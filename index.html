@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0a0a0a">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Sport Challenge</title>
+<title>Movement Challenge (TEST)</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,20 +28,26 @@
   --yellow: #eab308;
   --purple: #a855f7;
   --pink: #ec4899;
+  --red: #ef4444;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 html, body { background: var(--bg); color: var(--text); font-family: 'Bricolage Grotesque', sans-serif; min-height: 100vh; min-height: 100dvh; overflow-x: hidden; }
 body { padding-bottom: env(safe-area-inset-bottom); }
 
-.mono { font-family: 'JetBrains Mono', monospace; }
+.test-banner {
+  background: var(--purple); color: #fff;
+  text-align: center; padding: 6px;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+}
 
 .header {
   position: sticky; top: 0; z-index: 50;
   background: rgba(10, 10, 10, 0.85);
   backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border);
-  padding: 14px 20px; padding-top: max(14px, env(safe-area-inset-top));
+  padding: 14px 20px;
   display: flex; align-items: center; justify-content: space-between;
 }
 .header h1 { font-size: 18px; font-weight: 900; letter-spacing: -0.02em; }
@@ -90,14 +96,51 @@ body { padding-bottom: env(safe-area-inset-bottom); }
 .leader-stats { text-align: right; }
 .leader-points { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 16px; }
 .leader-streak { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-.leader-streak .fire { color: var(--accent); }
 
 .section-title {
   display: flex; align-items: baseline; justify-content: space-between;
   margin: 24px 4px 12px;
 }
 .section-title h2 { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-muted); }
-.section-title .link { font-size: 12px; color: var(--accent); font-weight: 600; cursor: pointer; }
+
+.heatmap {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 16px; padding: 14px;
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+}
+.heatmap-grid {
+  display: grid;
+  grid-template-columns: 70px repeat(35, 1fr);
+  gap: 3px;
+  min-width: 100%;
+}
+.heatmap-day-label, .heatmap-player-label {
+  font-size: 10px; color: var(--text-muted); font-weight: 600;
+  display: flex; align-items: center;
+}
+.heatmap-player-label { padding-right: 8px; font-size: 12px; color: var(--text); font-weight: 600; }
+.heatmap-cell {
+  aspect-ratio: 1; border-radius: 3px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.02);
+  cursor: pointer; transition: transform 0.1s;
+  min-width: 8px;
+}
+.heatmap-cell:active { transform: scale(1.2); }
+.heatmap-cell.today { outline: 1px solid var(--accent); outline-offset: 1px; }
+.heatmap-cell.l1 { background: rgba(255, 90, 31, 0.18); }
+.heatmap-cell.l2 { background: rgba(255, 90, 31, 0.35); }
+.heatmap-cell.l3 { background: rgba(255, 90, 31, 0.55); }
+.heatmap-cell.l4 { background: rgba(255, 90, 31, 0.78); }
+.heatmap-cell.l5 { background: var(--accent); box-shadow: 0 0 6px var(--accent-glow); }
+
+.heatmap-legend {
+  display: flex; align-items: center; gap: 6px;
+  margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border);
+  font-size: 10px; color: var(--text-muted);
+}
+.heatmap-legend-cells { display: flex; gap: 3px; }
+.heatmap-legend-cells .heatmap-cell { width: 10px; height: 10px; cursor: default; }
 
 .tabs {
   display: flex; gap: 4px; padding: 4px;
@@ -133,20 +176,42 @@ body { padding-bottom: env(safe-area-inset-bottom); }
   font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 15px;
   color: var(--accent);
 }
+.entry-actions { display: flex; gap: 4px; margin-left: 6px; }
+.entry-action-btn {
+  width: 30px; height: 30px; border-radius: 8px;
+  background: transparent; border: 1px solid var(--border);
+  color: var(--text-muted); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; transition: all 0.15s;
+}
+.entry-action-btn:active { transform: scale(0.92); }
+.entry-action-btn.delete:active { color: var(--red); border-color: var(--red); }
+.entry-action-btn.edit:active { color: var(--accent); border-color: var(--accent); }
 .entry-empty { padding: 40px 20px; text-align: center; color: var(--text-dim); font-size: 13px; }
 
-.fab {
-  position: fixed; bottom: 24px; bottom: calc(24px + env(safe-area-inset-bottom)); right: 50%;
-  transform: translateX(50%);
-  width: 64px; height: 64px; border-radius: 20px;
-  background: var(--accent); color: #000;
-  border: none; cursor: pointer; z-index: 100;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 32px; font-weight: 300;
-  box-shadow: 0 10px 40px var(--accent-glow), 0 0 0 1px rgba(0,0,0,0.2);
-  transition: transform 0.2s;
+.fab-group {
+  position: fixed; bottom: 24px; bottom: calc(24px + env(safe-area-inset-bottom));
+  left: 50%; transform: translateX(-50%);
+  display: flex; gap: 12px; z-index: 100;
 }
-.fab:active { transform: translateX(50%) scale(0.95); }
+.fab {
+  width: 56px; height: 56px; border-radius: 18px;
+  background: var(--bg-card); color: var(--text);
+  border: 1px solid var(--border); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; font-weight: 300;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+  transition: transform 0.15s;
+}
+.fab:active { transform: scale(0.92); }
+.fab.primary {
+  width: 64px; height: 64px; border-radius: 20px;
+  background: var(--accent); color: #000; border-color: var(--accent);
+  font-size: 32px;
+  box-shadow: 0 10px 40px var(--accent-glow), 0 0 0 1px rgba(0,0,0,0.2);
+}
+.fab.refresh.spinning svg { animation: spin 0.8s ease-in-out; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
 .modal-overlay {
   position: fixed; inset: 0; z-index: 200;
@@ -167,21 +232,25 @@ body { padding-bottom: env(safe-area-inset-bottom); }
   animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .modal-handle { width: 40px; height: 4px; background: var(--border); border-radius: 2px; margin: -10px auto 16px; }
-.modal-title { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 20px; }
+.modal-title { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 6px; }
+.modal-subtitle { font-size: 12px; color: var(--text-muted); margin-bottom: 20px; }
 
-.type-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }
+.field-group.disabled { opacity: 0.35; pointer-events: none; filter: grayscale(0.5); }
+.field-group { transition: opacity 0.2s; }
+
+.type-selector { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 20px; }
 .type-btn {
   background: var(--bg); border: 1px solid var(--border); color: var(--text);
-  padding: 16px; border-radius: 14px; cursor: pointer;
-  font-family: inherit; font-size: 14px; font-weight: 600;
-  transition: all 0.15s; text-align: left;
+  padding: 14px 8px; border-radius: 14px; cursor: pointer;
+  font-family: inherit; font-size: 13px; font-weight: 600;
+  transition: all 0.15s; text-align: center;
 }
 .type-btn .icon { font-size: 20px; display: block; margin-bottom: 4px; }
 .type-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
 
 .field { margin-bottom: 14px; }
 .field label { display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.08em; }
-.field input, .field select, .field textarea {
+.field input, .field select {
   width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text);
   padding: 14px; border-radius: 12px; font-family: inherit; font-size: 16px;
   -webkit-appearance: none; appearance: none;
@@ -214,24 +283,6 @@ body { padding-bottom: env(safe-area-inset-bottom); }
 
 .level-hint { font-size: 11px; color: var(--text-dim); margin-top: 4px; text-align: center; min-height: 14px; }
 
-.checkbox-row {
-  display: flex; align-items: center; gap: 12px;
-  background: var(--bg); border: 1px solid var(--border);
-  border-radius: 12px; padding: 14px; cursor: pointer; margin-bottom: 14px;
-}
-.checkbox-row .check {
-  width: 24px; height: 24px; border-radius: 8px;
-  border: 2px solid var(--border); flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-  transition: all 0.15s;
-}
-.checkbox-row.checked .check { background: var(--accent); border-color: var(--accent); color: #000; }
-.checkbox-row .check::after { content: '✓'; opacity: 0; font-weight: 700; }
-.checkbox-row.checked .check::after { opacity: 1; }
-.checkbox-row .label { flex: 1; }
-.checkbox-row .label-title { font-weight: 600; font-size: 14px; }
-.checkbox-row .label-sub { font-size: 11px; color: var(--text-muted); }
-
 .btn-submit {
   width: 100%; background: var(--accent); color: #000;
   border: none; padding: 16px; border-radius: 14px;
@@ -241,6 +292,13 @@ body { padding-bottom: env(safe-area-inset-bottom); }
 }
 .btn-submit:active { transform: scale(0.98); }
 .btn-submit:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.btn-danger {
+  width: 100%; background: var(--red); color: #fff;
+  border: none; padding: 14px; border-radius: 14px;
+  font-family: inherit; font-size: 15px; font-weight: 700;
+  cursor: pointer; margin-top: 8px;
+}
 
 .btn-cancel {
   width: 100%; background: transparent; color: var(--text-muted);
@@ -257,6 +315,7 @@ body { padding-bottom: env(safe-area-inset-bottom); }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 .toast.success { border-color: var(--green); color: var(--green); }
 .toast.error { border-color: #ef4444; color: #ef4444; }
+.toast.info { border-color: var(--blue); color: var(--blue); }
 
 .players-list { display: flex; flex-direction: column; gap: 8px; }
 .player-card {
@@ -291,13 +350,17 @@ body { padding-bottom: env(safe-area-inset-bottom); }
   display: flex; align-items: center; justify-content: center;
   padding: 60px; color: var(--text-muted);
 }
+
+.day-detail-list { display: flex; flex-direction: column; gap: 8px; max-height: 50vh; overflow-y: auto; }
 </style>
 </head>
 <body>
 
+<div class="test-banner">🧪 TESTOVACÍ VERZE — data jsou oddělená od ostré verze</div>
+
 <header class="header">
-  <h1>SPORT<span class="accent">/</span>CHALLENGE</h1>
-  <div class="status"><span class="status-dot"></span><span id="connection-status">připojeno</span></div>
+  <h1>MOVEMENT<span class="accent">/</span>CHALLENGE</h1>
+  <div class="status"><span class="status-dot"></span><span id="connection-status">test</span></div>
 </header>
 
 <main class="main">
@@ -331,6 +394,13 @@ body { padding-bottom: env(safe-area-inset-bottom); }
     </div>
 
     <div class="section-title">
+      <h2>Kalendář aktivity (5 týdnů)</h2>
+    </div>
+    <div class="heatmap" id="heatmap-container">
+      <div class="loading">Načítám...</div>
+    </div>
+
+    <div class="section-title">
       <h2>Poslední záznamy</h2>
     </div>
     <div class="entries" id="recent-entries">
@@ -358,85 +428,115 @@ body { padding-bottom: env(safe-area-inset-bottom); }
 
 </main>
 
-<button class="fab" onclick="openModal()" aria-label="Přidat záznam">+</button>
+<div class="fab-group">
+  <button class="fab refresh" id="fab-refresh" onclick="refreshApp()" aria-label="Obnovit">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>
+  </button>
+  <button class="fab primary" onclick="openModal()" aria-label="Přidat záznam">+</button>
+</div>
 
 <div class="toast" id="toast"></div>
 
 <div class="modal-overlay" id="modal">
   <div class="modal">
     <div class="modal-handle"></div>
-    <div class="modal-title">Nový záznam</div>
-
-    <div class="type-selector">
-      <button class="type-btn active" data-type="cvik">
-        <span class="icon">💪</span>Cvik
-      </button>
-      <button class="type-btn" data-type="aktivita">
-        <span class="icon">🏃</span>Aktivita
-      </button>
-    </div>
+    <div class="modal-title" id="modal-title">Nový záznam</div>
+    <div class="modal-subtitle" id="modal-subtitle">Nejdřív vyber kdo zadává</div>
 
     <div class="field">
-      <label>Kdo</label>
+      <label>Kdo zadává <span style="color: var(--accent)">*</span></label>
       <div class="player-pills" id="player-pills"></div>
     </div>
 
-    <div id="form-cvik">
-      <div class="field">
-        <label>Cvik</label>
-        <div class="player-pills" id="cvik-pills">
-          <div class="player-pill" data-cvik="Shyby">Shyby</div>
-          <div class="player-pill" data-cvik="Dřep">Dřep</div>
-          <div class="player-pill" data-cvik="Kliky">Kliky</div>
-          <div class="player-pill" data-cvik="Dipy">Dipy</div>
-        </div>
+    <div class="field-group disabled" id="entry-form">
+      <div class="type-selector">
+        <button class="type-btn active" data-type="cvik">
+          <span class="icon">💪</span>Cvik
+        </button>
+        <button class="type-btn" data-type="aktivita">
+          <span class="icon">🏃</span>Aktivita
+        </button>
+        <button class="type-btn" data-type="stretching">
+          <span class="icon">🧘</span>Stretching
+        </button>
       </div>
-      <div class="field-row">
-        <div class="field">
-          <label>Opakování</label>
-          <input type="number" id="cvik-opakovani" inputmode="numeric" min="1" placeholder="20">
-        </div>
-        <div class="field">
-          <label>Přidaná váha (kg)</label>
-          <input type="number" id="cvik-vaha" inputmode="decimal" min="0" step="0.5" placeholder="0" value="0">
-        </div>
-      </div>
-    </div>
 
-    <div id="form-aktivita" style="display:none;">
-      <div class="field">
-        <label>Co jsi dělal/a</label>
-        <input type="text" id="aktivita-nazev" placeholder="Např. Běh 5 km, posilovna...">
-      </div>
-      <div class="field">
-        <label>Úroveň obtížnosti</label>
-        <div class="level-grid">
-          <button class="level-btn l1" data-level="1">1</button>
-          <button class="level-btn l2" data-level="2">2</button>
-          <button class="level-btn l3" data-level="3">3</button>
-          <button class="level-btn l4" data-level="4">4</button>
-          <button class="level-btn l5" data-level="5">5</button>
+      <div id="form-cvik">
+        <div class="field">
+          <label>Cvik</label>
+          <div class="player-pills" id="cvik-pills">
+            <div class="player-pill" data-cvik="Shyby">Shyby</div>
+            <div class="player-pill" data-cvik="Dřep">Dřep</div>
+            <div class="player-pill" data-cvik="Kliky">Kliky</div>
+            <div class="player-pill" data-cvik="Dipy">Dipy</div>
+          </div>
         </div>
-        <div class="level-hint" id="level-hint">vyber úroveň 1-5</div>
+        <div class="field-row">
+          <div class="field">
+            <label>Opakování</label>
+            <input type="number" id="cvik-opakovani" inputmode="numeric" min="1" placeholder="20">
+          </div>
+          <div class="field">
+            <label>Přidaná váha (kg)</label>
+            <input type="number" id="cvik-vaha" inputmode="decimal" min="0" step="0.5" placeholder="0" value="0">
+          </div>
+        </div>
       </div>
-      <div class="checkbox-row" id="protahovani-row">
-        <div class="check"></div>
-        <div class="label">
-          <div class="label-title">+ Protahování</div>
-          <div class="label-sub">bonus 15 bodů</div>
+
+      <div id="form-aktivita" style="display:none;">
+        <div class="field">
+          <label>Co jsi dělal/a</label>
+          <input type="text" id="aktivita-nazev" placeholder="Např. Běh 5 km, posilovna...">
+        </div>
+        <div class="field">
+          <label>Úroveň obtížnosti</label>
+          <div class="level-grid">
+            <button class="level-btn l1" data-level="1">1</button>
+            <button class="level-btn l2" data-level="2">2</button>
+            <button class="level-btn l3" data-level="3">3</button>
+            <button class="level-btn l4" data-level="4">4</button>
+            <button class="level-btn l5" data-level="5">5</button>
+          </div>
+          <div class="level-hint" id="level-hint">vyber úroveň 1-5</div>
+        </div>
+      </div>
+
+      <div id="form-stretching" style="display:none;">
+        <div class="field">
+          <label>Délka stretchingu</label>
+          <div class="level-grid" style="grid-template-columns: repeat(3, 1fr);">
+            <button class="level-btn stretch-btn" data-stretch="krat" style="font-size:14px;padding:14px 4px;">Krátké<br><span style="font-size:11px;opacity:0.7">~5 min</span></button>
+            <button class="level-btn stretch-btn" data-stretch="stred" style="font-size:14px;padding:14px 4px;">Střední<br><span style="font-size:11px;opacity:0.7">~15 min</span></button>
+            <button class="level-btn stretch-btn" data-stretch="dlou" style="font-size:14px;padding:14px 4px;">Dlouhé<br><span style="font-size:11px;opacity:0.7">~30+ min</span></button>
+          </div>
+          <div class="level-hint" id="stretch-hint">vyber délku</div>
+        </div>
+        <div class="field">
+          <label>Poznámka (volitelné)</label>
+          <input type="text" id="stretch-nazev" placeholder="Např. ranní rozcvička...">
         </div>
       </div>
     </div>
 
     <button class="btn-submit" id="submit-btn" onclick="submitEntry()">Zapsat</button>
+    <button class="btn-danger" id="delete-btn" style="display:none;" onclick="deleteCurrentEntry()">Smazat záznam</button>
     <button class="btn-cancel" onclick="closeModal()">Zrušit</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="day-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="day-modal-title">Den</div>
+    <div class="day-detail-list" id="day-detail-list"></div>
+    <button class="btn-cancel" onclick="closeDayModal()">Zavřít</button>
   </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const SUPABASE_URL = 'https://jqxvrooosecseugfzpsx.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_KEG-Sb3HMyk0RjjLF4q5-Q_h6ovbG1L';
+const SUPABASE_URL = 'https://dslutpijlwmyftztyfva.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_vYqqqUeOuQ4idVCiCvwilQ_pIr5G08r';
 
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -448,11 +548,14 @@ const LEVEL_HINTS = {
   4: 'Těžká posilovna, běh 60 min, squash',
   5: 'Závod, velmi těžký trénink, squash 90+'
 };
+const STRETCH_POINTS = { krat: 10, stred: 20, dlou: 35 };
+const STRETCH_LABELS = { krat: 'Krátké', stred: 'Střední', dlou: 'Dlouhé' };
 
 let state = {
   players: [], cviky: [], aktivity: [],
-  selectedPlayer: null, selectedCvik: null, selectedLevel: null,
-  protahovani: false, entryType: 'cvik', view: 'prehled', tab: 'vse'
+  selectedPlayer: null, selectedCvik: null, selectedLevel: null, selectedStretch: null,
+  entryType: 'cvik', view: 'prehled', tab: 'vse',
+  editMode: false, editId: null, editTable: null
 };
 
 function wilksKoef(vaha, pohlavi) {
@@ -465,13 +568,11 @@ function vypocitejBodyCvik(player, cvik, opakovani, pridanaVaha) {
   const wk = wilksKoef(player.vaha, player.pohlavi);
   const pridana = Number(pridanaVaha) || 0;
   const op = Number(opakovani);
-
   switch (cvik) {
     case 'Shyby': {
       if (!player.max_shyby) return 0;
       const rel = (player.vaha + pridana) / player.vaha;
-      const vykon = op * rel;
-      const proc = vykon / player.max_shyby;
+      const proc = (op * rel) / player.max_shyby;
       return Math.round(Math.pow(proc, 0.85) * 100 * wk * 10) / 10;
     }
     case 'Dřep': {
@@ -489,9 +590,8 @@ function vypocitejBodyCvik(player, cvik, opakovani, pridanaVaha) {
     }
     case 'Dipy': {
       const rel = (player.vaha + pridana) / player.vaha;
-      const vykon = op * rel;
       const pb = player.max_dipy || 15;
-      const proc = vykon / pb;
+      const proc = (op * rel) / pb;
       return Math.round(Math.pow(proc, 0.85) * 80 * wk * 10) / 10;
     }
     default: return 0;
@@ -499,7 +599,6 @@ function vypocitejBodyCvik(player, cvik, opakovani, pridanaVaha) {
 }
 
 function initials(name) { return name.substring(0, 2).toUpperCase(); }
-
 function startOfWeek() {
   const d = new Date();
   const day = d.getDay() || 7;
@@ -507,7 +606,7 @@ function startOfWeek() {
   d.setHours(0,0,0,0);
   return d;
 }
-
+function dateToStr(d) { return d.toISOString().split('T')[0]; }
 function formatDate(dateStr) {
   const d = new Date(dateStr);
   const today = new Date(); today.setHours(0,0,0,0);
@@ -517,7 +616,6 @@ function formatDate(dateStr) {
   if (dd.getTime() === yesterday.getTime()) return 'Včera';
   return d.toLocaleDateString('cs-CZ', { day: 'numeric', month: 'numeric' });
 }
-
 function computeStreak(playerId) {
   const dates = new Set();
   state.cviky.filter(c => c.player_id === playerId).forEach(c => dates.add(c.datum));
@@ -531,7 +629,6 @@ function computeStreak(playerId) {
   }
   return streak;
 }
-
 function toast(msg, type='success') {
   const t = document.getElementById('toast');
   t.textContent = msg;
@@ -548,16 +645,13 @@ function renderWeekLabel() {
 
 function renderLeaderboardTotal() {
   const data = state.players.filter(p => p.aktivni).map(p => {
-    const bodyCviky = state.cviky.filter(c => c.player_id === p.id).reduce((s, c) => s + Number(c.body), 0);
-    const bodyAkt = state.aktivity.filter(a => a.player_id === p.id).reduce((s, a) => s + Number(a.body), 0);
-    return { ...p, total: bodyCviky + bodyAkt, streak: computeStreak(p.id) };
+    const bC = state.cviky.filter(c => c.player_id === p.id).reduce((s, c) => s + Number(c.body), 0);
+    const bA = state.aktivity.filter(a => a.player_id === p.id).reduce((s, a) => s + Number(a.body), 0);
+    return { ...p, total: bC + bA, streak: computeStreak(p.id) };
   }).sort((a, b) => b.total - a.total);
 
   const el = document.getElementById('leaderboard-total');
-  if (data.length === 0) {
-    el.innerHTML = '<div class="entry-empty">Žádní aktivní hráči</div>';
-    return;
-  }
+  if (data.length === 0) { el.innerHTML = '<div class="entry-empty">Žádní aktivní hráči</div>'; return; }
   el.innerHTML = data.map((p, i) => `
     <div class="leader-row ${i === 0 && p.total > 0 ? 'gold' : ''}">
       <div class="leader-rank">${i+1}</div>
@@ -590,50 +684,120 @@ function renderLeaderboardWeek() {
       <div class="leader-rank">${i+1}</div>
       <div class="leader-avatar" style="background:${p.barva}">${initials(p.jmeno)}</div>
       <div class="leader-name">${p.jmeno}</div>
-      <div class="leader-stats">
-        <div class="leader-points">${p.body.toFixed(1)}</div>
-      </div>
+      <div class="leader-stats"><div class="leader-points">${p.body.toFixed(1)}</div></div>
     </div>
   `).join('');
 }
 
-function renderRecent() {
-  const all = [
-    ...state.cviky.map(c => ({ ...c, type: 'cvik' })),
-    ...state.aktivity.map(a => ({ ...a, type: 'aktivita' }))
-  ].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 10);
+function renderHeatmap() {
+  const players = state.players.filter(p => p.aktivni);
+  const today = new Date(); today.setHours(0,0,0,0);
+  const todayStr = dateToStr(today);
+  const start = new Date(today);
+  start.setDate(start.getDate() - 34);
+  while ((start.getDay() || 7) !== 1) start.setDate(start.getDate() - 1);
 
-  const el = document.getElementById('recent-entries');
-  if (all.length === 0) {
-    el.innerHTML = '<div class="entry-empty">Zatím žádné záznamy. Klepni na + a začni!</div>';
-    return;
+  function pointsForDay(playerId, dateStr) {
+    let pts = 0;
+    state.cviky.filter(c => c.player_id === playerId && c.datum === dateStr).forEach(c => pts += Number(c.body));
+    state.aktivity.filter(a => a.player_id === playerId && a.datum === dateStr).forEach(a => pts += Number(a.body));
+    return pts;
   }
-  el.innerHTML = all.map(e => renderEntryCard(e)).join('');
+  function levelClass(pts) {
+    if (pts === 0) return '';
+    if (pts < 30) return 'l1';
+    if (pts < 70) return 'l2';
+    if (pts < 130) return 'l3';
+    if (pts < 220) return 'l4';
+    return 'l5';
+  }
+
+  const days = [];
+  for (let i = 0; i < 35; i++) {
+    const d = new Date(start);
+    d.setDate(d.getDate() + i);
+    days.push(d);
+  }
+
+  let html = '<div class="heatmap-grid"><div></div>';
+  for (let i = 0; i < 35; i++) {
+    const d = days[i];
+    const isFirst = i % 7 === 0;
+    html += `<div class="heatmap-day-label" style="font-size:8px;">${isFirst ? d.getDate()+'.'+(d.getMonth()+1)+'.' : ''}</div>`;
+  }
+  players.forEach(p => {
+    html += `<div class="heatmap-player-label" style="color:${p.barva}">${p.jmeno}</div>`;
+    days.forEach(d => {
+      const dStr = dateToStr(d);
+      const pts = pointsForDay(p.id, dStr);
+      const cls = levelClass(pts);
+      const isToday = dStr === todayStr;
+      html += `<div class="heatmap-cell ${cls} ${isToday ? 'today' : ''}" data-date="${dStr}" data-player="${p.id}" title="${p.jmeno} · ${d.toLocaleDateString('cs-CZ')} · ${pts.toFixed(1)} bodů"></div>`;
+    });
+  });
+  html += '</div><div class="heatmap-legend"><span>Méně</span><div class="heatmap-legend-cells"><div class="heatmap-cell"></div><div class="heatmap-cell l1"></div><div class="heatmap-cell l2"></div><div class="heatmap-cell l3"></div><div class="heatmap-cell l4"></div><div class="heatmap-cell l5"></div></div><span>Více</span></div>';
+
+  const el = document.getElementById('heatmap-container');
+  el.innerHTML = html;
+  el.querySelectorAll('.heatmap-cell[data-date]').forEach(cell => {
+    cell.addEventListener('click', () => openDayDetail(cell.dataset.player, cell.dataset.date));
+  });
+}
+
+function openDayDetail(playerId, dateStr) {
+  const player = state.players.find(p => p.id === playerId);
+  if (!player) return;
+  const cviky = state.cviky.filter(c => c.player_id === playerId && c.datum === dateStr);
+  const aktivity = state.aktivity.filter(a => a.player_id === playerId && a.datum === dateStr);
+  const totalBody = [...cviky, ...aktivity].reduce((s, e) => s + Number(e.body), 0);
+  document.getElementById('day-modal-title').textContent = 
+    `${player.jmeno} · ${new Date(dateStr).toLocaleDateString('cs-CZ', { day: 'numeric', month: 'long' })}`;
+  const list = document.getElementById('day-detail-list');
+  if (cviky.length === 0 && aktivity.length === 0) {
+    list.innerHTML = '<div class="entry-empty">Žádné záznamy v tento den</div>';
+  } else {
+    const all = [...cviky.map(c => ({ ...c, _type: 'cvik' })), ...aktivity.map(a => ({ ...a, _type: 'aktivita' }))];
+    list.innerHTML = `<div style="text-align:center;font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;color:var(--accent);margin-bottom:16px;">+${totalBody.toFixed(1)} bodů</div>` + all.map(e => renderEntryCard(e, false)).join('');
+  }
+  document.getElementById('day-modal').classList.add('active');
+}
+function closeDayModal() { document.getElementById('day-modal').classList.remove('active'); }
+
+function renderRecent() {
+  const all = [...state.cviky.map(c => ({ ...c, _type: 'cvik' })), ...state.aktivity.map(a => ({ ...a, _type: 'aktivita' }))].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 10);
+  const el = document.getElementById('recent-entries');
+  if (all.length === 0) { el.innerHTML = '<div class="entry-empty">Zatím žádné záznamy. Klepni na + a začni!</div>'; return; }
+  el.innerHTML = all.map(e => renderEntryCard(e, true)).join('');
+  attachEntryActions(el);
 }
 
 function renderAllEntries() {
-  const all = [
-    ...state.cviky.map(c => ({ ...c, type: 'cvik' })),
-    ...state.aktivity.map(a => ({ ...a, type: 'aktivita' }))
-  ].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-
+  const all = [...state.cviky.map(c => ({ ...c, _type: 'cvik' })), ...state.aktivity.map(a => ({ ...a, _type: 'aktivita' }))].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
   const el = document.getElementById('all-entries');
-  if (all.length === 0) {
-    el.innerHTML = '<div class="empty-state"><div class="icon">📋</div><div class="title">Žádné záznamy</div><div class="desc">Zatím tu nic není</div></div>';
-    return;
-  }
-  el.innerHTML = all.map(e => renderEntryCard(e)).join('');
+  if (all.length === 0) { el.innerHTML = '<div class="empty-state"><div class="icon">📋</div><div class="title">Žádné záznamy</div><div class="desc">Zatím tu nic není</div></div>'; return; }
+  el.innerHTML = all.map(e => renderEntryCard(e, true)).join('');
+  attachEntryActions(el);
 }
 
-function renderEntryCard(e) {
+function renderEntryCard(e, withActions) {
   const player = state.players.find(p => p.id === e.player_id);
   if (!player) return '';
-  const title = e.type === 'cvik'
-    ? `${e.cvik} × ${e.opakovani}${e.pridana_vaha > 0 ? ` (+${e.pridana_vaha} kg)` : ''}`
-    : `${e.nazev}`;
-  const meta = e.type === 'cvik'
-    ? `${player.jmeno} · ${formatDate(e.datum)}`
-    : `${player.jmeno} · úroveň ${e.uroven}${e.protahovani ? ' · +protah' : ''} · ${formatDate(e.datum)}`;
+  let title, isStretch = false;
+  if (e._type === 'cvik') {
+    title = `${e.cvik} × ${e.opakovani}${e.pridana_vaha > 0 ? ` (+${e.pridana_vaha} kg)` : ''}`;
+  } else {
+    if (e.nazev?.startsWith('🧘')) { isStretch = true; title = e.nazev; }
+    else { title = e.nazev; }
+  }
+  const typeIcon = e._type === 'cvik' ? '💪' : (isStretch ? '🧘' : '🏃');
+  const meta = e._type === 'cvik' || isStretch
+    ? `${typeIcon} ${player.jmeno} · ${formatDate(e.datum)}`
+    : `${typeIcon} ${player.jmeno} · úroveň ${e.uroven} · ${formatDate(e.datum)}`;
+  const actions = withActions ? `
+    <div class="entry-actions">
+      <button class="entry-action-btn edit" data-id="${e.id}" data-type="${e._type}" data-action="edit">✏️</button>
+      <button class="entry-action-btn delete" data-id="${e.id}" data-type="${e._type}" data-action="delete">🗑️</button>
+    </div>` : '';
   return `
     <div class="entry-card">
       <div class="entry-bar" style="background:${player.barva}"></div>
@@ -643,15 +807,110 @@ function renderEntryCard(e) {
         <div class="entry-meta">${meta}</div>
       </div>
       <div class="entry-points">+${Number(e.body).toFixed(1)}</div>
-    </div>
-  `;
+      ${actions}
+    </div>`;
+}
+
+function attachEntryActions(container) {
+  container.querySelectorAll('.entry-action-btn').forEach(btn => {
+    btn.addEventListener('click', async (ev) => {
+      ev.stopPropagation();
+      const id = btn.dataset.id;
+      const type = btn.dataset.type;
+      const action = btn.dataset.action;
+      if (action === 'delete') {
+        if (!confirm('Opravdu smazat tento záznam?')) return;
+        await deleteEntry(id, type);
+      } else if (action === 'edit') {
+        openEditModal(id, type);
+      }
+    });
+  });
+}
+
+async function deleteEntry(id, type) {
+  const table = type === 'cvik' ? 'cviky' : 'aktivity';
+  try {
+    const { error } = await db.from(table).delete().eq('id', id);
+    if (error) throw error;
+    toast('Záznam smazán', 'success');
+    await loadData();
+  } catch (e) { toast('Chyba: ' + e.message, 'error'); }
+}
+
+async function deleteCurrentEntry() {
+  if (!state.editId || !state.editTable) return;
+  if (!confirm('Opravdu smazat tento záznam?')) return;
+  try {
+    const { error } = await db.from(state.editTable).delete().eq('id', state.editId);
+    if (error) throw error;
+    toast('Záznam smazán', 'success');
+    closeModal();
+    await loadData();
+  } catch (e) { toast('Chyba: ' + e.message, 'error'); }
+}
+
+function openEditModal(id, type) {
+  const table = type === 'cvik' ? 'cviky' : 'aktivity';
+  const arr = type === 'cvik' ? state.cviky : state.aktivity;
+  const entry = arr.find(e => e.id === id);
+  if (!entry) return;
+  state.editMode = true;
+  state.editId = id;
+  state.editTable = table;
+  state.selectedPlayer = entry.player_id;
+  document.getElementById('modal-title').textContent = 'Upravit záznam';
+  document.getElementById('modal-subtitle').textContent = 'Změň hodnoty a ulož';
+  document.getElementById('submit-btn').textContent = 'Uložit změny';
+  document.getElementById('delete-btn').style.display = 'block';
+  buildPlayerPills();
+  setTimeout(() => {
+    const pill = document.querySelector(`#player-pills .player-pill[data-player-id="${entry.player_id}"]`);
+    if (pill) pill.click();
+  }, 50);
+  const isStretching = type === 'aktivita' && entry.nazev?.startsWith('🧘');
+  if (type === 'cvik') {
+    setEntryType('cvik');
+    state.selectedCvik = entry.cvik;
+    document.querySelectorAll('#cvik-pills .player-pill').forEach(p => {
+      p.classList.remove('active'); p.style.background = ''; p.style.borderColor = ''; p.style.color = '';
+      if (p.dataset.cvik === entry.cvik) {
+        p.classList.add('active');
+        p.style.background = 'var(--accent)'; p.style.borderColor = 'var(--accent)'; p.style.color = '#000';
+      }
+    });
+    document.getElementById('cvik-opakovani').value = entry.opakovani;
+    document.getElementById('cvik-vaha').value = entry.pridana_vaha || 0;
+  } else if (isStretching) {
+    setEntryType('stretching');
+    let stretchKey = 'stred';
+    if (entry.body <= 10) stretchKey = 'krat';
+    else if (entry.body >= 35) stretchKey = 'dlou';
+    state.selectedStretch = stretchKey;
+    document.querySelectorAll('.stretch-btn').forEach(b => {
+      b.classList.remove('active');
+      if (b.dataset.stretch === stretchKey) b.classList.add('active');
+    });
+    document.getElementById('stretch-hint').textContent = STRETCH_LABELS[stretchKey] + ` · ${STRETCH_POINTS[stretchKey]} bodů`;
+    document.getElementById('stretch-nazev').value = (entry.nazev || '').replace(/^🧘\s*Stretching\s*\w*\s*–?\s*/, '');
+  } else {
+    setEntryType('aktivita');
+    document.getElementById('aktivita-nazev').value = entry.nazev;
+    state.selectedLevel = entry.uroven;
+    document.querySelectorAll('.level-btn:not(.stretch-btn)').forEach(b => {
+      b.classList.remove('active');
+      if (parseInt(b.dataset.level) === entry.uroven) b.classList.add('active');
+    });
+    document.getElementById('level-hint').textContent = LEVEL_HINTS[entry.uroven] + ` · ${LEVEL_POINTS[entry.uroven]} bodů`;
+  }
+  document.getElementById('modal').classList.add('active');
 }
 
 function renderPlayers() {
   const el = document.getElementById('players-list');
   el.innerHTML = state.players.map(p => {
-    const bodyCviky = state.cviky.filter(c => c.player_id === p.id).reduce((s, c) => s + Number(c.body), 0);
-    const bodyAkt = state.aktivity.filter(a => a.player_id === p.id).reduce((s, a) => s + Number(a.body), 0);
+    const bC = state.cviky.filter(c => c.player_id === p.id).reduce((s, c) => s + Number(c.body), 0);
+    const bA = state.aktivity.filter(a => a.player_id === p.id).reduce((s, a) => s + Number(a.body), 0);
     return `
       <div class="player-card">
         <div class="player-card-header">
@@ -660,28 +919,15 @@ function renderPlayers() {
             <div style="font-weight:700;font-size:16px">${p.jmeno}</div>
             <div style="font-size:11px;color:var(--text-muted)">${p.pohlavi === 'M' ? 'Muž' : 'Žena'} · ${p.vaha} kg · ${p.vyska || '?'} cm</div>
           </div>
-          <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:18px;color:var(--accent)">${(bodyCviky + bodyAkt).toFixed(0)}</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:18px;color:var(--accent)">${(bC + bA).toFixed(0)}</div>
         </div>
         <div class="player-card-stats">
-          <div class="player-card-stat">
-            <div class="player-card-stat-label">Max shyby</div>
-            <div class="player-card-stat-value">${p.max_shyby || '—'}</div>
-          </div>
-          <div class="player-card-stat">
-            <div class="player-card-stat-label">Max dřep</div>
-            <div class="player-card-stat-value">${p.max_drep ? p.max_drep + ' kg' : '—'}</div>
-          </div>
-          <div class="player-card-stat">
-            <div class="player-card-stat-label">Max kliky</div>
-            <div class="player-card-stat-value">${p.max_kliky || '—'}</div>
-          </div>
-          <div class="player-card-stat">
-            <div class="player-card-stat-label">Max dipy</div>
-            <div class="player-card-stat-value">${p.max_dipy || '—'}</div>
-          </div>
+          <div class="player-card-stat"><div class="player-card-stat-label">Max shyby</div><div class="player-card-stat-value">${p.max_shyby || '—'}</div></div>
+          <div class="player-card-stat"><div class="player-card-stat-label">Max dřep</div><div class="player-card-stat-value">${p.max_drep ? p.max_drep + ' kg' : '—'}</div></div>
+          <div class="player-card-stat"><div class="player-card-stat-label">Max kliky</div><div class="player-card-stat-value">${p.max_kliky || '—'}</div></div>
+          <div class="player-card-stat"><div class="player-card-stat-label">Max dipy</div><div class="player-card-stat-value">${p.max_dipy || '—'}</div></div>
         </div>
-      </div>
-    `;
+      </div>`;
   }).join('');
 }
 
@@ -689,33 +935,61 @@ function renderAllViews() {
   renderWeekLabel();
   renderLeaderboardTotal();
   renderLeaderboardWeek();
+  renderHeatmap();
   renderRecent();
   renderAllEntries();
   renderPlayers();
 }
 
 function openModal() {
+  state.editMode = false; state.editId = null; state.editTable = null;
+  document.getElementById('modal-title').textContent = 'Nový záznam';
+  document.getElementById('modal-subtitle').textContent = 'Nejdřív vyber kdo zadává';
+  document.getElementById('submit-btn').textContent = 'Zapsat';
+  document.getElementById('delete-btn').style.display = 'none';
   buildPlayerPills();
+  resetFormFields();
+  updateFormDisabled();
   document.getElementById('modal').classList.add('active');
 }
 
 function closeModal() {
   document.getElementById('modal').classList.remove('active');
-  state.selectedPlayer = null;
-  state.selectedCvik = null;
-  state.selectedLevel = null;
-  state.protahovani = false;
-  state.entryType = 'cvik';
-  document.querySelectorAll('.type-btn').forEach(b => b.classList.toggle('active', b.dataset.type === 'cvik'));
-  document.getElementById('form-cvik').style.display = '';
-  document.getElementById('form-aktivita').style.display = 'none';
-  document.querySelectorAll('#cvik-pills .player-pill').forEach(p => { p.classList.remove('active'); p.style.background=''; p.style.borderColor=''; p.style.color=''; });
+  state.selectedPlayer = null; state.selectedCvik = null; state.selectedLevel = null; state.selectedStretch = null;
+  state.entryType = 'cvik'; state.editMode = false; state.editId = null; state.editTable = null;
+}
+
+function resetFormFields() {
+  setEntryType('cvik');
+  document.querySelectorAll('#cvik-pills .player-pill').forEach(p => {
+    p.classList.remove('active'); p.style.background=''; p.style.borderColor=''; p.style.color='';
+  });
   document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('protahovani-row').classList.remove('checked');
   document.getElementById('cvik-opakovani').value = '';
   document.getElementById('cvik-vaha').value = '0';
   document.getElementById('aktivita-nazev').value = '';
+  document.getElementById('stretch-nazev').value = '';
   document.getElementById('level-hint').textContent = 'vyber úroveň 1-5';
+  document.getElementById('stretch-hint').textContent = 'vyber délku';
+}
+
+function setEntryType(type) {
+  state.entryType = type;
+  document.querySelectorAll('.type-btn').forEach(b => b.classList.toggle('active', b.dataset.type === type));
+  document.getElementById('form-cvik').style.display = type === 'cvik' ? '' : 'none';
+  document.getElementById('form-aktivita').style.display = type === 'aktivita' ? '' : 'none';
+  document.getElementById('form-stretching').style.display = type === 'stretching' ? '' : 'none';
+}
+
+function updateFormDisabled() {
+  const fg = document.getElementById('entry-form');
+  if (state.selectedPlayer) {
+    fg.classList.remove('disabled');
+    document.getElementById('modal-subtitle').textContent = state.editMode ? 'Změň hodnoty a ulož' : 'Vyber typ a vyplň údaje';
+  } else {
+    fg.classList.add('disabled');
+    document.getElementById('modal-subtitle').textContent = 'Nejdřív vyber kdo zadává';
+  }
 }
 
 function buildPlayerPills() {
@@ -726,102 +1000,112 @@ function buildPlayerPills() {
   el.querySelectorAll('.player-pill').forEach(pill => {
     pill.addEventListener('click', () => {
       el.querySelectorAll('.player-pill').forEach(p => {
-        p.classList.remove('active');
-        p.style.background = '';
-        p.style.borderColor = '';
+        p.classList.remove('active'); p.style.background = ''; p.style.borderColor = '';
       });
       pill.classList.add('active');
       const color = pill.style.getPropertyValue('--c');
-      pill.style.background = color;
-      pill.style.borderColor = color;
+      pill.style.background = color; pill.style.borderColor = color;
       state.selectedPlayer = pill.dataset.playerId;
+      updateFormDisabled();
     });
   });
 }
 
 document.querySelectorAll('.type-btn').forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    state.entryType = btn.dataset.type;
-    document.getElementById('form-cvik').style.display = state.entryType === 'cvik' ? '' : 'none';
-    document.getElementById('form-aktivita').style.display = state.entryType === 'aktivita' ? '' : 'none';
+    if (!state.selectedPlayer) return;
+    setEntryType(btn.dataset.type);
   });
 });
 
 document.querySelectorAll('#cvik-pills .player-pill').forEach(pill => {
   pill.addEventListener('click', () => {
+    if (!state.selectedPlayer) return;
     document.querySelectorAll('#cvik-pills .player-pill').forEach(p => {
-      p.classList.remove('active');
-      p.style.background = '';
-      p.style.borderColor = '';
-      p.style.color = '';
+      p.classList.remove('active'); p.style.background = ''; p.style.borderColor = ''; p.style.color = '';
     });
     pill.classList.add('active');
-    pill.style.background = 'var(--accent)';
-    pill.style.borderColor = 'var(--accent)';
-    pill.style.color = '#000';
+    pill.style.background = 'var(--accent)'; pill.style.borderColor = 'var(--accent)'; pill.style.color = '#000';
     state.selectedCvik = pill.dataset.cvik;
   });
 });
 
-document.querySelectorAll('.level-btn').forEach(btn => {
+document.querySelectorAll('.level-btn:not(.stretch-btn)').forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+    if (!state.selectedPlayer) return;
+    document.querySelectorAll('.level-btn:not(.stretch-btn)').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     state.selectedLevel = parseInt(btn.dataset.level);
     document.getElementById('level-hint').textContent = LEVEL_HINTS[state.selectedLevel] + ` · ${LEVEL_POINTS[state.selectedLevel]} bodů`;
   });
 });
 
-document.getElementById('protahovani-row').addEventListener('click', () => {
-  state.protahovani = !state.protahovani;
-  document.getElementById('protahovani-row').classList.toggle('checked', state.protahovani);
+document.querySelectorAll('.stretch-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (!state.selectedPlayer) return;
+    document.querySelectorAll('.stretch-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    state.selectedStretch = btn.dataset.stretch;
+    document.getElementById('stretch-hint').textContent = STRETCH_LABELS[state.selectedStretch] + ` · ${STRETCH_POINTS[state.selectedStretch]} bodů`;
+  });
 });
 
 async function submitEntry() {
   if (!state.selectedPlayer) { toast('Vyber hráče', 'error'); return; }
-
   const btn = document.getElementById('submit-btn');
   btn.disabled = true;
   btn.textContent = 'Ukládám...';
-
   try {
     if (state.entryType === 'cvik') {
-      if (!state.selectedCvik) { toast('Vyber cvik', 'error'); btn.disabled = false; btn.textContent = 'Zapsat'; return; }
+      if (!state.selectedCvik) { toast('Vyber cvik', 'error'); btn.disabled = false; btn.textContent = state.editMode ? 'Uložit změny' : 'Zapsat'; return; }
       const op = parseInt(document.getElementById('cvik-opakovani').value);
       const vaha = parseFloat(document.getElementById('cvik-vaha').value) || 0;
-      if (!op || op < 1) { toast('Zadej počet opakování', 'error'); btn.disabled = false; btn.textContent = 'Zapsat'; return; }
-
+      if (!op || op < 1) { toast('Zadej počet opakování', 'error'); btn.disabled = false; btn.textContent = state.editMode ? 'Uložit změny' : 'Zapsat'; return; }
       const player = state.players.find(p => p.id === state.selectedPlayer);
       const body = vypocitejBodyCvik(player, state.selectedCvik, op, vaha);
-
-      const { error } = await db.from('cviky').insert({
-        player_id: state.selectedPlayer,
-        cvik: state.selectedCvik,
-        opakovani: op,
-        pridana_vaha: vaha,
-        body: body
-      });
-      if (error) throw error;
-      toast(`+${body.toFixed(1)} bodů přidáno!`, 'success');
-    } else {
+      const payload = { player_id: state.selectedPlayer, cvik: state.selectedCvik, opakovani: op, pridana_vaha: vaha, body: body };
+      if (state.editMode) {
+        const { error } = await db.from('cviky').update(payload).eq('id', state.editId);
+        if (error) throw error;
+        toast('Záznam upraven', 'success');
+      } else {
+        const { error } = await db.from('cviky').insert(payload);
+        if (error) throw error;
+        toast(`+${body.toFixed(1)} bodů přidáno!`, 'success');
+      }
+    } else if (state.entryType === 'aktivita') {
       const nazev = document.getElementById('aktivita-nazev').value.trim();
-      if (!nazev) { toast('Zadej co jsi dělal/a', 'error'); btn.disabled = false; btn.textContent = 'Zapsat'; return; }
-      if (!state.selectedLevel) { toast('Vyber úroveň', 'error'); btn.disabled = false; btn.textContent = 'Zapsat'; return; }
-
-      const body = LEVEL_POINTS[state.selectedLevel] + (state.protahovani ? 15 : 0);
-      const { error } = await db.from('aktivity').insert({
-        player_id: state.selectedPlayer,
-        nazev: nazev,
-        uroven: state.selectedLevel,
-        protahovani: state.protahovani,
-        body: body
-      });
-      if (error) throw error;
-      toast(`+${body} bodů přidáno!`, 'success');
+      if (!nazev) { toast('Zadej co jsi dělal/a', 'error'); btn.disabled = false; btn.textContent = state.editMode ? 'Uložit změny' : 'Zapsat'; return; }
+      if (!state.selectedLevel) { toast('Vyber úroveň', 'error'); btn.disabled = false; btn.textContent = state.editMode ? 'Uložit změny' : 'Zapsat'; return; }
+      const body = LEVEL_POINTS[state.selectedLevel];
+      const payload = { player_id: state.selectedPlayer, nazev: nazev, uroven: state.selectedLevel, body: body };
+      if (state.editMode) {
+        const { error } = await db.from('aktivity').update(payload).eq('id', state.editId);
+        if (error) throw error;
+        toast('Záznam upraven', 'success');
+      } else {
+        const { error } = await db.from('aktivity').insert(payload);
+        if (error) throw error;
+        toast(`+${body} bodů přidáno!`, 'success');
+      }
+    } else if (state.entryType === 'stretching') {
+      if (!state.selectedStretch) { toast('Vyber délku stretchingu', 'error'); btn.disabled = false; btn.textContent = state.editMode ? 'Uložit změny' : 'Zapsat'; return; }
+      const customNazev = document.getElementById('stretch-nazev').value.trim();
+      const body = STRETCH_POINTS[state.selectedStretch];
+      const label = STRETCH_LABELS[state.selectedStretch];
+      const nazev = `🧘 Stretching ${label.toLowerCase()}${customNazev ? ' – ' + customNazev : ''}`;
+      const stretchUroven = state.selectedStretch === 'krat' ? 1 : (state.selectedStretch === 'stred' ? 2 : 3);
+      const payload = { player_id: state.selectedPlayer, nazev: nazev, uroven: stretchUroven, body: body };
+      if (state.editMode) {
+        const { error } = await db.from('aktivity').update(payload).eq('id', state.editId);
+        if (error) throw error;
+        toast('Záznam upraven', 'success');
+      } else {
+        const { error } = await db.from('aktivity').insert(payload);
+        if (error) throw error;
+        toast(`+${body} bodů přidáno!`, 'success');
+      }
     }
-
     closeModal();
     await loadData();
   } catch (e) {
@@ -829,7 +1113,7 @@ async function submitEntry() {
     toast('Chyba: ' + e.message, 'error');
   } finally {
     btn.disabled = false;
-    btn.textContent = 'Zapsat';
+    btn.textContent = state.editMode ? 'Uložit změny' : 'Zapsat';
   }
 }
 
@@ -860,17 +1144,14 @@ async function loadData() {
       db.from('cviky').select('*').order('created_at', { ascending: false }),
       db.from('aktivity').select('*').order('created_at', { ascending: false })
     ]);
-
     if (pRes.error) throw pRes.error;
     if (cRes.error) throw cRes.error;
     if (aRes.error) throw aRes.error;
-
     state.players = pRes.data || [];
     state.cviky = cRes.data || [];
     state.aktivity = aRes.data || [];
-
     renderAllViews();
-    document.getElementById('connection-status').textContent = 'připojeno';
+    document.getElementById('connection-status').textContent = 'test';
   } catch (e) {
     console.error('Load error:', e);
     document.getElementById('connection-status').textContent = 'chyba spojení';
@@ -878,16 +1159,23 @@ async function loadData() {
   }
 }
 
-db.channel('public:all')
+async function refreshApp() {
+  const btn = document.getElementById('fab-refresh');
+  btn.classList.add('spinning');
+  toast('Obnovuji data...', 'info');
+  await loadData();
+  setTimeout(() => btn.classList.remove('spinning'), 800);
+}
+
+db.channel('public:all-test')
   .on('postgres_changes', { event: '*', schema: 'public', table: 'cviky' }, () => loadData())
   .on('postgres_changes', { event: '*', schema: 'public', table: 'aktivity' }, () => loadData())
   .subscribe();
 
 loadData();
 
-document.getElementById('modal').addEventListener('click', (e) => {
-  if (e.target.id === 'modal') closeModal();
-});
+document.getElementById('modal').addEventListener('click', (e) => { if (e.target.id === 'modal') closeModal(); });
+document.getElementById('day-modal').addEventListener('click', (e) => { if (e.target.id === 'day-modal') closeDayModal(); });
 </script>
 </body>
 </html>
