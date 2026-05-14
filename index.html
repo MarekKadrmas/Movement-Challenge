@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Sport Challenge</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700;12..96,900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #0a0a0a;
+  --bg-card: #161616;
+  --bg-card-hover: #1f1f1f;
+  --border: #262626;
+  --text: #fafafa;
+  --text-muted: #888;
+  --text-dim: #555;
+  --accent: #ff5a1f;
+  --accent-glow: rgba(255, 90, 31, 0.3);
+  --green: #22c55e;
+  --blue: #3b82f6;
+  --yellow: #eab308;
+  --purple: #a855f7;
+  --pink: #ec4899;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { background: var(--bg); color: var(--text); font-family: 'Bricolage Grotesque', sans-serif; min-height: 100vh; min-height: 100dvh; overflow-x: hidden; }
+body { padding-bottom: env(safe-area-inset-bottom); }
+
+.mono { font-family: 'JetBrains Mono', monospace; }
+
+.header {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(10, 10, 10, 0.85);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 20px; padding-top: max(14px, env(safe-area-inset-top));
+  display: flex; align-items: center; justify-content: space-between;
+}
+.header h1 { font-size: 18px; font-weight: 900; letter-spacing: -0.02em; }
+.header h1 .accent { color: var(--accent); }
+.header .status { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+.status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+.main { padding: 16px; max-width: 720px; margin: 0 auto; padding-bottom: 120px; }
+
+.hero {
+  position: relative;
+  background: linear-gradient(135deg, #1a0f0a 0%, #0a0a0a 100%);
+  border: 1px solid var(--border);
+  border-radius: 24px; padding: 20px; margin-bottom: 20px;
+  overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; top: -50%; right: -30%;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, var(--accent-glow), transparent 70%);
+  pointer-events: none;
+}
+.hero-label { font-size: 11px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.15em; font-weight: 700; margin-bottom: 4px; }
+.hero-title { font-size: 26px; font-weight: 900; letter-spacing: -0.03em; line-height: 1; margin-bottom: 16px; }
+.hero-title .week { color: var(--text-muted); font-weight: 500; font-size: 14px; }
+
+.leaderboard { display: flex; flex-direction: column; gap: 8px; position: relative; }
+.leader-row {
+  display: flex; align-items: center; gap: 12px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 14px; padding: 10px 12px;
+  transition: all 0.2s;
+}
+.leader-row.gold { background: linear-gradient(90deg, rgba(234, 179, 8, 0.15), rgba(255,255,255,0.03)); border-color: rgba(234, 179, 8, 0.3); }
+.leader-rank { font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 700; width: 24px; color: var(--text-muted); }
+.leader-row.gold .leader-rank { color: var(--yellow); }
+.leader-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 14px; color: #000;
+  flex-shrink: 0;
+}
+.leader-name { flex: 1; font-weight: 600; font-size: 15px; }
+.leader-stats { text-align: right; }
+.leader-points { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 16px; }
+.leader-streak { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.leader-streak .fire { color: var(--accent); }
+
+.section-title {
+  display: flex; align-items: baseline; justify-content: space-between;
+  margin: 24px 4px 12px;
+}
+.section-title h2 { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-muted); }
+.section-title .link { font-size: 12px; color: var(--accent); font-weight: 600; cursor: pointer; }
+
+.tabs {
+  display: flex; gap: 4px; padding: 4px;
+  background: var(--bg-card); border-radius: 14px;
+  border: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+.tab {
+  flex: 1; padding: 10px; text-align: center; cursor: pointer;
+  font-size: 13px; font-weight: 600; border-radius: 10px;
+  color: var(--text-muted); transition: all 0.2s;
+}
+.tab.active { background: var(--accent); color: #000; }
+
+.entries { display: flex; flex-direction: column; gap: 8px; }
+.entry-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 14px; padding: 12px 14px;
+  display: flex; align-items: center; gap: 12px;
+  position: relative; overflow: hidden;
+}
+.entry-bar { position: absolute; left: 0; top: 0; bottom: 0; width: 3px; }
+.entry-avatar {
+  width: 32px; height: 32px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 13px; color: #000;
+  flex-shrink: 0;
+}
+.entry-main { flex: 1; min-width: 0; }
+.entry-title { font-weight: 600; font-size: 14px; margin-bottom: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.entry-meta { font-size: 11px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
+.entry-points {
+  font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 15px;
+  color: var(--accent);
+}
+.entry-empty { padding: 40px 20px; text-align: center; color: var(--text-dim); font-size: 13px; }
+
+.fab {
+  position: fixed; bottom: 24px; bottom: calc(24px + env(safe-area-inset-bottom)); right: 50%;
+  transform: translateX(50%);
+  width: 64px; height: 64px; border-radius: 20px;
+  background: var(--accent); color: #000;
+  border: none; cursor: pointer; z-index: 100;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px; font-weight: 300;
+  box-shadow: 0 10px 40px var(--accent-glow), 0 0 0 1px rgba(0,0,0,0.2);
+  transition: transform 0.2s;
+}
+.fab:active { transform: translateX(50%) scale(0.95); }
+
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);
+  display: none; align-items: flex-end; justify-content: center;
+  animation: fadeIn 0.2s;
+}
+.modal-overlay.active { display: flex; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+.modal {
+  background: var(--bg-card); width: 100%; max-width: 480px;
+  border-radius: 24px 24px 0 0;
+  border: 1px solid var(--border); border-bottom: none;
+  padding: 24px 20px; padding-bottom: calc(24px + env(safe-area-inset-bottom));
+  max-height: 90vh; overflow-y: auto;
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.modal-handle { width: 40px; height: 4px; background: var(--border); border-radius: 2px; margin: -10px auto 16px; }
+.modal-title { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 20px; }
+
+.type-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }
+.type-btn {
+  background: var(--bg); border: 1px solid var(--border); color: var(--text);
+  padding: 16px; border-radius: 14px; cursor: pointer;
+  font-family: inherit; font-size: 14px; font-weight: 600;
+  transition: all 0.15s; text-align: left;
+}
+.type-btn .icon { font-size: 20px; display: block; margin-bottom: 4px; }
+.type-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
+
+.field { margin-bottom: 14px; }
+.field label { display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.08em; }
+.field input, .field select, .field textarea {
+  width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text);
+  padding: 14px; border-radius: 12px; font-family: inherit; font-size: 16px;
+  -webkit-appearance: none; appearance: none;
+}
+.field input:focus, .field select:focus { outline: none; border-color: var(--accent); }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+.player-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+.player-pill {
+  padding: 10px 14px; border-radius: 100px; cursor: pointer;
+  font-size: 13px; font-weight: 600;
+  background: var(--bg); border: 1px solid var(--border); color: var(--text-muted);
+  transition: all 0.15s;
+}
+.player-pill.active { color: #000; }
+
+.level-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.level-btn {
+  background: var(--bg); border: 1px solid var(--border); color: var(--text);
+  padding: 14px 0; border-radius: 12px; cursor: pointer;
+  font-family: inherit; font-weight: 700; font-size: 18px;
+  transition: all 0.15s;
+}
+.level-btn.active { color: #000; }
+.level-btn.l1.active { background: #4ade80; border-color: #4ade80; }
+.level-btn.l2.active { background: #22c55e; border-color: #22c55e; }
+.level-btn.l3.active { background: #eab308; border-color: #eab308; }
+.level-btn.l4.active { background: #f97316; border-color: #f97316; }
+.level-btn.l5.active { background: #ef4444; border-color: #ef4444; color: #fff; }
+
+.level-hint { font-size: 11px; color: var(--text-dim); margin-top: 4px; text-align: center; min-height: 14px; }
+
+.checkbox-row {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 12px; padding: 14px; cursor: pointer; margin-bottom: 14px;
+}
+.checkbox-row .check {
+  width: 24px; height: 24px; border-radius: 8px;
+  border: 2px solid var(--border); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+}
+.checkbox-row.checked .check { background: var(--accent); border-color: var(--accent); color: #000; }
+.checkbox-row .check::after { content: '✓'; opacity: 0; font-weight: 700; }
+.checkbox-row.checked .check::after { opacity: 1; }
+.checkbox-row .label { flex: 1; }
+.checkbox-row .label-title { font-weight: 600; font-size: 14px; }
+.checkbox-row .label-sub { font-size: 11px; color: var(--text-muted); }
+
+.btn-submit {
+  width: 100%; background: var(--accent); color: #000;
+  border: none; padding: 16px; border-radius: 14px;
+  font-family: inherit; font-size: 16px; font-weight: 700;
+  cursor: pointer; margin-top: 12px;
+  transition: transform 0.1s;
+}
+.btn-submit:active { transform: scale(0.98); }
+.btn-submit:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.btn-cancel {
+  width: 100%; background: transparent; color: var(--text-muted);
+  border: none; padding: 12px; font-family: inherit; font-size: 14px;
+  cursor: pointer; margin-top: 8px;
+}
+
+.toast {
+  position: fixed; top: 80px; left: 50%; transform: translateX(-50%) translateY(-20px);
+  background: var(--bg-card); border: 1px solid var(--border);
+  padding: 12px 20px; border-radius: 12px; font-size: 14px; font-weight: 600;
+  opacity: 0; transition: all 0.3s; z-index: 300; pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast.success { border-color: var(--green); color: var(--green); }
+.toast.error { border-color: #ef4444; color: #ef4444; }
+
+.players-list { display: flex; flex-direction: column; gap: 8px; }
+.player-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 14px; padding: 14px;
+}
+.player-card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.player-card-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; font-size: 12px; }
+.player-card-stat { background: var(--bg); padding: 8px 10px; border-radius: 8px; }
+.player-card-stat-label { color: var(--text-muted); font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; }
+.player-card-stat-value { font-family: 'JetBrains Mono', monospace; font-weight: 700; margin-top: 2px; }
+
+.nav {
+  display: flex; gap: 4px; padding: 4px; background: var(--bg-card);
+  border-radius: 14px; border: 1px solid var(--border); margin-bottom: 20px;
+}
+.nav-btn {
+  flex: 1; padding: 12px 8px; text-align: center; cursor: pointer;
+  font-size: 13px; font-weight: 600; border-radius: 10px;
+  color: var(--text-muted); transition: all 0.15s; border: none; background: none; font-family: inherit;
+}
+.nav-btn.active { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+
+.empty-state {
+  text-align: center; padding: 60px 20px; color: var(--text-dim);
+}
+.empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+.empty-state .title { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+.empty-state .desc { font-size: 13px; }
+
+.loading {
+  display: flex; align-items: center; justify-content: center;
+  padding: 60px; color: var(--text-muted);
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <h1>SPORT<span class="accent">/</span>CHALLENGE</h1>
+  <div class="status"><span class="status-dot"></span><span id="connection-status">připojeno</span></div>
+</header>
+
+<main class="main">
+
+  <nav class="nav">
+    <button class="nav-btn active" data-view="prehled">Přehled</button>
+    <button class="nav-btn" data-view="historie">Historie</button>
+    <button class="nav-btn" data-view="hraci">Hráči</button>
+  </nav>
+
+  <div id="view-prehled">
+    <div class="hero">
+      <div class="hero-label">Leaderboard</div>
+      <div class="hero-title">Celkové pořadí <span class="week" id="week-label"></span></div>
+      <div class="leaderboard" id="leaderboard-total">
+        <div class="loading">Načítám...</div>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active" data-tab="vse">Vše</div>
+      <div class="tab" data-tab="cviky">Cviky</div>
+      <div class="tab" data-tab="aktivity">Aktivity</div>
+    </div>
+
+    <div class="section-title">
+      <h2>Tento týden</h2>
+    </div>
+    <div class="leaderboard" id="leaderboard-week">
+      <div class="loading">Načítám...</div>
+    </div>
+
+    <div class="section-title">
+      <h2>Poslední záznamy</h2>
+    </div>
+    <div class="entries" id="recent-entries">
+      <div class="loading">Načítám...</div>
+    </div>
+  </div>
+
+  <div id="view-historie" style="display:none;">
+    <div class="section-title">
+      <h2>Všechny záznamy</h2>
+    </div>
+    <div class="entries" id="all-entries">
+      <div class="loading">Načítám...</div>
+    </div>
+  </div>
+
+  <div id="view-hraci" style="display:none;">
+    <div class="section-title">
+      <h2>Hráči a parametry</h2>
+    </div>
+    <div class="players-list" id="players-list">
+      <div class="loading">Načítám...</div>
+    </div>
+  </div>
+
+</main>
+
+<button class="fab" onclick="openModal()" aria-label="Přidat záznam">+</button>
+
+<div class="toast" id="toast"></div>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Nový záznam</div>
+
+    <div class="type-selector">
+      <button class="type-btn active" data-type="cvik">
+        <span class="icon">💪</span>Cvik
+      </button>
+      <button class="type-btn" data-type="aktivita">
+        <span class="icon">🏃</span>Aktivita
+      </button>
+    </div>
+
+    <div class="field">
+      <label>Kdo</label>
+      <div class="player-pills" id="player-pills"></div>
+    </div>
+
+    <div id="form-cvik">
+      <div class="field">
+        <label>Cvik</label>
+        <div class="player-pills" id="cvik-pills">
+          <div class="player-pill" data-cvik="Shyby">Shyby</div>
+          <div class="player-pill" data-cvik="Dřep">Dřep</div>
+          <div class="player-pill" data-cvik="Kliky">Kliky</div>
+          <div class="player-pill" data-cvik="Dipy">Dipy</div>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Opakování</label>
+          <input type="number" id="cvik-opakovani" inputmode="numeric" min="1" placeholder="20">
+        </div>
+        <div class="field">
+          <label>Přidaná váha (kg)</label>
+          <input type="number" id="cvik-vaha" inputmode="decimal" min="0" step="0.5" placeholder="0" value="0">
+        </div>
+      </div>
+    </div>
+
+    <div id="form-aktivita" style="display:none;">
+      <div class="field">
+        <label>Co jsi dělal/a</label>
+        <input type="text" id="aktivita-nazev" placeholder="Např. Běh 5 km, posilovna...">
+      </div>
+      <div class="field">
+        <label>Úroveň obtížnosti</label>
+        <div class="level-grid">
+          <button class="level-btn l1" data-level="1">1</button>
+          <button class="level-btn l2" data-level="2">2</button>
+          <button class="level-btn l3" data-level="3">3</button>
+          <button class="level-btn l4" data-level="4">4</button>
+          <button class="level-btn l5" data-level="5">5</button>
+        </div>
+        <div class="level-hint" id="level-hint">vyber úroveň 1-5</div>
+      </div>
+      <div class="checkbox-row" id="protahovani-row">
+        <div class="check"></div>
+        <div class="label">
+          <div class="label-title">+ Protahování</div>
+          <div class="label-sub">bonus 15 bodů</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-submit" id="submit-btn" onclick="submitEntry()">Zapsat</button>
+    <button class="btn-cancel" onclick="closeModal()">Zrušit</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://jqxvrooosecseugfzpsx.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_KEG-Sb3HMyk0RjjLF4q5-Q_h6ovbG1L';
+
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const LEVEL_POINTS = { 1: 20, 2: 40, 3: 65, 4: 95, 5: 130 };
+const LEVEL_HINTS = {
+  1: 'Procházka, jóga, lehké protažení',
+  2: 'Lehký běh, kolo, plavání rekreačně',
+  3: 'Posilovna lehká, běh 30-40 min, turistika',
+  4: 'Těžká posilovna, běh 60 min, squash',
+  5: 'Závod, velmi těžký trénink, squash 90+'
+};
+
+let state = {
+  players: [], cviky: [], aktivity: [],
+  selectedPlayer: null, selectedCvik: null, selectedLevel: null,
+  protahovani: false, entryType: 'cvik', view: 'prehled', tab: 'vse'
+};
+
+function wilksKoef(vaha, pohlavi) {
+  if (pohlavi === 'Z') return Math.max(0.9, 1.4 - (vaha - 50) * 0.008);
+  return Math.max(0.7, 1.1 - (vaha - 60) * 0.006);
+}
+
+function vypocitejBodyCvik(player, cvik, opakovani, pridanaVaha) {
+  if (!player || !opakovani) return 0;
+  const wk = wilksKoef(player.vaha, player.pohlavi);
+  const pridana = Number(pridanaVaha) || 0;
+  const op = Number(opakovani);
+
+  switch (cvik) {
+    case 'Shyby': {
+      if (!player.max_shyby) return 0;
+      const rel = (player.vaha + pridana) / player.vaha;
+      const vykon = op * rel;
+      const proc = vykon / player.max_shyby;
+      return Math.round(Math.pow(proc, 0.85) * 100 * wk * 10) / 10;
+    }
+    case 'Dřep': {
+      if (!player.max_drep) return 0;
+      const vaha = pridana > 0 ? pridana : player.max_drep * 0.7;
+      const relSila = vaha / (player.vaha * wk);
+      return Math.round(Math.pow(relSila * op, 0.85) * 50 * 10) / 10;
+    }
+    case 'Kliky': {
+      const ef = 0.69 * player.vaha + pridana;
+      const pbEf = 0.69 * player.vaha;
+      const pbOp = player.max_kliky || 20;
+      const rel = (ef * op) / (pbEf * pbOp);
+      return Math.round(Math.pow(rel, 0.85) * 80 * wk * 10) / 10;
+    }
+    case 'Dipy': {
+      const rel = (player.vaha + pridana) / player.vaha;
+      const vykon = op * rel;
+      const pb = player.max_dipy || 15;
+      const proc = vykon / pb;
+      return Math.round(Math.pow(proc, 0.85) * 80 * wk * 10) / 10;
+    }
+    default: return 0;
+  }
+}
+
+function initials(name) { return name.substring(0, 2).toUpperCase(); }
+
+function startOfWeek() {
+  const d = new Date();
+  const day = d.getDay() || 7;
+  d.setDate(d.getDate() - day + 1);
+  d.setHours(0,0,0,0);
+  return d;
+}
+
+function formatDate(dateStr) {
+  const d = new Date(dateStr);
+  const today = new Date(); today.setHours(0,0,0,0);
+  const yesterday = new Date(today); yesterday.setDate(today.getDate() - 1);
+  const dd = new Date(d); dd.setHours(0,0,0,0);
+  if (dd.getTime() === today.getTime()) return 'Dnes';
+  if (dd.getTime() === yesterday.getTime()) return 'Včera';
+  return d.toLocaleDateString('cs-CZ', { day: 'numeric', month: 'numeric' });
+}
+
+function computeStreak(playerId) {
+  const dates = new Set();
+  state.cviky.filter(c => c.player_id === playerId).forEach(c => dates.add(c.datum));
+  state.aktivity.filter(a => a.player_id === playerId).forEach(a => dates.add(a.datum));
+  let streak = 0;
+  const today = new Date(); today.setHours(0,0,0,0);
+  const check = new Date(today);
+  while (dates.has(check.toISOString().split('T')[0])) {
+    streak++;
+    check.setDate(check.getDate() - 1);
+  }
+  return streak;
+}
+
+function toast(msg, type='success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function renderWeekLabel() {
+  const start = startOfWeek();
+  const end = new Date(start); end.setDate(end.getDate() + 6);
+  document.getElementById('week-label').textContent = 
+    `${start.getDate()}.${start.getMonth()+1}. – ${end.getDate()}.${end.getMonth()+1}.`;
+}
+
+function renderLeaderboardTotal() {
+  const data = state.players.filter(p => p.aktivni).map(p => {
+    const bodyCviky = state.cviky.filter(c => c.player_id === p.id).reduce((s, c) => s + Number(c.body), 0);
+    const bodyAkt = state.aktivity.filter(a => a.player_id === p.id).reduce((s, a) => s + Number(a.body), 0);
+    return { ...p, total: bodyCviky + bodyAkt, streak: computeStreak(p.id) };
+  }).sort((a, b) => b.total - a.total);
+
+  const el = document.getElementById('leaderboard-total');
+  if (data.length === 0) {
+    el.innerHTML = '<div class="entry-empty">Žádní aktivní hráči</div>';
+    return;
+  }
+  el.innerHTML = data.map((p, i) => `
+    <div class="leader-row ${i === 0 && p.total > 0 ? 'gold' : ''}">
+      <div class="leader-rank">${i+1}</div>
+      <div class="leader-avatar" style="background:${p.barva}">${initials(p.jmeno)}</div>
+      <div class="leader-name">${p.jmeno}</div>
+      <div class="leader-stats">
+        <div class="leader-points">${p.total.toFixed(1)}</div>
+        <div class="leader-streak">${p.streak > 0 ? `🔥 ${p.streak} ${p.streak === 1 ? 'den' : p.streak < 5 ? 'dny' : 'dní'}` : '—'}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderLeaderboardWeek() {
+  const weekStart = startOfWeek().toISOString().split('T')[0];
+  const data = state.players.filter(p => p.aktivni).map(p => {
+    let body = 0;
+    if (state.tab === 'vse' || state.tab === 'cviky') {
+      body += state.cviky.filter(c => c.player_id === p.id && c.datum >= weekStart).reduce((s, c) => s + Number(c.body), 0);
+    }
+    if (state.tab === 'vse' || state.tab === 'aktivity') {
+      body += state.aktivity.filter(a => a.player_id === p.id && a.datum >= weekStart).reduce((s, a) => s + Number(a.body), 0);
+    }
+    return { ...p, body };
+  }).sort((a, b) => b.body - a.body);
+
+  const el = document.getElementById('leaderboard-week');
+  el.innerHTML = data.map((p, i) => `
+    <div class="leader-row ${i === 0 && p.body > 0 ? 'gold' : ''}">
+      <div class="leader-rank">${i+1}</div>
+      <div class="leader-avatar" style="background:${p.barva}">${initials(p.jmeno)}</div>
+      <div class="leader-name">${p.jmeno}</div>
+      <div class="leader-stats">
+        <div class="leader-points">${p.body.toFixed(1)}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderRecent() {
+  const all = [
+    ...state.cviky.map(c => ({ ...c, type: 'cvik' })),
+    ...state.aktivity.map(a => ({ ...a, type: 'aktivita' }))
+  ].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 10);
+
+  const el = document.getElementById('recent-entries');
+  if (all.length === 0) {
+    el.innerHTML = '<div class="entry-empty">Zatím žádné záznamy. Klepni na + a začni!</div>';
+    return;
+  }
+  el.innerHTML = all.map(e => renderEntryCard(e)).join('');
+}
+
+function renderAllEntries() {
+  const all = [
+    ...state.cviky.map(c => ({ ...c, type: 'cvik' })),
+    ...state.aktivity.map(a => ({ ...a, type: 'aktivita' }))
+  ].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+  const el = document.getElementById('all-entries');
+  if (all.length === 0) {
+    el.innerHTML = '<div class="empty-state"><div class="icon">📋</div><div class="title">Žádné záznamy</div><div class="desc">Zatím tu nic není</div></div>';
+    return;
+  }
+  el.innerHTML = all.map(e => renderEntryCard(e)).join('');
+}
+
+function renderEntryCard(e) {
+  const player = state.players.find(p => p.id === e.player_id);
+  if (!player) return '';
+  const title = e.type === 'cvik'
+    ? `${e.cvik} × ${e.opakovani}${e.pridana_vaha > 0 ? ` (+${e.pridana_vaha} kg)` : ''}`
+    : `${e.nazev}`;
+  const meta = e.type === 'cvik'
+    ? `${player.jmeno} · ${formatDate(e.datum)}`
+    : `${player.jmeno} · úroveň ${e.uroven}${e.protahovani ? ' · +protah' : ''} · ${formatDate(e.datum)}`;
+  return `
+    <div class="entry-card">
+      <div class="entry-bar" style="background:${player.barva}"></div>
+      <div class="entry-avatar" style="background:${player.barva}">${initials(player.jmeno)}</div>
+      <div class="entry-main">
+        <div class="entry-title">${title}</div>
+        <div class="entry-meta">${meta}</div>
+      </div>
+      <div class="entry-points">+${Number(e.body).toFixed(1)}</div>
+    </div>
+  `;
+}
+
+function renderPlayers() {
+  const el = document.getElementById('players-list');
+  el.innerHTML = state.players.map(p => {
+    const bodyCviky = state.cviky.filter(c => c.player_id === p.id).reduce((s, c) => s + Number(c.body), 0);
+    const bodyAkt = state.aktivity.filter(a => a.player_id === p.id).reduce((s, a) => s + Number(a.body), 0);
+    return `
+      <div class="player-card">
+        <div class="player-card-header">
+          <div class="entry-avatar" style="background:${p.barva}">${initials(p.jmeno)}</div>
+          <div style="flex:1">
+            <div style="font-weight:700;font-size:16px">${p.jmeno}</div>
+            <div style="font-size:11px;color:var(--text-muted)">${p.pohlavi === 'M' ? 'Muž' : 'Žena'} · ${p.vaha} kg · ${p.vyska || '?'} cm</div>
+          </div>
+          <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:18px;color:var(--accent)">${(bodyCviky + bodyAkt).toFixed(0)}</div>
+        </div>
+        <div class="player-card-stats">
+          <div class="player-card-stat">
+            <div class="player-card-stat-label">Max shyby</div>
+            <div class="player-card-stat-value">${p.max_shyby || '—'}</div>
+          </div>
+          <div class="player-card-stat">
+            <div class="player-card-stat-label">Max dřep</div>
+            <div class="player-card-stat-value">${p.max_drep ? p.max_drep + ' kg' : '—'}</div>
+          </div>
+          <div class="player-card-stat">
+            <div class="player-card-stat-label">Max kliky</div>
+            <div class="player-card-stat-value">${p.max_kliky || '—'}</div>
+          </div>
+          <div class="player-card-stat">
+            <div class="player-card-stat-label">Max dipy</div>
+            <div class="player-card-stat-value">${p.max_dipy || '—'}</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderAllViews() {
+  renderWeekLabel();
+  renderLeaderboardTotal();
+  renderLeaderboardWeek();
+  renderRecent();
+  renderAllEntries();
+  renderPlayers();
+}
+
+function openModal() {
+  buildPlayerPills();
+  document.getElementById('modal').classList.add('active');
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('active');
+  state.selectedPlayer = null;
+  state.selectedCvik = null;
+  state.selectedLevel = null;
+  state.protahovani = false;
+  state.entryType = 'cvik';
+  document.querySelectorAll('.type-btn').forEach(b => b.classList.toggle('active', b.dataset.type === 'cvik'));
+  document.getElementById('form-cvik').style.display = '';
+  document.getElementById('form-aktivita').style.display = 'none';
+  document.querySelectorAll('#cvik-pills .player-pill').forEach(p => { p.classList.remove('active'); p.style.background=''; p.style.borderColor=''; p.style.color=''; });
+  document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('protahovani-row').classList.remove('checked');
+  document.getElementById('cvik-opakovani').value = '';
+  document.getElementById('cvik-vaha').value = '0';
+  document.getElementById('aktivita-nazev').value = '';
+  document.getElementById('level-hint').textContent = 'vyber úroveň 1-5';
+}
+
+function buildPlayerPills() {
+  const el = document.getElementById('player-pills');
+  el.innerHTML = state.players.filter(p => p.aktivni).map(p => `
+    <div class="player-pill" data-player-id="${p.id}" style="--c:${p.barva}">${p.jmeno}</div>
+  `).join('');
+  el.querySelectorAll('.player-pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      el.querySelectorAll('.player-pill').forEach(p => {
+        p.classList.remove('active');
+        p.style.background = '';
+        p.style.borderColor = '';
+      });
+      pill.classList.add('active');
+      const color = pill.style.getPropertyValue('--c');
+      pill.style.background = color;
+      pill.style.borderColor = color;
+      state.selectedPlayer = pill.dataset.playerId;
+    });
+  });
+}
+
+document.querySelectorAll('.type-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    state.entryType = btn.dataset.type;
+    document.getElementById('form-cvik').style.display = state.entryType === 'cvik' ? '' : 'none';
+    document.getElementById('form-aktivita').style.display = state.entryType === 'aktivita' ? '' : 'none';
+  });
+});
+
+document.querySelectorAll('#cvik-pills .player-pill').forEach(pill => {
+  pill.addEventListener('click', () => {
+    document.querySelectorAll('#cvik-pills .player-pill').forEach(p => {
+      p.classList.remove('active');
+      p.style.background = '';
+      p.style.borderColor = '';
+      p.style.color = '';
+    });
+    pill.classList.add('active');
+    pill.style.background = 'var(--accent)';
+    pill.style.borderColor = 'var(--accent)';
+    pill.style.color = '#000';
+    state.selectedCvik = pill.dataset.cvik;
+  });
+});
+
+document.querySelectorAll('.level-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    state.selectedLevel = parseInt(btn.dataset.level);
+    document.getElementById('level-hint').textContent = LEVEL_HINTS[state.selectedLevel] + ` · ${LEVEL_POINTS[state.selectedLevel]} bodů`;
+  });
+});
+
+document.getElementById('protahovani-row').addEventListener('click', () => {
+  state.protahovani = !state.protahovani;
+  document.getElementById('protahovani-row').classList.toggle('checked', state.protahovani);
+});
+
+async function submitEntry() {
+  if (!state.selectedPlayer) { toast('Vyber hráče', 'error'); return; }
+
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'Ukládám...';
+
+  try {
+    if (state.entryType === 'cvik') {
+      if (!state.selectedCvik) { toast('Vyber cvik', 'error'); btn.disabled = false; btn.textContent = 'Zapsat'; return; }
+      const op = parseInt(document.getElementById('cvik-opakovani').value);
+      const vaha = parseFloat(document.getElementById('cvik-vaha').value) || 0;
+      if (!op || op < 1) { toast('Zadej počet opakování', 'error'); btn.disabled = false; btn.textContent = 'Zapsat'; return; }
+
+      const player = state.players.find(p => p.id === state.selectedPlayer);
+      const body = vypocitejBodyCvik(player, state.selectedCvik, op, vaha);
+
+      const { error } = await db.from('cviky').insert({
+        player_id: state.selectedPlayer,
+        cvik: state.selectedCvik,
+        opakovani: op,
+        pridana_vaha: vaha,
+        body: body
+      });
+      if (error) throw error;
+      toast(`+${body.toFixed(1)} bodů přidáno!`, 'success');
+    } else {
+      const nazev = document.getElementById('aktivita-nazev').value.trim();
+      if (!nazev) { toast('Zadej co jsi dělal/a', 'error'); btn.disabled = false; btn.textContent = 'Zapsat'; return; }
+      if (!state.selectedLevel) { toast('Vyber úroveň', 'error'); btn.disabled = false; btn.textContent = 'Zapsat'; return; }
+
+      const body = LEVEL_POINTS[state.selectedLevel] + (state.protahovani ? 15 : 0);
+      const { error } = await db.from('aktivity').insert({
+        player_id: state.selectedPlayer,
+        nazev: nazev,
+        uroven: state.selectedLevel,
+        protahovani: state.protahovani,
+        body: body
+      });
+      if (error) throw error;
+      toast(`+${body} bodů přidáno!`, 'success');
+    }
+
+    closeModal();
+    await loadData();
+  } catch (e) {
+    console.error(e);
+    toast('Chyba: ' + e.message, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Zapsat';
+  }
+}
+
+document.querySelectorAll('.nav-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    state.view = btn.dataset.view;
+    document.getElementById('view-prehled').style.display = state.view === 'prehled' ? '' : 'none';
+    document.getElementById('view-historie').style.display = state.view === 'historie' ? '' : 'none';
+    document.getElementById('view-hraci').style.display = state.view === 'hraci' ? '' : 'none';
+  });
+});
+
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    state.tab = tab.dataset.tab;
+    renderLeaderboardWeek();
+  });
+});
+
+async function loadData() {
+  try {
+    const [pRes, cRes, aRes] = await Promise.all([
+      db.from('players').select('*').order('jmeno'),
+      db.from('cviky').select('*').order('created_at', { ascending: false }),
+      db.from('aktivity').select('*').order('created_at', { ascending: false })
+    ]);
+
+    if (pRes.error) throw pRes.error;
+    if (cRes.error) throw cRes.error;
+    if (aRes.error) throw aRes.error;
+
+    state.players = pRes.data || [];
+    state.cviky = cRes.data || [];
+    state.aktivity = aRes.data || [];
+
+    renderAllViews();
+    document.getElementById('connection-status').textContent = 'připojeno';
+  } catch (e) {
+    console.error('Load error:', e);
+    document.getElementById('connection-status').textContent = 'chyba spojení';
+    toast('Chyba načítání: ' + e.message, 'error');
+  }
+}
+
+db.channel('public:all')
+  .on('postgres_changes', { event: '*', schema: 'public', table: 'cviky' }, () => loadData())
+  .on('postgres_changes', { event: '*', schema: 'public', table: 'aktivity' }, () => loadData())
+  .subscribe();
+
+loadData();
+
+document.getElementById('modal').addEventListener('click', (e) => {
+  if (e.target.id === 'modal') closeModal();
+});
+</script>
+</body>
+</html>
