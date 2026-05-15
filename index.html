@@ -337,29 +337,42 @@ body { padding-bottom: env(safe-area-inset-bottom); }
 }
 .serie-mode-btn.active .bubble-num { background: #000; color: var(--accent); }
 
+.serie-row-header {
+  display: grid; grid-template-columns: 1fr 1fr 1fr 32px;
+  gap: 10px; margin-bottom: 6px;
+}
+.serie-row-header div {
+  font-size: 12px; font-weight: 600; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.08em;
+}
 .serie-row {
-  display: grid; grid-template-columns: 36px 1fr 1fr 32px;
-  gap: 6px; align-items: center;
-  margin-bottom: 8px;
+  display: grid; grid-template-columns: 1fr 1fr 1fr 32px;
+  gap: 10px; align-items: center;
+  margin-bottom: 10px;
 }
 .serie-row .serie-num {
-  width: 36px; height: 36px; border-radius: 50%;
-  background: var(--accent); color: #000;
+  height: 48px;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 12px;
   display: flex; align-items: center; justify-content: center;
-  font-weight: 700; font-size: 14px;
+  color: var(--accent); font-weight: 700; font-size: 18px;
+  font-family: 'JetBrains Mono', monospace;
 }
 .serie-row input {
-  padding: 10px 12px; font-size: 15px;
+  padding: 14px; font-size: 16px;
   background: var(--bg); border: 1px solid var(--border); color: var(--text);
-  border-radius: 10px; font-family: inherit;
-  width: 100%;
+  border-radius: 12px; font-family: inherit;
+  width: 100%; height: 48px;
+  -webkit-appearance: none; appearance: none;
+  box-sizing: border-box;
 }
+.serie-row input:focus { outline: none; border-color: var(--accent); }
 .serie-row .remove-btn {
-  width: 32px; height: 36px; border-radius: 8px;
+  width: 32px; height: 48px; border-radius: 10px;
   background: transparent; border: 1px solid var(--border);
   color: var(--text-muted); cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  font-size: 14px;
+  font-size: 16px;
 }
 .serie-row .remove-btn:active { color: var(--red); border-color: var(--red); }
 .add-serie-btn {
@@ -702,10 +715,15 @@ body { padding-bottom: env(safe-area-inset-bottom); }
         </div>
       </div>
 
-      <div id="form-aktivita" style="display:none;">
-        <div class="field">
-          <label>Co jsi dělal/a</label>
-          <input type="text" id="aktivita-nazev" placeholder="Např. Běh 5 km, posilovna...">
+    <div id="form-cvik-varied" style="display:none;">
+          <div class="serie-row-header">
+            <div>Série</div>
+            <div>Opakování</div>
+            <div>Váha (kg)</div>
+            <div></div>
+          </div>
+          <div id="varied-series-list"></div>
+          <button type="button" class="add-serie-btn" onclick="addVariedSerie()">+ Přidat sérii</button>
         </div>
         <div class="field">
           <label>Úroveň obtížnosti</label>
@@ -729,15 +747,15 @@ body { padding-bottom: env(safe-area-inset-bottom); }
         <div class="field">
           <label>Délka stretchingu</label>
           <div class="level-grid" style="grid-template-columns: repeat(3, 1fr);">
-            <button class="level-btn stretch-btn l1" data-stretch="krat">
+           <button class="level-btn stretch-btn l1" data-stretch="krat">
               <div style="font-size:14px;">Krátké</div>
               <div style="font-size:11px;opacity:0.7;margin-top:2px;">~5 min</div>
             </button>
-            <button class="level-btn stretch-btn l2" data-stretch="stred">
+            <button class="level-btn stretch-btn l3" data-stretch="stred">
               <div style="font-size:14px;">Střední</div>
               <div style="font-size:11px;opacity:0.7;margin-top:2px;">~15 min</div>
             </button>
-            <button class="level-btn stretch-btn l3" data-stretch="dlou">
+            <button class="level-btn stretch-btn l4" data-stretch="dlou">
               <div style="font-size:14px;">Dlouhé</div>
               <div style="font-size:11px;opacity:0.7;margin-top:2px;">~30+ min</div>
             </button>
@@ -1021,7 +1039,7 @@ function renderHeatmap() {
   const tdStr = dateToStr(today);
   const start = new Date(today);
   start.setDate(start.getDate() - 34);
-  while ((start.getDay() || 7) !== 1) start.setDate(start.getDate() - 1);
+  
 
   function pointsForDay(playerId, dateStr) {
     let pts = 0;
