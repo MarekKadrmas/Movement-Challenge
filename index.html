@@ -309,6 +309,7 @@ body { padding-bottom: env(safe-area-inset-bottom); }
 }
 .info-box .info-icon { display: inline-block; margin-right: 6px; }
 
+/* SERIE MODE SELECTOR */
 .serie-mode-grid { display: grid; grid-template-columns: 1fr 1fr 1.6fr; gap: 8px; margin-bottom: 14px; }
 .serie-mode-btn {
   background: var(--bg-card); border: 1px solid var(--border); color: var(--text);
@@ -337,6 +338,7 @@ body { padding-bottom: env(safe-area-inset-bottom); }
 }
 .serie-mode-btn.active .bubble-num { background: #000; color: var(--accent); }
 
+/* RUZNE SERIE - VYPLNOVACI RADKY */
 .serie-row-header {
   display: grid; grid-template-columns: 1fr 1fr 1fr 32px;
   gap: 10px; margin-bottom: 6px;
@@ -614,6 +616,7 @@ body { padding-bottom: env(safe-area-inset-bottom); }
 
 <div class="toast" id="toast"></div>
 
+<!-- ADD/EDIT ENTRY MODAL -->
 <div class="modal-overlay" id="modal">
   <div class="modal">
     <div class="modal-handle"></div>
@@ -678,6 +681,7 @@ body { padding-bottom: env(safe-area-inset-bottom); }
           </div>
         </div>
 
+        <!-- SINGLE -->
         <div id="form-cvik-single">
           <div class="field-row">
             <div class="field">
@@ -691,6 +695,7 @@ body { padding-bottom: env(safe-area-inset-bottom); }
           </div>
         </div>
 
+        <!-- SAME SERIES -->
         <div id="form-cvik-same" style="display:none;">
           <div class="field-row" style="grid-template-columns:1fr 1fr 1fr;">
             <div class="field">
@@ -708,14 +713,8 @@ body { padding-bottom: env(safe-area-inset-bottom); }
           </div>
         </div>
 
+        <!-- VARIED SERIES -->
         <div id="form-cvik-varied" style="display:none;">
-          <label style="display:block;font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.08em;">Série</label>
-          <div id="varied-series-list"></div>
-          <button type="button" class="add-serie-btn" onclick="addVariedSerie()">+ Přidat sérii</button>
-        </div>
-      </div>
-
-    <div id="form-cvik-varied" style="display:none;">
           <div class="serie-row-header">
             <div>Série</div>
             <div>Opakování</div>
@@ -724,6 +723,13 @@ body { padding-bottom: env(safe-area-inset-bottom); }
           </div>
           <div id="varied-series-list"></div>
           <button type="button" class="add-serie-btn" onclick="addVariedSerie()">+ Přidat sérii</button>
+        </div>
+      </div>
+
+      <div id="form-aktivita" style="display:none;">
+        <div class="field">
+          <label>Co jsi dělal/a</label>
+          <input type="text" id="aktivita-nazev" placeholder="Např. Běh 5 km, posilovna...">
         </div>
         <div class="field">
           <label>Úroveň obtížnosti</label>
@@ -747,7 +753,7 @@ body { padding-bottom: env(safe-area-inset-bottom); }
         <div class="field">
           <label>Délka stretchingu</label>
           <div class="level-grid" style="grid-template-columns: repeat(3, 1fr);">
-           <button class="level-btn stretch-btn l1" data-stretch="krat">
+            <button class="level-btn stretch-btn l1" data-stretch="krat">
               <div style="font-size:14px;">Krátké</div>
               <div style="font-size:11px;opacity:0.7;margin-top:2px;">~5 min</div>
             </button>
@@ -775,6 +781,7 @@ body { padding-bottom: env(safe-area-inset-bottom); }
   </div>
 </div>
 
+<!-- DAY DETAIL MODAL -->
 <div class="modal-overlay" id="day-modal">
   <div class="modal">
     <div class="modal-handle"></div>
@@ -784,6 +791,7 @@ body { padding-bottom: env(safe-area-inset-bottom); }
   </div>
 </div>
 
+<!-- EDIT PLAYER MODAL -->
 <div class="modal-overlay" id="player-modal">
   <div class="modal">
     <div class="modal-handle"></div>
@@ -837,6 +845,7 @@ body { padding-bottom: env(safe-area-inset-bottom); }
   </div>
 </div>
 
+<!-- PLAYER HISTORY MODAL -->
 <div class="modal-overlay" id="history-modal">
   <div class="modal">
     <div class="modal-handle"></div>
@@ -854,6 +863,7 @@ const SUPABASE_KEY = 'sb_publishable_vYqqqUeOuQ4idVCiCvwilQ_pIr5G08r';
 
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+// Nove body (zvyseno o ~54%)
 const LEVEL_POINTS = { 1: 30, 2: 60, 3: 100, 4: 150, 5: 220 };
 const LEVEL_HINTS = {
   1: 'Procházka, jóga, lehké protažení',
@@ -864,6 +874,8 @@ const LEVEL_HINTS = {
 };
 const STRETCH_POINTS = { krat: 15, stred: 30, dlou: 50 };
 const STRETCH_LABELS = { krat: 'Krátké', stred: 'Střední', dlou: 'Dlouhé' };
+
+// Multiplikátor cviků - snizeno o ~35%
 const CVIK_MULTIPLIER = 0.65;
 
 const FIELD_LABELS = {
@@ -938,12 +950,15 @@ function startOfWeek() {
   return d;
 }
 function dateToStr(d) {
+  // Lokalni datum (ne UTC) aby kalendar fungoval spravne
   const year = d.getFullYear();
   const month = String(d.getMonth() + 1).padStart(2, '0');
   const day = String(d.getDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
 }
-function todayStr() { return dateToStr(new Date()); }
+function todayStr() {
+  return dateToStr(new Date());
+}
 function formatDate(dateStr) {
   const d = new Date(dateStr);
   const today = new Date(); today.setHours(0,0,0,0);
@@ -980,6 +995,9 @@ function toast(msg, type='success') {
   setTimeout(() => t.classList.remove('show'), 2500);
 }
 
+// ============================================================
+//  RENDERING - HLAVNI POHLEDY
+// ============================================================
 function renderWeekLabel() {
   const start = startOfWeek();
   const end = new Date(start); end.setDate(end.getDate() + 6);
@@ -1037,9 +1055,9 @@ function renderHeatmap() {
   const players = state.players.filter(p => p.aktivni);
   const today = new Date(); today.setHours(0,0,0,0);
   const tdStr = dateToStr(today);
+  // Kalendar: dnesek je posledni (35.) ctverecek vpravo
   const start = new Date(today);
   start.setDate(start.getDate() - 34);
-  
 
   function pointsForDay(playerId, dateStr) {
     let pts = 0;
@@ -1064,10 +1082,11 @@ function renderHeatmap() {
   }
 
   let html = '<div class="heatmap-grid"><div></div>';
+  // Popisky - kazdy 7. den ukaze datum
   for (let i = 0; i < 35; i++) {
     const d = days[i];
-    const isFirst = i % 7 === 0;
-    html += `<div class="heatmap-day-label" style="font-size:8px;">${isFirst ? d.getDate()+'.'+(d.getMonth()+1)+'.' : ''}</div>`;
+    const showLabel = i % 7 === 0 || i === 34;
+    html += `<div class="heatmap-day-label" style="font-size:8px;">${showLabel ? d.getDate()+'.'+(d.getMonth()+1)+'.' : ''}</div>`;
   }
   players.forEach(p => {
     html += `<div class="heatmap-player-label" style="color:${p.barva}">${p.jmeno}</div>`;
@@ -1131,6 +1150,7 @@ function renderEntryCard(e, withActions) {
   let title, sub = '', isStretch = false;
 
   if (e._type === 'cvik') {
+    // Detekce serii v poznamce (JSON)
     let serieInfo = null;
     if (e.poznamka) {
       try {
@@ -1215,6 +1235,9 @@ async function deleteCurrentEntry() {
   } catch (e) { toast('Chyba: ' + e.message, 'error'); }
 }
 
+// ============================================================
+//  HRACI - karta s vysvetlenim
+// ============================================================
 function renderPlayers() {
   const el = document.getElementById('players-list');
   el.innerHTML = state.players.map(p => {
@@ -1245,6 +1268,7 @@ function renderPlayers() {
 }
 
 function renderScoringExplanation() {
+  // Vyber referencniho hrace pro priklady (prvni aktivni muz)
   const muz = state.players.find(p => p.aktivni && p.pohlavi === 'M');
   const zena = state.players.find(p => p.aktivni && p.pohlavi === 'Z');
 
@@ -1349,6 +1373,9 @@ function renderAllViews() {
   renderScoringExplanation();
 }
 
+// ============================================================
+//  MODAL - ZAPIS ZAZNAMU
+// ============================================================
 function openModal() {
   state.editMode = false; state.editId = null; state.editTable = null;
   document.getElementById('modal-title').textContent = 'Nový záznam';
@@ -1438,6 +1465,7 @@ function renderVariedSeries() {
 }
 
 function addVariedSerie() {
+  // Pri pridani nove serie pouzij vahu z posledni serie
   const lastVaha = state.variedSeries.length > 0 ? state.variedSeries[state.variedSeries.length-1].vaha : 0;
   state.variedSeries.push({op:'',vaha:lastVaha});
   renderVariedSeries();
@@ -1552,6 +1580,7 @@ async function submitEntry() {
         if (!ops || ops < 1) { toast('Zadej opakování v sérii', 'error'); btn.disabled = false; btn.textContent = origText; return; }
         totalOps = series * ops;
         pridanaVaha = vaha;
+        // Body: spocti pro kazdou serii zvlast (i kdyz jsou stejne) a secti
         for (let i = 0; i < series; i++) {
           totalBody += vypocitejBodyCvik(player, state.selectedCvik, ops, vaha);
         }
@@ -1570,6 +1599,7 @@ async function submitEntry() {
           list.push({ op: op, vaha: vaha });
         });
         totalBody = Math.round(body * 10) / 10;
+        // Prumerna pridana vaha pro DB (jen orientacni, hlavni je JSON)
         pridanaVaha = Math.round((list.reduce((s, x) => s + (x.vaha || 0), 0) / list.length) * 10) / 10;
         poznamka = JSON.stringify({ mode: 'varied', list: list });
       }
@@ -1585,7 +1615,7 @@ async function submitEntry() {
       };
 
       if (state.editMode) {
-        delete payload.datum;
+        delete payload.datum; // pri editaci zachovat puvodni datum
         const { error } = await db.from('cviky').update(payload).eq('id', state.editId);
         if (error) throw error;
         toast('Záznam upraven', 'success');
@@ -1681,6 +1711,7 @@ function openEditModal(id, type) {
         p.style.background = 'var(--accent)'; p.style.borderColor = 'var(--accent)'; p.style.color = '#000';
       }
     });
+    // Detekce mode podle poznamky
     let mode = 'single';
     if (entry.poznamka) {
       try {
@@ -1729,21 +1760,28 @@ function openEditModal(id, type) {
   document.getElementById('modal').classList.add('active');
 }
 
+// ============================================================
+//  EDITACE HRACU
+// ============================================================
 function openPlayerEdit(playerId) {
   state.playerBeingEdited = playerId;
   state.editorPlayer = null;
   const player = state.players.find(p => p.id === playerId);
   if (!player) return;
+
   document.getElementById('player-edit-name').textContent = player.jmeno;
   buildEditorPills();
   document.getElementById('player-edit-form').classList.add('disabled');
   document.getElementById('player-modal-subtitle').textContent = 'Vyber kdo provádí úpravu';
+
+  // Naplnit puvodnimi hodnotami
   document.getElementById('pe-vaha').value = player.vaha || '';
   document.getElementById('pe-vyska').value = player.vyska || '';
   document.getElementById('pe-shyby').value = player.max_shyby || '';
   document.getElementById('pe-drep').value = player.max_drep || '';
   document.getElementById('pe-kliky').value = player.max_kliky || '';
   document.getElementById('pe-dipy').value = player.max_dipy || '';
+
   document.getElementById('player-modal').classList.add('active');
 }
 
@@ -1776,8 +1814,10 @@ function closePlayerModal() {
 async function submitPlayerEdit() {
   if (!state.editorPlayer) { toast('Vyber kdo upravuje', 'error'); return; }
   if (!state.playerBeingEdited) return;
+
   const player = state.players.find(p => p.id === state.playerBeingEdited);
   if (!player) return;
+
   const newValues = {
     vaha: parseFloat(document.getElementById('pe-vaha').value) || null,
     vyska: parseInt(document.getElementById('pe-vyska').value) || null,
@@ -1786,6 +1826,8 @@ async function submitPlayerEdit() {
     max_kliky: parseInt(document.getElementById('pe-kliky').value) || null,
     max_dipy: parseInt(document.getElementById('pe-dipy').value) || null
   };
+
+  // Najdi rozdily
   const changes = [];
   Object.keys(newValues).forEach(field => {
     const oldVal = player[field];
@@ -1794,13 +1836,19 @@ async function submitPlayerEdit() {
       changes.push({ field, oldVal, newVal });
     }
   });
+
   if (changes.length === 0) { toast('Žádné změny', 'info'); return; }
+
   const btn = document.getElementById('player-submit-btn');
   btn.disabled = true;
   btn.textContent = 'Ukládám...';
+
   try {
+    // Update hrace
     const { error: upErr } = await db.from('players').update(newValues).eq('id', state.playerBeingEdited);
     if (upErr) throw upErr;
+
+    // Insert historie - jeden zaznam za zmenu
     const historyRows = changes.map(c => ({
       player_id: state.playerBeingEdited,
       changed_by_player_id: state.editorPlayer,
@@ -1810,6 +1858,7 @@ async function submitPlayerEdit() {
     }));
     const { error: histErr } = await db.from('player_history').insert(historyRows);
     if (histErr) throw histErr;
+
     toast(`Upraveno (${changes.length} změn)`, 'success');
     closePlayerModal();
     await loadData();
@@ -1821,6 +1870,9 @@ async function submitPlayerEdit() {
   }
 }
 
+// ============================================================
+//  HISTORIE UPRAV HRACE
+// ============================================================
 function openPlayerHistory(playerId) {
   const player = state.players.find(p => p.id === playerId);
   if (!player) return;
@@ -1850,6 +1902,9 @@ function closeHistoryModal() {
   document.getElementById('history-modal').classList.remove('active');
 }
 
+// ============================================================
+//  NAVIGACE
+// ============================================================
 document.querySelectorAll('.nav-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
