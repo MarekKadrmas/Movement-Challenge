@@ -131,6 +131,7 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 .heatmap-day-label {
   font-size: 8px; color: var(--text-dim); font-weight: 600;
   display: flex; align-items: center;
+  min-width: 0; overflow: hidden; /* zabranuje rozjezdu bunek pod popisky */
 }
 .heatmap-player-label { padding-right: 8px; font-size: 12px; font-weight: 600; display: flex; align-items: center; }
 .heatmap-cell {
@@ -141,59 +142,53 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 }
 .heatmap-cell:active { transform: scale(1.2); }
 
-/* Heatmap - barvy hracu - 7 odstinu */
+/* Heatmap - barvy hracu - 7 odstinu (svetlejsi paleta) */
 /* Mara - modra */
-.heatmap-cell.mara-1 { background: rgba(191,219,254,0.7); }
-.heatmap-cell.mara-2 { background: rgba(147,197,253,0.85); }
-.heatmap-cell.mara-3 { background: rgba(96,165,250,0.9); }
-.heatmap-cell.mara-4 { background: #3b82f6; }
-.heatmap-cell.mara-5 { background: #2563eb; }
-.heatmap-cell.mara-6 { background: #1d4ed8; }
-.heatmap-cell.mara-7 { background: #1e3a8a; }
+.heatmap-cell.mara-1 { background: #dbeafe; }
+.heatmap-cell.mara-2 { background: #bfdbfe; }
+.heatmap-cell.mara-3 { background: #93c5fd; }
+.heatmap-cell.mara-4 { background: #60a5fa; }
+.heatmap-cell.mara-5 { background: #3b82f6; }
+.heatmap-cell.mara-6 { background: #2563eb; }
+.heatmap-cell.mara-7 { background: #1d4ed8; }
 /* Martin - zelena */
-.heatmap-cell.martin-1 { background: rgba(187,247,208,0.7); }
-.heatmap-cell.martin-2 { background: rgba(134,239,172,0.85); }
-.heatmap-cell.martin-3 { background: rgba(74,222,128,0.9); }
-.heatmap-cell.martin-4 { background: #22c55e; }
-.heatmap-cell.martin-5 { background: #16a34a; }
-.heatmap-cell.martin-6 { background: #15803d; }
-.heatmap-cell.martin-7 { background: #052e16; }
+.heatmap-cell.martin-1 { background: #d1fae5; }
+.heatmap-cell.martin-2 { background: #a7f3d0; }
+.heatmap-cell.martin-3 { background: #6ee7b7; }
+.heatmap-cell.martin-4 { background: #34d399; }
+.heatmap-cell.martin-5 { background: #22c55e; }
+.heatmap-cell.martin-6 { background: #16a34a; }
+.heatmap-cell.martin-7 { background: #15803d; }
 /* Natalka - ruzova */
-.heatmap-cell.nat-1 { background: rgba(252,231,243,0.7); }
-.heatmap-cell.nat-2 { background: rgba(251,207,232,0.85); }
-.heatmap-cell.nat-3 { background: rgba(244,114,182,0.9); }
-.heatmap-cell.nat-4 { background: #ec4899; }
-.heatmap-cell.nat-5 { background: #db2777; }
-.heatmap-cell.nat-6 { background: #be185d; }
-.heatmap-cell.nat-7 { background: #831843; }
+.heatmap-cell.nat-1 { background: #fce7f3; }
+.heatmap-cell.nat-2 { background: #fbcfe8; }
+.heatmap-cell.nat-3 { background: #f9a8d4; }
+.heatmap-cell.nat-4 { background: #f472b6; }
+.heatmap-cell.nat-5 { background: #ec4899; }
+.heatmap-cell.nat-6 { background: #db2777; }
+.heatmap-cell.nat-7 { background: #be185d; }
 /* Peta - zluta */
-.heatmap-cell.peta-1 { background: rgba(254,243,199,0.7); }
-.heatmap-cell.peta-2 { background: rgba(253,224,71,0.85); }
-.heatmap-cell.peta-3 { background: rgba(250,204,21,0.9); }
-.heatmap-cell.peta-4 { background: #eab308; }
-.heatmap-cell.peta-5 { background: #ca8a04; }
-.heatmap-cell.peta-6 { background: #a16207; }
-.heatmap-cell.peta-7 { background: #713f12; }
-/* Fallback obecny - pokud nemame definovanou barvu hrace */
-.heatmap-cell.gen-1 { background: rgba(229,231,235,0.8); }
-.heatmap-cell.gen-2 { background: rgba(209,213,219,0.9); }
-.heatmap-cell.gen-3 { background: rgba(156,163,175,0.9); }
+.heatmap-cell.peta-1 { background: #fef3c7; }
+.heatmap-cell.peta-2 { background: #fde68a; }
+.heatmap-cell.peta-3 { background: #fcd34d; }
+.heatmap-cell.peta-4 { background: #fbbf24; }
+.heatmap-cell.peta-5 { background: #eab308; }
+.heatmap-cell.peta-6 { background: #ca8a04; }
+.heatmap-cell.peta-7 { background: #a16207; }
+/* Fallback obecny */
+.heatmap-cell.gen-1 { background: #e5e7eb; }
+.heatmap-cell.gen-2 { background: #d1d5db; }
+.heatmap-cell.gen-3 { background: #9ca3af; }
 .heatmap-cell.gen-4 { background: #6b7280; }
 .heatmap-cell.gen-5 { background: #4b5563; }
 .heatmap-cell.gen-6 { background: #374151; }
-.heatmap-cell.gen-7 { background: #111827; }
+.heatmap-cell.gen-7 { background: #1f2937; }
 
-/* DNES tag — nad poslednim sloupcem heatmapy */
-.heatmap-day-label.today {
-  position: relative;
-  overflow: visible;
-}
-.heatmap-day-label.today::before {
-  content: 'DNES';
+/* DNES tag — vpravo nahore v containeru heatmapy */
+.today-tag {
   position: absolute;
-  bottom: calc(100% + 8px);
-  left: 50%;
-  transform: translateX(-50%);
+  top: 4px;
+  right: 14px;
   background: #000; color: #fff;
   font-size: 9px; font-weight: 700;
   padding: 4px 8px; border-radius: 6px;
@@ -202,15 +197,14 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   z-index: 2;
 }
-.heatmap-day-label.today::after {
+.today-tag::after {
   content: '';
   position: absolute;
-  bottom: calc(100% + 4px);
-  left: 50%;
-  transform: translateX(-50%) rotate(45deg);
+  top: 100%;
+  right: 10px;
   width: 8px; height: 8px;
   background: #000;
-  z-index: 2;
+  transform: translateY(-50%) rotate(45deg);
 }
 
 .heatmap-legend {
@@ -1659,13 +1653,12 @@ function renderHeatmap() {
     days.push(d);
   }
 
-  let html = '<div class="heatmap-grid"><div></div>';
-  // Popisky - kazdy 7. den ukaze datum, posledni sloupec ma "DNES" tag pres CSS
+  let html = '<div class="today-tag">DNES</div><div class="heatmap-grid"><div></div>';
+  // Popisky - kazdy 7. den ukaze datum
   for (let i = 0; i < HEATMAP_DAYS; i++) {
     const d = days[i];
     const showLabel = i % 7 === 0 || i === HEATMAP_DAYS - 1;
-    const isToday = i === HEATMAP_DAYS - 1;
-    html += `<div class="heatmap-day-label${isToday ? ' today' : ''}">${showLabel ? d.getDate()+'.'+(d.getMonth()+1)+'.' : ''}</div>`;
+    html += `<div class="heatmap-day-label">${showLabel ? d.getDate()+'.'+(d.getMonth()+1)+'.' : ''}</div>`;
   }
   players.forEach(p => {
     const colorKey = playerColorKey(p.jmeno);
