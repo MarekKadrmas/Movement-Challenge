@@ -1397,9 +1397,17 @@ function vypocitejBodyCvik(player, cvik, opakovani, pridanaVaha) {
     }
     case 'Dřep': {
       if (!player.max_drep) return 0;
-      const vaha = pridana > 0 ? pridana : player.max_drep * 0.7;
-      const relSila = vaha / (player.vaha * wk);
-      body = Math.pow(relSila * op, 0.85) * 50;
+      if (pridana > 0) {
+        // Silovy drep s pridanou vahou — relativni sila × opakovani
+        const relSila = pridana / (player.vaha * wk);
+        body = Math.pow(relSila * op, 0.85) * 30;
+      } else {
+        // F14 Bug 2 fix: bodyweight drep — pocita se jako % z hypotetickeho max_reps
+        // (max_drep * 0.5 = priblizny odhad kolik bezvazovych drepu hrac zvladne v 1 serii)
+        const maxReps = Math.max(20, Math.round(player.max_drep * 0.5));
+        const proc = op / maxReps;
+        body = Math.pow(proc, 0.85) * 30 * wk;
+      }
       break;
     }
     case 'Kliky': {
@@ -2447,11 +2455,8 @@ async function submitEntry() {
         if (!ops || ops < 1) { toast('Zadej opakování v sérii', 'error'); btn.disabled = false; btn.textContent = origText; return; }
         totalOps = series * ops;
         pridanaVaha = vaha;
-        // Body: spocti pro kazdou serii zvlast (i kdyz jsou stejne) a secti
-        for (let i = 0; i < series; i++) {
-          totalBody += vypocitejBodyCvik(player, state.selectedCvik, ops, vaha);
-        }
-        totalBody = Math.round(totalBody * 10) / 10;
+        // F14 Bug 1 fix: pocitat z celkoveho poctu op najednou (konzistentni s 'single' modem)
+        totalBody = vypocitejBodyCvik(player, state.selectedCvik, totalOps, vaha);
         poznamka = JSON.stringify({ mode: 'same', series: series, ops: ops, vaha: vaha });
       } else if (state.serieMode === 'varied') {
         const valid = state.variedSeries.filter(s => parseInt(s.op) > 0);
