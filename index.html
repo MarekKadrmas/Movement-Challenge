@@ -117,9 +117,10 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 /* Heatmap kalendar */
 .heatmap {
   background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: 14px; padding: 22px 14px 14px;
+  border-radius: 14px; padding: 14px;
   position: relative;
   overflow: visible;
+  margin-top: 28px; /* prostor pro DNES tag nad containerem */
 }
 .heatmap-grid {
   display: grid;
@@ -184,10 +185,10 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 .heatmap-cell.gen-6 { background: #374151; }
 .heatmap-cell.gen-7 { background: #1f2937; }
 
-/* DNES tag — vpravo nahore v containeru heatmapy */
+/* DNES tag — nad horním okrajem heatmapy, špička dolů */
 .today-tag {
   position: absolute;
-  top: 4px;
+  bottom: calc(100% + 6px);
   right: 14px;
   background: #000; color: #fff;
   font-size: 9px; font-weight: 700;
@@ -201,10 +202,11 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
   content: '';
   position: absolute;
   top: 100%;
-  right: 10px;
+  right: 12px;
+  margin-top: -4px;
   width: 8px; height: 8px;
   background: #000;
-  transform: translateY(-50%) rotate(45deg);
+  transform: rotate(45deg);
 }
 
 .heatmap-legend {
