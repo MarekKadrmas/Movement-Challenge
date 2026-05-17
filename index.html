@@ -227,6 +227,26 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 
 /* Entry karta */
 .entries { display: flex; flex-direction: column; gap: 8px; }
+
+/* Skupiny dnu v Historii (a pozdeji v Poslednich zaznamech) */
+.entry-day-group { margin-bottom: 20px; }
+.entry-day-group:last-child { margin-bottom: 0; }
+.entry-day-header {
+  display: flex; align-items: baseline; justify-content: space-between;
+  padding: 4px 4px 8px;
+  border-bottom: 1px solid var(--border-soft);
+  margin-bottom: 8px;
+}
+.entry-day-label {
+  font-size: 12px; font-weight: 700; color: var(--text);
+  text-transform: uppercase; letter-spacing: 0.06em;
+}
+.entry-day-total {
+  font-size: 12px; font-weight: 600; color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+.entry-day-items { display: flex; flex-direction: column; gap: 6px; }
+
 .entry-card {
   background: var(--bg-card); border: 1px solid var(--border);
   border-radius: 12px; padding: 12px 14px;
@@ -1417,8 +1437,37 @@ function renderAllEntries() {
     .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
   const el = document.getElementById('all-entries');
   if (all.length === 0) { el.innerHTML = '<div class="empty-state"><div class="icon">📋</div><div class="title">Žádné záznamy</div><div class="desc">Zatím tu nic není</div></div>'; return; }
-  el.innerHTML = all.map(e => renderEntryCard(e, true)).join('');
+  const groups = groupEntriesByDate(all);
+  el.innerHTML = groups.map(renderEntryGroup).join('');
   attachEntryActions(el);
+}
+
+// Seskupi zaznamy podle datumu, secte body. Vraci pole serazene od nejnovejsiho dne.
+function groupEntriesByDate(entries) {
+  const groups = new Map();
+  for (const e of entries) {
+    const d = e.datum || todayStr();
+    if (!groups.has(d)) groups.set(d, { dateStr: d, entries: [], totalBody: 0 });
+    const g = groups.get(d);
+    g.entries.push(e);
+    g.totalBody += Number(e.body) || 0;
+  }
+  return [...groups.values()].sort((a, b) => b.dateStr.localeCompare(a.dateStr));
+}
+
+// Vykresli skupinu zaznamu s headerem (datum + celkem bodu) + entries
+function renderEntryGroup(group) {
+  const label = formatDateDisplay(group.dateStr);
+  const total = Math.round(group.totalBody * 10) / 10;
+  const items = group.entries.map(e => renderEntryCard(e, true)).join('');
+  return `
+    <div class="entry-day-group">
+      <div class="entry-day-header">
+        <div class="entry-day-label">${label}</div>
+        <div class="entry-day-total">${total} b.</div>
+      </div>
+      <div class="entry-day-items">${items}</div>
+    </div>`;
 }
 
 function renderEntryCard(e, withActions) {
