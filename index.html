@@ -117,14 +117,14 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 /* Heatmap kalendar */
 .heatmap {
   background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: 14px; padding: 18px 14px 14px;
-  overflow-x: auto; -webkit-overflow-scrolling: touch;
+  border-radius: 14px; padding: 22px 14px 14px;
   position: relative;
+  overflow: visible;
 }
 .heatmap-grid {
   display: grid;
-  grid-template-columns: 70px repeat(35, 1fr);
-  gap: 3px;
+  grid-template-columns: 70px repeat(21, 1fr);
+  gap: 4px;
   min-width: 100%;
   position: relative;
 }
@@ -183,21 +183,34 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 .heatmap-cell.gen-6 { background: #374151; }
 .heatmap-cell.gen-7 { background: #111827; }
 
-.today-tag {
-  position: absolute; top: -12px; right: 8px;
+/* DNES tag — nad poslednim sloupcem heatmapy */
+.heatmap-day-label.today {
+  position: relative;
+  overflow: visible;
+}
+.heatmap-day-label.today::before {
+  content: 'DNES';
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
   background: #000; color: #fff;
   font-size: 9px; font-weight: 700;
   padding: 4px 8px; border-radius: 6px;
   letter-spacing: 0.08em;
+  white-space: nowrap;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   z-index: 2;
 }
-.today-tag::after {
-  content: ''; position: absolute;
-  bottom: -4px; right: 14px;
+.heatmap-day-label.today::after {
+  content: '';
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
   width: 8px; height: 8px;
   background: #000;
-  transform: rotate(45deg);
+  z-index: 2;
 }
 
 .heatmap-legend {
@@ -930,7 +943,7 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
     </div>
 
     <div class="section-title">
-      <h2>Kalendář aktivity (5 týdnů)</h2>
+      <h2>Kalendář aktivity (3 týdny)</h2>
     </div>
     <div class="heatmap" id="heatmap-container">
       <div class="loading">Načítám...</div>
@@ -1605,12 +1618,12 @@ function renderLeaderboardWeek() {
 }
 
 function renderHeatmap() {
+  const HEATMAP_DAYS = 21; // F: 3 tydny zpet (drive 35)
   const players = state.players.filter(p => p.aktivni);
   const today = new Date(); today.setHours(0,0,0,0);
   const tdStr = dateToStr(today);
-  // Kalendar: dnesek je posledni (35.) ctverecek vpravo
   const start = new Date(today);
-  start.setDate(start.getDate() - 34);
+  start.setDate(start.getDate() - (HEATMAP_DAYS - 1));
 
   function pointsForDay(playerId, dateStr) {
     let pts = 0;
@@ -1640,18 +1653,19 @@ function renderHeatmap() {
   }
 
   const days = [];
-  for (let i = 0; i < 35; i++) {
+  for (let i = 0; i < HEATMAP_DAYS; i++) {
     const d = new Date(start);
     d.setDate(d.getDate() + i);
     days.push(d);
   }
 
-  let html = '<div class="today-tag">DNES</div><div class="heatmap-grid"><div></div>';
-  // Popisky - kazdy 7. den ukaze datum
-  for (let i = 0; i < 35; i++) {
+  let html = '<div class="heatmap-grid"><div></div>';
+  // Popisky - kazdy 7. den ukaze datum, posledni sloupec ma "DNES" tag pres CSS
+  for (let i = 0; i < HEATMAP_DAYS; i++) {
     const d = days[i];
-    const showLabel = i % 7 === 0 || i === 34;
-    html += `<div class="heatmap-day-label">${showLabel ? d.getDate()+'.'+(d.getMonth()+1)+'.' : ''}</div>`;
+    const showLabel = i % 7 === 0 || i === HEATMAP_DAYS - 1;
+    const isToday = i === HEATMAP_DAYS - 1;
+    html += `<div class="heatmap-day-label${isToday ? ' today' : ''}">${showLabel ? d.getDate()+'.'+(d.getMonth()+1)+'.' : ''}</div>`;
   }
   players.forEach(p => {
     const colorKey = playerColorKey(p.jmeno);
