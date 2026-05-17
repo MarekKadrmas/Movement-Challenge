@@ -1803,17 +1803,17 @@ function renderDatePicker() {
   }).join('');
 }
 
-// "Dnes" / "Včera" / "Předevčírem" / "15.5.2026"
+// "Dnes 17. 5. 2026" / "Včera 16. 5. 2026" / "15. 5. 2026"
 function formatDateDisplay(dateStr) {
-  if (!dateStr) return 'Dnes';
+  if (!dateStr) dateStr = todayStr();
   const today = todayStr();
-  if (dateStr === today) return 'Dnes';
   const d = new Date(dateStr + 'T00:00:00');
+  const dateLabel = `${d.getDate()}. ${d.getMonth() + 1}. ${d.getFullYear()}`;
+  if (dateStr === today) return `Dnes ${dateLabel}`;
   const todayDate = new Date(today + 'T00:00:00');
   const diffDays = Math.round((todayDate - d) / (1000 * 60 * 60 * 24));
-  if (diffDays === 1) return 'Včera';
-  if (diffDays === 2) return 'Předevčírem';
-  return `${d.getDate()}. ${d.getMonth() + 1}. ${d.getFullYear()}`;
+  if (diffDays === 1) return `Včera ${dateLabel}`;
+  return dateLabel;
 }
 
 function updateDateTrigger() {
