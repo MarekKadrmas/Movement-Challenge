@@ -132,7 +132,8 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 .heatmap-day-label {
   font-size: 8px; color: var(--text-dim); font-weight: 600;
   display: flex; align-items: center;
-  min-width: 0; overflow: hidden; /* zabranuje rozjezdu bunek pod popisky */
+  min-width: 0; overflow: visible; /* text muze precnivat (datum se neorezava) */
+  white-space: nowrap;
 }
 .heatmap-player-label { padding-right: 8px; font-size: 12px; font-weight: 600; display: flex; align-items: center; }
 .heatmap-cell {
@@ -185,12 +186,11 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 .heatmap-cell.gen-6 { background: #374151; }
 .heatmap-cell.gen-7 { background: #1f2937; }
 
-/* DNES tag — nad horním okrajem heatmapy, špička míří na střed poslední buňky */
-/* Tag.right=14px = container.padding-right; šipka.right=0px => šipka.center = container.right - 18 = střed poslední buňky */
+/* DNES tag — bublina nad heatmapou, zarovnana s pravym okrajem containeru (bez sipky) */
 .today-tag {
   position: absolute;
   bottom: calc(100% + 6px);
-  right: 14px;
+  right: 0;
   background: #000; color: #fff;
   font-size: 9px; font-weight: 700;
   padding: 4px 8px; border-radius: 6px;
@@ -198,16 +198,6 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
   white-space: nowrap;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   z-index: 2;
-}
-.today-tag::after {
-  content: '';
-  position: absolute;
-  top: 100%;
-  right: 0;
-  margin-top: -4px;
-  width: 8px; height: 8px;
-  background: #000;
-  transform: rotate(45deg);
 }
 
 .heatmap-legend {
