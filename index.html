@@ -448,6 +448,68 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
   background: var(--accent); color: #fff; border-color: var(--accent);
 }
 
+/* F6: Player entries modal */
+.ph-header {
+  display: flex; align-items: center; gap: 12px;
+  padding-bottom: 14px; margin-bottom: 8px;
+  border-bottom: 1px solid var(--border-soft);
+}
+.ph-avatar {
+  width: 48px; height: 48px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 14px; color: #000;
+  flex-shrink: 0;
+}
+.ph-title-block { flex: 1; min-width: 0; }
+.ph-title { font-size: 16px; font-weight: 800; color: var(--text); }
+.ph-subtitle { font-size: 12px; color: var(--text-muted); margin-top: 2px; font-weight: 500; }
+.ph-stats { text-align: right; flex-shrink: 0; }
+.ph-stats-points {
+  font-size: 18px; font-weight: 800; color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.ph-stats-label { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; }
+.ph-subtabs {
+  display: flex; gap: 4px; padding: 8px 0 12px;
+  border-bottom: 1px solid var(--border-soft);
+  margin-bottom: 14px;
+}
+.ph-subtab {
+  flex: 1; padding: 8px 6px; border-radius: 8px;
+  font-size: 12px; font-weight: 600; text-align: center;
+  cursor: pointer; color: var(--text-muted);
+  background: transparent; border: 1px solid transparent;
+  font-family: inherit;
+}
+.ph-subtab.active { background: var(--text); color: #fff; border-color: var(--text); }
+.ph-entries {
+  display: flex; flex-direction: column;
+  max-height: 55vh; overflow-y: auto;
+  padding-right: 4px;
+}
+
+/* F7: Filtry v Historii (hlavni zalozka) */
+.history-filters {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 12px; margin-bottom: 12px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.filter-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.filter-label {
+  font-size: 11px; font-weight: 700; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.06em;
+  flex-shrink: 0;
+}
+.filter-pills { display: flex; gap: 6px; flex-wrap: wrap; flex: 1; }
+.filter-pill {
+  padding: 6px 12px; border-radius: 100px;
+  font-size: 12px; font-weight: 600;
+  background: var(--bg-card); border: 1px solid var(--border); color: var(--text-muted);
+  cursor: pointer; font-family: inherit;
+  transition: all 0.15s;
+}
+.filter-pill.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
 .player-pills { display: flex; gap: 6px; flex-wrap: wrap; }
 .player-pill {
   padding: 9px 14px; border-radius: 100px; cursor: pointer;
@@ -804,6 +866,22 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
     <div class="section-title">
       <h2>Všechny záznamy</h2>
     </div>
+    <!-- F7: Filtry -->
+    <div class="history-filters">
+      <div class="filter-row">
+        <div class="filter-label">Hráč</div>
+        <div class="filter-pills" id="history-player-pills"></div>
+      </div>
+      <div class="filter-row">
+        <div class="filter-label">Typ</div>
+        <div class="filter-pills">
+          <button type="button" class="filter-pill active" data-h-type="all" onclick="setHistoryTypeFilter('all')">Vše</button>
+          <button type="button" class="filter-pill" data-h-type="cvik" onclick="setHistoryTypeFilter('cvik')">Cviky</button>
+          <button type="button" class="filter-pill" data-h-type="aktivita" onclick="setHistoryTypeFilter('aktivita')">Aktivity</button>
+          <button type="button" class="filter-pill" data-h-type="stretching" onclick="setHistoryTypeFilter('stretching')">Stretching</button>
+        </div>
+      </div>
+    </div>
     <div class="entries" id="all-entries">
       <div class="loading">Načítám...</div>
     </div>
@@ -1083,6 +1161,32 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
   </div>
 </div>
 
+<!-- F6: Modal s historii zapisu hrace -->
+<div class="modal-overlay" id="player-entries-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="ph-header">
+      <div class="ph-avatar" id="ph-avatar">MA</div>
+      <div class="ph-title-block">
+        <div class="ph-title" id="ph-title">Historie · —</div>
+        <div class="ph-subtitle" id="ph-subtitle">Všechny záznamy</div>
+      </div>
+      <div class="ph-stats">
+        <div class="ph-stats-points" id="ph-total">0.0</div>
+        <div class="ph-stats-label">celkem b.</div>
+      </div>
+    </div>
+    <div class="ph-subtabs">
+      <button type="button" class="ph-subtab active" data-pe-type="all" onclick="setPlayerEntriesFilter('all')">Vše</button>
+      <button type="button" class="ph-subtab" data-pe-type="cvik" onclick="setPlayerEntriesFilter('cvik')">Cviky</button>
+      <button type="button" class="ph-subtab" data-pe-type="aktivita" onclick="setPlayerEntriesFilter('aktivita')">Aktivity</button>
+      <button type="button" class="ph-subtab" data-pe-type="stretching" onclick="setPlayerEntriesFilter('stretching')">Stretching</button>
+    </div>
+    <div class="ph-entries" id="ph-entries"><div class="loading">Načítám...</div></div>
+    <button class="btn-cancel" onclick="closePlayerEntriesModal()">Zavřít</button>
+  </div>
+</div>
+
 <!-- Vlastni kalendar popup -->
 <div class="date-picker-overlay" id="date-picker-overlay" onclick="onPickerOverlayClick(event)">
   <div class="date-picker" onclick="event.stopPropagation()">
@@ -1163,7 +1267,11 @@ let state = {
   editMode: false, editId: null, editTable: null,
   editorPlayer: null, playerBeingEdited: null,
   selectedDate: null,           // YYYY-MM-DD pro zapis/edit datum
-  pickerYear: null, pickerMonth: null  // 0-11, pro navigaci v kalendari
+  pickerYear: null, pickerMonth: null,  // 0-11, pro navigaci v kalendari
+  // F6: player entries modal
+  peCurrentPlayer: null, peTypeFilter: 'all',
+  // F7: filtry v Historii
+  historyPlayerFilter: 'all', historyTypeFilter: 'all'
 };
 
 const MESICE_CZ = ['leden','únor','březen','duben','květen','červen','červenec','srpen','září','říjen','listopad','prosinec'];
@@ -1289,7 +1397,7 @@ function renderLeaderboardTotal() {
   el.innerHTML = data.map((p, i) => {
     const isFirst = i === 0 && p.total > 0;
     return `
-    <div class="leader-row ${isFirst ? 'gold' : ''}">
+    <div class="leader-row ${isFirst ? 'gold' : ''}" onclick="openPlayerEntriesModal('${p.id}')" style="cursor:pointer;">
       ${isFirst ? '<div class="leader-crown">👑</div>' : ''}
       <div class="leader-rank">${i+1}</div>
       <div class="leader-av-wrap">
@@ -1322,7 +1430,7 @@ function renderLeaderboardWeek() {
   el.innerHTML = data.map((p, i) => {
     const isFirst = i === 0 && p.body > 0;
     return `
-    <div class="leader-row ${isFirst ? 'gold' : ''}">
+    <div class="leader-row ${isFirst ? 'gold' : ''}" onclick="openPlayerEntriesModal('${p.id}')" style="cursor:pointer;">
       ${isFirst ? '<div class="leader-crown">👑</div>' : ''}
       <div class="leader-rank">${i+1}</div>
       <div class="leader-av-wrap">
@@ -1435,10 +1543,14 @@ function renderRecent() {
 }
 
 function renderAllEntries() {
-  const all = [...state.cviky.map(c => ({ ...c, _type: 'cvik' })), ...state.aktivity.map(a => ({ ...a, _type: 'aktivita' }))]
-    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  // F7: respektuje filtry hracu a typu
+  buildHistoryPlayerPills();
+  const all = collectEntries({ playerId: state.historyPlayerFilter, typeFilter: state.historyTypeFilter });
   const el = document.getElementById('all-entries');
-  if (all.length === 0) { el.innerHTML = '<div class="empty-state"><div class="icon">📋</div><div class="title">Žádné záznamy</div><div class="desc">Zatím tu nic není</div></div>'; return; }
+  if (all.length === 0) {
+    el.innerHTML = '<div class="empty-state"><div class="icon">📋</div><div class="title">Žádné záznamy</div><div class="desc">Pro tyto filtry tu nic není</div></div>';
+    return;
+  }
   const groups = groupEntriesByDate(all);
   el.innerHTML = groups.map(renderEntryGroup).join('');
   attachEntryActions(el);
@@ -1470,6 +1582,97 @@ function renderEntryGroup(group) {
       </div>
       <div class="entry-day-items">${items}</div>
     </div>`;
+}
+
+// === F6: Player entries modal (klik na hrace v leaderboardu) ===
+
+function openPlayerEntriesModal(playerId) {
+  const player = state.players.find(p => p.id === playerId);
+  if (!player) return;
+  state.peCurrentPlayer = playerId;
+  state.peTypeFilter = 'all';
+  // Avatar a header
+  const avatarEl = document.getElementById('ph-avatar');
+  avatarEl.style.background = player.barva;
+  avatarEl.textContent = initials(player.jmeno);
+  document.getElementById('ph-title').textContent = `Historie · ${player.jmeno}`;
+  // Reset subtabs
+  document.querySelectorAll('.ph-subtab').forEach(t => t.classList.toggle('active', t.dataset.peType === 'all'));
+  renderPlayerEntries();
+  document.getElementById('player-entries-modal').classList.add('active');
+}
+
+function closePlayerEntriesModal() {
+  document.getElementById('player-entries-modal').classList.remove('active');
+}
+
+function setPlayerEntriesFilter(type) {
+  state.peTypeFilter = type;
+  document.querySelectorAll('.ph-subtab').forEach(t => t.classList.toggle('active', t.dataset.peType === type));
+  renderPlayerEntries();
+}
+
+function renderPlayerEntries() {
+  const playerId = state.peCurrentPlayer;
+  if (!playerId) return;
+  const entries = collectEntries({ playerId, typeFilter: state.peTypeFilter });
+  const total = entries.reduce((s, e) => s + Number(e.body), 0);
+  document.getElementById('ph-total').textContent = total.toFixed(1);
+  const subEl = document.getElementById('ph-subtitle');
+  const typeLabels = { all: 'Všechny záznamy', cvik: 'Pouze cviky', aktivita: 'Pouze aktivity', stretching: 'Pouze stretching' };
+  subEl.textContent = typeLabels[state.peTypeFilter];
+  const el = document.getElementById('ph-entries');
+  if (entries.length === 0) {
+    el.innerHTML = '<div class="entry-empty">Žádné záznamy v této kategorii.</div>';
+    return;
+  }
+  const groups = groupEntriesByDate(entries);
+  el.innerHTML = groups.map(renderEntryGroup).join('');
+  attachEntryActions(el);
+}
+
+// Sber zaznamy podle filteru (playerId='all'|<id>, typeFilter='all'|'cvik'|'aktivita'|'stretching')
+function collectEntries({ playerId = 'all', typeFilter = 'all' } = {}) {
+  let result = [];
+  const filterPlayer = (e) => playerId === 'all' || e.player_id === playerId;
+  if (typeFilter === 'all' || typeFilter === 'cvik') {
+    result = result.concat(state.cviky.filter(filterPlayer).map(c => ({ ...c, _type: 'cvik' })));
+  }
+  if (typeFilter === 'all' || typeFilter === 'aktivita' || typeFilter === 'stretching') {
+    let acts = state.aktivity.filter(filterPlayer);
+    if (typeFilter === 'stretching') {
+      acts = acts.filter(a => a.nazev && a.nazev.indexOf('🧘') === 0);
+    } else if (typeFilter === 'aktivita') {
+      acts = acts.filter(a => !(a.nazev && a.nazev.indexOf('🧘') === 0));
+    }
+    result = result.concat(acts.map(a => ({ ...a, _type: 'aktivita' })));
+  }
+  result.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  return result;
+}
+
+// === F7: Filtry v Historii (hlavni zalozka) ===
+
+function buildHistoryPlayerPills() {
+  const wrap = document.getElementById('history-player-pills');
+  if (!wrap) return;
+  const items = [{ id: 'all', jmeno: 'Vše' }, ...state.players.filter(p => p.aktivni)];
+  wrap.innerHTML = items.map(p => {
+    const active = state.historyPlayerFilter === p.id;
+    return `<button type="button" class="filter-pill ${active ? 'active' : ''}" onclick="setHistoryPlayerFilter('${p.id}')">${p.jmeno}</button>`;
+  }).join('');
+}
+
+function setHistoryPlayerFilter(playerId) {
+  state.historyPlayerFilter = playerId;
+  buildHistoryPlayerPills();
+  renderAllEntries();
+}
+
+function setHistoryTypeFilter(type) {
+  state.historyTypeFilter = type;
+  document.querySelectorAll('[data-h-type]').forEach(b => b.classList.toggle('active', b.dataset.hType === type));
+  renderAllEntries();
 }
 
 function renderEntryCard(e, withActions) {
@@ -2432,6 +2635,7 @@ document.getElementById('modal').addEventListener('click', (e) => { if (e.target
 document.getElementById('day-modal').addEventListener('click', (e) => { if (e.target.id === 'day-modal') closeDayModal(); });
 document.getElementById('player-modal').addEventListener('click', (e) => { if (e.target.id === 'player-modal') closePlayerModal(); });
 document.getElementById('history-modal').addEventListener('click', (e) => { if (e.target.id === 'history-modal') closeHistoryModal(); });
+document.getElementById('player-entries-modal').addEventListener('click', (e) => { if (e.target.id === 'player-entries-modal') closePlayerEntriesModal(); });
 </script>
 </body>
 </html>
