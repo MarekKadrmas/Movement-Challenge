@@ -1428,7 +1428,9 @@ function renderRecent() {
     .sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 10);
   const el = document.getElementById('recent-entries');
   if (all.length === 0) { el.innerHTML = '<div class="entry-empty">Zatím žádné záznamy. Klepni na + a začni!</div>'; return; }
-  el.innerHTML = all.map(e => renderEntryCard(e, true)).join('');
+  // F5: skupiny dnu i v Poslednich zaznamech (stejne jako F3 v Historii)
+  const groups = groupEntriesByDate(all);
+  el.innerHTML = groups.map(renderEntryGroup).join('');
   attachEntryActions(el);
 }
 
