@@ -339,6 +339,20 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 .field input:focus, .field select:focus { outline: none; border-color: var(--text); }
 .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
+/* Zpetne zadavani data */
+.custom-date-field { margin-top: 8px; padding-top: 12px; border-top: 1px dashed var(--border); }
+.custom-date-toggle {
+  display: flex !important; align-items: center; gap: 10px; cursor: pointer;
+  font-size: 13px !important; font-weight: 500 !important; color: var(--text) !important;
+  text-transform: none !important; letter-spacing: 0 !important; margin-bottom: 0 !important;
+}
+.custom-date-toggle input[type="checkbox"] {
+  width: 18px; height: 18px; margin: 0; cursor: pointer;
+  accent-color: var(--accent);
+}
+.custom-date-toggle .toggle-text { user-select: none; }
+.custom-date-input { margin-top: 10px; }
+
 .player-pills { display: flex; gap: 6px; flex-wrap: wrap; }
 .player-pill {
   padding: 9px 14px; border-radius: 100px; cursor: pointer;
@@ -881,6 +895,15 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
           <label>Poznámka (volitelné)</label>
           <input type="text" id="stretch-nazev" placeholder="Např. ranní rozcvička...">
         </div>
+      </div>
+
+      <!-- Zpetne zadavani data -->
+      <div class="field custom-date-field">
+        <label class="custom-date-toggle">
+          <input type="checkbox" id="use-custom-date" onchange="toggleCustomDate()">
+          <span class="toggle-text">📅 Zadat pro jiné datum</span>
+        </label>
+        <input type="date" id="custom-date" class="custom-date-input" style="display:none;">
       </div>
     </div>
 
@@ -1577,6 +1600,38 @@ function resetFormFields() {
   document.getElementById('level-hint').textContent = 'vyber úroveň 1-5';
   document.getElementById('level-points-display').classList.remove('show');
   document.getElementById('stretch-points-display').classList.remove('show');
+  // Reset custom date toggle
+  const useDateCb = document.getElementById('use-custom-date');
+  const dateInp = document.getElementById('custom-date');
+  if (useDateCb) useDateCb.checked = false;
+  if (dateInp) {
+    dateInp.value = todayStr();
+    dateInp.max = todayStr();
+    dateInp.style.display = 'none';
+  }
+}
+
+// Toggle pro zpetne zadavani data
+function toggleCustomDate() {
+  const cb = document.getElementById('use-custom-date');
+  const inp = document.getElementById('custom-date');
+  if (cb.checked) {
+    inp.style.display = '';
+    if (!inp.value) inp.value = todayStr();
+    inp.max = todayStr(); // budouci datum nedovolit
+  } else {
+    inp.style.display = 'none';
+  }
+}
+
+// Vraci datum pro zapis: bud dnes nebo vybrane uzivatelem
+function getEntryDate() {
+  const cb = document.getElementById('use-custom-date');
+  const inp = document.getElementById('custom-date');
+  if (cb && cb.checked && inp && inp.value) {
+    return inp.value;
+  }
+  return todayStr();
 }
 
 function setEntryType(type) {
@@ -1773,7 +1828,7 @@ async function submitEntry() {
         pridana_vaha: pridanaVaha,
         body: totalBody,
         poznamka: poznamka,
-        datum: todayStr()
+        datum: getEntryDate()
       };
 
       if (state.editMode) {
@@ -1796,7 +1851,7 @@ async function submitEntry() {
         nazev: nazev,
         uroven: state.selectedLevel,
         body: body,
-        datum: todayStr()
+        datum: getEntryDate()
       };
       if (state.editMode) {
         delete payload.datum;
@@ -1820,7 +1875,7 @@ async function submitEntry() {
         nazev: nazev,
         uroven: stretchUroven,
         body: body,
-        datum: todayStr()
+        datum: getEntryDate()
       };
       if (state.editMode) {
         delete payload.datum;
