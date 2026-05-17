@@ -578,6 +578,20 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 }
 .filter-pill.active { background: var(--accent); color: #fff; border-color: var(--accent); }
 
+/* F4: Tlacitko Nacist dalsi mesic */
+.load-more-btn {
+  width: 100%; margin-top: 14px; padding: 14px 16px;
+  background: var(--bg-card); border: 1px dashed var(--border);
+  border-radius: 12px; font-family: inherit;
+  font-size: 14px; font-weight: 600; color: var(--text);
+  cursor: pointer; text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  transition: all 0.15s;
+}
+.load-more-btn:active { transform: scale(0.99); background: var(--bg); }
+.load-more-btn:hover { border-color: var(--text); }
+.load-more-hint { font-size: 11px; font-weight: 500; color: var(--text-muted); }
+
 .player-pills { display: flex; gap: 6px; flex-wrap: wrap; }
 .player-pill {
   padding: 9px 14px; border-radius: 100px; cursor: pointer;
@@ -1354,6 +1368,8 @@ let state = {
   peCurrentPlayer: null, peTypeFilter: 'all',
   // F7: filtry v Historii
   historyPlayerFilter: 'all', historyTypeFilter: 'all',
+  // F4: pocet "mesicu zpet" pri zobrazeni Historie (default 1 = 30 dni)
+  historyMonthsLoaded: 1,
   // F12: filtr obdobi (mode + anchor date pro pocitani rangu)
   periodMode: 'week', periodAnchor: null
 };
@@ -1706,15 +1722,39 @@ function renderRecent() {
 function renderAllEntries() {
   // F7: respektuje filtry hracu a typu
   buildHistoryPlayerPills();
-  const all = collectEntries({ playerId: state.historyPlayerFilter, typeFilter: state.historyTypeFilter });
+  const allFiltered = collectEntries({ playerId: state.historyPlayerFilter, typeFilter: state.historyTypeFilter });
+  // F4: filtr datumu - posledních N mesicu (30 dni * monthsLoaded)
+  const cutoffDate = new Date(); cutoffDate.setHours(0,0,0,0);
+  cutoffDate.setDate(cutoffDate.getDate() - 30 * state.historyMonthsLoaded);
+  const cutoffStr = dateToStr(cutoffDate);
+  const visible = allFiltered.filter(e => e.datum >= cutoffStr);
+  const hasOlder = allFiltered.some(e => e.datum < cutoffStr);
+
   const el = document.getElementById('all-entries');
-  if (all.length === 0) {
+  if (allFiltered.length === 0) {
     el.innerHTML = '<div class="empty-state"><div class="icon">📋</div><div class="title">Žádné záznamy</div><div class="desc">Pro tyto filtry tu nic není</div></div>';
     return;
   }
-  const groups = groupEntriesByDate(all);
-  el.innerHTML = groups.map(renderEntryGroup).join('');
+  if (visible.length === 0) {
+    // V poslednich 30*N dnech nic, ale starsi existuji
+    el.innerHTML = '<div class="empty-state"><div class="icon">📋</div><div class="title">V tomto období nic</div><div class="desc">Klepni na "Načíst další měsíc" pro starší záznamy</div></div>' + loadMoreButtonHtml();
+    return;
+  }
+  const groups = groupEntriesByDate(visible);
+  let html = groups.map(renderEntryGroup).join('');
+  if (hasOlder) html += loadMoreButtonHtml();
+  el.innerHTML = html;
   attachEntryActions(el);
+}
+
+function loadMoreButtonHtml() {
+  const nextMonths = state.historyMonthsLoaded + 1;
+  return `<button type="button" class="load-more-btn" onclick="loadMoreHistory()">Načíst další měsíc <span class="load-more-hint">(zobrazí posledních ${nextMonths * 30} dní)</span></button>`;
+}
+
+function loadMoreHistory() {
+  state.historyMonthsLoaded += 1;
+  renderAllEntries();
 }
 
 // Seskupi zaznamy podle datumu, secte body. Vraci pole serazene od nejnovejsiho dne.
@@ -1826,12 +1866,14 @@ function buildHistoryPlayerPills() {
 
 function setHistoryPlayerFilter(playerId) {
   state.historyPlayerFilter = playerId;
+  state.historyMonthsLoaded = 1; // F4: reset rozsahu pri zmene filteru
   buildHistoryPlayerPills();
   renderAllEntries();
 }
 
 function setHistoryTypeFilter(type) {
   state.historyTypeFilter = type;
+  state.historyMonthsLoaded = 1; // F4: reset rozsahu pri zmene filteru
   document.querySelectorAll('[data-h-type]').forEach(b => b.classList.toggle('active', b.dataset.hType === type));
   renderAllEntries();
 }
