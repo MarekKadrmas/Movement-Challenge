@@ -2024,7 +2024,7 @@ async function submitEntry() {
       };
 
       if (state.editMode) {
-        delete payload.datum; // pri editaci zachovat puvodni datum
+        // payload.datum pochazi z getEntryDate() — uzivatel mohl upravit datum v kalendari
         const { error } = await db.from('cviky').update(payload).eq('id', state.editId);
         if (error) throw error;
         toast('Záznam upraven', 'success');
@@ -2046,7 +2046,6 @@ async function submitEntry() {
         datum: getEntryDate()
       };
       if (state.editMode) {
-        delete payload.datum;
         const { error } = await db.from('aktivity').update(payload).eq('id', state.editId);
         if (error) throw error;
         toast('Záznam upraven', 'success');
@@ -2070,7 +2069,6 @@ async function submitEntry() {
         datum: getEntryDate()
       };
       if (state.editMode) {
-        delete payload.datum;
         const { error } = await db.from('aktivity').update(payload).eq('id', state.editId);
         if (error) throw error;
         toast('Záznam upraven', 'success');
@@ -2166,6 +2164,9 @@ function openEditModal(id, type) {
     disp.textContent = `+${LEVEL_POINTS[entry.uroven]} bodů`;
     disp.classList.add('show');
   }
+  // Nacti datum z editovaneho zaznamu (jinak by zustal todayStr() z resetFormFields)
+  state.selectedDate = entry.datum || todayStr();
+  updateDateTrigger();
   document.getElementById('modal').classList.add('active');
 }
 
