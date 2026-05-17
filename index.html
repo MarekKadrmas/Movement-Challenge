@@ -339,19 +339,94 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 .field input:focus, .field select:focus { outline: none; border-color: var(--text); }
 .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
-/* Zpetne zadavani data */
+/* Zadavani data — klikatelny trigger + vlastni picker */
 .custom-date-field { margin-top: 8px; padding-top: 12px; border-top: 1px dashed var(--border); }
-.custom-date-toggle {
-  display: flex !important; align-items: center; gap: 10px; cursor: pointer;
-  font-size: 13px !important; font-weight: 500 !important; color: var(--text) !important;
-  text-transform: none !important; letter-spacing: 0 !important; margin-bottom: 0 !important;
+.date-trigger {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 14px; background: var(--bg-card);
+  border: 1px solid var(--border); border-radius: 10px;
+  cursor: pointer; transition: all 0.15s;
+  font-size: 14px; font-weight: 500; color: var(--text);
+  user-select: none;
 }
-.custom-date-toggle input[type="checkbox"] {
-  width: 18px; height: 18px; margin: 0; cursor: pointer;
-  accent-color: var(--accent);
+.date-trigger:active { transform: scale(0.98); background: var(--bg); }
+.date-trigger .date-icon { font-size: 16px; line-height: 1; }
+.date-trigger .date-text { flex: 1; }
+.date-trigger .date-chevron { font-size: 14px; color: var(--text-muted); }
+
+.date-picker-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+  z-index: 200; opacity: 0; pointer-events: none;
+  transition: opacity 0.2s;
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px;
+  -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
 }
-.custom-date-toggle .toggle-text { user-select: none; }
-.custom-date-input { margin-top: 10px; }
+.date-picker-overlay.active { opacity: 1; pointer-events: auto; }
+.date-picker {
+  background: var(--bg-card); border-radius: 16px; padding: 14px;
+  max-width: 340px; width: 100%;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+  transform: scale(0.95); transition: transform 0.2s;
+}
+.date-picker-overlay.active .date-picker { transform: scale(1); }
+.date-picker-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-bottom: 10px; margin-bottom: 6px;
+}
+.date-picker-month {
+  font-weight: 700; font-size: 15px; color: var(--text);
+  text-transform: capitalize;
+}
+.date-picker-nav {
+  width: 34px; height: 34px; border-radius: 8px;
+  background: var(--bg); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 18px; color: var(--text);
+  font-family: inherit; padding: 0;
+}
+.date-picker-nav:active { transform: scale(0.95); background: var(--border); }
+.date-picker-weekdays {
+  display: grid; grid-template-columns: repeat(7, 1fr);
+  gap: 2px; margin-bottom: 4px;
+}
+.date-picker-weekday {
+  font-size: 10px; font-weight: 700; color: var(--text-dim);
+  text-transform: uppercase; letter-spacing: 0.05em;
+  text-align: center; padding: 6px 0;
+}
+.date-picker-grid {
+  display: grid; grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+.date-cell {
+  aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 500;
+  background: transparent; border: 1px solid transparent;
+  border-radius: 8px; cursor: pointer;
+  color: var(--text); transition: all 0.1s;
+  font-family: inherit;
+}
+.date-cell:active { transform: scale(0.92); background: var(--bg); }
+.date-cell.other-month { color: var(--text-dim); opacity: 0.4; }
+.date-cell.today { border-color: var(--text); font-weight: 700; }
+.date-cell.selected { background: var(--accent); color: #fff; border-color: var(--accent); }
+.date-cell.selected.today { border-color: var(--accent); }
+.date-cell.future { opacity: 0.25; cursor: not-allowed; pointer-events: none; }
+.date-picker-actions {
+  display: flex; gap: 8px; margin-top: 12px;
+  padding-top: 12px; border-top: 1px solid var(--border);
+}
+.date-picker-btn {
+  flex: 1; padding: 10px; border-radius: 10px;
+  background: var(--bg); border: 1px solid var(--border);
+  font-family: inherit; font-size: 13px; font-weight: 600;
+  color: var(--text); cursor: pointer;
+}
+.date-picker-btn:active { transform: scale(0.98); }
+.date-picker-btn.primary {
+  background: var(--accent); color: #fff; border-color: var(--accent);
+}
 
 .player-pills { display: flex; gap: 6px; flex-wrap: wrap; }
 .player-pill {
@@ -897,13 +972,13 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
         </div>
       </div>
 
-      <!-- Zpetne zadavani data -->
+      <!-- Datum zaznamu — klikatelny trigger pro vlastni kalendar -->
       <div class="field custom-date-field">
-        <label class="custom-date-toggle">
-          <input type="checkbox" id="use-custom-date" onchange="toggleCustomDate()">
-          <span class="toggle-text">📅 Zadat pro jiné datum</span>
-        </label>
-        <input type="date" id="custom-date" class="custom-date-input" style="display:none;">
+        <div class="date-trigger" id="date-trigger" onclick="openDatePicker()">
+          <span class="date-icon">📅</span>
+          <span class="date-text" id="date-trigger-text">Datum: Dnes</span>
+          <span class="date-chevron">▾</span>
+        </div>
       </div>
     </div>
 
@@ -988,6 +1063,31 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
   </div>
 </div>
 
+<!-- Vlastni kalendar popup -->
+<div class="date-picker-overlay" id="date-picker-overlay" onclick="onPickerOverlayClick(event)">
+  <div class="date-picker" onclick="event.stopPropagation()">
+    <div class="date-picker-header">
+      <button type="button" class="date-picker-nav" onclick="changeMonth(-1)">‹</button>
+      <div class="date-picker-month" id="date-picker-month-label">měsíc 2026</div>
+      <button type="button" class="date-picker-nav" onclick="changeMonth(1)">›</button>
+    </div>
+    <div class="date-picker-weekdays">
+      <div class="date-picker-weekday">Po</div>
+      <div class="date-picker-weekday">Út</div>
+      <div class="date-picker-weekday">St</div>
+      <div class="date-picker-weekday">Čt</div>
+      <div class="date-picker-weekday">Pá</div>
+      <div class="date-picker-weekday">So</div>
+      <div class="date-picker-weekday">Ne</div>
+    </div>
+    <div class="date-picker-grid" id="date-picker-grid"></div>
+    <div class="date-picker-actions">
+      <button type="button" class="date-picker-btn" onclick="jumpToToday()">Dnes</button>
+      <button type="button" class="date-picker-btn primary" onclick="closeDatePicker()">Hotovo</button>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // Automatická detekce: pokud URL obsahuje "test" nebo "v1.2" → testovací DB, jinak ostrá
@@ -1041,8 +1141,12 @@ let state = {
   serieMode: 'single', variedSeries: [],
   entryType: 'cvik', view: 'prehled', tab: 'vse',
   editMode: false, editId: null, editTable: null,
-  editorPlayer: null, playerBeingEdited: null
+  editorPlayer: null, playerBeingEdited: null,
+  selectedDate: null,           // YYYY-MM-DD pro zapis/edit datum
+  pickerYear: null, pickerMonth: null  // 0-11, pro navigaci v kalendari
 };
+
+const MESICE_CZ = ['leden','únor','březen','duben','květen','červen','červenec','srpen','září','říjen','listopad','prosinec'];
 
 function wilksKoef(vaha, pohlavi) {
   if (pohlavi === 'Z') return Math.max(0.9, 1.4 - (vaha - 50) * 0.008);
@@ -1600,38 +1704,126 @@ function resetFormFields() {
   document.getElementById('level-hint').textContent = 'vyber úroveň 1-5';
   document.getElementById('level-points-display').classList.remove('show');
   document.getElementById('stretch-points-display').classList.remove('show');
-  // Reset custom date toggle
-  const useDateCb = document.getElementById('use-custom-date');
-  const dateInp = document.getElementById('custom-date');
-  if (useDateCb) useDateCb.checked = false;
-  if (dateInp) {
-    dateInp.value = todayStr();
-    dateInp.max = todayStr();
-    dateInp.style.display = 'none';
-  }
+  // Reset datum na dnes
+  state.selectedDate = todayStr();
+  updateDateTrigger();
 }
 
-// Toggle pro zpetne zadavani data
-function toggleCustomDate() {
-  const cb = document.getElementById('use-custom-date');
-  const inp = document.getElementById('custom-date');
-  if (cb.checked) {
-    inp.style.display = '';
-    if (!inp.value) inp.value = todayStr();
-    inp.max = todayStr(); // budouci datum nedovolit
-  } else {
-    inp.style.display = 'none';
-  }
+// === Vlastni date picker ===
+
+// Otevre kalendar a vykresli mesic podle aktualne zvoleneho data
+function openDatePicker() {
+  if (!state.selectedDate) state.selectedDate = todayStr();
+  const d = new Date(state.selectedDate + 'T00:00:00');
+  state.pickerYear = d.getFullYear();
+  state.pickerMonth = d.getMonth();
+  renderDatePicker();
+  document.getElementById('date-picker-overlay').classList.add('active');
 }
 
-// Vraci datum pro zapis: bud dnes nebo vybrane uzivatelem
+function closeDatePicker() {
+  document.getElementById('date-picker-overlay').classList.remove('active');
+  updateDateTrigger();
+}
+
+// Kliknuti mimo popup (na overlay) - zavre picker
+function onPickerOverlayClick(event) {
+  if (event.target.id === 'date-picker-overlay') closeDatePicker();
+}
+
+function changeMonth(delta) {
+  state.pickerMonth += delta;
+  if (state.pickerMonth < 0) { state.pickerMonth = 11; state.pickerYear--; }
+  if (state.pickerMonth > 11) { state.pickerMonth = 0; state.pickerYear++; }
+  renderDatePicker();
+}
+
+function jumpToToday() {
+  state.selectedDate = todayStr();
+  const today = new Date();
+  state.pickerYear = today.getFullYear();
+  state.pickerMonth = today.getMonth();
+  renderDatePicker();
+  updateDateTrigger();
+}
+
+function selectDateCell(dateStr) {
+  state.selectedDate = dateStr;
+  renderDatePicker();
+  updateDateTrigger();
+}
+
+// Vykresli kalendarovy grid pro aktualni mesic (state.pickerYear/Month)
+function renderDatePicker() {
+  const year = state.pickerYear;
+  const month = state.pickerMonth;
+  document.getElementById('date-picker-month-label').textContent = `${MESICE_CZ[month]} ${year}`;
+
+  // Prvni den mesice, pondeli = 1, nedele = 0 (chceme pondeli prvni)
+  const first = new Date(year, month, 1);
+  let firstDayOfWeek = first.getDay() - 1;
+  if (firstDayOfWeek < 0) firstDayOfWeek = 6;
+
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const prevMonthDays = new Date(year, month, 0).getDate();
+
+  const today = todayStr();
+  const todayDate = new Date(today + 'T00:00:00');
+
+  const cells = [];
+
+  // Predchozi mesic (vyplnove dny)
+  for (let i = firstDayOfWeek - 1; i >= 0; i--) {
+    const day = prevMonthDays - i;
+    const date = new Date(year, month - 1, day);
+    cells.push({ day, dateStr: dateToStr(date), isOther: true, isFuture: date > todayDate });
+  }
+  // Aktualni mesic
+  for (let day = 1; day <= daysInMonth; day++) {
+    const date = new Date(year, month, day);
+    cells.push({ day, dateStr: dateToStr(date), isOther: false, isFuture: date > todayDate });
+  }
+  // Nasledujici mesic (do plne mrizky 6 radku = 42 cells)
+  let nextDay = 1;
+  while (cells.length < 42) {
+    const date = new Date(year, month + 1, nextDay);
+    cells.push({ day: nextDay, dateStr: dateToStr(date), isOther: true, isFuture: date > todayDate });
+    nextDay++;
+  }
+
+  const grid = document.getElementById('date-picker-grid');
+  grid.innerHTML = cells.map(c => {
+    const classes = ['date-cell'];
+    if (c.isOther) classes.push('other-month');
+    if (c.dateStr === today) classes.push('today');
+    if (c.dateStr === state.selectedDate) classes.push('selected');
+    if (c.isFuture) classes.push('future');
+    const onclick = c.isFuture ? '' : `onclick="selectDateCell('${c.dateStr}')"`;
+    return `<button type="button" class="${classes.join(' ')}" ${onclick}>${c.day}</button>`;
+  }).join('');
+}
+
+// "Dnes" / "Včera" / "Předevčírem" / "15.5.2026"
+function formatDateDisplay(dateStr) {
+  if (!dateStr) return 'Dnes';
+  const today = todayStr();
+  if (dateStr === today) return 'Dnes';
+  const d = new Date(dateStr + 'T00:00:00');
+  const todayDate = new Date(today + 'T00:00:00');
+  const diffDays = Math.round((todayDate - d) / (1000 * 60 * 60 * 24));
+  if (diffDays === 1) return 'Včera';
+  if (diffDays === 2) return 'Předevčírem';
+  return `${d.getDate()}. ${d.getMonth() + 1}. ${d.getFullYear()}`;
+}
+
+function updateDateTrigger() {
+  const text = document.getElementById('date-trigger-text');
+  if (text) text.textContent = `Datum: ${formatDateDisplay(state.selectedDate)}`;
+}
+
+// Vraci datum pro zapis: bud zvolene nebo dnes
 function getEntryDate() {
-  const cb = document.getElementById('use-custom-date');
-  const inp = document.getElementById('custom-date');
-  if (cb && cb.checked && inp && inp.value) {
-    return inp.value;
-  }
-  return todayStr();
+  return state.selectedDate || todayStr();
 }
 
 function setEntryType(type) {
