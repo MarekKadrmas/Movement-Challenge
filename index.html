@@ -3145,13 +3145,15 @@ document.querySelectorAll('.nav-btn').forEach(btn => {
     document.getElementById('view-prehled').style.display = state.view === 'prehled' ? '' : 'none';
     document.getElementById('view-historie').style.display = state.view === 'historie' ? '' : 'none';
     document.getElementById('view-hraci').style.display = state.view === 'hraci' ? '' : 'none';
+    document.getElementById('view-chat').style.display = state.view === 'chat' ? '' : 'none';  // F18
   });
 });
 
-// F11: category tabs (boxiky pro Dohromady/Cviky/Aktivity/Stretching)
-document.querySelectorAll('.cat-tab').forEach(tab => {
+// F11: category tabs (boxiky pro Dohromady/Cviky/Aktivity/Stretching v dolnim LB)
+// F18 fix: scoped jen na .cat-tab[data-tab] aby neklasovalo s hero tabs (data-total-cat)
+document.querySelectorAll('.cat-tab[data-tab]').forEach(tab => {
   tab.addEventListener('click', () => {
-    document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.cat-tab[data-tab]').forEach(t => t.classList.remove('active'));
     tab.classList.add('active');
     state.tab = tab.dataset.tab;
     // propagace barvy do parent sekce
