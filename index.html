@@ -200,6 +200,14 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 .heatmap-cell.peta-5 { background: #eab308; }
 .heatmap-cell.peta-6 { background: #ca8a04; }
 .heatmap-cell.peta-7 { background: #a16207; }
+/* Katka - oranzova (F16) */
+.heatmap-cell.katka-1 { background: #ffedd5; }
+.heatmap-cell.katka-2 { background: #fed7aa; }
+.heatmap-cell.katka-3 { background: #fdba74; }
+.heatmap-cell.katka-4 { background: #fb923c; }
+.heatmap-cell.katka-5 { background: #f97316; }
+.heatmap-cell.katka-6 { background: #ea580c; }
+.heatmap-cell.katka-7 { background: #c2410c; }
 /* Fallback obecny */
 .heatmap-cell.gen-1 { background: #e5e7eb; }
 .heatmap-cell.gen-2 { background: #d1d5db; }
@@ -1706,6 +1714,7 @@ function renderHeatmap() {
     if (n.includes('martin')) return 'martin';
     if (n.includes('nat')) return 'nat'; // Natalka i Natalka
     if (n.includes('péť') || n.includes('pet')) return 'peta';
+    if (n.includes('káť') || n.includes('kat')) return 'katka'; // F16: barva pro Katu
     return 'gen';
   }
 
@@ -2857,7 +2866,7 @@ document.querySelectorAll('.cat-tab').forEach(tab => {
 async function loadData() {
   try {
     const [pRes, cRes, aRes, hRes] = await Promise.all([
-      db.from('players').select('*').order('jmeno'),
+      db.from('players').select('*').order('created_at', { ascending: true }),  // F16: stari hraci prvni, novi posledni
       db.from('cviky').select('*').order('created_at', { ascending: false }),
       db.from('aktivity').select('*').order('created_at', { ascending: false }),
       db.from('player_history').select('*').order('created_at', { ascending: false })
