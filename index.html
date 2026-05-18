@@ -2260,6 +2260,9 @@ async function deleteCurrentEntry() {
     toast('Záznam smazán', 'success');
     closeModal();
     await loadData();
+    // F6 refresh: pokud je otevreny player-entries-modal, prerenderovat
+    const pem = document.getElementById('player-entries-modal');
+    if (pem && pem.classList.contains('active')) renderPlayerEntries();
   } catch (e) { toast('Chyba: ' + e.message, 'error'); }
 }
 
@@ -2802,7 +2805,7 @@ document.querySelectorAll('#cvik-pills .player-pill').forEach(pill => {
       p.classList.remove('active'); p.style.background = ''; p.style.borderColor = ''; p.style.color = '';
     });
     pill.classList.add('active');
-    pill.style.background = 'var(--accent)'; pill.style.borderColor = 'var(--accent)'; pill.style.color = '#000';
+    pill.style.background = 'var(--accent)'; pill.style.borderColor = 'var(--accent)'; pill.style.color = '#fff';
     state.selectedCvik = pill.dataset.cvik;
     updateCvikPointsPreview();
   });
@@ -2955,6 +2958,9 @@ async function submitEntry() {
     }
     closeModal();
     await loadData();
+    // Pokud je otevreny player-entries-modal (F6), prerenderovat ho aby se zobrazil novy stav
+    const pem = document.getElementById('player-entries-modal');
+    if (pem && pem.classList.contains('active')) renderPlayerEntries();
   } catch (e) {
     console.error(e);
     toast('Chyba: ' + e.message, 'error');
@@ -2990,7 +2996,7 @@ function openEditModal(id, type) {
       p.classList.remove('active'); p.style.background = ''; p.style.borderColor = ''; p.style.color = '';
       if (p.dataset.cvik === entry.cvik) {
         p.classList.add('active');
-        p.style.background = 'var(--accent)'; p.style.borderColor = 'var(--accent)'; p.style.color = '#000';
+        p.style.background = 'var(--accent)'; p.style.borderColor = 'var(--accent)'; p.style.color = '#fff';
       }
     });
     // Detekce mode podle poznamky
