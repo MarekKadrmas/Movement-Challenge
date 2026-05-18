@@ -69,9 +69,32 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 .main { padding: 16px; max-width: 720px; margin: 0 auto; padding-bottom: 120px; }
 
 /* Hero / Leaderboard */
+/* F15: hero karta s filtry kategorii - tabs+tabulka v lehce sedem boxu (stejne pro vsechny filtry) */
 .hero {
   background: var(--bg-card); border: 1px solid var(--border);
   border-radius: 16px; padding: 18px; margin-bottom: 16px;
+}
+.hero-title { margin-bottom: 12px; }
+.hero-section-wrap {
+  background: var(--border-soft);
+  border-radius: 12px;
+  padding: 8px;
+}
+#total-category-tabs { margin-bottom: 8px; }
+#total-category-tabs .cat-tab {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+}
+#total-category-tabs .cat-tab.active {
+  background: var(--accent);     /* #18181b - tmavy */
+  color: #fff;
+  border-color: var(--accent);
+}
+.hero-section-wrap .leaderboard {
+  background: var(--bg-card);
+  border-radius: 10px;
+  padding: 4px 8px;
 }
 .hero-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; margin-bottom: 4px; }
 .hero-title { font-size: 22px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 16px; }
@@ -224,6 +247,7 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
   transition: all 0.15s;
 }
 .tab.active { color: var(--text); border-bottom-color: var(--text); }
+
 
 /* F11: Category section (Dohromady / Cviky / Aktivity / Stretching) */
 .category-section {
@@ -911,8 +935,17 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
     <div class="hero">
       <div class="hero-label">Leaderboard</div>
       <div class="hero-title">Celkové pořadí</div>
-      <div class="leaderboard" id="leaderboard-total">
-        <div class="loading">Načítám...</div>
+      <!-- F15: filtry kategorii v celkovem LB - tabs+tabulka v jednom lehce sedem boxu -->
+      <div class="hero-section-wrap">
+        <div class="category-tabs" id="total-category-tabs">
+          <button type="button" class="cat-tab active" data-total-cat="all" onclick="setTotalCategory('all')">Dohromady</button>
+          <button type="button" class="cat-tab" data-total-cat="cvik" onclick="setTotalCategory('cvik')">Cviky</button>
+          <button type="button" class="cat-tab" data-total-cat="aktivita" onclick="setTotalCategory('aktivita')">Aktivity</button>
+          <button type="button" class="cat-tab" data-total-cat="stretching" onclick="setTotalCategory('stretching')">Stretching</button>
+        </div>
+        <div class="leaderboard" id="leaderboard-total">
+          <div class="loading">Načítám...</div>
+        </div>
       </div>
     </div>
 
@@ -1371,7 +1404,9 @@ let state = {
   // F4: pocet "mesicu zpet" pri zobrazeni Historie (default 1 = 30 dni)
   historyMonthsLoaded: 1,
   // F12: filtr obdobi (mode + anchor date pro pocitani rangu)
-  periodMode: 'week', periodAnchor: null
+  periodMode: 'week', periodAnchor: null,
+  // F15: filtr kategorii v hlavnim Celkove poradi (all-time)
+  totalCategory: 'all'  // 'all' | 'cvik' | 'aktivita' | 'stretching'
 };
 
 const MESICE_CZ = ['leden','únor','březen','duben','květen','červen','červenec','srpen','září','říjen','listopad','prosinec'];
@@ -1565,10 +1600,21 @@ function movePeriod(delta) {
 }
 
 function renderLeaderboardTotal() {
+  // F15: respektuj filter kategorii (all-time)
+  const cat = state.totalCategory;
+  const isStretch = (a) => a.nazev && a.nazev.indexOf('🧘') === 0;
   const data = state.players.filter(p => p.aktivni).map(p => {
-    const bC = state.cviky.filter(c => c.player_id === p.id).reduce((s, c) => s + Number(c.body), 0);
-    const bA = state.aktivity.filter(a => a.player_id === p.id).reduce((s, a) => s + Number(a.body), 0);
-    return { ...p, total: bC + bA, streak: computeStreak(p.id) };
+    let total = 0;
+    if (cat === 'all' || cat === 'cvik') {
+      total += state.cviky.filter(c => c.player_id === p.id).reduce((s, c) => s + Number(c.body), 0);
+    }
+    if (cat === 'all' || cat === 'aktivita') {
+      total += state.aktivity.filter(a => a.player_id === p.id && !isStretch(a)).reduce((s, a) => s + Number(a.body), 0);
+    }
+    if (cat === 'all' || cat === 'stretching') {
+      total += state.aktivity.filter(a => a.player_id === p.id && isStretch(a)).reduce((s, a) => s + Number(a.body), 0);
+    }
+    return { ...p, total, streak: computeStreak(p.id) };
   }).sort((a, b) => b.total - a.total);
 
   const el = document.getElementById('leaderboard-total');
@@ -1884,6 +1930,13 @@ function setHistoryTypeFilter(type) {
   state.historyMonthsLoaded = 1; // F4: reset rozsahu pri zmene filteru
   document.querySelectorAll('[data-h-type]').forEach(b => b.classList.toggle('active', b.dataset.hType === type));
   renderAllEntries();
+}
+
+// F15: filtr kategorii v Celkove poradi (all-time)
+function setTotalCategory(cat) {
+  state.totalCategory = cat;
+  document.querySelectorAll('#total-category-tabs .cat-tab').forEach(t => t.classList.toggle('active', t.dataset.totalCat === cat));
+  renderLeaderboardTotal();
 }
 
 function renderEntryCard(e, withActions) {
