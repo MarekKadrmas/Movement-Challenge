@@ -419,6 +419,8 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
   display: none; align-items: flex-end; justify-content: center;
   animation: fadeIn 0.2s;
 }
+/* Fix: hlavni modal zapisu/editace musi byt VZDY nahore (i kdyz se otevre z player-entries-modal F6) */
+#modal { z-index: 300; }
 .modal-overlay.active { display: flex; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
@@ -1282,6 +1284,8 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
           <div id="varied-series-list"></div>
           <button type="button" class="add-serie-btn" onclick="addVariedSerie()">+ Přidat sérii</button>
         </div>
+        <!-- F20: zive zobrazeni bodu u cviku -->
+        <div class="level-points-display" id="cvik-points-display"></div>
       </div>
 
       <div id="form-aktivita" style="display:none;">
@@ -2529,6 +2533,8 @@ function resetFormFields() {
   document.getElementById('level-hint').textContent = 'vyber úroveň 1-5';
   document.getElementById('level-points-display').classList.remove('show');
   document.getElementById('stretch-points-display').classList.remove('show');
+  const cvikDisp = document.getElementById('cvik-points-display');
+  if (cvikDisp) cvikDisp.classList.remove('show');  // F20
   // Reset datum na dnes
   state.selectedDate = todayStr();
   updateDateTrigger();
@@ -2657,6 +2663,7 @@ function setEntryType(type) {
   document.getElementById('form-cvik').style.display = type === 'cvik' ? '' : 'none';
   document.getElementById('form-aktivita').style.display = type === 'aktivita' ? '' : 'none';
   document.getElementById('form-stretching').style.display = type === 'stretching' ? '' : 'none';
+  if (type === 'cvik') updateCvikPointsPreview();
 }
 
 function setSerieMode(mode) {
@@ -2668,6 +2675,44 @@ function setSerieMode(mode) {
   if (mode === 'varied' && state.variedSeries.length === 0) {
     state.variedSeries = [{op:'',vaha:0}];
     renderVariedSeries();
+  }
+  updateCvikPointsPreview();
+}
+
+// F20: Zive zobrazeni bodu u cviku (stejne jako u aktivity/stretching)
+function updateCvikPointsPreview() {
+  const disp = document.getElementById('cvik-points-display');
+  if (!disp) return;
+  if (state.entryType !== 'cvik' || !state.selectedPlayer || !state.selectedCvik) {
+    disp.classList.remove('show');
+    disp.textContent = '';
+    return;
+  }
+  const player = state.players.find(p => p.id === state.selectedPlayer);
+  if (!player) { disp.classList.remove('show'); return; }
+  let total = 0;
+  if (state.serieMode === 'single') {
+    const op = parseInt(document.getElementById('cvik-single-op').value) || 0;
+    const vaha = parseFloat(document.getElementById('cvik-single-vaha').value) || 0;
+    if (op > 0) total = vypocitejBodyCvik(player, state.selectedCvik, op, vaha);
+  } else if (state.serieMode === 'same') {
+    const series = parseInt(document.getElementById('cvik-same-series').value) || 0;
+    const ops = parseInt(document.getElementById('cvik-same-op').value) || 0;
+    const vaha = parseFloat(document.getElementById('cvik-same-vaha').value) || 0;
+    if (series > 0 && ops > 0) total = vypocitejBodyCvik(player, state.selectedCvik, series * ops, vaha);
+  } else if (state.serieMode === 'varied') {
+    state.variedSeries.forEach(s => {
+      const op = parseInt(s.op) || 0;
+      const vaha = parseFloat(s.vaha) || 0;
+      if (op > 0) total += vypocitejBodyCvik(player, state.selectedCvik, op, vaha);
+    });
+    total = Math.round(total * 10) / 10;
+  }
+  if (total > 0) {
+    disp.textContent = `+${total.toFixed(1)} bodů`;
+    disp.classList.add('show');
+  } else {
+    disp.classList.remove('show');
   }
 }
 
@@ -2686,6 +2731,7 @@ function renderVariedSeries() {
       const idx = parseInt(e.target.dataset.idx);
       const field = e.target.dataset.field;
       state.variedSeries[idx][field] = e.target.value;
+      updateCvikPointsPreview();  // F20: zive prepocet
     });
   });
   el.querySelectorAll('.remove-btn').forEach(btn => {
@@ -2758,7 +2804,14 @@ document.querySelectorAll('#cvik-pills .player-pill').forEach(pill => {
     pill.classList.add('active');
     pill.style.background = 'var(--accent)'; pill.style.borderColor = 'var(--accent)'; pill.style.color = '#000';
     state.selectedCvik = pill.dataset.cvik;
+    updateCvikPointsPreview();
   });
+});
+
+// F20: input listener pro vsechny cvik inputs (single, same, varied) -> zive prepocet
+['cvik-single-op','cvik-single-vaha','cvik-same-series','cvik-same-op','cvik-same-vaha'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('input', updateCvikPointsPreview);
 });
 
 document.querySelectorAll('.level-btn:not(.stretch-btn)').forEach(btn => {
@@ -2989,6 +3042,7 @@ function openEditModal(id, type) {
   // Nacti datum z editovaneho zaznamu (jinak by zustal todayStr() z resetFormFields)
   state.selectedDate = entry.datum || todayStr();
   updateDateTrigger();
+  updateCvikPointsPreview();  // F20: zobrazi body v edit rezimu
   document.getElementById('modal').classList.add('active');
 }
 
