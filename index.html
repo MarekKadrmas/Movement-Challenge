@@ -69,18 +69,33 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 .main { padding: 16px; max-width: 720px; margin: 0 auto; padding-bottom: 120px; }
 
 /* Hero / Leaderboard */
-/* F15: hero karta dostane barevny ramecek podle vybrane kategorie (tlumene barvy) */
+/* F15: hero karta s filtry kategorii - tabs+tabulka v lehce sedem boxu (stejne pro vsechny filtry) */
 .hero {
-  --cat-color: #57534e;        /* Dohromady = warm gray (stone-600) */
-  background: var(--bg-card); border: 2px solid var(--cat-color);
+  background: var(--bg-card); border: 1px solid var(--border);
   border-radius: 16px; padding: 18px; margin-bottom: 16px;
-  transition: border-color 0.2s;
 }
-.hero[data-cat="cvik"]       { --cat-color: #3b5e87; }  /* tlumena modra */
-.hero[data-cat="aktivita"]   { --cat-color: #4a7a4d; }  /* tlumena zelena */
-.hero[data-cat="stretching"] { --cat-color: #6f4f8a; }  /* tlumena fialova */
 .hero-title { margin-bottom: 12px; }
-#total-category-tabs { margin-bottom: 14px; }
+.hero-section-wrap {
+  background: var(--border-soft);
+  border-radius: 12px;
+  padding: 8px;
+}
+#total-category-tabs { margin-bottom: 8px; }
+#total-category-tabs .cat-tab {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+}
+#total-category-tabs .cat-tab.active {
+  background: var(--accent);     /* #18181b - tmavy */
+  color: #fff;
+  border-color: var(--accent);
+}
+.hero-section-wrap .leaderboard {
+  background: var(--bg-card);
+  border-radius: 10px;
+  padding: 4px 8px;
+}
 .hero-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; margin-bottom: 4px; }
 .hero-title { font-size: 22px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 16px; }
 .hero-title .week { color: var(--text-muted); font-weight: 500; font-size: 13px; }
@@ -917,18 +932,20 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
   </nav>
 
   <div id="view-prehled">
-    <div class="hero" data-cat="all">
+    <div class="hero">
       <div class="hero-label">Leaderboard</div>
       <div class="hero-title">Celkové pořadí</div>
-      <!-- F15: filtry kategorii v celkovem leaderboardu (all-time) — stejny styl jako dolni LB, ale tlumene barvy -->
-      <div class="category-tabs" id="total-category-tabs">
-        <button type="button" class="cat-tab active" data-total-cat="all" onclick="setTotalCategory('all')">Dohromady</button>
-        <button type="button" class="cat-tab" data-total-cat="cvik" onclick="setTotalCategory('cvik')">Cviky</button>
-        <button type="button" class="cat-tab" data-total-cat="aktivita" onclick="setTotalCategory('aktivita')">Aktivity</button>
-        <button type="button" class="cat-tab" data-total-cat="stretching" onclick="setTotalCategory('stretching')">Stretching</button>
-      </div>
-      <div class="leaderboard" id="leaderboard-total">
-        <div class="loading">Načítám...</div>
+      <!-- F15: filtry kategorii v celkovem LB - tabs+tabulka v jednom lehce sedem boxu -->
+      <div class="hero-section-wrap">
+        <div class="category-tabs" id="total-category-tabs">
+          <button type="button" class="cat-tab active" data-total-cat="all" onclick="setTotalCategory('all')">Dohromady</button>
+          <button type="button" class="cat-tab" data-total-cat="cvik" onclick="setTotalCategory('cvik')">Cviky</button>
+          <button type="button" class="cat-tab" data-total-cat="aktivita" onclick="setTotalCategory('aktivita')">Aktivity</button>
+          <button type="button" class="cat-tab" data-total-cat="stretching" onclick="setTotalCategory('stretching')">Stretching</button>
+        </div>
+        <div class="leaderboard" id="leaderboard-total">
+          <div class="loading">Načítám...</div>
+        </div>
       </div>
     </div>
 
@@ -1919,8 +1936,6 @@ function setHistoryTypeFilter(type) {
 function setTotalCategory(cat) {
   state.totalCategory = cat;
   document.querySelectorAll('#total-category-tabs .cat-tab').forEach(t => t.classList.toggle('active', t.dataset.totalCat === cat));
-  // Propagace barvy do hero karty (data-cat atribut definuje --cat-color)
-  document.querySelector('.hero').setAttribute('data-cat', cat === 'all' ? 'all' : cat);
   renderLeaderboardTotal();
 }
 
