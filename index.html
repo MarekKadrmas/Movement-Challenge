@@ -983,6 +983,20 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
   cursor: pointer; font-family: inherit;
 }
 .chat-sender-pill.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+/* F19: chat sender info pro bezne hrace (read-only, jen info kdo pise) */
+.chat-sender-me {
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 10px 4px 4px;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 100px;
+  font-size: 12px; font-weight: 600;
+}
+.chat-sender-me-avatar {
+  width: 22px; height: 22px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 9px; color: #000;
+}
 .chat-input-row { display: flex; gap: 8px; }
 .chat-input-row input {
   flex: 1; padding: 11px 13px;
@@ -2300,12 +2314,20 @@ function buildChatSenderPills() {
   const wrap = document.getElementById('chat-sender-pills');
   if (!wrap) return;
   const aktivni = state.players.filter(p => p.aktivni);
-  // Pokud neni nastaven sender, vyber prvniho
+  // F19: chatSender = currentPlayerId (bez admina nelze menit)
+  if (!state.chatSender && state.currentPlayerId) state.chatSender = state.currentPlayerId;
   if (!state.chatSender && aktivni.length > 0) state.chatSender = aktivni[0].id;
-  wrap.innerHTML = aktivni.map(p => {
-    const active = state.chatSender === p.id;
-    return `<button type="button" class="chat-sender-pill ${active ? 'active' : ''}" style="${active ? `background:${p.barva};color:#000;border-color:${p.barva};` : ''}" onclick="setChatSender('${p.id}')">${p.jmeno}</button>`;
-  }).join('');
+  if (isAdmin()) {
+    // Admin muze psat za kohokoli - zachovat pills
+    wrap.innerHTML = aktivni.map(p => {
+      const active = state.chatSender === p.id;
+      return `<button type="button" class="chat-sender-pill ${active ? 'active' : ''}" style="${active ? `background:${p.barva};color:#000;border-color:${p.barva};` : ''}" onclick="setChatSender('${p.id}')">${p.jmeno}</button>`;
+    }).join('');
+  } else {
+    // Bezny hrac - jen info "Pises jako X"
+    const me = state.players.find(p => p.id === state.chatSender);
+    wrap.innerHTML = me ? `<div class="chat-sender-me"><div class="chat-sender-me-avatar" style="background:${me.barva}">${initials(me.jmeno)}</div><span>${me.jmeno}</span></div>` : '';
+  }
 }
 
 function setChatSender(playerId) {
@@ -2363,6 +2385,8 @@ function renderChat() {
         return `<button type="button" class="chat-reaction-pill ${mine ? 'mine' : ''}" onclick="event.stopPropagation(); toggleChatReaction('${m.id}', '${emoji}')">${emoji} <span class="reaction-count">${list.length}</span></button>`;
       }).join('') + '</div>';
     }
+    // F19: delete jen vlastní zprávy nebo admin
+    const canDelete = isAdmin() || m.player_id === state.currentPlayerId;
     return `
       <div class="chat-msg" onclick="openChatActionMenu('${m.id}')">
         <div class="chat-msg-avatar" style="background:${player.barva}">${initials(player.jmeno)}</div>
@@ -2375,7 +2399,7 @@ function renderChat() {
           <div class="chat-msg-text">${chatEscape(m.text)}</div>
           ${reactionsHtml}
         </div>
-        <button type="button" class="chat-msg-delete" onclick="event.stopPropagation(); deleteChatMessage('${m.id}')" title="Smazat">🗑️</button>
+        ${canDelete ? `<button type="button" class="chat-msg-delete" onclick="event.stopPropagation(); deleteChatMessage('${m.id}')" title="Smazat">🗑️</button>` : ''}
       </div>`;
   }).join('');
   el.scrollTop = el.scrollHeight;
@@ -2636,6 +2660,10 @@ function attachEntryActions(container) {
 
 async function deleteEntry(id, type) {
   const table = type === 'cvik' ? 'cviky' : 'aktivity';
+  // F19: ochrana - jen vlastni nebo admin
+  const arr = type === 'cvik' ? state.cviky : state.aktivity;
+  const entry = arr.find(e => e.id === id);
+  if (entry && !canEditEntry(entry)) { toast('Nemůžeš mazat cizí záznam', 'error'); return; }
   try {
     const { error } = await db.from(table).delete().eq('id', id);
     if (error) throw error;
@@ -2771,10 +2799,11 @@ function renderPlayers() {
             </div>
           </div>
         </div>
+        ${(isAdmin() || p.id === state.currentPlayerId) ? `
         <div class="player-card-actions">
           <button onclick="openPlayerEdit('${p.id}')">✏️ Upravit</button>
           <button onclick="openPlayerHistory('${p.id}')">🕓 Historie úprav</button>
-        </div>
+        </div>` : ''}
       </div>`;
   }).join('');
 }
@@ -3376,6 +3405,8 @@ function openEditModal(id, type) {
   const arr = type === 'cvik' ? state.cviky : state.aktivity;
   const entry = arr.find(e => e.id === id);
   if (!entry) return;
+  // F19: ochrana - jen vlastni nebo admin
+  if (!canEditEntry(entry)) { toast('Nemůžeš upravovat cizí záznam', 'error'); return; }
   state.editMode = true;
   state.editId = id;
   state.editTable = table;
@@ -3457,6 +3488,8 @@ function openEditModal(id, type) {
 //  EDITACE HRACU
 // ============================================================
 function openPlayerEdit(playerId) {
+  // F19: jen vlastni nebo admin
+  if (!isAdmin() && playerId !== state.currentPlayerId) { toast('Nemůžeš upravovat cizího hráče', 'error'); return; }
   state.playerBeingEdited = playerId;
   state.editorPlayer = null;
   const player = state.players.find(p => p.id === playerId);
