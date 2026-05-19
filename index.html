@@ -300,14 +300,22 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 .heatmap-cell.nat-5 { background: #ec4899; }
 .heatmap-cell.nat-6 { background: #db2777; }
 .heatmap-cell.nat-7 { background: #be185d; }
-/* Peta - modra */
-.heatmap-cell.peta-1 { background: #dbeafe; }
-.heatmap-cell.peta-2 { background: #bfdbfe; }
-.heatmap-cell.peta-3 { background: #93c5fd; }
-.heatmap-cell.peta-4 { background: #60a5fa; }
-.heatmap-cell.peta-5 { background: #3b82f6; }
-.heatmap-cell.peta-6 { background: #2563eb; }
-.heatmap-cell.peta-7 { background: #1d4ed8; }
+/* Peta - fialova (F28: prohozeno s Mátou) */
+.heatmap-cell.peta-1 { background: #ede9fe; }
+.heatmap-cell.peta-2 { background: #ddd6fe; }
+.heatmap-cell.peta-3 { background: #c4b5fd; }
+.heatmap-cell.peta-4 { background: #a78bfa; }
+.heatmap-cell.peta-5 { background: #8b5cf6; }
+.heatmap-cell.peta-6 { background: #7c3aed; }
+.heatmap-cell.peta-7 { background: #6d28d9; }
+/* Mata - modra (F28) */
+.heatmap-cell.mata-1 { background: #dbeafe; }
+.heatmap-cell.mata-2 { background: #bfdbfe; }
+.heatmap-cell.mata-3 { background: #93c5fd; }
+.heatmap-cell.mata-4 { background: #60a5fa; }
+.heatmap-cell.mata-5 { background: #3b82f6; }
+.heatmap-cell.mata-6 { background: #2563eb; }
+.heatmap-cell.mata-7 { background: #1d4ed8; }
 /* Katka - oranzova (F16) */
 .heatmap-cell.katka-1 { background: #ffedd5; }
 .heatmap-cell.katka-2 { background: #fed7aa; }
@@ -803,11 +811,12 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
   background: #fef3c7;
   border: 1px solid #fde68a;
   border-radius: 10px;
-  padding: 11px 14px;
-  margin-top: 14px;
-  font-size: 12px;
+  padding: 8px 12px;
+  margin-top: 6px;
+  margin-bottom: 4px;
+  font-size: 11px;
   color: #78350f;
-  line-height: 1.5;
+  line-height: 1.4;
 }
 .info-box strong { font-weight: 700; }
 
@@ -2250,8 +2259,9 @@ function renderHeatmap() {
   // Prefix podle jmena hrace
   function playerColorKey(name) {
     const n = (name || '').toLowerCase();
+    if (n.startsWith('máť') || n.startsWith('máta')) return 'mata';  // F28: Mata
+    if (n.includes('martin')) return 'martin';                          // martin pred marou (precize)
     if (n.includes('mára') || n.includes('mara')) return 'mara';
-    if (n.includes('martin')) return 'martin';
     if (n.includes('nat')) return 'nat'; // Natalka i Natalka
     if (n.includes('péť') || n.includes('pet')) return 'peta';
     if (n.includes('káť') || n.includes('kat')) return 'katka'; // F16: barva pro Katu
@@ -3024,11 +3034,12 @@ function renderPlayers() {
   // Defaultni emoji per hrac (podle iniciaru / jmena)
   function avatarEmoji(name) {
     const n = (name || '').toLowerCase();
-    if (n.includes('mára') || n.includes('mara')) return '🦊';
+    if (n.startsWith('máť') || n.startsWith('máta')) return '🐺';  // F28: Mata
     if (n.includes('martin')) return '🦁';
+    if (n.includes('mára') || n.includes('mara')) return '🦊';
     if (n.includes('nat')) return '🦄';
     if (n.includes('péť') || n.includes('pet')) return '🐯';
-    if (n.includes('káť') || n.includes('kat')) return '🐶'; // Káta + psi
+    if (n.includes('káť') || n.includes('kat')) return '🐶';
     return '😎';
   }
   el.innerHTML = state.players.map(p => {
