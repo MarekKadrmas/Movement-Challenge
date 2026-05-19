@@ -2705,7 +2705,8 @@ async function startLoginFlow(playerId) {
     return;
   }
   if (!p.password_hash) {
-    // Prvni login — nastavit heslo
+    // F25: Confirm pred nastavenim (zabrani nahodnemu prepsani cizi avatar)
+    if (!confirm(`Vytvoříš heslo pro hráče "${p.jmeno}". Jsi opravdu ${p.jmeno}? Po nastavení si ho musíš pamatovat.`)) return;
     const pass1 = prompt(`Nastav heslo pro ${p.jmeno} (zapamatuj si ho):`);
     if (!pass1) return;
     if (pass1.length < 3) { alert('Heslo musí mít aspoň 3 znaky.'); return; }
@@ -3058,9 +3059,27 @@ function renderPlayers() {
         <div class="player-card-actions">
           <button onclick="openPlayerEdit('${p.id}')">✏️ Upravit</button>
           <button onclick="openPlayerHistory('${p.id}')">🕓 Historie úprav</button>
+          ${isAdmin() && p.password_hash ? `<button onclick="resetPlayerPassword('${p.id}')">🔓 Resetovat heslo</button>` : ''}
         </div>` : ''}
       </div>`;
   }).join('');
+}
+
+// F25: Admin reset hesla hrace (smaze password_hash, hrac musi znova nastavit pri dalsim loginu)
+async function resetPlayerPassword(playerId) {
+  if (!isAdmin()) return;
+  const p = state.players.find(pl => pl.id === playerId);
+  if (!p) return;
+  if (!confirm(`Opravdu resetovat heslo pro ${p.jmeno}? Při dalším přihlášení si bude muset nastavit nové.`)) return;
+  try {
+    const { error } = await db.from('players').update({ password_hash: null }).eq('id', playerId);
+    if (error) throw error;
+    p.password_hash = null;  // update lokalne
+    toast(`Heslo ${p.jmeno} resetováno`, 'success');
+    renderPlayers();
+  } catch (e) {
+    toast('Chyba: ' + e.message, 'error');
+  }
 }
 
 function renderScoringExplanation() {
