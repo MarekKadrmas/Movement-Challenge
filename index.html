@@ -366,9 +366,9 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 
 
 /* F11: Category section (Dohromady / Cviky / Aktivity / Stretching) */
+/* F26: barvy zmeneny na sedo-cerne aby se nepletly s barvami hracu */
 .category-section {
-  --cat-color: #f97316;   /* vychozi = oranzova (Dohromady) */
-  --cat-color-soft: rgba(249, 115, 22, 0.08);
+  --cat-color: #18181b;         /* Dohromady = cerna */
   border: 2px solid var(--cat-color);
   border-radius: 16px;
   padding: 10px 12px 14px;
@@ -376,9 +376,9 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
   background: var(--bg-card);
   transition: border-color 0.2s;
 }
-.category-section[data-cat="cviky"]      { --cat-color: #3b82f6; --cat-color-soft: rgba(59, 130, 246, 0.08); }
-.category-section[data-cat="aktivity"]   { --cat-color: #22c55e; --cat-color-soft: rgba(34, 197, 94, 0.08); }
-.category-section[data-cat="stretching"] { --cat-color: #a855f7; --cat-color-soft: rgba(168, 85, 247, 0.08); }
+.category-section[data-cat="cviky"]      { --cat-color: #3f3f46; }  /* zinc-700 */
+.category-section[data-cat="aktivity"]   { --cat-color: #52525b; }  /* zinc-600 */
+.category-section[data-cat="stretching"] { --cat-color: #71717a; }  /* zinc-500 */
 .category-tabs {
   display: grid; grid-template-columns: repeat(4, 1fr);
   gap: 8px; margin-bottom: 14px;
@@ -2421,7 +2421,9 @@ function buildHistoryPlayerPills() {
   const items = [{ id: 'all', jmeno: 'Vše' }, ...state.players.filter(p => p.aktivni)];
   wrap.innerHTML = items.map(p => {
     const active = state.historyPlayerFilter === p.id;
-    return `<button type="button" class="filter-pill ${active ? 'active' : ''}" onclick="setHistoryPlayerFilter('${p.id}')">${p.jmeno}</button>`;
+    // F26: pokud je aktivni hrac, dat mu jeho barvu (vse zustane cerne)
+    const styleAttr = active && p.barva ? `style="background:${p.barva};color:#000;border-color:${p.barva};"` : '';
+    return `<button type="button" class="filter-pill ${active ? 'active' : ''}" ${styleAttr} onclick="setHistoryPlayerFilter('${p.id}')">${p.jmeno}</button>`;
   }).join('');
 }
 
