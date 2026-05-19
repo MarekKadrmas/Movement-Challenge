@@ -1001,7 +1001,7 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 .chat-input-row input {
   flex: 1; padding: 11px 13px;
   background: var(--bg); border: 1px solid var(--border);
-  border-radius: 10px; font-family: inherit; font-size: 14px;
+  border-radius: 10px; font-family: inherit; font-size: 16px;  /* 16px = iOS Safari nezoomuje pri focus */
   color: var(--text);
   -webkit-appearance: none; appearance: none;
 }
@@ -2477,7 +2477,11 @@ function startReplyFromMenu() {
   document.getElementById('chat-action-menu').classList.remove('active');
   state.chatActiveMessage = null;
   updateReplyBar();
-  document.getElementById('chat-input').focus();
+  // Focus input bez scroll stranky (Messenger-like UX)
+  const inp = document.getElementById('chat-input');
+  if (inp && inp.focus) {
+    try { inp.focus({ preventScroll: true }); } catch(_) { inp.focus(); }
+  }
 }
 
 function cancelReply() {
