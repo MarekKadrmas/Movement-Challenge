@@ -1840,8 +1840,15 @@ let state = {
   currentPlayerId: null
 };
 
-// F19: localStorage klic
+// F19: localStorage klice
 const CURRENT_PLAYER_KEY = 'mc-current-player-id';
+const ADMIN_DEVICE_KEY = 'mc-is-admin-device';
+
+// F19: zarizeni je "admin device" pokud kdy bylo prihlaseno jako admin (= Marek muze prepinat hrace
+// i po vyberu jineho hrace, aby otestoval; ostatni hraci tohle nikdy nezískaji)
+function isAdminDevice() {
+  return localStorage.getItem(ADMIN_DEVICE_KEY) === 'true';
+}
 
 const MESICE_CZ = ['leden','únor','březen','duben','květen','červen','červenec','srpen','září','říjen','listopad','prosinec'];
 
@@ -2630,6 +2637,11 @@ function selectPlayer(playerId) {
   state.currentPlayerId = playerId;
   state.chatSender = playerId;   // F18: pro chat synchronizovat
   localStorage.setItem(CURRENT_PLAYER_KEY, playerId);
+  // F19 fix: pokud byl vybran admin, oznacit zarizeni jako admin-device (trvale)
+  const player = state.players.find(p => p.id === playerId);
+  if (player && player.is_admin) {
+    localStorage.setItem(ADMIN_DEVICE_KEY, 'true');
+  }
   document.getElementById('login-overlay').classList.remove('active');
   updateHeaderMe();
   renderAllViews();
@@ -2644,8 +2656,8 @@ function updateHeaderMe() {
   av.style.background = p.barva;
   av.textContent = initials(p.jmeno);
   document.getElementById('header-me-name').textContent = p.jmeno;
-  // F19 fix: prepinani hrace jen pro admina (Marek)
-  if (isAdmin()) {
+  // F19 fix: prepinani hrace jen pro admin-device (zarizeni co se nekdy prihlasilo jako Marek)
+  if (isAdminDevice()) {
     me.style.cursor = 'pointer';
     me.removeAttribute('data-no-switch');
   } else {
@@ -2655,8 +2667,8 @@ function updateHeaderMe() {
 }
 
 function openSwitchPlayer() {
-  // F19 fix: jen admin muze prepinat hrace
-  if (!isAdmin()) return;
+  // F19 fix: jen admin-device muze prepinat hrace
+  if (!isAdminDevice()) return;
   renderLoginScreen();
   document.getElementById('login-overlay').classList.add('active');
 }
