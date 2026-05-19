@@ -2877,9 +2877,10 @@ function renderEntryCard(e, withActions) {
     ? `${typeIcon} ${player.jmeno} · ${formatDate(e.datum)}`
     : `${typeIcon} ${player.jmeno} · úroveň ${e.uroven} · ${formatDate(e.datum)}`;
   // F19: edit/delete jen pro vlastní záznam (kromě adminu)
+  // Vzdy renderujeme aby se nemenila vyska karty pri prepnuti admin/hrac (jen schovame vizuálně)
   const canEdit = withActions && canEditEntry(e);
-  const actions = canEdit ? `
-    <div class="entry-actions">
+  const actions = withActions ? `
+    <div class="entry-actions" style="${canEdit ? '' : 'visibility:hidden;pointer-events:none;'}">
       <button class="entry-action-btn edit" data-id="${e.id}" data-type="${e._type}" data-action="edit">✏️</button>
       <button class="entry-action-btn delete" data-id="${e.id}" data-type="${e._type}" data-action="delete">🗑️</button>
     </div>` : '';
