@@ -67,7 +67,20 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
 /* F19: header-right + me avatar */
-.header-right { display: flex; align-items: center; gap: 12px; }
+.header-right { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
+/* Mobil: kompaktnejsi header — Movement.Challenge i jmeno hrace vidi celé */
+@media (max-width: 480px) {
+  .header { padding: 10px 10px; }
+  .header-brand { gap: 6px; min-width: 0; }
+  .header h1 { font-size: 13px; white-space: nowrap; }
+  .header-logo { width: 26px; height: 26px; }
+  .header .status { display: none; }
+  .header-admin-toggle { padding: 4px 7px; font-size: 10px; }
+  .header-logout { width: 26px; height: 26px; font-size: 12px; }
+  .header-me { padding: 3px 8px 3px 3px; }
+  .header-me-avatar { width: 22px; height: 22px; font-size: 9px; }
+  .header-me-name { font-size: 11px; }
+}
 .header-me {
   display: flex; align-items: center; gap: 6px;
   cursor: pointer; padding: 4px 8px 4px 4px;
@@ -82,6 +95,28 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
   font-weight: 700; font-size: 10px; color: #000;
 }
 .header-me-name { font-size: 12px; font-weight: 600; }
+
+/* F25: admin toggle */
+.header-admin-toggle {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 100px; padding: 5px 12px;
+  font-family: inherit; font-size: 11px; font-weight: 700;
+  color: var(--text-muted); cursor: pointer;
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+.header-admin-toggle.active {
+  background: var(--accent); color: #fff; border-color: var(--accent);
+}
+.header-admin-toggle:active { transform: scale(0.96); }
+
+/* F25: Odhlasit se */
+.header-logout {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 100px; width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 14px; padding: 0;
+}
+.header-logout:active { transform: scale(0.94); background: var(--bg); }
 
 /* F19: Login overlay (Kdo jsi?) */
 .login-overlay {
@@ -137,6 +172,7 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
   border-radius: 100px; font-weight: 700;
   text-transform: uppercase; letter-spacing: 0.05em;
 }
+.login-player-btn .login-lock { font-size: 14px; opacity: 0.4; }
 
 .main { padding: 16px; max-width: 720px; margin: 0 auto; padding-bottom: 120px; }
 
@@ -1260,11 +1296,17 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
     <h1>Movement<span class="light">.Challenge</span></h1>
   </div>
   <div class="header-right">
+    <!-- F25: admin toggle (jen pro admina) -->
+    <button type="button" class="header-admin-toggle" id="header-admin-toggle" onclick="toggleAdminActive()" style="display:none;">
+      <span id="header-admin-label">Admin</span>
+    </button>
     <!-- F19: zobrazeni prihlaseneho hrace -->
     <div class="header-me" id="header-me" onclick="openSwitchPlayer()" style="display:none;">
       <div class="header-me-avatar" id="header-me-avatar"></div>
       <span class="header-me-name" id="header-me-name">—</span>
     </div>
+    <!-- F25: Odhlasit se (vraci na "Kdo jsi?") -->
+    <button type="button" class="header-logout" id="header-logout" onclick="logoutPlayer()" title="Odhlásit se" style="display:none;" aria-label="Odhlásit se">⏻</button>
     <div class="status"><span class="status-dot"></span><span id="connection-status">online</span></div>
   </div>
 </header>
@@ -1840,8 +1882,38 @@ let state = {
   currentPlayerId: null
 };
 
-// F19: localStorage klic
+// F19: localStorage klice
 const CURRENT_PLAYER_KEY = 'mc-current-player-id';
+const ADMIN_DEVICE_KEY = 'mc-is-admin-device';
+const ADMIN_ACTIVE_KEY = 'mc-admin-active';  // F25: admin muze prepnout mezi rolemi
+
+function isAdminDevice() {
+  return localStorage.getItem(ADMIN_DEVICE_KEY) === 'true';
+}
+
+// F25: admin aktivni (default true; lze vypnout pro testovani jako bezny hrac)
+function isAdminActive() {
+  const v = localStorage.getItem(ADMIN_ACTIVE_KEY);
+  return v === null || v === 'true';
+}
+
+// F25: Odhlasit se - vrati appku do "Kdo jsi?" stavu
+function logoutPlayer() {
+  if (!confirm('Opravdu se odhlásit? Příště budeš muset zase zadat heslo.')) return;
+  localStorage.removeItem(CURRENT_PLAYER_KEY);
+  localStorage.removeItem(ADMIN_DEVICE_KEY);  // pri odhlaseni i flag - admin se musi znovu pretvrdit
+  localStorage.removeItem(ADMIN_ACTIVE_KEY);
+  location.reload();
+}
+
+function toggleAdminActive() {
+  if (!isAdminDevice()) return;
+  const p = getCurrentPlayer();
+  if (!p || !p.is_admin) return;  // pouze admin muze prepinat
+  localStorage.setItem(ADMIN_ACTIVE_KEY, isAdminActive() ? 'false' : 'true');
+  updateHeaderMe();
+  renderAllViews();
+}
 
 const MESICE_CZ = ['leden','únor','březen','duben','květen','červen','červenec','srpen','září','říjen','listopad','prosinec'];
 
@@ -2593,7 +2665,10 @@ function getCurrentPlayer() {
 
 function isAdmin() {
   const p = getCurrentPlayer();
-  return !!(p && p.is_admin);
+  if (!p || !p.is_admin) return false;
+  // F25: admin musi byt aktivni (Mára si muze vypnout admin mode aby se choval jako hrac)
+  if (!isAdminActive()) return false;
+  return true;
 }
 
 function canEditEntry(entry) {
@@ -2605,12 +2680,58 @@ function renderLoginScreen() {
   const aktivni = state.players.filter(p => p.aktivni);
   const wrap = document.getElementById('login-players');
   wrap.innerHTML = aktivni.map(p => `
-    <button type="button" class="login-player-btn" onclick="selectPlayer('${p.id}')">
+    <button type="button" class="login-player-btn" onclick="startLoginFlow('${p.id}')">
       <div class="login-avatar" style="background:${p.barva}">${initials(p.jmeno)}</div>
       <div class="login-name">${p.jmeno}</div>
       ${p.is_admin ? '<div class="login-badge">Admin</div>' : ''}
+      <div class="login-lock">${p.password_hash ? '🔒' : ''}</div>
     </button>
   `).join('');
+}
+
+// F25: SHA-256 hash pres Web Crypto API
+async function sha256Hex(text) {
+  const enc = new TextEncoder().encode(text);
+  const buf = await crypto.subtle.digest('SHA-256', enc);
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function startLoginFlow(playerId) {
+  const p = state.players.find(pl => pl.id === playerId);
+  if (!p) return;
+  // F25: admin-device bypass — Marek muze prepinat hrace bez zadavani jejich hesla (jen pro testovani)
+  if (isAdminDevice() && p.password_hash) {
+    selectPlayer(playerId);
+    return;
+  }
+  if (!p.password_hash) {
+    // Prvni login — nastavit heslo
+    const pass1 = prompt(`Nastav heslo pro ${p.jmeno} (zapamatuj si ho):`);
+    if (!pass1) return;
+    if (pass1.length < 3) { alert('Heslo musí mít aspoň 3 znaky.'); return; }
+    const pass2 = prompt(`Zadej heslo znovu pro kontrolu:`);
+    if (pass1 !== pass2) { alert('Hesla se neshodují.'); return; }
+    const hash = await sha256Hex(pass1);
+    try {
+      const { error } = await db.from('players').update({ password_hash: hash }).eq('id', playerId);
+      if (error) throw error;
+      p.password_hash = hash;  // update lokalne
+      toast('Heslo nastaveno', 'success');
+      selectPlayer(playerId);
+    } catch (e) {
+      alert('Chyba ulození hesla: ' + e.message);
+    }
+  } else {
+    // Bezne prihlaseni - zadat heslo
+    const pass = prompt(`Heslo pro ${p.jmeno}:`);
+    if (!pass) return;
+    const hash = await sha256Hex(pass);
+    if (hash !== p.password_hash) {
+      alert('Špatné heslo.');
+      return;
+    }
+    selectPlayer(playerId);
+  }
 }
 
 function showLoginIfNeeded() {
@@ -2630,6 +2751,11 @@ function selectPlayer(playerId) {
   state.currentPlayerId = playerId;
   state.chatSender = playerId;   // F18: pro chat synchronizovat
   localStorage.setItem(CURRENT_PLAYER_KEY, playerId);
+  // F19 fix: pokud byl vybran admin, oznacit zarizeni jako admin-device (trvale)
+  const player = state.players.find(p => p.id === playerId);
+  if (player && player.is_admin) {
+    localStorage.setItem(ADMIN_DEVICE_KEY, 'true');
+  }
   document.getElementById('login-overlay').classList.remove('active');
   updateHeaderMe();
   renderAllViews();
@@ -2644,10 +2770,33 @@ function updateHeaderMe() {
   av.style.background = p.barva;
   av.textContent = initials(p.jmeno);
   document.getElementById('header-me-name').textContent = p.jmeno;
+  // F19 fix: prepinani hrace jen pro admin-device
+  if (isAdminDevice()) {
+    me.style.cursor = 'pointer';
+    me.removeAttribute('data-no-switch');
+  } else {
+    me.style.cursor = 'default';
+    me.setAttribute('data-no-switch', 'true');
+  }
+  // F25: admin toggle - viditelny jen pokud aktualni hrac je admin a admin-device
+  const toggle = document.getElementById('header-admin-toggle');
+  if (toggle) {
+    if (isAdminDevice() && p.is_admin) {
+      toggle.style.display = '';
+      toggle.classList.toggle('active', isAdminActive());
+      document.getElementById('header-admin-label').textContent = isAdminActive() ? 'Admin' : 'Hráč';
+    } else {
+      toggle.style.display = 'none';
+    }
+  }
+  // F25: Odhlasit se - viditelne vzdy kdyz je prihlaseny hrac
+  const logout = document.getElementById('header-logout');
+  if (logout) logout.style.display = '';
 }
 
 function openSwitchPlayer() {
-  // Otevre login overlay znovu pro zmenu hrace
+  // F19 fix: jen admin-device muze prepinat hrace
+  if (!isAdminDevice()) return;
   renderLoginScreen();
   document.getElementById('login-overlay').classList.add('active');
 }
