@@ -96,6 +96,15 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 }
 .header-admin-toggle:active { transform: scale(0.96); }
 
+/* F25: Odhlasit se */
+.header-logout {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 100px; width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 14px; padding: 0;
+}
+.header-logout:active { transform: scale(0.94); background: var(--bg); }
+
 /* F19: Login overlay (Kdo jsi?) */
 .login-overlay {
   position: fixed; inset: 0; z-index: 1000;
@@ -1283,6 +1292,8 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
       <div class="header-me-avatar" id="header-me-avatar"></div>
       <span class="header-me-name" id="header-me-name">—</span>
     </div>
+    <!-- F25: Odhlasit se (vraci na "Kdo jsi?") -->
+    <button type="button" class="header-logout" id="header-logout" onclick="logoutPlayer()" title="Odhlásit se" style="display:none;">🚪</button>
     <div class="status"><span class="status-dot"></span><span id="connection-status">online</span></div>
   </div>
 </header>
@@ -1871,6 +1882,15 @@ function isAdminDevice() {
 function isAdminActive() {
   const v = localStorage.getItem(ADMIN_ACTIVE_KEY);
   return v === null || v === 'true';
+}
+
+// F25: Odhlasit se - vrati appku do "Kdo jsi?" stavu
+function logoutPlayer() {
+  if (!confirm('Opravdu se odhlásit? Příště budeš muset zase zadat heslo.')) return;
+  localStorage.removeItem(CURRENT_PLAYER_KEY);
+  localStorage.removeItem(ADMIN_DEVICE_KEY);  // pri odhlaseni i flag - admin se musi znovu pretvrdit
+  localStorage.removeItem(ADMIN_ACTIVE_KEY);
+  location.reload();
 }
 
 function toggleAdminActive() {
@@ -2756,6 +2776,9 @@ function updateHeaderMe() {
       toggle.style.display = 'none';
     }
   }
+  // F25: Odhlasit se - viditelne vzdy kdyz je prihlaseny hrac
+  const logout = document.getElementById('header-logout');
+  if (logout) logout.style.display = '';
 }
 
 function openSwitchPlayer() {
