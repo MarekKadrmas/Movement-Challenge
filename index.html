@@ -932,6 +932,90 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
   color: var(--text-muted); font-size: 13px;
 }
 
+/* F21: reply indikator nad inputem */
+.chat-reply-bar {
+  display: flex !important; align-items: center; gap: 8px;
+  padding: 8px 10px; margin-bottom: 8px;
+  background: var(--border-soft); border-radius: 8px;
+  border-left: 3px solid var(--accent);
+}
+.chat-reply-bar[style*="none"] { display: none !important; }
+.chat-reply-icon { font-size: 14px; flex-shrink: 0; }
+.chat-reply-content { flex: 1; min-width: 0; overflow: hidden; }
+.chat-reply-name { font-size: 11px; font-weight: 700; color: var(--text); }
+.chat-reply-preview {
+  font-size: 12px; color: var(--text-muted);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.chat-reply-cancel {
+  background: none; border: none; font-size: 18px; cursor: pointer;
+  color: var(--text-muted); padding: 0 4px; flex-shrink: 0;
+}
+
+/* F21: reply preview UVNITR zpravy (kdyz tato zprava je odpoved) */
+.chat-msg-reply-ref {
+  display: flex; gap: 6px; align-items: center;
+  padding: 6px 10px; margin-bottom: 6px;
+  background: var(--border-soft); border-radius: 8px;
+  border-left: 3px solid var(--accent-soft);
+  font-size: 12px;
+}
+.chat-msg-reply-name { font-weight: 700; color: var(--text); flex-shrink: 0; }
+.chat-msg-reply-text {
+  color: var(--text-muted);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* F21: reakce pod zpravou */
+.chat-msg-reactions {
+  display: flex; gap: 4px; flex-wrap: wrap;
+  margin-top: 6px;
+}
+.chat-reaction-pill {
+  display: inline-flex; align-items: center; gap: 3px;
+  padding: 2px 8px; border-radius: 100px;
+  background: var(--bg); border: 1px solid var(--border);
+  font-size: 12px; cursor: pointer;
+  font-family: inherit;
+}
+.chat-reaction-pill.mine {
+  background: var(--accent); color: #fff; border-color: var(--accent);
+}
+.chat-reaction-pill .reaction-count { font-weight: 700; font-size: 11px; }
+
+/* F21: long-press / tap effect na zpravu */
+.chat-msg { cursor: pointer; user-select: none; }
+.chat-msg:active { background: var(--bg-card-hover); }
+
+/* F21: action menu modal */
+#chat-action-menu .chat-action-card {
+  background: var(--bg-card); border-radius: 16px;
+  padding: 14px; max-width: 360px; width: 100%;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+  margin-bottom: 24px;
+}
+.chat-action-emojis {
+  display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-soft);
+}
+.chat-emoji-btn {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 10px; padding: 10px 0;
+  font-size: 22px; cursor: pointer; font-family: inherit;
+}
+.chat-emoji-btn:active { transform: scale(0.92); background: var(--border); }
+.chat-action-btn {
+  display: block; width: 100%; padding: 12px;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 10px; font-family: inherit;
+  font-size: 14px; font-weight: 600; color: var(--text);
+  cursor: pointer; margin-bottom: 6px;
+}
+.chat-action-btn:active { background: var(--border); }
+.chat-action-btn.cancel { color: var(--text-muted); }
+
 /* Nav */
 .nav {
   display: flex; gap: 0; padding: 0;
@@ -1154,6 +1238,15 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
       <div class="loading">Načítám zprávy...</div>
     </div>
     <div class="chat-composer">
+      <!-- F21: reply indikator -->
+      <div class="chat-reply-bar" id="chat-reply-bar" style="display:none;">
+        <div class="chat-reply-icon">↩️</div>
+        <div class="chat-reply-content">
+          <div class="chat-reply-name" id="chat-reply-name"></div>
+          <div class="chat-reply-preview" id="chat-reply-preview"></div>
+        </div>
+        <button type="button" class="chat-reply-cancel" onclick="cancelReply()">×</button>
+      </div>
       <div class="chat-sender-row">
         <span class="chat-sender-label">Píše:</span>
         <div class="chat-sender-pills" id="chat-sender-pills"></div>
@@ -1162,6 +1255,22 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
         <input type="text" id="chat-input" placeholder="Napiš zprávu..." maxlength="500" onkeydown="if(event.key==='Enter') sendChatMessage()">
         <button type="button" class="chat-send-btn" onclick="sendChatMessage()">Odeslat</button>
       </div>
+    </div>
+  </div>
+
+  <!-- F21: Action menu pro zpravu (reply + reakce) -->
+  <div class="modal-overlay" id="chat-action-menu" onclick="closeChatActionMenu(event)">
+    <div class="chat-action-card" onclick="event.stopPropagation()">
+      <div class="chat-action-emojis">
+        <button type="button" class="chat-emoji-btn" onclick="addChatReaction('👍')">👍</button>
+        <button type="button" class="chat-emoji-btn" onclick="addChatReaction('❤️')">❤️</button>
+        <button type="button" class="chat-emoji-btn" onclick="addChatReaction('🔥')">🔥</button>
+        <button type="button" class="chat-emoji-btn" onclick="addChatReaction('💪')">💪</button>
+        <button type="button" class="chat-emoji-btn" onclick="addChatReaction('😂')">😂</button>
+        <button type="button" class="chat-emoji-btn" onclick="addChatReaction('😮')">😮</button>
+      </div>
+      <button type="button" class="chat-action-btn" onclick="startReplyFromMenu()">↩️ Odpovědět</button>
+      <button type="button" class="chat-action-btn cancel" onclick="closeChatActionMenu()">Zrušit</button>
     </div>
   </div>
 
@@ -1545,7 +1654,11 @@ let state = {
   // F15: filtr kategorii v hlavnim Celkove poradi (all-time)
   totalCategory: 'all',  // 'all' | 'cvik' | 'aktivita' | 'stretching'
   // F18: chat - kdo prave pise (player_id)
-  chatSender: null
+  chatSender: null,
+  // F21: chat replies + reakce
+  chatReplyTo: null,          // ID zpravy na kterou se odpovida
+  chatReactions: [],          // pole reakci nactenych z DB
+  chatActiveMessage: null     // ID zpravy s otevrenym menu (long-press / klik)
 };
 
 const MESICE_CZ = ['leden','únor','březen','duben','květen','červen','červenec','srpen','září','říjen','listopad','prosinec'];
@@ -2098,15 +2211,19 @@ function setChatSender(playerId) {
   buildChatSenderPills();
 }
 
+function chatEscape(s) {
+  return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
 function renderChat() {
   const el = document.getElementById('chat-messages');
   if (!el) return;
   buildChatSenderPills();
+  updateReplyBar();
   if (state.chatMessages.length === 0) {
     el.innerHTML = '<div class="chat-empty">Zatím žádné zprávy. Napiš první!</div>';
     return;
   }
-  // Seraz od nejstarsi po nejnovejsi (chronologicky, novejsi dole jako Messenger)
   const sorted = [...state.chatMessages].sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
   el.innerHTML = sorted.map(m => {
     const player = state.players.find(p => p.id === m.player_id);
@@ -2117,22 +2234,122 @@ function renderChat() {
     let timeStr;
     if (msgDay.getTime() === today.getTime()) timeStr = `${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;
     else timeStr = `${d.getDate()}.${d.getMonth()+1}. ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;
-    const escText = m.text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    // F21: reply preview pokud zprava odpovida na jinou
+    let replyHtml = '';
+    if (m.reply_to_id) {
+      const orig = state.chatMessages.find(x => x.id === m.reply_to_id);
+      if (orig) {
+        const origPlayer = state.players.find(p => p.id === orig.player_id);
+        replyHtml = `<div class="chat-msg-reply-ref">
+          <span class="chat-msg-reply-name">${origPlayer ? origPlayer.jmeno : '?'}:</span>
+          <span class="chat-msg-reply-text">${chatEscape(orig.text)}</span>
+        </div>`;
+      }
+    }
+    // F21: reakce - seskupit per emoji
+    const reactions = state.chatReactions.filter(r => r.message_id === m.id);
+    let reactionsHtml = '';
+    if (reactions.length > 0) {
+      const grouped = {};
+      reactions.forEach(r => {
+        if (!grouped[r.emoji]) grouped[r.emoji] = [];
+        grouped[r.emoji].push(r);
+      });
+      reactionsHtml = '<div class="chat-msg-reactions">' + Object.keys(grouped).map(emoji => {
+        const list = grouped[emoji];
+        const mine = state.chatSender && list.some(r => r.player_id === state.chatSender);
+        return `<button type="button" class="chat-reaction-pill ${mine ? 'mine' : ''}" onclick="event.stopPropagation(); toggleChatReaction('${m.id}', '${emoji}')">${emoji} <span class="reaction-count">${list.length}</span></button>`;
+      }).join('') + '</div>';
+    }
     return `
-      <div class="chat-msg">
+      <div class="chat-msg" onclick="openChatActionMenu('${m.id}')">
         <div class="chat-msg-avatar" style="background:${player.barva}">${initials(player.jmeno)}</div>
         <div class="chat-msg-body">
           <div class="chat-msg-head">
             <span class="chat-msg-name">${player.jmeno}</span>
             <span class="chat-msg-time">${timeStr}</span>
           </div>
-          <div class="chat-msg-text">${escText}</div>
+          ${replyHtml}
+          <div class="chat-msg-text">${chatEscape(m.text)}</div>
+          ${reactionsHtml}
         </div>
-        <button type="button" class="chat-msg-delete" onclick="deleteChatMessage('${m.id}')" title="Smazat">🗑️</button>
+        <button type="button" class="chat-msg-delete" onclick="event.stopPropagation(); deleteChatMessage('${m.id}')" title="Smazat">🗑️</button>
       </div>`;
   }).join('');
-  // Scroll na konec (nejnovejsi)
   el.scrollTop = el.scrollHeight;
+}
+
+// F21: Reply / action menu funkce
+function openChatActionMenu(messageId) {
+  state.chatActiveMessage = messageId;
+  document.getElementById('chat-action-menu').classList.add('active');
+}
+
+function closeChatActionMenu(event) {
+  if (event && event.target.id !== 'chat-action-menu') return;
+  document.getElementById('chat-action-menu').classList.remove('active');
+  state.chatActiveMessage = null;
+}
+
+function startReplyFromMenu() {
+  state.chatReplyTo = state.chatActiveMessage;
+  document.getElementById('chat-action-menu').classList.remove('active');
+  state.chatActiveMessage = null;
+  updateReplyBar();
+  document.getElementById('chat-input').focus();
+}
+
+function cancelReply() {
+  state.chatReplyTo = null;
+  updateReplyBar();
+}
+
+function updateReplyBar() {
+  const bar = document.getElementById('chat-reply-bar');
+  if (!bar) return;
+  if (!state.chatReplyTo) {
+    bar.style.display = 'none';
+    return;
+  }
+  const orig = state.chatMessages.find(m => m.id === state.chatReplyTo);
+  if (!orig) { bar.style.display = 'none'; return; }
+  const player = state.players.find(p => p.id === orig.player_id);
+  bar.style.display = '';
+  document.getElementById('chat-reply-name').textContent = `Odpovídáš ${player ? player.jmeno : '?'}`;
+  document.getElementById('chat-reply-preview').textContent = orig.text;
+}
+
+// F21: pridat/odebrat reakci
+async function addChatReaction(emoji) {
+  const messageId = state.chatActiveMessage;
+  if (!messageId) return;
+  document.getElementById('chat-action-menu').classList.remove('active');
+  state.chatActiveMessage = null;
+  await toggleChatReaction(messageId, emoji);
+}
+
+async function toggleChatReaction(messageId, emoji) {
+  if (!state.chatSender) { toast('Vyber kdo píše', 'error'); return; }
+  // Pokud uz mam stejnou reakci, odeber. Jinak pridej.
+  const existing = state.chatReactions.find(r => r.message_id === messageId && r.player_id === state.chatSender && r.emoji === emoji);
+  try {
+    if (existing) {
+      const { error } = await db.from('chat_reactions').delete().eq('id', existing.id);
+      if (error) throw error;
+    } else {
+      const { error } = await db.from('chat_reactions').insert({ message_id: messageId, player_id: state.chatSender, emoji });
+      if (error) throw error;
+    }
+    await loadChatReactions();
+    renderChat();
+  } catch (e) {
+    toast('Chyba reakce: ' + e.message, 'error');
+  }
+}
+
+async function loadChatReactions() {
+  const { data, error } = await db.from('chat_reactions').select('*').limit(2000);
+  if (!error) state.chatReactions = data || [];
 }
 
 async function sendChatMessage() {
@@ -2142,10 +2359,14 @@ async function sendChatMessage() {
   if (!state.chatSender) { toast('Vyber kdo píše', 'error'); return; }
   inp.disabled = true;
   try {
-    const { error } = await db.from('chat_messages').insert({ player_id: state.chatSender, text });
+    const payload = { player_id: state.chatSender, text };
+    if (state.chatReplyTo) payload.reply_to_id = state.chatReplyTo;  // F21
+    const { error } = await db.from('chat_messages').insert(payload);
     if (error) throw error;
     inp.value = '';
+    state.chatReplyTo = null;  // F21: po odeslani zrusit reply mode
     await loadChatMessages();
+    await loadChatReactions();
     renderChat();
   } catch (e) {
     toast('Chyba: ' + e.message, 'error');
@@ -3224,20 +3445,22 @@ document.querySelectorAll('.cat-tab[data-tab]').forEach(tab => {
 
 async function loadData() {
   try {
-    const [pRes, cRes, aRes, hRes, chRes] = await Promise.all([
+    const [pRes, cRes, aRes, hRes, chRes, crRes] = await Promise.all([
       db.from('players').select('*').order('created_at', { ascending: true }),  // F16: stari hraci prvni, novi posledni
       db.from('cviky').select('*').order('created_at', { ascending: false }),
       db.from('aktivity').select('*').order('created_at', { ascending: false }),
       db.from('player_history').select('*').order('created_at', { ascending: false }),
-      db.from('chat_messages').select('*').order('created_at', { ascending: true }).limit(500)  // F18
+      db.from('chat_messages').select('*').order('created_at', { ascending: true }).limit(500),  // F18
+      db.from('chat_reactions').select('*').limit(2000)  // F21
     ]);
     if (pRes.error) throw pRes.error;
     if (cRes.error) throw cRes.error;
     if (aRes.error) throw aRes.error;
     if (hRes.error) throw hRes.error;
-    // chat error nehazet (tabulka v ostre DB jeste nemusi existovat) — jen zalogovat
     if (chRes.error) console.warn('chat_messages neexistuje:', chRes.error.message);
+    if (crRes.error) console.warn('chat_reactions neexistuje:', crRes.error.message);
     state.chatMessages = chRes.data || [];
+    state.chatReactions = crRes.data || [];
     state.players = pRes.data || [];
     state.cviky = cRes.data || [];
     state.aktivity = aRes.data || [];
