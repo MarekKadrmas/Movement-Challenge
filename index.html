@@ -2477,11 +2477,15 @@ function startReplyFromMenu() {
   document.getElementById('chat-action-menu').classList.remove('active');
   state.chatActiveMessage = null;
   updateReplyBar();
-  // Focus input bez scroll stranky (Messenger-like UX)
-  const inp = document.getElementById('chat-input');
-  if (inp && inp.focus) {
-    try { inp.focus({ preventScroll: true }); } catch(_) { inp.focus(); }
-  }
+  // Scroll composer (reply bar + input) do viewportu a focus na input
+  setTimeout(() => {
+    const composer = document.querySelector('.chat-composer');
+    if (composer && composer.scrollIntoView) {
+      composer.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }
+    const inp = document.getElementById('chat-input');
+    if (inp) inp.focus();
+  }, 50);
 }
 
 function cancelReply() {
