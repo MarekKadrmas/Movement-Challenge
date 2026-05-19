@@ -1102,6 +1102,61 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 .chat-action-btn:active { background: var(--border); }
 .chat-action-btn.cancel { color: var(--text-muted); }
 
+/* F22: Reactions list modal */
+.reactions-list { max-height: 60vh; overflow-y: auto; }
+.reaction-group {
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-soft);
+}
+.reaction-group:last-child { border-bottom: none; margin-bottom: 0; }
+.reaction-group-header {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 8px;
+  font-weight: 700; font-size: 14px;
+}
+.reaction-group-emoji { font-size: 22px; }
+.reaction-group-count { color: var(--text-muted); font-size: 13px; font-weight: 500; }
+.reaction-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  cursor: default;
+}
+.reaction-row.mine {
+  background: var(--bg);
+  cursor: pointer;
+}
+.reaction-row.mine:active { transform: scale(0.98); }
+.reaction-row-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 11px; color: #000;
+}
+.reaction-row-name { flex: 1; font-weight: 600; font-size: 14px; }
+.reaction-row-remove {
+  font-size: 11px; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.05em;
+  font-weight: 700;
+}
+
+/* F22: reply lepsi vzhled (víc Messenger-like) */
+.chat-msg-reply-ref {
+  display: flex !important; flex-direction: column; align-items: flex-start;
+  gap: 2px;
+  padding: 6px 10px; margin-bottom: 4px;
+  background: var(--bg); border-radius: 8px;
+  border-left: 3px solid var(--accent-soft);
+  font-size: 11px;
+  max-width: 100%;
+}
+.chat-msg-reply-name { font-weight: 700; color: var(--text); font-size: 11px; }
+.chat-msg-reply-text {
+  color: var(--text-muted); font-size: 12px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  max-width: 100%;
+}
+
 /* Nav */
 .nav {
   display: flex; gap: 0; padding: 0;
@@ -1365,6 +1420,17 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
         <input type="text" id="chat-input" placeholder="Napiš zprávu..." maxlength="500" onkeydown="if(event.key==='Enter') sendChatMessage()">
         <button type="button" class="chat-send-btn" onclick="sendChatMessage()">Odeslat</button>
       </div>
+    </div>
+  </div>
+
+  <!-- F22: Reactions list modal (kdo dal jakou reakci) -->
+  <div class="modal-overlay" id="reactions-modal" onclick="closeReactionsModal(event)">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div class="modal-title">Reakce</div>
+      <div class="modal-subtitle" id="reactions-modal-sub">Kdo reagoval</div>
+      <div id="reactions-list" class="reactions-list"></div>
+      <button class="btn-cancel" onclick="closeReactionsModal()">Zavřít</button>
     </div>
   </div>
 
@@ -2313,21 +2379,10 @@ function setTotalCategory(cat) {
 function buildChatSenderPills() {
   const wrap = document.getElementById('chat-sender-pills');
   if (!wrap) return;
-  const aktivni = state.players.filter(p => p.aktivni);
-  // F19: chatSender = currentPlayerId (bez admina nelze menit)
-  if (!state.chatSender && state.currentPlayerId) state.chatSender = state.currentPlayerId;
-  if (!state.chatSender && aktivni.length > 0) state.chatSender = aktivni[0].id;
-  if (isAdmin()) {
-    // Admin muze psat za kohokoli - zachovat pills
-    wrap.innerHTML = aktivni.map(p => {
-      const active = state.chatSender === p.id;
-      return `<button type="button" class="chat-sender-pill ${active ? 'active' : ''}" style="${active ? `background:${p.barva};color:#000;border-color:${p.barva};` : ''}" onclick="setChatSender('${p.id}')">${p.jmeno}</button>`;
-    }).join('');
-  } else {
-    // Bezny hrac - jen info "Pises jako X"
-    const me = state.players.find(p => p.id === state.chatSender);
-    wrap.innerHTML = me ? `<div class="chat-sender-me"><div class="chat-sender-me-avatar" style="background:${me.barva}">${initials(me.jmeno)}</div><span>${me.jmeno}</span></div>` : '';
-  }
+  // F19 fix: chat sender vzdy = currentPlayerId (i admin pise jen jako Marek)
+  state.chatSender = state.currentPlayerId;
+  const me = state.players.find(p => p.id === state.chatSender);
+  wrap.innerHTML = me ? `<div class="chat-sender-me"><div class="chat-sender-me-avatar" style="background:${me.barva}">${initials(me.jmeno)}</div><span>${me.jmeno}</span></div>` : '';
 }
 
 function setChatSender(playerId) {
@@ -2381,8 +2436,8 @@ function renderChat() {
       });
       reactionsHtml = '<div class="chat-msg-reactions">' + Object.keys(grouped).map(emoji => {
         const list = grouped[emoji];
-        const mine = state.chatSender && list.some(r => r.player_id === state.chatSender);
-        return `<button type="button" class="chat-reaction-pill ${mine ? 'mine' : ''}" onclick="event.stopPropagation(); toggleChatReaction('${m.id}', '${emoji}')">${emoji} <span class="reaction-count">${list.length}</span></button>`;
+        const mine = state.currentPlayerId && list.some(r => r.player_id === state.currentPlayerId);
+        return `<button type="button" class="chat-reaction-pill ${mine ? 'mine' : ''}" onclick="event.stopPropagation(); showReactionsList('${m.id}')">${emoji} <span class="reaction-count">${list.length}</span></button>`;
       }).join('') + '</div>';
     }
     // F19: delete jen vlastní zprávy nebo admin
@@ -2476,6 +2531,54 @@ async function toggleChatReaction(messageId, emoji) {
 async function loadChatReactions() {
   const { data, error } = await db.from('chat_reactions').select('*').limit(2000);
   if (!error) state.chatReactions = data || [];
+}
+
+// F22: Modal "Kdo reagoval" - seznam reaktoru
+function showReactionsList(messageId) {
+  const reactions = state.chatReactions.filter(r => r.message_id === messageId);
+  if (reactions.length === 0) return;
+  const grouped = {};
+  reactions.forEach(r => {
+    if (!grouped[r.emoji]) grouped[r.emoji] = [];
+    grouped[r.emoji].push(r);
+  });
+  const html = Object.keys(grouped).map(emoji => {
+    const list = grouped[emoji];
+    return `
+      <div class="reaction-group">
+        <div class="reaction-group-header">
+          <span class="reaction-group-emoji">${emoji}</span>
+          <span class="reaction-group-count">${list.length}</span>
+        </div>
+        ${list.map(r => {
+          const player = state.players.find(p => p.id === r.player_id);
+          const isMine = r.player_id === state.currentPlayerId;
+          const onclickAttr = isMine ? `onclick="removeMyReaction('${r.id}')"` : '';
+          return `<div class="reaction-row ${isMine ? 'mine' : ''}" ${onclickAttr}>
+            <div class="reaction-row-avatar" style="background:${player ? player.barva : '#ccc'}">${player ? initials(player.jmeno) : '?'}</div>
+            <span class="reaction-row-name">${player ? player.jmeno : '?'}</span>
+            ${isMine ? '<span class="reaction-row-remove">Odebrat</span>' : ''}
+          </div>`;
+        }).join('')}
+      </div>`;
+  }).join('');
+  document.getElementById('reactions-list').innerHTML = html;
+  document.getElementById('reactions-modal').classList.add('active');
+}
+
+function closeReactionsModal(event) {
+  if (event && event.target.id !== 'reactions-modal') return;
+  document.getElementById('reactions-modal').classList.remove('active');
+}
+
+async function removeMyReaction(reactionId) {
+  try {
+    const { error } = await db.from('chat_reactions').delete().eq('id', reactionId);
+    if (error) throw error;
+    await loadChatReactions();
+    closeReactionsModal();
+    renderChat();
+  } catch (e) { toast('Chyba: ' + e.message, 'error'); }
 }
 
 // === F19: Soft auth (localStorage + admin flag) ===
