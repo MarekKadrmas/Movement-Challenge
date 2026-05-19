@@ -2644,10 +2644,19 @@ function updateHeaderMe() {
   av.style.background = p.barva;
   av.textContent = initials(p.jmeno);
   document.getElementById('header-me-name').textContent = p.jmeno;
+  // F19 fix: prepinani hrace jen pro admina (Marek)
+  if (isAdmin()) {
+    me.style.cursor = 'pointer';
+    me.removeAttribute('data-no-switch');
+  } else {
+    me.style.cursor = 'default';
+    me.setAttribute('data-no-switch', 'true');
+  }
 }
 
 function openSwitchPlayer() {
-  // Otevre login overlay znovu pro zmenu hrace
+  // F19 fix: jen admin muze prepinat hrace
+  if (!isAdmin()) return;
   renderLoginScreen();
   document.getElementById('login-overlay').classList.add('active');
 }
