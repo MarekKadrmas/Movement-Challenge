@@ -66,6 +66,78 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
+/* F19: header-right + me avatar */
+.header-right { display: flex; align-items: center; gap: 12px; }
+.header-me {
+  display: flex; align-items: center; gap: 6px;
+  cursor: pointer; padding: 4px 8px 4px 4px;
+  border-radius: 100px; background: var(--bg-card);
+  border: 1px solid var(--border);
+  transition: transform 0.1s;
+}
+.header-me:active { transform: scale(0.96); }
+.header-me-avatar {
+  width: 26px; height: 26px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 10px; color: #000;
+}
+.header-me-name { font-size: 12px; font-weight: 600; }
+
+/* F19: Login overlay (Kdo jsi?) */
+.login-overlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: var(--bg);
+  display: none; align-items: center; justify-content: center;
+  padding: 20px;
+}
+.login-overlay.active { display: flex; }
+.login-card {
+  max-width: 400px; width: 100%;
+  text-align: center;
+}
+.login-logo {
+  width: 64px; height: 64px;
+  margin: 0 auto 20px;
+  border-radius: 16px; background: #000;
+  display: flex; align-items: center; justify-content: center;
+}
+.login-title {
+  font-size: 26px; font-weight: 800;
+  letter-spacing: -0.03em; margin-bottom: 8px;
+}
+.login-subtitle {
+  font-size: 14px; color: var(--text-muted);
+  margin-bottom: 28px;
+}
+.login-players {
+  display: grid; gap: 10px;
+}
+.login-player-btn {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 16px;
+  background: var(--bg-card); border: 2px solid var(--border);
+  border-radius: 14px; cursor: pointer;
+  font-family: inherit; text-align: left;
+  transition: all 0.15s;
+}
+.login-player-btn:hover { border-color: var(--text); }
+.login-player-btn:active { transform: scale(0.98); }
+.login-player-btn .login-avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 13px; color: #000;
+  flex-shrink: 0;
+}
+.login-player-btn .login-name {
+  font-size: 16px; font-weight: 700; flex: 1;
+}
+.login-player-btn .login-badge {
+  font-size: 10px; padding: 2px 8px;
+  background: var(--accent); color: #fff;
+  border-radius: 100px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+
 .main { padding: 16px; max-width: 720px; margin: 0 auto; padding-bottom: 120px; }
 
 /* Hero / Leaderboard */
@@ -1118,8 +1190,32 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
     </div>
     <h1>Movement<span class="light">.Challenge</span></h1>
   </div>
-  <div class="status"><span class="status-dot"></span><span id="connection-status">online</span></div>
+  <div class="header-right">
+    <!-- F19: zobrazeni prihlaseneho hrace -->
+    <div class="header-me" id="header-me" onclick="openSwitchPlayer()" style="display:none;">
+      <div class="header-me-avatar" id="header-me-avatar"></div>
+      <span class="header-me-name" id="header-me-name">—</span>
+    </div>
+    <div class="status"><span class="status-dot"></span><span id="connection-status">online</span></div>
+  </div>
 </header>
+
+<!-- F19: Login obrazovka — Kdo jsi? -->
+<div class="login-overlay" id="login-overlay">
+  <div class="login-card">
+    <div class="login-logo">
+      <svg viewBox="0 0 64 64" fill="none" width="48" height="48">
+        <rect width="64" height="64" rx="14" fill="#18181b"/>
+        <path d="M12 50 Q32 14 52 50" stroke="#52525b" stroke-width="3" stroke-linecap="round" fill="none"/>
+        <path d="M12 50 Q32 24 52 50" stroke="#fff" stroke-width="3" stroke-linecap="round" fill="none"/>
+        <path d="M12 50 Q32 34 52 50" stroke="#a1a1aa" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.6"/>
+      </svg>
+    </div>
+    <h2 class="login-title">Kdo jsi?</h2>
+    <p class="login-subtitle">Vyber sebe, ať appka ví kdo zapisuje</p>
+    <div class="login-players" id="login-players"></div>
+  </div>
+</div>
 
 <main class="main">
 
@@ -1292,7 +1388,8 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
     <div class="modal-title" id="modal-title">Nový záznam</div>
     <div class="modal-subtitle" id="modal-subtitle">Nejdřív vyber kdo zadává</div>
 
-    <div class="field">
+    <!-- F19: vyber hrace - skryto pro bezne hrace (predvyplneno), zobrazeno pro admina -->
+    <div class="field" id="player-select-field">
       <label>Kdo zadává <span style="color: var(--accent)">*</span></label>
       <div class="player-pills" id="player-pills"></div>
     </div>
@@ -1654,12 +1751,17 @@ let state = {
   // F15: filtr kategorii v hlavnim Celkove poradi (all-time)
   totalCategory: 'all',  // 'all' | 'cvik' | 'aktivita' | 'stretching'
   // F18: chat - kdo prave pise (player_id)
-  chatSender: null,
+  chatSender: null,  // F19: bude se priradit z currentPlayerId po loginu
   // F21: chat replies + reakce
   chatReplyTo: null,          // ID zpravy na kterou se odpovida
   chatReactions: [],          // pole reakci nactenych z DB
-  chatActiveMessage: null     // ID zpravy s otevrenym menu (long-press / klik)
+  chatActiveMessage: null,    // ID zpravy s otevrenym menu (long-press / klik)
+  // F19: soft auth - aktualne prihlaseny hrac (z localStorage)
+  currentPlayerId: null
 };
+
+// F19: localStorage klic
+const CURRENT_PLAYER_KEY = 'mc-current-player-id';
 
 const MESICE_CZ = ['leden','únor','březen','duben','květen','červen','červenec','srpen','září','říjen','listopad','prosinec'];
 
@@ -2352,6 +2454,74 @@ async function loadChatReactions() {
   if (!error) state.chatReactions = data || [];
 }
 
+// === F19: Soft auth (localStorage + admin flag) ===
+
+function getCurrentPlayer() {
+  if (!state.currentPlayerId) return null;
+  return state.players.find(p => p.id === state.currentPlayerId) || null;
+}
+
+function isAdmin() {
+  const p = getCurrentPlayer();
+  return !!(p && p.is_admin);
+}
+
+function canEditEntry(entry) {
+  // Vlastní záznam nebo admin
+  return isAdmin() || entry.player_id === state.currentPlayerId;
+}
+
+function renderLoginScreen() {
+  const aktivni = state.players.filter(p => p.aktivni);
+  const wrap = document.getElementById('login-players');
+  wrap.innerHTML = aktivni.map(p => `
+    <button type="button" class="login-player-btn" onclick="selectPlayer('${p.id}')">
+      <div class="login-avatar" style="background:${p.barva}">${initials(p.jmeno)}</div>
+      <div class="login-name">${p.jmeno}</div>
+      ${p.is_admin ? '<div class="login-badge">Admin</div>' : ''}
+    </button>
+  `).join('');
+}
+
+function showLoginIfNeeded() {
+  const overlay = document.getElementById('login-overlay');
+  if (!state.currentPlayerId) {
+    renderLoginScreen();
+    overlay.classList.add('active');
+    document.getElementById('header-me').style.display = 'none';
+    return true;
+  }
+  overlay.classList.remove('active');
+  updateHeaderMe();
+  return false;
+}
+
+function selectPlayer(playerId) {
+  state.currentPlayerId = playerId;
+  state.chatSender = playerId;   // F18: pro chat synchronizovat
+  localStorage.setItem(CURRENT_PLAYER_KEY, playerId);
+  document.getElementById('login-overlay').classList.remove('active');
+  updateHeaderMe();
+  renderAllViews();
+}
+
+function updateHeaderMe() {
+  const p = getCurrentPlayer();
+  const me = document.getElementById('header-me');
+  if (!p || !me) { if (me) me.style.display = 'none'; return; }
+  me.style.display = 'flex';
+  const av = document.getElementById('header-me-avatar');
+  av.style.background = p.barva;
+  av.textContent = initials(p.jmeno);
+  document.getElementById('header-me-name').textContent = p.jmeno;
+}
+
+function openSwitchPlayer() {
+  // Otevre login overlay znovu pro zmenu hrace
+  renderLoginScreen();
+  document.getElementById('login-overlay').classList.add('active');
+}
+
 async function sendChatMessage() {
   const inp = document.getElementById('chat-input');
   const text = (inp.value || '').trim();
@@ -2426,7 +2596,9 @@ function renderEntryCard(e, withActions) {
   const meta = e._type === 'cvik' || isStretch
     ? `${typeIcon} ${player.jmeno} · ${formatDate(e.datum)}`
     : `${typeIcon} ${player.jmeno} · úroveň ${e.uroven} · ${formatDate(e.datum)}`;
-  const actions = withActions ? `
+  // F19: edit/delete jen pro vlastní záznam (kromě adminu)
+  const canEdit = withActions && canEditEntry(e);
+  const actions = canEdit ? `
     <div class="entry-actions">
       <button class="entry-action-btn edit" data-id="${e.id}" data-type="${e._type}" data-action="edit">✏️</button>
       <button class="entry-action-btn delete" data-id="${e.id}" data-type="${e._type}" data-action="delete">🗑️</button>
@@ -2721,11 +2893,19 @@ function renderAllViews() {
 function openModal() {
   state.editMode = false; state.editId = null; state.editTable = null;
   document.getElementById('modal-title').textContent = 'Nový záznam';
-  document.getElementById('modal-subtitle').textContent = 'Nejdřív vyber kdo zadává';
+  document.getElementById('modal-subtitle').textContent = 'Vyplň údaje';
   document.getElementById('submit-btn').textContent = 'Zapsat';
   document.getElementById('delete-btn').style.display = 'none';
   buildPlayerPills();
   resetFormFields();
+  // F19: pokud není admin, skryt výběr hráče + předvyplnit sebe
+  const selField = document.getElementById('player-select-field');
+  if (state.currentPlayerId && !isAdmin()) {
+    selField.style.display = 'none';
+    state.selectedPlayer = state.currentPlayerId;
+  } else {
+    selField.style.display = '';
+  }
   updateFormDisabled();
   document.getElementById('modal').classList.add('active');
 }
@@ -3465,7 +3645,17 @@ async function loadData() {
     state.cviky = cRes.data || [];
     state.aktivity = aRes.data || [];
     state.history = hRes.data || [];
-    renderAllViews();
+    // F19: nacist current player z localStorage a overit ze existuje
+    const savedId = localStorage.getItem(CURRENT_PLAYER_KEY);
+    if (savedId && state.players.find(p => p.id === savedId)) {
+      state.currentPlayerId = savedId;
+      state.chatSender = savedId;
+    } else if (savedId) {
+      // ulozeny hrac uz neexistuje (smazany) - clean
+      localStorage.removeItem(CURRENT_PLAYER_KEY);
+    }
+    const needsLogin = showLoginIfNeeded();
+    if (!needsLogin) renderAllViews();
     document.getElementById('connection-status').textContent = isTest ? 'test' : 'online';
   } catch (e) {
     console.error('Load error:', e);
