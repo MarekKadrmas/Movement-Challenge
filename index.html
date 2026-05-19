@@ -67,7 +67,20 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
 /* F19: header-right + me avatar */
-.header-right { display: flex; align-items: center; gap: 12px; }
+.header-right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+/* Mobil: kompaktnejsi header */
+@media (max-width: 480px) {
+  .header { padding: 10px 12px; }
+  .header h1 { font-size: 14px; }
+  .header h1 .light { display: none; }   /* skryt ".Challenge" */
+  .header-logo { width: 28px; height: 28px; }
+  .header .status { display: none; }      /* status indicator (online/test) skryt */
+  .header-me-name { display: none; }
+  .header-admin-toggle { padding: 4px 8px; font-size: 10px; }
+  .header-logout { width: 28px; height: 28px; font-size: 12px; }
+  .header-me { padding: 3px 4px; }
+  .header-me-avatar { width: 22px; height: 22px; font-size: 9px; }
+}
 .header-me {
   display: flex; align-items: center; gap: 6px;
   cursor: pointer; padding: 4px 8px 4px 4px;
@@ -1293,7 +1306,7 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
       <span class="header-me-name" id="header-me-name">—</span>
     </div>
     <!-- F25: Odhlasit se (vraci na "Kdo jsi?") -->
-    <button type="button" class="header-logout" id="header-logout" onclick="logoutPlayer()" title="Odhlásit se" style="display:none;">🚪</button>
+    <button type="button" class="header-logout" id="header-logout" onclick="logoutPlayer()" title="Odhlásit se" style="display:none;" aria-label="Odhlásit se">⏻</button>
     <div class="status"><span class="status-dot"></span><span id="connection-status">online</span></div>
   </div>
 </header>
