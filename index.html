@@ -66,6 +66,78 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
+/* F19: header-right + me avatar */
+.header-right { display: flex; align-items: center; gap: 12px; }
+.header-me {
+  display: flex; align-items: center; gap: 6px;
+  cursor: pointer; padding: 4px 8px 4px 4px;
+  border-radius: 100px; background: var(--bg-card);
+  border: 1px solid var(--border);
+  transition: transform 0.1s;
+}
+.header-me:active { transform: scale(0.96); }
+.header-me-avatar {
+  width: 26px; height: 26px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 10px; color: #000;
+}
+.header-me-name { font-size: 12px; font-weight: 600; }
+
+/* F19: Login overlay (Kdo jsi?) */
+.login-overlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: var(--bg);
+  display: none; align-items: center; justify-content: center;
+  padding: 20px;
+}
+.login-overlay.active { display: flex; }
+.login-card {
+  max-width: 400px; width: 100%;
+  text-align: center;
+}
+.login-logo {
+  width: 64px; height: 64px;
+  margin: 0 auto 20px;
+  border-radius: 16px; background: #000;
+  display: flex; align-items: center; justify-content: center;
+}
+.login-title {
+  font-size: 26px; font-weight: 800;
+  letter-spacing: -0.03em; margin-bottom: 8px;
+}
+.login-subtitle {
+  font-size: 14px; color: var(--text-muted);
+  margin-bottom: 28px;
+}
+.login-players {
+  display: grid; gap: 10px;
+}
+.login-player-btn {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 16px;
+  background: var(--bg-card); border: 2px solid var(--border);
+  border-radius: 14px; cursor: pointer;
+  font-family: inherit; text-align: left;
+  transition: all 0.15s;
+}
+.login-player-btn:hover { border-color: var(--text); }
+.login-player-btn:active { transform: scale(0.98); }
+.login-player-btn .login-avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 13px; color: #000;
+  flex-shrink: 0;
+}
+.login-player-btn .login-name {
+  font-size: 16px; font-weight: 700; flex: 1;
+}
+.login-player-btn .login-badge {
+  font-size: 10px; padding: 2px 8px;
+  background: var(--accent); color: #fff;
+  border-radius: 100px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+
 .main { padding: 16px; max-width: 720px; margin: 0 auto; padding-bottom: 120px; }
 
 /* Hero / Leaderboard */
@@ -167,23 +239,23 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 }
 .heatmap-cell:active { transform: scale(1.2); }
 
-/* Heatmap - barvy hracu - 7 odstinu (svetlejsi paleta) */
-/* Mara - modra */
-.heatmap-cell.mara-1 { background: #dbeafe; }
-.heatmap-cell.mara-2 { background: #bfdbfe; }
-.heatmap-cell.mara-3 { background: #93c5fd; }
-.heatmap-cell.mara-4 { background: #60a5fa; }
-.heatmap-cell.mara-5 { background: #3b82f6; }
-.heatmap-cell.mara-6 { background: #2563eb; }
-.heatmap-cell.mara-7 { background: #1d4ed8; }
-/* Martin - zelena */
-.heatmap-cell.martin-1 { background: #d1fae5; }
-.heatmap-cell.martin-2 { background: #a7f3d0; }
-.heatmap-cell.martin-3 { background: #6ee7b7; }
-.heatmap-cell.martin-4 { background: #34d399; }
-.heatmap-cell.martin-5 { background: #22c55e; }
-.heatmap-cell.martin-6 { background: #16a34a; }
-.heatmap-cell.martin-7 { background: #15803d; }
+/* Heatmap - barvy hracu - 7 odstinu (F23: prohozeno - Mara=zelena, Martin=cervena, Peta=modra) */
+/* Mara - zelena */
+.heatmap-cell.mara-1 { background: #d1fae5; }
+.heatmap-cell.mara-2 { background: #a7f3d0; }
+.heatmap-cell.mara-3 { background: #6ee7b7; }
+.heatmap-cell.mara-4 { background: #34d399; }
+.heatmap-cell.mara-5 { background: #22c55e; }
+.heatmap-cell.mara-6 { background: #16a34a; }
+.heatmap-cell.mara-7 { background: #15803d; }
+/* Martin - cervena */
+.heatmap-cell.martin-1 { background: #fee2e2; }
+.heatmap-cell.martin-2 { background: #fecaca; }
+.heatmap-cell.martin-3 { background: #fca5a5; }
+.heatmap-cell.martin-4 { background: #f87171; }
+.heatmap-cell.martin-5 { background: #ef4444; }
+.heatmap-cell.martin-6 { background: #dc2626; }
+.heatmap-cell.martin-7 { background: #b91c1c; }
 /* Natalka - ruzova */
 .heatmap-cell.nat-1 { background: #fce7f3; }
 .heatmap-cell.nat-2 { background: #fbcfe8; }
@@ -192,14 +264,22 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 .heatmap-cell.nat-5 { background: #ec4899; }
 .heatmap-cell.nat-6 { background: #db2777; }
 .heatmap-cell.nat-7 { background: #be185d; }
-/* Peta - zluta */
-.heatmap-cell.peta-1 { background: #fef3c7; }
-.heatmap-cell.peta-2 { background: #fde68a; }
-.heatmap-cell.peta-3 { background: #fcd34d; }
-.heatmap-cell.peta-4 { background: #fbbf24; }
-.heatmap-cell.peta-5 { background: #eab308; }
-.heatmap-cell.peta-6 { background: #ca8a04; }
-.heatmap-cell.peta-7 { background: #a16207; }
+/* Peta - modra */
+.heatmap-cell.peta-1 { background: #dbeafe; }
+.heatmap-cell.peta-2 { background: #bfdbfe; }
+.heatmap-cell.peta-3 { background: #93c5fd; }
+.heatmap-cell.peta-4 { background: #60a5fa; }
+.heatmap-cell.peta-5 { background: #3b82f6; }
+.heatmap-cell.peta-6 { background: #2563eb; }
+.heatmap-cell.peta-7 { background: #1d4ed8; }
+/* Katka - oranzova (F16) */
+.heatmap-cell.katka-1 { background: #ffedd5; }
+.heatmap-cell.katka-2 { background: #fed7aa; }
+.heatmap-cell.katka-3 { background: #fdba74; }
+.heatmap-cell.katka-4 { background: #fb923c; }
+.heatmap-cell.katka-5 { background: #f97316; }
+.heatmap-cell.katka-6 { background: #ea580c; }
+.heatmap-cell.katka-7 { background: #c2410c; }
 /* Fallback obecny */
 .heatmap-cell.gen-1 { background: #e5e7eb; }
 .heatmap-cell.gen-2 { background: #d1d5db; }
@@ -411,6 +491,8 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
   display: none; align-items: flex-end; justify-content: center;
   animation: fadeIn 0.2s;
 }
+/* Fix: hlavni modal zapisu/editace musi byt VZDY nahore (i kdyz se otevre z player-entries-modal F6) */
+#modal { z-index: 300; }
 .modal-overlay.active { display: flex; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
@@ -633,11 +715,11 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
   transition: all 0.15s;
 }
 .level-btn.active { color: #fff; }
-.level-btn.l1.active { background: #4ade80; border-color: #4ade80; }
-.level-btn.l2.active { background: #22c55e; border-color: #22c55e; }
-.level-btn.l3.active { background: #eab308; border-color: #eab308; color: #000; }
-.level-btn.l4.active { background: #f97316; border-color: #f97316; }
-.level-btn.l5.active { background: #ef4444; border-color: #ef4444; }
+.level-btn.l1.active { background: #22c55e; border-color: #22c55e; }              /* zelena */
+.level-btn.l2.active { background: #84cc16; border-color: #84cc16; }              /* limetkova */
+.level-btn.l3.active { background: #f97316; border-color: #f97316; }              /* oranzova */
+.level-btn.l4.active { background: #ea580c; border-color: #ea580c; }              /* tmava oranzova */
+.level-btn.l5.active { background: #ef4444; border-color: #ef4444; }              /* cervena */
 
 .level-hint { font-size: 11px; color: var(--text-dim); margin-top: 4px; text-align: center; min-height: 14px; }
 .level-points-display {
@@ -809,6 +891,33 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 .player-card-stat { background: var(--bg); padding: 9px 11px; border-radius: 9px; border: 1px solid var(--border-soft); }
 .player-card-stat-label { color: var(--text-muted); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
 .player-card-stat-value { font-weight: 700; font-size: 14px; margin-top: 2px; font-variant-numeric: tabular-nums; }
+/* F17: Celkove statistiky cviku na profilu */
+.player-totals { margin-top: 12px; }
+.player-totals-title {
+  font-size: 10px; font-weight: 700; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.06em;
+  margin-bottom: 6px;
+}
+.player-totals-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px;
+}
+.player-total-item {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--bg); padding: 9px 11px;
+  border-radius: 9px; border: 1px solid var(--border-soft);
+}
+.player-total-icon { font-size: 18px; flex-shrink: 0; }
+.player-total-text { flex: 1; min-width: 0; }
+.player-total-label {
+  font-size: 10px; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;
+}
+.player-total-value {
+  font-weight: 700; font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+.player-total-extra { color: var(--text-muted); font-weight: 500; font-size: 12px; }
+
 .player-card-actions { display: flex; gap: 6px; margin-top: 12px; }
 .player-card-actions button {
   flex: 1; padding: 9px; border-radius: 9px;
@@ -817,6 +926,236 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
   font-family: inherit; font-size: 12px; font-weight: 600;
 }
 .player-card-actions button:active { background: var(--bg-card-hover); }
+
+/* F18: Chat */
+.chat-messages {
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 4px;
+  margin-bottom: 14px;
+  max-height: 55vh; overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.chat-msg {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 10px 12px;
+  background: var(--bg-card); border: 1px solid var(--border-soft);
+  border-radius: 14px;
+}
+.chat-msg-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 11px; color: #000;
+  flex-shrink: 0;
+}
+.chat-msg-body { flex: 1; min-width: 0; }
+.chat-msg-head {
+  display: flex; align-items: baseline; gap: 6px;
+  margin-bottom: 3px;
+}
+.chat-msg-name { font-weight: 700; font-size: 13px; }
+.chat-msg-time { font-size: 11px; color: var(--text-dim); }
+.chat-msg-text { font-size: 14px; line-height: 1.4; word-wrap: break-word; white-space: pre-wrap; }
+.chat-msg-delete {
+  background: none; border: none; cursor: pointer;
+  opacity: 0.4; font-size: 14px; padding: 2px 4px;
+  align-self: flex-start;
+}
+.chat-msg-delete:hover { opacity: 1; }
+
+.chat-composer {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 10px 12px;
+}
+.chat-sender-row {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 8px;
+}
+.chat-sender-label {
+  font-size: 11px; font-weight: 700; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.05em;
+  flex-shrink: 0;
+}
+.chat-sender-pills { display: flex; gap: 5px; flex-wrap: wrap; flex: 1; }
+.chat-sender-pill {
+  padding: 5px 10px; border-radius: 100px;
+  font-size: 12px; font-weight: 600;
+  background: var(--bg); border: 1px solid var(--border); color: var(--text-muted);
+  cursor: pointer; font-family: inherit;
+}
+.chat-sender-pill.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+/* F19: chat sender info pro bezne hrace (read-only, jen info kdo pise) */
+.chat-sender-me {
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 10px 4px 4px;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 100px;
+  font-size: 12px; font-weight: 600;
+}
+.chat-sender-me-avatar {
+  width: 22px; height: 22px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 9px; color: #000;
+}
+.chat-input-row { display: flex; gap: 8px; }
+.chat-input-row input {
+  flex: 1; padding: 11px 13px;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 10px; font-family: inherit; font-size: 16px;  /* 16px = iOS Safari nezoomuje pri focus */
+  color: var(--text);
+  -webkit-appearance: none; appearance: none;
+}
+.chat-input-row input:focus { outline: none; border-color: var(--text); }
+.chat-send-btn {
+  padding: 11px 16px; border-radius: 10px;
+  background: var(--accent); color: #fff; border: none;
+  font-family: inherit; font-size: 13px; font-weight: 700;
+  cursor: pointer; flex-shrink: 0;
+}
+.chat-send-btn:active { transform: scale(0.98); }
+.chat-empty {
+  text-align: center; padding: 30px 16px;
+  color: var(--text-muted); font-size: 13px;
+}
+
+/* F21: reply indikator nad inputem */
+.chat-reply-bar {
+  display: flex !important; align-items: center; gap: 8px;
+  padding: 8px 10px; margin-bottom: 8px;
+  background: var(--border-soft); border-radius: 8px;
+  border-left: 3px solid var(--accent);
+}
+.chat-reply-bar[style*="none"] { display: none !important; }
+.chat-reply-icon { font-size: 14px; flex-shrink: 0; }
+.chat-reply-content { flex: 1; min-width: 0; overflow: hidden; }
+.chat-reply-name { font-size: 11px; font-weight: 700; color: var(--text); }
+.chat-reply-preview {
+  font-size: 12px; color: var(--text-muted);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.chat-reply-cancel {
+  background: none; border: none; font-size: 18px; cursor: pointer;
+  color: var(--text-muted); padding: 0 4px; flex-shrink: 0;
+}
+
+/* F21: reply preview UVNITR zpravy (kdyz tato zprava je odpoved) */
+.chat-msg-reply-ref {
+  display: flex; gap: 6px; align-items: center;
+  padding: 6px 10px; margin-bottom: 6px;
+  background: var(--border-soft); border-radius: 8px;
+  border-left: 3px solid var(--accent-soft);
+  font-size: 12px;
+}
+.chat-msg-reply-name { font-weight: 700; color: var(--text); flex-shrink: 0; }
+.chat-msg-reply-text {
+  color: var(--text-muted);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* F21: reakce pod zpravou */
+.chat-msg-reactions {
+  display: flex; gap: 4px; flex-wrap: wrap;
+  margin-top: 6px;
+}
+.chat-reaction-pill {
+  display: inline-flex; align-items: center; gap: 3px;
+  padding: 2px 8px; border-radius: 100px;
+  background: var(--bg); border: 1px solid var(--border);
+  font-size: 12px; cursor: pointer;
+  font-family: inherit;
+}
+.chat-reaction-pill.mine {
+  background: var(--accent); color: #fff; border-color: var(--accent);
+}
+.chat-reaction-pill .reaction-count { font-weight: 700; font-size: 11px; }
+
+/* F21: long-press / tap effect na zpravu */
+.chat-msg { cursor: pointer; user-select: none; }
+.chat-msg:active { background: var(--bg-card-hover); }
+
+/* F21: action menu modal */
+#chat-action-menu .chat-action-card {
+  background: var(--bg-card); border-radius: 16px;
+  padding: 14px; max-width: 360px; width: 100%;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+  margin-bottom: 24px;
+}
+.chat-action-emojis {
+  display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-soft);
+}
+.chat-emoji-btn {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 10px; padding: 10px 0;
+  font-size: 22px; cursor: pointer; font-family: inherit;
+}
+.chat-emoji-btn:active { transform: scale(0.92); background: var(--border); }
+.chat-action-btn {
+  display: block; width: 100%; padding: 12px;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 10px; font-family: inherit;
+  font-size: 14px; font-weight: 600; color: var(--text);
+  cursor: pointer; margin-bottom: 6px;
+}
+.chat-action-btn:active { background: var(--border); }
+.chat-action-btn.cancel { color: var(--text-muted); }
+
+/* F22: Reactions list modal */
+.reactions-list { max-height: 60vh; overflow-y: auto; }
+.reaction-group {
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-soft);
+}
+.reaction-group:last-child { border-bottom: none; margin-bottom: 0; }
+.reaction-group-header {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 8px;
+  font-weight: 700; font-size: 14px;
+}
+.reaction-group-emoji { font-size: 22px; }
+.reaction-group-count { color: var(--text-muted); font-size: 13px; font-weight: 500; }
+.reaction-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  cursor: default;
+}
+.reaction-row.mine {
+  background: var(--bg);
+  cursor: pointer;
+}
+.reaction-row.mine:active { transform: scale(0.98); }
+.reaction-row-avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 11px; color: #000;
+}
+.reaction-row-name { flex: 1; font-weight: 600; font-size: 14px; }
+.reaction-row-remove {
+  font-size: 11px; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.05em;
+  font-weight: 700;
+}
+
+/* F22: reply lepsi vzhled (víc Messenger-like) */
+.chat-msg-reply-ref {
+  display: flex !important; flex-direction: column; align-items: flex-start;
+  gap: 2px;
+  padding: 6px 10px; margin-bottom: 4px;
+  background: var(--bg); border-radius: 8px;
+  border-left: 3px solid var(--accent-soft);
+  font-size: 11px;
+  max-width: 100%;
+}
+.chat-msg-reply-name { font-weight: 700; color: var(--text); font-size: 11px; }
+.chat-msg-reply-text {
+  color: var(--text-muted); font-size: 12px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  max-width: 100%;
+}
 
 /* Nav */
 .nav {
@@ -920,8 +1259,32 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
     </div>
     <h1>Movement<span class="light">.Challenge</span></h1>
   </div>
-  <div class="status"><span class="status-dot"></span><span id="connection-status">online</span></div>
+  <div class="header-right">
+    <!-- F19: zobrazeni prihlaseneho hrace -->
+    <div class="header-me" id="header-me" onclick="openSwitchPlayer()" style="display:none;">
+      <div class="header-me-avatar" id="header-me-avatar"></div>
+      <span class="header-me-name" id="header-me-name">—</span>
+    </div>
+    <div class="status"><span class="status-dot"></span><span id="connection-status">online</span></div>
+  </div>
 </header>
+
+<!-- F19: Login obrazovka — Kdo jsi? -->
+<div class="login-overlay" id="login-overlay">
+  <div class="login-card">
+    <div class="login-logo">
+      <svg viewBox="0 0 64 64" fill="none" width="48" height="48">
+        <rect width="64" height="64" rx="14" fill="#18181b"/>
+        <path d="M12 50 Q32 14 52 50" stroke="#52525b" stroke-width="3" stroke-linecap="round" fill="none"/>
+        <path d="M12 50 Q32 24 52 50" stroke="#fff" stroke-width="3" stroke-linecap="round" fill="none"/>
+        <path d="M12 50 Q32 34 52 50" stroke="#a1a1aa" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.6"/>
+      </svg>
+    </div>
+    <h2 class="login-title">Kdo jsi?</h2>
+    <p class="login-subtitle">Vyber sebe, ať appka ví kdo zapisuje</p>
+    <div class="login-players" id="login-players"></div>
+  </div>
+</div>
 
 <main class="main">
 
@@ -929,6 +1292,7 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
     <button class="nav-btn active" data-view="prehled">Přehled</button>
     <button class="nav-btn" data-view="historie">Historie</button>
     <button class="nav-btn" data-view="hraci">Hráči</button>
+    <button class="nav-btn" data-view="chat">Chat</button>
   </nav>
 
   <div id="view-prehled">
@@ -1030,6 +1394,62 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
     <div id="scoring-explanation"></div>
   </div>
 
+  <!-- F18: Chat (4. zalozka) -->
+  <div id="view-chat" style="display:none;">
+    <div class="section-title">
+      <h2>Chat</h2>
+    </div>
+    <div class="chat-messages" id="chat-messages">
+      <div class="loading">Načítám zprávy...</div>
+    </div>
+    <div class="chat-composer">
+      <!-- F21: reply indikator -->
+      <div class="chat-reply-bar" id="chat-reply-bar" style="display:none;">
+        <div class="chat-reply-icon">↩️</div>
+        <div class="chat-reply-content">
+          <div class="chat-reply-name" id="chat-reply-name"></div>
+          <div class="chat-reply-preview" id="chat-reply-preview"></div>
+        </div>
+        <button type="button" class="chat-reply-cancel" onclick="cancelReply()">×</button>
+      </div>
+      <div class="chat-sender-row">
+        <span class="chat-sender-label">Píše:</span>
+        <div class="chat-sender-pills" id="chat-sender-pills"></div>
+      </div>
+      <div class="chat-input-row">
+        <input type="text" id="chat-input" placeholder="Napiš zprávu..." maxlength="500" onkeydown="if(event.key==='Enter') sendChatMessage()">
+        <button type="button" class="chat-send-btn" onclick="sendChatMessage()">Odeslat</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- F22: Reactions list modal (kdo dal jakou reakci) -->
+  <div class="modal-overlay" id="reactions-modal" onclick="closeReactionsModal(event)">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div class="modal-title">Reakce</div>
+      <div class="modal-subtitle" id="reactions-modal-sub">Kdo reagoval</div>
+      <div id="reactions-list" class="reactions-list"></div>
+      <button class="btn-cancel" onclick="closeReactionsModal()">Zavřít</button>
+    </div>
+  </div>
+
+  <!-- F21: Action menu pro zpravu (reply + reakce) -->
+  <div class="modal-overlay" id="chat-action-menu" onclick="closeChatActionMenu(event)">
+    <div class="chat-action-card" onclick="event.stopPropagation()">
+      <div class="chat-action-emojis">
+        <button type="button" class="chat-emoji-btn" onclick="addChatReaction('👍')">👍</button>
+        <button type="button" class="chat-emoji-btn" onclick="addChatReaction('❤️')">❤️</button>
+        <button type="button" class="chat-emoji-btn" onclick="addChatReaction('🔥')">🔥</button>
+        <button type="button" class="chat-emoji-btn" onclick="addChatReaction('💪')">💪</button>
+        <button type="button" class="chat-emoji-btn" onclick="addChatReaction('😂')">😂</button>
+        <button type="button" class="chat-emoji-btn" onclick="addChatReaction('😮')">😮</button>
+      </div>
+      <button type="button" class="chat-action-btn" onclick="startReplyFromMenu()">↩️ Odpovědět</button>
+      <button type="button" class="chat-action-btn cancel" onclick="closeChatActionMenu()">Zrušit</button>
+    </div>
+  </div>
+
 </main>
 
 <div class="fab-group">
@@ -1048,7 +1468,8 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
     <div class="modal-title" id="modal-title">Nový záznam</div>
     <div class="modal-subtitle" id="modal-subtitle">Nejdřív vyber kdo zadává</div>
 
-    <div class="field">
+    <!-- F19: vyber hrace - skryto pro bezne hrace (predvyplneno), zobrazeno pro admina -->
+    <div class="field" id="player-select-field">
       <label>Kdo zadává <span style="color: var(--accent)">*</span></label>
       <div class="player-pills" id="player-pills"></div>
     </div>
@@ -1149,6 +1570,8 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
           <div id="varied-series-list"></div>
           <button type="button" class="add-serie-btn" onclick="addVariedSerie()">+ Přidat sérii</button>
         </div>
+        <!-- F20: zive zobrazeni bodu u cviku -->
+        <div class="level-points-display" id="cvik-points-display"></div>
       </div>
 
       <div id="form-aktivita" style="display:none;">
@@ -1186,7 +1609,7 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
               <div style="font-size:14px;">Střední</div>
               <div style="font-size:11px;opacity:0.7;margin-top:2px;">~15 min</div>
             </button>
-            <button class="level-btn stretch-btn l4" data-stretch="dlou">
+            <button class="level-btn stretch-btn l5" data-stretch="dlou">
               <div style="font-size:14px;">Dlouhé</div>
               <div style="font-size:11px;opacity:0.7;margin-top:2px;">~30+ min</div>
             </button>
@@ -1389,7 +1812,7 @@ const FIELD_LABELS = {
 };
 
 let state = {
-  players: [], cviky: [], aktivity: [], history: [],
+  players: [], cviky: [], aktivity: [], history: [], chatMessages: [],
   selectedPlayer: null, selectedCvik: null, selectedLevel: null, selectedStretch: null,
   serieMode: 'single', variedSeries: [],
   entryType: 'cvik', view: 'prehled', tab: 'vse',
@@ -1406,8 +1829,19 @@ let state = {
   // F12: filtr obdobi (mode + anchor date pro pocitani rangu)
   periodMode: 'week', periodAnchor: null,
   // F15: filtr kategorii v hlavnim Celkove poradi (all-time)
-  totalCategory: 'all'  // 'all' | 'cvik' | 'aktivita' | 'stretching'
+  totalCategory: 'all',  // 'all' | 'cvik' | 'aktivita' | 'stretching'
+  // F18: chat - kdo prave pise (player_id)
+  chatSender: null,  // F19: bude se priradit z currentPlayerId po loginu
+  // F21: chat replies + reakce
+  chatReplyTo: null,          // ID zpravy na kterou se odpovida
+  chatReactions: [],          // pole reakci nactenych z DB
+  chatActiveMessage: null,    // ID zpravy s otevrenym menu (long-press / klik)
+  // F19: soft auth - aktualne prihlaseny hrac (z localStorage)
+  currentPlayerId: null
 };
+
+// F19: localStorage klic
+const CURRENT_PLAYER_KEY = 'mc-current-player-id';
 
 const MESICE_CZ = ['leden','únor','březen','duben','květen','červen','červenec','srpen','září','říjen','listopad','prosinec'];
 
@@ -1706,6 +2140,7 @@ function renderHeatmap() {
     if (n.includes('martin')) return 'martin';
     if (n.includes('nat')) return 'nat'; // Natalka i Natalka
     if (n.includes('péť') || n.includes('pet')) return 'peta';
+    if (n.includes('káť') || n.includes('kat')) return 'katka'; // F16: barva pro Katu
     return 'gen';
   }
 
@@ -1939,6 +2374,325 @@ function setTotalCategory(cat) {
   renderLeaderboardTotal();
 }
 
+// === F18: Chat ===
+
+function buildChatSenderPills() {
+  const wrap = document.getElementById('chat-sender-pills');
+  if (!wrap) return;
+  // F19 fix: chat sender vzdy = currentPlayerId (i admin pise jen jako Marek)
+  state.chatSender = state.currentPlayerId;
+  const me = state.players.find(p => p.id === state.chatSender);
+  wrap.innerHTML = me ? `<div class="chat-sender-me"><div class="chat-sender-me-avatar" style="background:${me.barva}">${initials(me.jmeno)}</div><span>${me.jmeno}</span></div>` : '';
+}
+
+function setChatSender(playerId) {
+  state.chatSender = playerId;
+  buildChatSenderPills();
+}
+
+function chatEscape(s) {
+  return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function renderChat() {
+  const el = document.getElementById('chat-messages');
+  if (!el) return;
+  buildChatSenderPills();
+  updateReplyBar();
+  if (state.chatMessages.length === 0) {
+    el.innerHTML = '<div class="chat-empty">Zatím žádné zprávy. Napiš první!</div>';
+    return;
+  }
+  const sorted = [...state.chatMessages].sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+  el.innerHTML = sorted.map(m => {
+    const player = state.players.find(p => p.id === m.player_id);
+    if (!player) return '';
+    const d = new Date(m.created_at);
+    const today = new Date(); today.setHours(0,0,0,0);
+    const msgDay = new Date(d); msgDay.setHours(0,0,0,0);
+    let timeStr;
+    if (msgDay.getTime() === today.getTime()) timeStr = `${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;
+    else timeStr = `${d.getDate()}.${d.getMonth()+1}. ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;
+    // F21: reply preview pokud zprava odpovida na jinou
+    let replyHtml = '';
+    if (m.reply_to_id) {
+      const orig = state.chatMessages.find(x => x.id === m.reply_to_id);
+      if (orig) {
+        const origPlayer = state.players.find(p => p.id === orig.player_id);
+        replyHtml = `<div class="chat-msg-reply-ref">
+          <span class="chat-msg-reply-name">${origPlayer ? origPlayer.jmeno : '?'}:</span>
+          <span class="chat-msg-reply-text">${chatEscape(orig.text)}</span>
+        </div>`;
+      }
+    }
+    // F21: reakce - seskupit per emoji
+    const reactions = state.chatReactions.filter(r => r.message_id === m.id);
+    let reactionsHtml = '';
+    if (reactions.length > 0) {
+      const grouped = {};
+      reactions.forEach(r => {
+        if (!grouped[r.emoji]) grouped[r.emoji] = [];
+        grouped[r.emoji].push(r);
+      });
+      reactionsHtml = '<div class="chat-msg-reactions">' + Object.keys(grouped).map(emoji => {
+        const list = grouped[emoji];
+        const mine = state.currentPlayerId && list.some(r => r.player_id === state.currentPlayerId);
+        return `<button type="button" class="chat-reaction-pill ${mine ? 'mine' : ''}" onclick="event.stopPropagation(); showReactionsList('${m.id}')">${emoji} <span class="reaction-count">${list.length}</span></button>`;
+      }).join('') + '</div>';
+    }
+    // F19: delete jen vlastní zprávy nebo admin
+    const canDelete = isAdmin() || m.player_id === state.currentPlayerId;
+    return `
+      <div class="chat-msg" onclick="openChatActionMenu('${m.id}')">
+        <div class="chat-msg-avatar" style="background:${player.barva}">${initials(player.jmeno)}</div>
+        <div class="chat-msg-body">
+          <div class="chat-msg-head">
+            <span class="chat-msg-name">${player.jmeno}</span>
+            <span class="chat-msg-time">${timeStr}</span>
+          </div>
+          ${replyHtml}
+          <div class="chat-msg-text">${chatEscape(m.text)}</div>
+          ${reactionsHtml}
+        </div>
+        ${canDelete ? `<button type="button" class="chat-msg-delete" onclick="event.stopPropagation(); deleteChatMessage('${m.id}')" title="Smazat">🗑️</button>` : ''}
+      </div>`;
+  }).join('');
+  el.scrollTop = el.scrollHeight;
+}
+
+// F21: Reply / action menu funkce
+function openChatActionMenu(messageId) {
+  state.chatActiveMessage = messageId;
+  document.getElementById('chat-action-menu').classList.add('active');
+}
+
+function closeChatActionMenu(event) {
+  if (event && event.target.id !== 'chat-action-menu') return;
+  document.getElementById('chat-action-menu').classList.remove('active');
+  state.chatActiveMessage = null;
+}
+
+function startReplyFromMenu() {
+  state.chatReplyTo = state.chatActiveMessage;
+  document.getElementById('chat-action-menu').classList.remove('active');
+  state.chatActiveMessage = null;
+  updateReplyBar();
+  // Synchronni focus - iOS Safari otevre klavesnici a sam scrolluje input nad ni.
+  // Zadny explicit scrollIntoView (zpusoboval double-jump).
+  const inp = document.getElementById('chat-input');
+  if (inp) inp.focus();
+}
+
+function cancelReply() {
+  state.chatReplyTo = null;
+  updateReplyBar();
+}
+
+function updateReplyBar() {
+  const bar = document.getElementById('chat-reply-bar');
+  if (!bar) return;
+  if (!state.chatReplyTo) {
+    bar.style.display = 'none';
+    return;
+  }
+  const orig = state.chatMessages.find(m => m.id === state.chatReplyTo);
+  if (!orig) { bar.style.display = 'none'; return; }
+  const player = state.players.find(p => p.id === orig.player_id);
+  bar.style.display = '';
+  document.getElementById('chat-reply-name').textContent = `Odpovídáš ${player ? player.jmeno : '?'}`;
+  document.getElementById('chat-reply-preview').textContent = orig.text;
+}
+
+// F21: pridat/odebrat reakci
+async function addChatReaction(emoji) {
+  const messageId = state.chatActiveMessage;
+  if (!messageId) return;
+  document.getElementById('chat-action-menu').classList.remove('active');
+  state.chatActiveMessage = null;
+  await toggleChatReaction(messageId, emoji);
+}
+
+async function toggleChatReaction(messageId, emoji) {
+  if (!state.chatSender) { toast('Vyber kdo píše', 'error'); return; }
+  // Pokud uz mam stejnou reakci, odeber. Jinak pridej.
+  const existing = state.chatReactions.find(r => r.message_id === messageId && r.player_id === state.chatSender && r.emoji === emoji);
+  try {
+    if (existing) {
+      const { error } = await db.from('chat_reactions').delete().eq('id', existing.id);
+      if (error) throw error;
+    } else {
+      const { error } = await db.from('chat_reactions').insert({ message_id: messageId, player_id: state.chatSender, emoji });
+      if (error) throw error;
+    }
+    await loadChatReactions();
+    renderChat();
+  } catch (e) {
+    toast('Chyba reakce: ' + e.message, 'error');
+  }
+}
+
+async function loadChatReactions() {
+  const { data, error } = await db.from('chat_reactions').select('*').limit(2000);
+  if (!error) state.chatReactions = data || [];
+}
+
+// F22: Modal "Kdo reagoval" - seznam reaktoru
+function showReactionsList(messageId) {
+  const reactions = state.chatReactions.filter(r => r.message_id === messageId);
+  if (reactions.length === 0) return;
+  const grouped = {};
+  reactions.forEach(r => {
+    if (!grouped[r.emoji]) grouped[r.emoji] = [];
+    grouped[r.emoji].push(r);
+  });
+  const html = Object.keys(grouped).map(emoji => {
+    const list = grouped[emoji];
+    return `
+      <div class="reaction-group">
+        <div class="reaction-group-header">
+          <span class="reaction-group-emoji">${emoji}</span>
+          <span class="reaction-group-count">${list.length}</span>
+        </div>
+        ${list.map(r => {
+          const player = state.players.find(p => p.id === r.player_id);
+          const isMine = r.player_id === state.currentPlayerId;
+          const onclickAttr = isMine ? `onclick="removeMyReaction('${r.id}')"` : '';
+          return `<div class="reaction-row ${isMine ? 'mine' : ''}" ${onclickAttr}>
+            <div class="reaction-row-avatar" style="background:${player ? player.barva : '#ccc'}">${player ? initials(player.jmeno) : '?'}</div>
+            <span class="reaction-row-name">${player ? player.jmeno : '?'}</span>
+            ${isMine ? '<span class="reaction-row-remove">Odebrat</span>' : ''}
+          </div>`;
+        }).join('')}
+      </div>`;
+  }).join('');
+  document.getElementById('reactions-list').innerHTML = html;
+  document.getElementById('reactions-modal').classList.add('active');
+}
+
+function closeReactionsModal(event) {
+  if (event && event.target.id !== 'reactions-modal') return;
+  document.getElementById('reactions-modal').classList.remove('active');
+}
+
+async function removeMyReaction(reactionId) {
+  try {
+    const { error } = await db.from('chat_reactions').delete().eq('id', reactionId);
+    if (error) throw error;
+    await loadChatReactions();
+    closeReactionsModal();
+    renderChat();
+  } catch (e) { toast('Chyba: ' + e.message, 'error'); }
+}
+
+// === F19: Soft auth (localStorage + admin flag) ===
+
+function getCurrentPlayer() {
+  if (!state.currentPlayerId) return null;
+  return state.players.find(p => p.id === state.currentPlayerId) || null;
+}
+
+function isAdmin() {
+  const p = getCurrentPlayer();
+  return !!(p && p.is_admin);
+}
+
+function canEditEntry(entry) {
+  // Vlastní záznam nebo admin
+  return isAdmin() || entry.player_id === state.currentPlayerId;
+}
+
+function renderLoginScreen() {
+  const aktivni = state.players.filter(p => p.aktivni);
+  const wrap = document.getElementById('login-players');
+  wrap.innerHTML = aktivni.map(p => `
+    <button type="button" class="login-player-btn" onclick="selectPlayer('${p.id}')">
+      <div class="login-avatar" style="background:${p.barva}">${initials(p.jmeno)}</div>
+      <div class="login-name">${p.jmeno}</div>
+      ${p.is_admin ? '<div class="login-badge">Admin</div>' : ''}
+    </button>
+  `).join('');
+}
+
+function showLoginIfNeeded() {
+  const overlay = document.getElementById('login-overlay');
+  if (!state.currentPlayerId) {
+    renderLoginScreen();
+    overlay.classList.add('active');
+    document.getElementById('header-me').style.display = 'none';
+    return true;
+  }
+  overlay.classList.remove('active');
+  updateHeaderMe();
+  return false;
+}
+
+function selectPlayer(playerId) {
+  state.currentPlayerId = playerId;
+  state.chatSender = playerId;   // F18: pro chat synchronizovat
+  localStorage.setItem(CURRENT_PLAYER_KEY, playerId);
+  document.getElementById('login-overlay').classList.remove('active');
+  updateHeaderMe();
+  renderAllViews();
+}
+
+function updateHeaderMe() {
+  const p = getCurrentPlayer();
+  const me = document.getElementById('header-me');
+  if (!p || !me) { if (me) me.style.display = 'none'; return; }
+  me.style.display = 'flex';
+  const av = document.getElementById('header-me-avatar');
+  av.style.background = p.barva;
+  av.textContent = initials(p.jmeno);
+  document.getElementById('header-me-name').textContent = p.jmeno;
+}
+
+function openSwitchPlayer() {
+  // Otevre login overlay znovu pro zmenu hrace
+  renderLoginScreen();
+  document.getElementById('login-overlay').classList.add('active');
+}
+
+async function sendChatMessage() {
+  const inp = document.getElementById('chat-input');
+  const text = (inp.value || '').trim();
+  if (!text) return;
+  if (!state.chatSender) { toast('Vyber kdo píše', 'error'); return; }
+  inp.disabled = true;
+  try {
+    const payload = { player_id: state.chatSender, text };
+    if (state.chatReplyTo) payload.reply_to_id = state.chatReplyTo;  // F21
+    const { error } = await db.from('chat_messages').insert(payload);
+    if (error) throw error;
+    inp.value = '';
+    state.chatReplyTo = null;  // F21: po odeslani zrusit reply mode
+    await loadChatMessages();
+    await loadChatReactions();
+    renderChat();
+  } catch (e) {
+    toast('Chyba: ' + e.message, 'error');
+  } finally {
+    inp.disabled = false;
+    inp.focus();
+  }
+}
+
+async function deleteChatMessage(id) {
+  if (!confirm('Smazat zprávu?')) return;
+  try {
+    const { error } = await db.from('chat_messages').delete().eq('id', id);
+    if (error) throw error;
+    await loadChatMessages();
+    renderChat();
+  } catch (e) {
+    toast('Chyba: ' + e.message, 'error');
+  }
+}
+
+async function loadChatMessages() {
+  const { data, error } = await db.from('chat_messages').select('*').order('created_at', { ascending: true }).limit(500);
+  if (!error) state.chatMessages = data || [];
+}
+
 function renderEntryCard(e, withActions) {
   const player = state.players.find(p => p.id === e.player_id);
   if (!player) return '';
@@ -1972,7 +2726,9 @@ function renderEntryCard(e, withActions) {
   const meta = e._type === 'cvik' || isStretch
     ? `${typeIcon} ${player.jmeno} · ${formatDate(e.datum)}`
     : `${typeIcon} ${player.jmeno} · úroveň ${e.uroven} · ${formatDate(e.datum)}`;
-  const actions = withActions ? `
+  // F19: edit/delete jen pro vlastní záznam (kromě adminu)
+  const canEdit = withActions && canEditEntry(e);
+  const actions = canEdit ? `
     <div class="entry-actions">
       <button class="entry-action-btn edit" data-id="${e.id}" data-type="${e._type}" data-action="edit">✏️</button>
       <button class="entry-action-btn delete" data-id="${e.id}" data-type="${e._type}" data-action="delete">🗑️</button>
@@ -2010,6 +2766,10 @@ function attachEntryActions(container) {
 
 async function deleteEntry(id, type) {
   const table = type === 'cvik' ? 'cviky' : 'aktivity';
+  // F19: ochrana - jen vlastni nebo admin
+  const arr = type === 'cvik' ? state.cviky : state.aktivity;
+  const entry = arr.find(e => e.id === id);
+  if (entry && !canEditEntry(entry)) { toast('Nemůžeš mazat cizí záznam', 'error'); return; }
   try {
     const { error } = await db.from(table).delete().eq('id', id);
     if (error) throw error;
@@ -2027,12 +2787,41 @@ async function deleteCurrentEntry() {
     toast('Záznam smazán', 'success');
     closeModal();
     await loadData();
+    // F6 refresh: pokud je otevreny player-entries-modal, prerenderovat
+    const pem = document.getElementById('player-entries-modal');
+    if (pem && pem.classList.contains('active')) renderPlayerEntries();
   } catch (e) { toast('Chyba: ' + e.message, 'error'); }
 }
 
 // ============================================================
 //  HRACI - karta s vysvetlenim
 // ============================================================
+// F17: spocita celkove statistiky hrace - pocet opakovani per cvik + zvedna pridana vaha + pocet aktivit/stretching
+function calcPlayerStats(playerId) {
+  const cviky = state.cviky.filter(c => c.player_id === playerId);
+  const aktivity = state.aktivity.filter(a => a.player_id === playerId);
+  const cvikStats = {
+    'Shyby': { pocet: 0, vaha: 0 },
+    'Dřep':  { pocet: 0, vaha: 0 },
+    'Kliky': { pocet: 0, vaha: 0 },
+    'Dipy':  { pocet: 0, vaha: 0 }
+  };
+  cviky.forEach(c => {
+    if (cvikStats[c.cvik]) {
+      const op = Number(c.opakovani) || 0;
+      const va = Number(c.pridana_vaha) || 0;
+      cvikStats[c.cvik].pocet += op;
+      cvikStats[c.cvik].vaha += va * op;
+    }
+  });
+  let aktivityCount = 0, stretchingCount = 0;
+  aktivity.forEach(a => {
+    if (a.nazev && a.nazev.indexOf('🧘') === 0) stretchingCount += 1;
+    else aktivityCount += 1;
+  });
+  return { cvikStats, aktivityCount, stretchingCount };
+}
+
 function renderPlayers() {
   const el = document.getElementById('players-list');
   // Defaultni emoji per hrac (podle iniciaru / jmena)
@@ -2042,11 +2831,13 @@ function renderPlayers() {
     if (n.includes('martin')) return '🦁';
     if (n.includes('nat')) return '🦄';
     if (n.includes('péť') || n.includes('pet')) return '🐯';
+    if (n.includes('káť') || n.includes('kat')) return '🐶'; // Káta + psi
     return '😎';
   }
   el.innerHTML = state.players.map(p => {
     const bC = state.cviky.filter(c => c.player_id === p.id).reduce((s, c) => s + Number(c.body), 0);
     const bA = state.aktivity.filter(a => a.player_id === p.id).reduce((s, a) => s + Number(a.body), 0);
+    const stats = calcPlayerStats(p.id);
     return `
       <div class="player-card">
         <div class="player-card-header">
@@ -2066,10 +2857,59 @@ function renderPlayers() {
           <div class="player-card-stat"><div class="player-card-stat-label">Max kliky</div><div class="player-card-stat-value">${p.max_kliky || '—'}</div></div>
           <div class="player-card-stat"><div class="player-card-stat-label">Max dipy</div><div class="player-card-stat-value">${p.max_dipy || '—'}</div></div>
         </div>
+        <!-- F17: celkove statistiky za celou dobu -->
+        <div class="player-totals">
+          <div class="player-totals-title">Celkem za celou dobu</div>
+          <div class="player-totals-grid">
+            <div class="player-total-item">
+              <div class="player-total-icon">💪</div>
+              <div class="player-total-text">
+                <div class="player-total-label">Shyby</div>
+                <div class="player-total-value">${stats.cvikStats['Shyby'].pocet}${stats.cvikStats['Shyby'].vaha > 0 ? ` <span class="player-total-extra">· +${stats.cvikStats['Shyby'].vaha} kg</span>` : ''}</div>
+              </div>
+            </div>
+            <div class="player-total-item">
+              <div class="player-total-icon">🦵</div>
+              <div class="player-total-text">
+                <div class="player-total-label">Dřepy</div>
+                <div class="player-total-value">${stats.cvikStats['Dřep'].pocet}${stats.cvikStats['Dřep'].vaha > 0 ? ` <span class="player-total-extra">· +${stats.cvikStats['Dřep'].vaha} kg</span>` : ''}</div>
+              </div>
+            </div>
+            <div class="player-total-item">
+              <div class="player-total-icon">💥</div>
+              <div class="player-total-text">
+                <div class="player-total-label">Kliky</div>
+                <div class="player-total-value">${stats.cvikStats['Kliky'].pocet}${stats.cvikStats['Kliky'].vaha > 0 ? ` <span class="player-total-extra">· +${stats.cvikStats['Kliky'].vaha} kg</span>` : ''}</div>
+              </div>
+            </div>
+            <div class="player-total-item">
+              <div class="player-total-icon">🤸</div>
+              <div class="player-total-text">
+                <div class="player-total-label">Dipy</div>
+                <div class="player-total-value">${stats.cvikStats['Dipy'].pocet}${stats.cvikStats['Dipy'].vaha > 0 ? ` <span class="player-total-extra">· +${stats.cvikStats['Dipy'].vaha} kg</span>` : ''}</div>
+              </div>
+            </div>
+            <div class="player-total-item">
+              <div class="player-total-icon">🏃</div>
+              <div class="player-total-text">
+                <div class="player-total-label">Aktivity</div>
+                <div class="player-total-value">${stats.aktivityCount}</div>
+              </div>
+            </div>
+            <div class="player-total-item">
+              <div class="player-total-icon">🧘</div>
+              <div class="player-total-text">
+                <div class="player-total-label">Stretching</div>
+                <div class="player-total-value">${stats.stretchingCount}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        ${(isAdmin() || p.id === state.currentPlayerId) ? `
         <div class="player-card-actions">
           <button onclick="openPlayerEdit('${p.id}')">✏️ Upravit</button>
           <button onclick="openPlayerHistory('${p.id}')">🕓 Historie úprav</button>
-        </div>
+        </div>` : ''}
       </div>`;
   }).join('');
 }
@@ -2179,6 +3019,7 @@ function renderAllViews() {
   renderAllEntries();
   renderPlayers();
   renderScoringExplanation();
+  renderChat();
 }
 
 // ============================================================
@@ -2187,11 +3028,19 @@ function renderAllViews() {
 function openModal() {
   state.editMode = false; state.editId = null; state.editTable = null;
   document.getElementById('modal-title').textContent = 'Nový záznam';
-  document.getElementById('modal-subtitle').textContent = 'Nejdřív vyber kdo zadává';
+  document.getElementById('modal-subtitle').textContent = 'Vyplň údaje';
   document.getElementById('submit-btn').textContent = 'Zapsat';
   document.getElementById('delete-btn').style.display = 'none';
   buildPlayerPills();
   resetFormFields();
+  // F19: pokud není admin, skryt výběr hráče + předvyplnit sebe
+  const selField = document.getElementById('player-select-field');
+  if (state.currentPlayerId && !isAdmin()) {
+    selField.style.display = 'none';
+    state.selectedPlayer = state.currentPlayerId;
+  } else {
+    selField.style.display = '';
+  }
   updateFormDisabled();
   document.getElementById('modal').classList.add('active');
 }
@@ -2223,6 +3072,8 @@ function resetFormFields() {
   document.getElementById('level-hint').textContent = 'vyber úroveň 1-5';
   document.getElementById('level-points-display').classList.remove('show');
   document.getElementById('stretch-points-display').classList.remove('show');
+  const cvikDisp = document.getElementById('cvik-points-display');
+  if (cvikDisp) cvikDisp.classList.remove('show');  // F20
   // Reset datum na dnes
   state.selectedDate = todayStr();
   updateDateTrigger();
@@ -2351,6 +3202,7 @@ function setEntryType(type) {
   document.getElementById('form-cvik').style.display = type === 'cvik' ? '' : 'none';
   document.getElementById('form-aktivita').style.display = type === 'aktivita' ? '' : 'none';
   document.getElementById('form-stretching').style.display = type === 'stretching' ? '' : 'none';
+  if (type === 'cvik') updateCvikPointsPreview();
 }
 
 function setSerieMode(mode) {
@@ -2362,6 +3214,44 @@ function setSerieMode(mode) {
   if (mode === 'varied' && state.variedSeries.length === 0) {
     state.variedSeries = [{op:'',vaha:0}];
     renderVariedSeries();
+  }
+  updateCvikPointsPreview();
+}
+
+// F20: Zive zobrazeni bodu u cviku (stejne jako u aktivity/stretching)
+function updateCvikPointsPreview() {
+  const disp = document.getElementById('cvik-points-display');
+  if (!disp) return;
+  if (state.entryType !== 'cvik' || !state.selectedPlayer || !state.selectedCvik) {
+    disp.classList.remove('show');
+    disp.textContent = '';
+    return;
+  }
+  const player = state.players.find(p => p.id === state.selectedPlayer);
+  if (!player) { disp.classList.remove('show'); return; }
+  let total = 0;
+  if (state.serieMode === 'single') {
+    const op = parseInt(document.getElementById('cvik-single-op').value) || 0;
+    const vaha = parseFloat(document.getElementById('cvik-single-vaha').value) || 0;
+    if (op > 0) total = vypocitejBodyCvik(player, state.selectedCvik, op, vaha);
+  } else if (state.serieMode === 'same') {
+    const series = parseInt(document.getElementById('cvik-same-series').value) || 0;
+    const ops = parseInt(document.getElementById('cvik-same-op').value) || 0;
+    const vaha = parseFloat(document.getElementById('cvik-same-vaha').value) || 0;
+    if (series > 0 && ops > 0) total = vypocitejBodyCvik(player, state.selectedCvik, series * ops, vaha);
+  } else if (state.serieMode === 'varied') {
+    state.variedSeries.forEach(s => {
+      const op = parseInt(s.op) || 0;
+      const vaha = parseFloat(s.vaha) || 0;
+      if (op > 0) total += vypocitejBodyCvik(player, state.selectedCvik, op, vaha);
+    });
+    total = Math.round(total * 10) / 10;
+  }
+  if (total > 0) {
+    disp.textContent = `+${total.toFixed(1)} bodů`;
+    disp.classList.add('show');
+  } else {
+    disp.classList.remove('show');
   }
 }
 
@@ -2380,6 +3270,7 @@ function renderVariedSeries() {
       const idx = parseInt(e.target.dataset.idx);
       const field = e.target.dataset.field;
       state.variedSeries[idx][field] = e.target.value;
+      updateCvikPointsPreview();  // F20: zive prepocet
     });
   });
   el.querySelectorAll('.remove-btn').forEach(btn => {
@@ -2450,9 +3341,16 @@ document.querySelectorAll('#cvik-pills .player-pill').forEach(pill => {
       p.classList.remove('active'); p.style.background = ''; p.style.borderColor = ''; p.style.color = '';
     });
     pill.classList.add('active');
-    pill.style.background = 'var(--accent)'; pill.style.borderColor = 'var(--accent)'; pill.style.color = '#000';
+    pill.style.background = 'var(--accent)'; pill.style.borderColor = 'var(--accent)'; pill.style.color = '#fff';
     state.selectedCvik = pill.dataset.cvik;
+    updateCvikPointsPreview();
   });
+});
+
+// F20: input listener pro vsechny cvik inputs (single, same, varied) -> zive prepocet
+['cvik-single-op','cvik-single-vaha','cvik-same-series','cvik-same-op','cvik-same-vaha'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('input', updateCvikPointsPreview);
 });
 
 document.querySelectorAll('.level-btn:not(.stretch-btn)').forEach(btn => {
@@ -2596,6 +3494,9 @@ async function submitEntry() {
     }
     closeModal();
     await loadData();
+    // Pokud je otevreny player-entries-modal (F6), prerenderovat ho aby se zobrazil novy stav
+    const pem = document.getElementById('player-entries-modal');
+    if (pem && pem.classList.contains('active')) renderPlayerEntries();
   } catch (e) {
     console.error(e);
     toast('Chyba: ' + e.message, 'error');
@@ -2610,6 +3511,8 @@ function openEditModal(id, type) {
   const arr = type === 'cvik' ? state.cviky : state.aktivity;
   const entry = arr.find(e => e.id === id);
   if (!entry) return;
+  // F19: ochrana - jen vlastni nebo admin
+  if (!canEditEntry(entry)) { toast('Nemůžeš upravovat cizí záznam', 'error'); return; }
   state.editMode = true;
   state.editId = id;
   state.editTable = table;
@@ -2631,7 +3534,7 @@ function openEditModal(id, type) {
       p.classList.remove('active'); p.style.background = ''; p.style.borderColor = ''; p.style.color = '';
       if (p.dataset.cvik === entry.cvik) {
         p.classList.add('active');
-        p.style.background = 'var(--accent)'; p.style.borderColor = 'var(--accent)'; p.style.color = '#000';
+        p.style.background = 'var(--accent)'; p.style.borderColor = 'var(--accent)'; p.style.color = '#fff';
       }
     });
     // Detekce mode podle poznamky
@@ -2683,6 +3586,7 @@ function openEditModal(id, type) {
   // Nacti datum z editovaneho zaznamu (jinak by zustal todayStr() z resetFormFields)
   state.selectedDate = entry.datum || todayStr();
   updateDateTrigger();
+  updateCvikPointsPreview();  // F20: zobrazi body v edit rezimu
   document.getElementById('modal').classList.add('active');
 }
 
@@ -2690,6 +3594,8 @@ function openEditModal(id, type) {
 //  EDITACE HRACU
 // ============================================================
 function openPlayerEdit(playerId) {
+  // F19: jen vlastni nebo admin
+  if (!isAdmin() && playerId !== state.currentPlayerId) { toast('Nemůžeš upravovat cizího hráče', 'error'); return; }
   state.playerBeingEdited = playerId;
   state.editorPlayer = null;
   const player = state.players.find(p => p.id === playerId);
@@ -2839,13 +3745,15 @@ document.querySelectorAll('.nav-btn').forEach(btn => {
     document.getElementById('view-prehled').style.display = state.view === 'prehled' ? '' : 'none';
     document.getElementById('view-historie').style.display = state.view === 'historie' ? '' : 'none';
     document.getElementById('view-hraci').style.display = state.view === 'hraci' ? '' : 'none';
+    document.getElementById('view-chat').style.display = state.view === 'chat' ? '' : 'none';  // F18
   });
 });
 
-// F11: category tabs (boxiky pro Dohromady/Cviky/Aktivity/Stretching)
-document.querySelectorAll('.cat-tab').forEach(tab => {
+// F11: category tabs (boxiky pro Dohromady/Cviky/Aktivity/Stretching v dolnim LB)
+// F18 fix: scoped jen na .cat-tab[data-tab] aby neklasovalo s hero tabs (data-total-cat)
+document.querySelectorAll('.cat-tab[data-tab]').forEach(tab => {
   tab.addEventListener('click', () => {
-    document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.cat-tab[data-tab]').forEach(t => t.classList.remove('active'));
     tab.classList.add('active');
     state.tab = tab.dataset.tab;
     // propagace barvy do parent sekce
@@ -2856,21 +3764,37 @@ document.querySelectorAll('.cat-tab').forEach(tab => {
 
 async function loadData() {
   try {
-    const [pRes, cRes, aRes, hRes] = await Promise.all([
-      db.from('players').select('*').order('jmeno'),
+    const [pRes, cRes, aRes, hRes, chRes, crRes] = await Promise.all([
+      db.from('players').select('*').order('created_at', { ascending: true }),  // F16: stari hraci prvni, novi posledni
       db.from('cviky').select('*').order('created_at', { ascending: false }),
       db.from('aktivity').select('*').order('created_at', { ascending: false }),
-      db.from('player_history').select('*').order('created_at', { ascending: false })
+      db.from('player_history').select('*').order('created_at', { ascending: false }),
+      db.from('chat_messages').select('*').order('created_at', { ascending: true }).limit(500),  // F18
+      db.from('chat_reactions').select('*').limit(2000)  // F21
     ]);
     if (pRes.error) throw pRes.error;
     if (cRes.error) throw cRes.error;
     if (aRes.error) throw aRes.error;
     if (hRes.error) throw hRes.error;
+    if (chRes.error) console.warn('chat_messages neexistuje:', chRes.error.message);
+    if (crRes.error) console.warn('chat_reactions neexistuje:', crRes.error.message);
+    state.chatMessages = chRes.data || [];
+    state.chatReactions = crRes.data || [];
     state.players = pRes.data || [];
     state.cviky = cRes.data || [];
     state.aktivity = aRes.data || [];
     state.history = hRes.data || [];
-    renderAllViews();
+    // F19: nacist current player z localStorage a overit ze existuje
+    const savedId = localStorage.getItem(CURRENT_PLAYER_KEY);
+    if (savedId && state.players.find(p => p.id === savedId)) {
+      state.currentPlayerId = savedId;
+      state.chatSender = savedId;
+    } else if (savedId) {
+      // ulozeny hrac uz neexistuje (smazany) - clean
+      localStorage.removeItem(CURRENT_PLAYER_KEY);
+    }
+    const needsLogin = showLoginIfNeeded();
+    if (!needsLogin) renderAllViews();
     document.getElementById('connection-status').textContent = isTest ? 'test' : 'online';
   } catch (e) {
     console.error('Load error:', e);
