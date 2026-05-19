@@ -67,19 +67,19 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
 /* F19: header-right + me avatar */
-.header-right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
-/* Mobil: kompaktnejsi header */
+.header-right { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
+/* Mobil: kompaktnejsi header — Movement.Challenge i jmeno hrace vidi celé */
 @media (max-width: 480px) {
-  .header { padding: 10px 12px; }
-  .header h1 { font-size: 14px; }
-  .header h1 .light { display: none; }   /* skryt ".Challenge" */
-  .header-logo { width: 28px; height: 28px; }
-  .header .status { display: none; }      /* status indicator (online/test) skryt */
-  .header-me-name { display: none; }
-  .header-admin-toggle { padding: 4px 8px; font-size: 10px; }
-  .header-logout { width: 28px; height: 28px; font-size: 12px; }
-  .header-me { padding: 3px 4px; }
+  .header { padding: 10px 10px; }
+  .header-brand { gap: 6px; min-width: 0; }
+  .header h1 { font-size: 13px; white-space: nowrap; }
+  .header-logo { width: 26px; height: 26px; }
+  .header .status { display: none; }
+  .header-admin-toggle { padding: 4px 7px; font-size: 10px; }
+  .header-logout { width: 26px; height: 26px; font-size: 12px; }
+  .header-me { padding: 3px 8px 3px 3px; }
   .header-me-avatar { width: 22px; height: 22px; font-size: 9px; }
+  .header-me-name { font-size: 11px; }
 }
 .header-me {
   display: flex; align-items: center; gap: 6px;
