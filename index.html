@@ -2477,15 +2477,16 @@ function startReplyFromMenu() {
   document.getElementById('chat-action-menu').classList.remove('active');
   state.chatActiveMessage = null;
   updateReplyBar();
-  // Scroll composer (reply bar + input) do viewportu a focus na input
+  // KRITICKE: focus musi byt synchronni v user-gesture handleru (jinak iOS Safari neotevre klavesnici)
+  const inp = document.getElementById('chat-input');
+  if (inp) inp.focus();
+  // Scroll k composeru az po focus (po krátké pauze, az se klavesnice zobrazi)
   setTimeout(() => {
     const composer = document.querySelector('.chat-composer');
     if (composer && composer.scrollIntoView) {
       composer.scrollIntoView({ behavior: 'smooth', block: 'end' });
     }
-    const inp = document.getElementById('chat-input');
-    if (inp) inp.focus();
-  }, 50);
+  }, 250);
 }
 
 function cancelReply() {
