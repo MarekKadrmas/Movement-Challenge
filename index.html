@@ -1315,6 +1315,58 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 .history-item .when { color: var(--text-muted); font-size: 11px; margin-bottom: 4px; font-variant-numeric: tabular-nums; }
 .history-item .change { color: var(--text); }
 .history-item .change strong { color: var(--text); font-weight: 700; }
+
+/* F31: Grafy */
+.charts-tabs { display: flex; gap: 4px; overflow-x: auto; margin: 8px 0 12px; padding-bottom: 2px; scrollbar-width: none; }
+.charts-tabs::-webkit-scrollbar { display: none; }
+.chart-tab { padding: 6px 12px; border-radius: 100px; font-size: 12px; font-weight: 600; background: var(--bg); border: 1px solid var(--border); color: var(--text-muted); cursor: pointer; white-space: nowrap; flex-shrink: 0; }
+.chart-tab.active { background: var(--text); color: #fff; border-color: var(--text); }
+
+.chart-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; margin-bottom: 14px; }
+.chart-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 8px; }
+.chart-title-main { font-size: 13px; font-weight: 800; color: var(--text); }
+.chart-subtitle { font-size: 11px; font-weight: 500; color: var(--text-muted); margin-top: 2px; }
+.chart-kpis { display: flex; gap: 8px; margin-bottom: 12px; padding: 8px 10px; background: var(--bg); border-radius: 8px; }
+.chart-kpi { flex: 1; min-width: 0; }
+.chart-kpi-val { font-size: 14px; font-weight: 800; color: var(--text); display: block; line-height: 1.1; }
+.chart-kpi-lbl { font-size: 9px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; margin-top: 2px; display: block; }
+
+.chart-frame { display: grid; grid-template-columns: 30px 1fr; grid-template-rows: 1fr 16px 14px; }
+.chart-y-axis { grid-column: 1; grid-row: 1; display: flex; flex-direction: column-reverse; justify-content: space-between; padding: 8px 6px 0 0; text-align: right; font-size: 9px; color: var(--text-muted); font-weight: 500; }
+.chart-plot { grid-column: 2; grid-row: 1; position: relative; border-left: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.chart-x-axis { grid-column: 2; grid-row: 2; display: flex; justify-content: space-between; padding: 4px 2px 0 2px; font-size: 9px; color: var(--text-muted); font-weight: 500; }
+.chart-x-title { grid-column: 2; grid-row: 3; text-align: center; font-size: 9px; color: var(--text-dim); font-style: italic; padding-top: 2px; }
+.chart-y-title { grid-column: 1; grid-row: 3; text-align: center; font-size: 9px; color: var(--text-dim); font-style: italic; padding-top: 2px; }
+.chart-gridlines { position: absolute; inset: 0; pointer-events: none; display: flex; flex-direction: column-reverse; justify-content: space-between; }
+.chart-gridline { border-bottom: 1px dashed var(--border-soft); height: 0; }
+.chart-gridline:first-child { border-bottom: 1px solid var(--border); }
+
+.chart-bars { position: absolute; inset: 16px 4px 0 4px; display: flex; align-items: flex-end; gap: 5px; }
+.chart-bar-col { flex: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; gap: 1px; align-items: stretch; position: relative; }
+.chart-bar { width: 100%; border-radius: 3px 3px 0 0; min-height: 2px; }
+.chart-bar-group { display: flex; gap: 1px; align-items: flex-end; height: 100%; flex: 1; }
+.chart-bar-mini { flex: 1; border-radius: 2px 2px 0 0; min-height: 2px; }
+.chart-bar-val { position: absolute; top: -13px; left: 50%; transform: translateX(-50%); font-size: 8.5px; font-weight: 700; color: var(--text); white-space: nowrap; }
+
+.chart-plot svg { display: block; width: 100%; height: 100%; }
+.chart-line-end { position: absolute; font-size: 9px; font-weight: 700; background: var(--bg-card); padding: 1px 4px; border-radius: 3px; transform: translate(0, -50%); white-space: nowrap; }
+
+.chart-legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; font-size: 11px; }
+.chart-legend-item { display: flex; align-items: center; gap: 4px; color: var(--text); }
+.chart-legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+.chart-footer-note { font-size: 11px; color: var(--text-muted); margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--border-soft); }
+.chart-footer-note strong { color: var(--text); }
+.chart-empty { padding: 40px 20px; text-align: center; color: var(--text-muted); font-size: 12px; }
+
+.view-mode-toggle { display: flex; gap: 4px; background: var(--bg); padding: 4px; border-radius: 100px; border: 1px solid var(--border); margin-bottom: 14px; }
+.view-mode-btn { flex: 1; padding: 8px 12px; border-radius: 100px; font-size: 12px; font-weight: 700; background: transparent; border: none; color: var(--text-muted); cursor: pointer; }
+.view-mode-btn.active { background: var(--text); color: #fff; }
+
+.player-tabs { display: flex; gap: 4px; overflow-x: auto; margin-bottom: 12px; padding-bottom: 2px; scrollbar-width: none; }
+.player-tabs::-webkit-scrollbar { display: none; }
+.player-tab { padding: 6px 10px; border-radius: 100px; font-size: 11px; font-weight: 700; background: var(--bg); border: 1px solid var(--border); color: var(--text-muted); cursor: pointer; white-space: nowrap; flex-shrink: 0; display: flex; align-items: center; gap: 5px; }
+.player-tab-dot { width: 8px; height: 8px; border-radius: 50%; }
+.player-tab.active { background: var(--text); color: #fff; border-color: var(--text); }
 </style>
 </head>
 <body>
@@ -1426,6 +1478,19 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
       <div class="loading">Načítám...</div>
     </div>
 
+    <!-- F31: Grafy -->
+    <div class="section-title">
+      <h2>Grafy</h2>
+    </div>
+    <div class="charts-tabs" id="overview-chart-tabs">
+      <button type="button" class="chart-tab active" data-ov-chart="body-time" onclick="setOverviewChart('body-time')">Body v čase</button>
+      <button type="button" class="chart-tab" data-ov-chart="day-of-week" onclick="setOverviewChart('day-of-week')">Den v týdnu</button>
+      <button type="button" class="chart-tab" data-ov-chart="km" onclick="setOverviewChart('km')">Naběháno km</button>
+    </div>
+    <div id="overview-chart-container">
+      <div class="loading">Načítám...</div>
+    </div>
+
     <div class="section-title">
       <h2>Poslední záznamy</h2>
     </div>
@@ -1460,17 +1525,40 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
   </div>
 
   <div id="view-hraci" style="display:none;">
-    <div class="section-title">
-      <h2>Hráči</h2>
-    </div>
-    <div class="players-list" id="players-list">
-      <div class="loading">Načítám...</div>
+    <!-- F31: Statistiky / Grafy prepinac -->
+    <div class="view-mode-toggle">
+      <button type="button" class="view-mode-btn active" data-hraci-mode="stats" onclick="setHraciMode('stats')">📊 Statistiky</button>
+      <button type="button" class="view-mode-btn" data-hraci-mode="charts" onclick="setHraciMode('charts')">📈 Grafy</button>
     </div>
 
-    <div class="section-title">
-      <h2>Jak funguje bodování</h2>
+    <div id="hraci-stats-section">
+      <div class="section-title">
+        <h2>Hráči</h2>
+      </div>
+      <div class="players-list" id="players-list">
+        <div class="loading">Načítám...</div>
+      </div>
+
+      <div class="section-title">
+        <h2>Jak funguje bodování</h2>
+      </div>
+      <div id="scoring-explanation"></div>
     </div>
-    <div id="scoring-explanation"></div>
+
+    <!-- F31: Grafy hrace -->
+    <div id="hraci-charts-section" style="display:none;">
+      <div class="player-tabs" id="player-chart-player-tabs"></div>
+      <div class="charts-tabs" id="player-chart-type-tabs">
+        <button type="button" class="chart-tab active" data-pl-chart="body-time" onclick="setPlayerChart('body-time')">Body v čase</button>
+        <button type="button" class="chart-tab" data-pl-chart="day-of-week" onclick="setPlayerChart('day-of-week')">Den v týdnu</button>
+        <button type="button" class="chart-tab" data-pl-chart="cviky" onclick="setPlayerChart('cviky')">Cviky</button>
+        <button type="button" class="chart-tab" data-pl-chart="km" onclick="setPlayerChart('km')">Km</button>
+        <button type="button" class="chart-tab" data-pl-chart="stretching" onclick="setPlayerChart('stretching')">Stretching</button>
+      </div>
+      <div id="player-chart-container">
+        <div class="loading">Načítám...</div>
+      </div>
+    </div>
   </div>
 
   <!-- F18: Chat (4. zalozka) -->
@@ -1927,7 +2015,12 @@ let state = {
   chatReactions: [],          // pole reakci nactenych z DB
   chatActiveMessage: null,    // ID zpravy s otevrenym menu (long-press / klik)
   // F19: soft auth - aktualne prihlaseny hrac (z localStorage)
-  currentPlayerId: null
+  currentPlayerId: null,
+  // F31: Grafy
+  overviewChart: 'body-time',   // 'body-time' | 'day-of-week' | 'km'
+  hraciMode: 'stats',           // 'stats' | 'charts'
+  playerChart: 'body-time',     // 'body-time' | 'day-of-week' | 'cviky' | 'km' | 'stretching'
+  playerChartPlayerId: null     // hrac jehoz grafy zobrazujeme (default = currentPlayerId)
 };
 
 // F19: localStorage klice
@@ -3239,6 +3332,603 @@ function renderScoringExplanation() {
   document.getElementById('scoring-explanation').innerHTML = html;
 }
 
+// ============================================================
+//  F31: GRAFY
+// ============================================================
+const DOW_LABELS = ['Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne'];
+
+// 0=Po, 6=Ne (z JS getDay 0=So, 1=Po)
+function dowIndex(dateStr) {
+  const d = new Date(dateStr + 'T00:00:00');
+  const js = d.getDay();
+  return js === 0 ? 6 : js - 1;
+}
+
+// Vrati pole datumu (YYYY-MM-DD) za poslednich N dni, ascending
+function lastNDays(n) {
+  const out = [];
+  const today = new Date();
+  for (let i = n - 1; i >= 0; i--) {
+    const d = new Date(today); d.setDate(d.getDate() - i);
+    out.push(d.toISOString().slice(0, 10));
+  }
+  return out;
+}
+
+// Body hrace v dany den (cviky + aktivity)
+function pointsOfPlayerOnDate(playerId, dateStr) {
+  let pts = 0;
+  state.cviky.filter(c => c.player_id === playerId && c.datum === dateStr).forEach(c => pts += Number(c.body) || 0);
+  state.aktivity.filter(a => a.player_id === playerId && a.datum === dateStr).forEach(a => pts += Number(a.body) || 0);
+  return pts;
+}
+
+// Nice round max pro Y osu (5 ticks)
+function niceMax(rawMax) {
+  if (rawMax <= 0) return 10;
+  const targetTicks = 5;
+  const rough = rawMax / targetTicks;
+  const mag = Math.pow(10, Math.floor(Math.log10(rough)));
+  const norm = rough / mag;
+  let step;
+  if (norm < 1.5) step = 1;
+  else if (norm < 3) step = 2;
+  else if (norm < 7) step = 5;
+  else step = 10;
+  step *= mag;
+  return Math.ceil(rawMax / step) * step;
+}
+
+function yTicks(max, count) {
+  count = count || 5;
+  const step = max / count;
+  const out = [];
+  for (let i = 0; i <= count; i++) out.push(Math.round(step * i));
+  return out;
+}
+
+function fmtDateShort(dateStr) {
+  const d = new Date(dateStr + 'T00:00:00');
+  return d.getDate() + '.' + (d.getMonth() + 1) + '.';
+}
+
+// Vrati ~6 pickovanych X-osa labelu z pole datumu
+function pickXLabels(dates, n) {
+  n = n || 6;
+  if (dates.length <= n) return dates.map(fmtDateShort);
+  const out = [];
+  const step = (dates.length - 1) / (n - 1);
+  for (let i = 0; i < n; i++) out.push(fmtDateShort(dates[Math.round(i * step)]));
+  return out;
+}
+
+// ===== PREHLED: Body v case =====
+function renderChartBodyTime() {
+  const days = 30;
+  const dates = lastNDays(days);
+  const players = state.players.filter(p => p.aktivni);
+
+  // Per-player kumulativni body
+  const series = players.map(p => {
+    let cum = 0;
+    const pts = dates.map(d => { cum += pointsOfPlayerOnDate(p.id, d); return cum; });
+    return { player: p, points: pts, total: cum };
+  }).sort((a, b) => b.total - a.total);
+
+  const maxVal = Math.max(1, ...series.map(s => s.total));
+  const yMax = niceMax(maxVal);
+  const ticks = yTicks(yMax, 4);
+
+  const PLOT_H = 160;
+  const PLOT_W = 400;
+  const poly = (pts) => pts.map((v, i) => {
+    const x = (i / (dates.length - 1)) * (PLOT_W - 5);
+    const y = PLOT_H - (v / yMax) * PLOT_H;
+    return x + ',' + y;
+  }).join(' ');
+
+  // End labels - vertical stack at right edge
+  const endLabels = series.map((s) => {
+    const v = s.points[s.points.length - 1];
+    const yPct = (1 - v / yMax) * 100;
+    return `<div class="chart-line-end" style="right:2px;top:${yPct}%;color:${s.player.barva};">${Math.round(v)}</div>`;
+  }).join('');
+
+  const lines = series.map(s => `<polyline fill="none" stroke="${s.player.barva}" stroke-width="2.5" vector-effect="non-scaling-stroke" points="${poly(s.points)}"/>`).join('');
+  const yAxisHtml = ticks.map(t => `<span>${t}</span>`).join('');
+  const gridHtml = ticks.map(() => '<div class="chart-gridline"></div>').join('');
+  const xLabels = pickXLabels(dates, 6).map(l => `<span>${l}</span>`).join('');
+  const legend = series.map(s => `<div class="chart-legend-item"><div class="chart-legend-dot" style="background:${s.player.barva}"></div>${s.player.jmeno}</div>`).join('');
+  const top = series[0];
+  const footer = top ? `Vede <strong>${top.player.jmeno} (${Math.round(top.total)} b.)</strong>` : '';
+
+  return `<div class="chart-card">
+    <div class="chart-head"><div><div class="chart-title-main">Kumulativní body za 30 dní</div><div class="chart-subtitle">Trajektorie skóre každého hráče</div></div></div>
+    <div class="chart-frame" style="grid-template-rows: ${PLOT_H}px 16px 14px;">
+      <div class="chart-y-axis">${yAxisHtml}</div>
+      <div class="chart-plot">
+        <div class="chart-gridlines">${gridHtml}</div>
+        <svg viewBox="0 0 ${PLOT_W} ${PLOT_H}" preserveAspectRatio="none" style="position:absolute;inset:0;">${lines}</svg>
+        ${endLabels}
+      </div>
+      <div class="chart-x-axis">${xLabels}</div>
+      <div class="chart-y-title">body</div>
+      <div class="chart-x-title">datum</div>
+    </div>
+    <div class="chart-legend">${legend}</div>
+    <div class="chart-footer-note">${footer}</div>
+  </div>`;
+}
+
+// ===== PREHLED: Den v tydnu (grouped bar) =====
+function renderChartDayOfWeek() {
+  const days = 90;
+  const dates = lastNDays(days);
+  const dateSet = new Set(dates);
+  const players = state.players.filter(p => p.aktivni);
+
+  // dowSums[dow][playerIdx] = total
+  const dowSums = Array.from({ length: 7 }, () => players.map(() => 0));
+  const dowCounts = Array.from({ length: 7 }, () => 0);
+  dates.forEach(d => { dowCounts[dowIndex(d)] += 1; });
+
+  state.cviky.forEach(c => { if (dateSet.has(c.datum)) { const pi = players.findIndex(p => p.id === c.player_id); if (pi >= 0) dowSums[dowIndex(c.datum)][pi] += Number(c.body) || 0; } });
+  state.aktivity.forEach(a => { if (dateSet.has(a.datum)) { const pi = players.findIndex(p => p.id === a.player_id); if (pi >= 0) dowSums[dowIndex(a.datum)][pi] += Number(a.body) || 0; } });
+
+  // Avg per den (sum per dow / pocet vyskytu dow / pocet hracu — chceme prumer bodu na hrace na den toho dow)
+  const dowTotalAvg = dowSums.map((arr, di) => {
+    const sum = arr.reduce((s, v) => s + v, 0);
+    const weeks = Math.max(1, Math.ceil(dowCounts[di]));
+    return sum / weeks;
+  });
+
+  const maxVal = Math.max(1, ...dowTotalAvg);
+  const yMax = niceMax(maxVal);
+  const ticks = yTicks(yMax, 4);
+
+  const cols = DOW_LABELS.map((lbl, di) => {
+    const groupMax = Math.max(1, ...dowSums[di]);
+    const bars = players.map((p, pi) => {
+      const v = dowSums[di][pi] / Math.max(1, dowCounts[di]);
+      const h = Math.max(2, (v / yMax) * 100);
+      return `<div class="chart-bar-mini" style="background:${p.barva};height:${h}%"></div>`;
+    }).join('');
+    const totalVal = Math.round(dowTotalAvg[di]);
+    return `<div class="chart-bar-col"><div class="chart-bar-val">${totalVal}</div><div class="chart-bar-group">${bars}</div></div>`;
+  }).join('');
+
+  const yAxisHtml = ticks.map(t => `<span>${t}</span>`).join('');
+  const gridHtml = ticks.map(() => '<div class="chart-gridline"></div>').join('');
+  const xLabels = DOW_LABELS.map(l => `<span>${l}</span>`).join('');
+  const legend = players.map(p => `<div class="chart-legend-item"><div class="chart-legend-dot" style="background:${p.barva}"></div>${p.jmeno}</div>`).join('');
+
+  // Top den
+  let topDow = 0;
+  dowTotalAvg.forEach((v, i) => { if (v > dowTotalAvg[topDow]) topDow = i; });
+  const footer = `⭐ Top den: <strong>${['Pondělí','Úterý','Středa','Čtvrtek','Pátek','Sobota','Neděle'][topDow]} (${Math.round(dowTotalAvg[topDow])} b. průměr)</strong>`;
+
+  return `<div class="chart-card">
+    <div class="chart-head"><div><div class="chart-title-main">Průměr bodů podle dne v týdnu</div><div class="chart-subtitle">Posledních 90 dní · per hráč ve sloupci</div></div></div>
+    <div class="chart-frame" style="grid-template-rows: 150px 16px 14px;">
+      <div class="chart-y-axis">${yAxisHtml}</div>
+      <div class="chart-plot">
+        <div class="chart-gridlines">${gridHtml}</div>
+        <div class="chart-bars">${cols}</div>
+      </div>
+      <div class="chart-x-axis">${xLabels}</div>
+      <div class="chart-y-title">body</div>
+      <div class="chart-x-title">den v týdnu</div>
+    </div>
+    <div class="chart-legend">${legend}</div>
+    <div class="chart-footer-note">${footer}</div>
+  </div>`;
+}
+
+// ===== PREHLED: Nabehano km =====
+function renderChartKmAll() {
+  const days = 30;
+  const dates = lastNDays(days);
+  const dateSet = new Set(dates);
+  const players = state.players.filter(p => p.aktivni);
+
+  // Kumulativni km per hrac
+  const series = players.map(p => {
+    let cum = 0;
+    const pts = dates.map(d => {
+      state.aktivity.filter(a => a.player_id === p.id && a.datum === d && a.km).forEach(a => { cum += Number(a.km) || 0; });
+      return cum;
+    });
+    return { player: p, points: pts, total: cum };
+  }).filter(s => s.total > 0).sort((a, b) => b.total - a.total);
+
+  if (series.length === 0) {
+    return `<div class="chart-card"><div class="chart-empty">Zatím žádné km nikdo nezapsal.</div></div>`;
+  }
+
+  const maxVal = Math.max(1, ...series.map(s => s.total));
+  const yMax = niceMax(maxVal);
+  const ticks = yTicks(yMax, 3);
+
+  const PLOT_H = 150;
+  const PLOT_W = 400;
+  const poly = (pts) => pts.map((v, i) => {
+    const x = (i / (dates.length - 1)) * (PLOT_W - 5);
+    const y = PLOT_H - (v / yMax) * PLOT_H;
+    return x + ',' + y;
+  }).join(' ');
+
+  const endLabels = series.map(s => {
+    const v = s.points[s.points.length - 1];
+    const yPct = (1 - v / yMax) * 100;
+    return `<div class="chart-line-end" style="right:2px;top:${yPct}%;color:${s.player.barva};">${v.toFixed(1)} km</div>`;
+  }).join('');
+
+  const lines = series.map(s => `<polyline fill="none" stroke="${s.player.barva}" stroke-width="2.5" vector-effect="non-scaling-stroke" points="${poly(s.points)}"/>`).join('');
+  const yAxisHtml = ticks.map(t => `<span>${t}</span>`).join('');
+  const gridHtml = ticks.map(() => '<div class="chart-gridline"></div>').join('');
+  const xLabels = pickXLabels(dates, 6).map(l => `<span>${l}</span>`).join('');
+  const legend = series.map(s => `<div class="chart-legend-item"><div class="chart-legend-dot" style="background:${s.player.barva}"></div>${s.player.jmeno}</div>`).join('');
+  const totalKm = series.reduce((s, x) => s + x.total, 0);
+  const footer = `Skupina dohromady <strong>${totalKm.toFixed(1)} km</strong> · ${series[0].player.jmeno} naběhal nejvíc (${series[0].total.toFixed(1)} km)`;
+
+  return `<div class="chart-card">
+    <div class="chart-head"><div><div class="chart-title-main">Kumulativní km — všichni hráči</div><div class="chart-subtitle">Posledních 30 dní</div></div></div>
+    <div class="chart-frame" style="grid-template-rows: ${PLOT_H}px 16px 14px;">
+      <div class="chart-y-axis">${yAxisHtml}</div>
+      <div class="chart-plot">
+        <div class="chart-gridlines">${gridHtml}</div>
+        <svg viewBox="0 0 ${PLOT_W} ${PLOT_H}" preserveAspectRatio="none" style="position:absolute;inset:0;">${lines}</svg>
+        ${endLabels}
+      </div>
+      <div class="chart-x-axis">${xLabels}</div>
+      <div class="chart-y-title">km</div>
+      <div class="chart-x-title">datum</div>
+    </div>
+    <div class="chart-legend">${legend}</div>
+    <div class="chart-footer-note">${footer}</div>
+  </div>`;
+}
+
+function renderOverviewChart() {
+  const el = document.getElementById('overview-chart-container');
+  if (!el) return;
+  if (!state.players.length) { el.innerHTML = '<div class="chart-empty">Načítám data…</div>'; return; }
+  let html = '';
+  switch (state.overviewChart) {
+    case 'body-time': html = renderChartBodyTime(); break;
+    case 'day-of-week': html = renderChartDayOfWeek(); break;
+    case 'km': html = renderChartKmAll(); break;
+  }
+  el.innerHTML = html;
+}
+
+function setOverviewChart(type) {
+  state.overviewChart = type;
+  document.querySelectorAll('[data-ov-chart]').forEach(b => b.classList.toggle('active', b.dataset.ovChart === type));
+  renderOverviewChart();
+}
+
+// ===== HRAC: Moje body v case =====
+function renderPlayerChartBodyTime(player) {
+  const days = 30;
+  const dates = lastNDays(days);
+  let cum = 0;
+  const points = dates.map(d => { cum += pointsOfPlayerOnDate(player.id, d); return cum; });
+  const total = cum;
+
+  // KPI: za 7 dni rozdil
+  const idx7 = Math.max(0, points.length - 8);
+  const last7 = points[points.length - 1] - points[idx7];
+  const avgDay = total / days;
+
+  const yMax = niceMax(Math.max(1, total));
+  const ticks = yTicks(yMax, 4);
+  const PLOT_H = 160;
+  const PLOT_W = 400;
+  const poly = points.map((v, i) => {
+    const x = (i / (dates.length - 1)) * (PLOT_W - 5);
+    const y = PLOT_H - (v / yMax) * PLOT_H;
+    return x + ',' + y;
+  }).join(' ');
+  const polyFill = poly + ` ${PLOT_W - 5},${PLOT_H} 0,${PLOT_H}`;
+
+  const endYPct = (1 - points[points.length - 1] / yMax) * 100;
+  const yAxisHtml = ticks.map(t => `<span>${t}</span>`).join('');
+  const gridHtml = ticks.map(() => '<div class="chart-gridline"></div>').join('');
+  const xLabels = pickXLabels(dates, 6).map(l => `<span>${l}</span>`).join('');
+
+  return `<div class="chart-card">
+    <div class="chart-head"><div><div class="chart-title-main">Moje kumulativní body</div><div class="chart-subtitle">Posledních 30 dní</div></div></div>
+    <div class="chart-kpis">
+      <div class="chart-kpi"><span class="chart-kpi-val">${Math.round(total)}</span><span class="chart-kpi-lbl">celkem bodů</span></div>
+      <div class="chart-kpi"><span class="chart-kpi-val">+${Math.round(last7)}</span><span class="chart-kpi-lbl">za 7 dní</span></div>
+      <div class="chart-kpi"><span class="chart-kpi-val">${Math.round(avgDay)}</span><span class="chart-kpi-lbl">průměr/den</span></div>
+    </div>
+    <div class="chart-frame" style="grid-template-rows: ${PLOT_H}px 16px 14px;">
+      <div class="chart-y-axis">${yAxisHtml}</div>
+      <div class="chart-plot">
+        <div class="chart-gridlines">${gridHtml}</div>
+        <svg viewBox="0 0 ${PLOT_W} ${PLOT_H}" preserveAspectRatio="none" style="position:absolute;inset:0;">
+          <polyline fill="${player.barva}33" stroke="none" points="${polyFill}"/>
+          <polyline fill="none" stroke="${player.barva}" stroke-width="3" vector-effect="non-scaling-stroke" points="${poly}"/>
+        </svg>
+        <div class="chart-line-end" style="right:2px;top:${endYPct}%;color:${player.barva};">${Math.round(total)} b.</div>
+      </div>
+      <div class="chart-x-axis">${xLabels}</div>
+      <div class="chart-y-title">body</div>
+      <div class="chart-x-title">datum</div>
+    </div>
+    <div class="chart-footer-note">Trend ${last7 > 0 ? '↗' : '→'} · poslední týden ${last7 > 0 ? '+' : ''}${Math.round(last7)} b.</div>
+  </div>`;
+}
+
+// ===== HRAC: Muj den v tydnu =====
+function renderPlayerChartDayOfWeek(player) {
+  const days = 90;
+  const dates = lastNDays(days);
+  const dateSet = new Set(dates);
+  const dowSums = [0, 0, 0, 0, 0, 0, 0];
+  const dowCounts = [0, 0, 0, 0, 0, 0, 0];
+  dates.forEach(d => { dowCounts[dowIndex(d)] += 1; });
+  state.cviky.filter(c => c.player_id === player.id && dateSet.has(c.datum)).forEach(c => { dowSums[dowIndex(c.datum)] += Number(c.body) || 0; });
+  state.aktivity.filter(a => a.player_id === player.id && dateSet.has(a.datum)).forEach(a => { dowSums[dowIndex(a.datum)] += Number(a.body) || 0; });
+  const dowAvg = dowSums.map((s, i) => s / Math.max(1, dowCounts[i]));
+
+  const maxVal = Math.max(1, ...dowAvg);
+  const yMax = niceMax(maxVal);
+  const ticks = yTicks(yMax, 4);
+  let topDow = 0;
+  dowAvg.forEach((v, i) => { if (v > dowAvg[topDow]) topDow = i; });
+
+  const cols = DOW_LABELS.map((lbl, di) => {
+    const v = dowAvg[di];
+    const h = Math.max(2, (v / yMax) * 100);
+    const isTop = di === topDow;
+    return `<div class="chart-bar-col"><div class="chart-bar-val">${Math.round(v)}</div><div class="chart-bar" style="background:${isTop ? '#22c55e' : player.barva};height:${h}%"></div></div>`;
+  }).join('');
+
+  const yAxisHtml = ticks.map(t => `<span>${t}</span>`).join('');
+  const gridHtml = ticks.map(() => '<div class="chart-gridline"></div>').join('');
+  const xLabels = DOW_LABELS.map(l => `<span>${l}</span>`).join('');
+  const footer = `⭐ Nejlepší den: <strong>${['Pondělí','Úterý','Středa','Čtvrtek','Pátek','Sobota','Neděle'][topDow]} (${Math.round(dowAvg[topDow])} b. průměr)</strong>`;
+
+  return `<div class="chart-card">
+    <div class="chart-head"><div><div class="chart-title-main">Můj průměr bodů podle dne v týdnu</div><div class="chart-subtitle">Posledních 90 dní</div></div></div>
+    <div class="chart-frame" style="grid-template-rows: 140px 16px 14px;">
+      <div class="chart-y-axis">${yAxisHtml}</div>
+      <div class="chart-plot">
+        <div class="chart-gridlines">${gridHtml}</div>
+        <div class="chart-bars">${cols}</div>
+      </div>
+      <div class="chart-x-axis">${xLabels}</div>
+      <div class="chart-y-title">body</div>
+      <div class="chart-x-title">den v týdnu</div>
+    </div>
+    <div class="chart-footer-note">${footer}</div>
+  </div>`;
+}
+
+// ===== HRAC: Cviky v case (multi-line, kumulativni opakovani) =====
+function renderPlayerChartCviky(player) {
+  const days = 30;
+  const dates = lastNDays(days);
+  const dateSet = new Set(dates);
+  const cvikTypes = [
+    { name: 'Shyby', color: '#3b82f6' },
+    { name: 'Dřep',  color: '#22c55e' },
+    { name: 'Kliky', color: '#a855f7' },
+    { name: 'Dipy',  color: '#eab308' }
+  ];
+
+  const series = cvikTypes.map(ct => {
+    let cum = 0;
+    const pts = dates.map(d => {
+      state.cviky.filter(c => c.player_id === player.id && c.cvik === ct.name && c.datum === d).forEach(c => { cum += Number(c.opakovani) || 0; });
+      return cum;
+    });
+    return { ...ct, points: pts, total: cum };
+  });
+
+  const maxVal = Math.max(1, ...series.map(s => s.total));
+  const yMax = niceMax(maxVal);
+  const ticks = yTicks(yMax, 4);
+  const PLOT_H = 160;
+  const PLOT_W = 400;
+  const poly = (pts) => pts.map((v, i) => {
+    const x = (i / (dates.length - 1)) * (PLOT_W - 5);
+    const y = PLOT_H - (v / yMax) * PLOT_H;
+    return x + ',' + y;
+  }).join(' ');
+
+  const endLabels = series.filter(s => s.total > 0).map(s => {
+    const v = s.points[s.points.length - 1];
+    const yPct = (1 - v / yMax) * 100;
+    return `<div class="chart-line-end" style="right:2px;top:${yPct}%;color:${s.color};">${v}×</div>`;
+  }).join('');
+
+  const lines = series.map(s => `<polyline fill="none" stroke="${s.color}" stroke-width="2.5" vector-effect="non-scaling-stroke" points="${poly(s.points)}"/>`).join('');
+  const yAxisHtml = ticks.map(t => `<span>${t}</span>`).join('');
+  const gridHtml = ticks.map(() => '<div class="chart-gridline"></div>').join('');
+  const xLabels = pickXLabels(dates, 6).map(l => `<span>${l}</span>`).join('');
+  const legend = series.map(s => `<div class="chart-legend-item"><div class="chart-legend-dot" style="background:${s.color}"></div>${s.name}</div>`).join('');
+  const top = [...series].sort((a, b) => b.total - a.total)[0];
+
+  return `<div class="chart-card">
+    <div class="chart-head"><div><div class="chart-title-main">Počet opakování v čase (kumulativně)</div><div class="chart-subtitle">Posledních 30 dní · per cvik</div></div></div>
+    <div class="chart-frame" style="grid-template-rows: ${PLOT_H}px 16px 14px;">
+      <div class="chart-y-axis">${yAxisHtml}</div>
+      <div class="chart-plot">
+        <div class="chart-gridlines">${gridHtml}</div>
+        <svg viewBox="0 0 ${PLOT_W} ${PLOT_H}" preserveAspectRatio="none" style="position:absolute;inset:0;">${lines}</svg>
+        ${endLabels}
+      </div>
+      <div class="chart-x-axis">${xLabels}</div>
+      <div class="chart-y-title">opak.</div>
+      <div class="chart-x-title">datum</div>
+    </div>
+    <div class="chart-legend">${legend}</div>
+    <div class="chart-footer-note">${top && top.total > 0 ? `Největší růst: <strong>${top.name} (+${top.total} za 30 dní)</strong>` : 'Žádné cviky za 30 dní.'}</div>
+  </div>`;
+}
+
+// ===== HRAC: Me nabehano km =====
+function renderPlayerChartKm(player) {
+  const days = 30;
+  const dates = lastNDays(days);
+  let cum = 0;
+  let runs = 0;
+  const points = dates.map(d => {
+    state.aktivity.filter(a => a.player_id === player.id && a.datum === d && a.km).forEach(a => { cum += Number(a.km) || 0; runs += 1; });
+    return cum;
+  });
+
+  if (cum === 0) {
+    return `<div class="chart-card"><div class="chart-head"><div><div class="chart-title-main">Mé naběhané km</div></div></div><div class="chart-empty">Zatím žádné km nezapsané.</div></div>`;
+  }
+
+  const yMax = niceMax(cum);
+  const ticks = yTicks(yMax, 3);
+  const PLOT_H = 150;
+  const PLOT_W = 400;
+  const poly = points.map((v, i) => {
+    const x = (i / (dates.length - 1)) * (PLOT_W - 5);
+    const y = PLOT_H - (v / yMax) * PLOT_H;
+    return x + ',' + y;
+  }).join(' ');
+  const polyFill = poly + ` ${PLOT_W - 5},${PLOT_H} 0,${PLOT_H}`;
+  const endYPct = (1 - cum / yMax) * 100;
+  const yAxisHtml = ticks.map(t => `<span>${t}</span>`).join('');
+  const gridHtml = ticks.map(() => '<div class="chart-gridline"></div>').join('');
+  const xLabels = pickXLabels(dates, 6).map(l => `<span>${l}</span>`).join('');
+  const perWeek = (cum / days * 7).toFixed(1);
+
+  return `<div class="chart-card">
+    <div class="chart-head"><div><div class="chart-title-main">Mé naběhané km kumulativně</div><div class="chart-subtitle">Posledních 30 dní</div></div></div>
+    <div class="chart-kpis">
+      <div class="chart-kpi"><span class="chart-kpi-val">${cum.toFixed(1)} km</span><span class="chart-kpi-lbl">celkem</span></div>
+      <div class="chart-kpi"><span class="chart-kpi-val">${perWeek}</span><span class="chart-kpi-lbl">km/týden</span></div>
+      <div class="chart-kpi"><span class="chart-kpi-val">${runs}</span><span class="chart-kpi-lbl">běhů</span></div>
+    </div>
+    <div class="chart-frame" style="grid-template-rows: ${PLOT_H}px 16px 14px;">
+      <div class="chart-y-axis">${yAxisHtml}</div>
+      <div class="chart-plot">
+        <div class="chart-gridlines">${gridHtml}</div>
+        <svg viewBox="0 0 ${PLOT_W} ${PLOT_H}" preserveAspectRatio="none" style="position:absolute;inset:0;">
+          <polyline fill="${player.barva}33" stroke="none" points="${polyFill}"/>
+          <polyline fill="none" stroke="${player.barva}" stroke-width="3" vector-effect="non-scaling-stroke" points="${poly}"/>
+        </svg>
+        <div class="chart-line-end" style="right:2px;top:${endYPct}%;color:${player.barva};">${cum.toFixed(1)} km</div>
+      </div>
+      <div class="chart-x-axis">${xLabels}</div>
+      <div class="chart-y-title">km</div>
+      <div class="chart-x-title">datum</div>
+    </div>
+    <div class="chart-footer-note">Tempo: <strong>${perWeek} km/týden</strong></div>
+  </div>`;
+}
+
+// ===== HRAC: Stretching pravidelnost (8 tydnu) =====
+function renderPlayerChartStretching(player) {
+  const weeks = 8;
+  // Spocti pondelek tohoto tydne (zacatek)
+  const today = new Date();
+  const dow = today.getDay() === 0 ? 6 : today.getDay() - 1;
+  const monday = new Date(today); monday.setDate(today.getDate() - dow); monday.setHours(0, 0, 0, 0);
+
+  const bucket = new Array(weeks).fill(0);
+  const labels = [];
+  for (let i = weeks - 1; i >= 0; i--) labels.push('T-' + (i + 1));
+  labels[weeks - 1] = 'T-1'; // teden ktery prave bezi (relativni)
+
+  state.aktivity.filter(a => a.player_id === player.id && isStretchActivity(a)).forEach(a => {
+    const d = new Date(a.datum + 'T00:00:00');
+    const diffDays = Math.floor((monday - d) / 86400000);
+    const wkIdx = weeks - 1 - Math.floor(diffDays / 7);
+    if (wkIdx >= 0 && wkIdx < weeks) bucket[wkIdx] += 1;
+  });
+
+  const maxVal = Math.max(1, ...bucket);
+  const yMax = niceMax(maxVal);
+  const ticks = yTicks(yMax, 3);
+
+  const cols = bucket.map(v => {
+    const h = Math.max(2, (v / yMax) * 100);
+    const color = v >= 5 ? '#6b21a8' : v >= 4 ? '#7e22ce' : v >= 3 ? '#9333ea' : v >= 2 ? '#a855f7' : v >= 1 ? '#c084fc' : '#e9d5ff';
+    return `<div class="chart-bar-col"><div class="chart-bar-val">${v}×</div><div class="chart-bar" style="background:${color};height:${h}%"></div></div>`;
+  }).join('');
+
+  const yAxisHtml = ticks.map(t => `<span>${t}</span>`).join('');
+  const gridHtml = ticks.map(() => '<div class="chart-gridline"></div>').join('');
+  const xLabels = labels.map(l => `<span>${l}</span>`).join('');
+  const total = bucket.reduce((s, v) => s + v, 0);
+  const avg = (total / weeks).toFixed(1);
+  const last = bucket[bucket.length - 1], prev = bucket[bucket.length - 2] || 0;
+  const trend = last > prev ? '↗' : last < prev ? '↘' : '→';
+
+  return `<div class="chart-card">
+    <div class="chart-head"><div><div class="chart-title-main">Stretching per týden</div><div class="chart-subtitle">Posledních 8 týdnů</div></div></div>
+    <div class="chart-frame" style="grid-template-rows: 130px 16px 14px;">
+      <div class="chart-y-axis">${yAxisHtml}</div>
+      <div class="chart-plot">
+        <div class="chart-gridlines">${gridHtml}</div>
+        <div class="chart-bars">${cols}</div>
+      </div>
+      <div class="chart-x-axis">${xLabels}</div>
+      <div class="chart-y-title">×/týden</div>
+      <div class="chart-x-title">týden (T-1 = tento)</div>
+    </div>
+    <div class="chart-footer-note">Trend ${trend} · průměr <strong>${avg}×/týden</strong></div>
+  </div>`;
+}
+
+function renderPlayerChart() {
+  const el = document.getElementById('player-chart-container');
+  if (!el) return;
+  if (!state.players.length) { el.innerHTML = '<div class="chart-empty">Načítám data…</div>'; return; }
+  // Pokud neni vybran hrac, default = currentPlayer nebo prvni hrac
+  if (!state.playerChartPlayerId) state.playerChartPlayerId = state.currentPlayerId || state.players[0].id;
+  const player = state.players.find(p => p.id === state.playerChartPlayerId);
+  if (!player) { el.innerHTML = '<div class="chart-empty">Hráč nenalezen.</div>'; return; }
+
+  // Vykresli player tabs
+  const tabsEl = document.getElementById('player-chart-player-tabs');
+  if (tabsEl) {
+    tabsEl.innerHTML = state.players.filter(p => p.aktivni).map(p => {
+      const active = p.id === state.playerChartPlayerId;
+      return `<button type="button" class="player-tab${active ? ' active' : ''}" onclick="setPlayerChartPlayer('${p.id}')"><span class="player-tab-dot" style="background:${p.barva}"></span>${p.jmeno}</button>`;
+    }).join('');
+  }
+
+  let html = '';
+  switch (state.playerChart) {
+    case 'body-time': html = renderPlayerChartBodyTime(player); break;
+    case 'day-of-week': html = renderPlayerChartDayOfWeek(player); break;
+    case 'cviky': html = renderPlayerChartCviky(player); break;
+    case 'km': html = renderPlayerChartKm(player); break;
+    case 'stretching': html = renderPlayerChartStretching(player); break;
+  }
+  el.innerHTML = html;
+}
+
+function setPlayerChart(type) {
+  state.playerChart = type;
+  document.querySelectorAll('[data-pl-chart]').forEach(b => b.classList.toggle('active', b.dataset.plChart === type));
+  renderPlayerChart();
+}
+
+function setPlayerChartPlayer(playerId) {
+  state.playerChartPlayerId = playerId;
+  renderPlayerChart();
+}
+
+function setHraciMode(mode) {
+  state.hraciMode = mode;
+  document.querySelectorAll('[data-hraci-mode]').forEach(b => b.classList.toggle('active', b.dataset.hraciMode === mode));
+  document.getElementById('hraci-stats-section').style.display = mode === 'stats' ? '' : 'none';
+  document.getElementById('hraci-charts-section').style.display = mode === 'charts' ? '' : 'none';
+  if (mode === 'charts') renderPlayerChart();
+}
+
 function renderAllViews() {
   renderWeekLabel();
   updatePeriodUI();
@@ -3250,6 +3940,9 @@ function renderAllViews() {
   renderPlayers();
   renderScoringExplanation();
   renderChat();
+  // F31: Grafy
+  renderOverviewChart();
+  if (state.hraciMode === 'charts') renderPlayerChart();
 }
 
 // ============================================================
