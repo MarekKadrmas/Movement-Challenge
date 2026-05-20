@@ -1693,18 +1693,14 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
       <div id="form-stretching" style="display:none;">
         <div class="field">
           <label>Délka stretchingu</label>
-          <div class="level-grid" style="grid-template-columns: repeat(3, 1fr);">
+          <div class="level-grid" style="grid-template-columns: repeat(2, 1fr);">
             <button class="level-btn stretch-btn l1" data-stretch="krat">
-              <div style="font-size:14px;">Krátké</div>
-              <div style="font-size:11px;opacity:0.7;margin-top:2px;">~5 min</div>
-            </button>
-            <button class="level-btn stretch-btn l3" data-stretch="stred">
-              <div style="font-size:14px;">Střední</div>
-              <div style="font-size:11px;opacity:0.7;margin-top:2px;">~15 min</div>
+              <div style="font-size:14px;">Krátký</div>
+              <div style="font-size:11px;opacity:0.7;margin-top:2px;">10 min</div>
             </button>
             <button class="level-btn stretch-btn l5" data-stretch="dlou">
-              <div style="font-size:14px;">Dlouhé</div>
-              <div style="font-size:11px;opacity:0.7;margin-top:2px;">~30+ min</div>
+              <div style="font-size:14px;">Delší</div>
+              <div style="font-size:11px;opacity:0.7;margin-top:2px;">20+ min</div>
             </button>
           </div>
           <div class="level-points-display" id="stretch-points-display"></div>
@@ -1889,8 +1885,9 @@ const LEVEL_HINTS = {
   4: 'Těžká posilovna, běh 60 min, squash',
   5: 'Závod, velmi těžký trénink, squash 90+'
 };
-const STRETCH_POINTS = { krat: 15, stred: 30, dlou: 50 };
-const STRETCH_LABELS = { krat: 'Krátké', stred: 'Střední', dlou: 'Dlouhé' };
+// F30: jen 2 varianty stretchingu (krat 10min, dlou 20+min)
+const STRETCH_POINTS = { krat: 20, dlou: 40 };
+const STRETCH_LABELS = { krat: 'Krátký', dlou: 'Delší' };
 
 // Multiplikátor cviků - snizeno o ~35%
 const CVIK_MULTIPLIER = 0.65;
@@ -1967,6 +1964,13 @@ function toggleAdminActive() {
 }
 
 const MESICE_CZ = ['leden','únor','březen','duben','květen','červen','červenec','srpen','září','říjen','listopad','prosinec'];
+
+// F30: detekce stretchingu - preferuje sloupec je_stretching, fallback na 🧘 v nazvu (zpetna kompatibilita)
+function isStretchActivity(a) {
+  if (!a) return false;
+  if (typeof a.je_stretching === 'boolean') return a.je_stretching;
+  return !!isStretchActivity(a);
+}
 
 function wilksKoef(vaha, pohlavi) {
   if (pohlavi === 'Z') return Math.max(0.9, 1.4 - (vaha - 50) * 0.008);
@@ -2159,7 +2163,7 @@ function movePeriod(delta) {
 function renderLeaderboardTotal() {
   // F15: respektuj filter kategorii (all-time)
   const cat = state.totalCategory;
-  const isStretch = (a) => a.nazev && a.nazev.indexOf('🧘') === 0;
+  const isStretch = (a) => isStretchActivity(a);
   const data = state.players.filter(p => p.aktivni).map(p => {
     let total = 0;
     if (cat === 'all' || cat === 'cvik') {
@@ -2206,10 +2210,10 @@ function renderLeaderboardWeek() {
     }
     if (state.tab === 'vse' || state.tab === 'aktivity') {
       // 'aktivity' tab = ne-stretching aktivity
-      body += state.aktivity.filter(a => a.player_id === p.id && inRange(a) && !(a.nazev && a.nazev.indexOf('🧘') === 0)).reduce((s, a) => s + Number(a.body), 0);
+      body += state.aktivity.filter(a => a.player_id === p.id && inRange(a) && !isStretchActivity(a)).reduce((s, a) => s + Number(a.body), 0);
     }
     if (state.tab === 'vse' || state.tab === 'stretching') {
-      body += state.aktivity.filter(a => a.player_id === p.id && inRange(a) && a.nazev && a.nazev.indexOf('🧘') === 0).reduce((s, a) => s + Number(a.body), 0);
+      body += state.aktivity.filter(a => a.player_id === p.id && inRange(a) && isStretchActivity(a)).reduce((s, a) => s + Number(a.body), 0);
     }
     return { ...p, body };
   }).sort((a, b) => b.body - a.body);
@@ -2455,9 +2459,9 @@ function collectEntries({ playerId = 'all', typeFilter = 'all' } = {}) {
   if (typeFilter === 'all' || typeFilter === 'aktivita' || typeFilter === 'stretching') {
     let acts = state.aktivity.filter(filterPlayer);
     if (typeFilter === 'stretching') {
-      acts = acts.filter(a => a.nazev && a.nazev.indexOf('🧘') === 0);
+      acts = acts.filter(a => isStretchActivity(a));
     } else if (typeFilter === 'aktivita') {
-      acts = acts.filter(a => !(a.nazev && a.nazev.indexOf('🧘') === 0));
+      acts = acts.filter(a => !isStretchActivity(a));
     }
     result = result.concat(acts.map(a => ({ ...a, _type: 'aktivita' })));
   }
@@ -2923,7 +2927,7 @@ function renderEntryCard(e, withActions) {
       title = `${e.cvik} × ${e.opakovani}${e.pridana_vaha > 0 ? ` (+${e.pridana_vaha} kg)` : ''}`;
     }
   } else {
-    if (e.nazev && e.nazev.indexOf('🧘') === 0) { isStretch = true; title = e.nazev; }
+    if (isStretchActivity(e)) { isStretch = true; title = e.nazev; }
     else { title = e.nazev; }
   }
   const typeIcon = e._type === 'cvik' ? '💪' : (isStretch ? '🧘' : '🏃');
@@ -3021,7 +3025,7 @@ function calcPlayerStats(playerId) {
   });
   let aktivityCount = 0, stretchingCount = 0, totalKm = 0;
   aktivity.forEach(a => {
-    if (a.nazev && a.nazev.indexOf('🧘') === 0) stretchingCount += 1;
+    if (isStretchActivity(a)) stretchingCount += 1;
     else aktivityCount += 1;
     if (a.km) totalKm += Number(a.km) || 0;  // F27
   });
@@ -3688,7 +3692,8 @@ async function submitEntry() {
         uroven: state.selectedLevel,
         body: body,
         datum: getEntryDate(),
-        km: (km && km > 0) ? km : null
+        km: (km && km > 0) ? km : null,
+        je_stretching: false   // F30
       };
       if (state.editMode) {
         const { error } = await db.from('aktivity').update(payload).eq('id', state.editId);
@@ -3704,14 +3709,16 @@ async function submitEntry() {
       const customNazev = document.getElementById('stretch-nazev').value.trim();
       const body = STRETCH_POINTS[state.selectedStretch];
       const label = STRETCH_LABELS[state.selectedStretch];
-      const nazev = `🧘 Stretching ${label.toLowerCase()}${customNazev ? ' – ' + customNazev : ''}`;
-      const stretchUroven = state.selectedStretch === 'krat' ? 1 : (state.selectedStretch === 'stred' ? 2 : 3);
+      // F30: custom název má prioritu (pokud user zadal). Default = "Stretching krátký/delší"
+      const nazev = customNazev || `Stretching ${label.toLowerCase()}`;
+      const stretchUroven = state.selectedStretch === 'krat' ? 1 : 2;  // jen 2 varianty
       const payload = {
         player_id: state.selectedPlayer,
         nazev: nazev,
         uroven: stretchUroven,
         body: body,
-        datum: getEntryDate()
+        datum: getEntryDate(),
+        je_stretching: true   // F30: explicit flag
       };
       if (state.editMode) {
         const { error } = await db.from('aktivity').update(payload).eq('id', state.editId);
@@ -3757,7 +3764,7 @@ function openEditModal(id, type) {
     const pill = document.querySelector(`#player-pills .player-pill[data-player-id="${entry.player_id}"]`);
     if (pill) pill.click();
   }, 50);
-  const isStretching = type === 'aktivita' && entry.nazev && entry.nazev.indexOf('🧘') === 0;
+  const isStretching = type === 'aktivita' && isStretchActivity(entry);
   if (type === 'cvik') {
     setEntryType('cvik');
     state.selectedCvik = entry.cvik;
