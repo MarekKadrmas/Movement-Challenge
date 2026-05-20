@@ -1525,40 +1525,17 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
   </div>
 
   <div id="view-hraci" style="display:none;">
-    <!-- F31: Statistiky / Grafy prepinac -->
-    <div class="view-mode-toggle">
-      <button type="button" class="view-mode-btn active" data-hraci-mode="stats" onclick="setHraciMode('stats')">📊 Statistiky</button>
-      <button type="button" class="view-mode-btn" data-hraci-mode="charts" onclick="setHraciMode('charts')">📈 Grafy</button>
+    <div class="section-title">
+      <h2>Hráči</h2>
+    </div>
+    <div class="players-list" id="players-list">
+      <div class="loading">Načítám...</div>
     </div>
 
-    <div id="hraci-stats-section">
-      <div class="section-title">
-        <h2>Hráči</h2>
-      </div>
-      <div class="players-list" id="players-list">
-        <div class="loading">Načítám...</div>
-      </div>
-
-      <div class="section-title">
-        <h2>Jak funguje bodování</h2>
-      </div>
-      <div id="scoring-explanation"></div>
+    <div class="section-title">
+      <h2>Jak funguje bodování</h2>
     </div>
-
-    <!-- F31: Grafy hrace -->
-    <div id="hraci-charts-section" style="display:none;">
-      <div class="player-tabs" id="player-chart-player-tabs"></div>
-      <div class="charts-tabs" id="player-chart-type-tabs">
-        <button type="button" class="chart-tab active" data-pl-chart="body-time" onclick="setPlayerChart('body-time')">Body v čase</button>
-        <button type="button" class="chart-tab" data-pl-chart="day-of-week" onclick="setPlayerChart('day-of-week')">Den v týdnu</button>
-        <button type="button" class="chart-tab" data-pl-chart="cviky" onclick="setPlayerChart('cviky')">Cviky</button>
-        <button type="button" class="chart-tab" data-pl-chart="km" onclick="setPlayerChart('km')">Km</button>
-        <button type="button" class="chart-tab" data-pl-chart="stretching" onclick="setPlayerChart('stretching')">Stretching</button>
-      </div>
-      <div id="player-chart-container">
-        <div class="loading">Načítám...</div>
-      </div>
-    </div>
+    <div id="scoring-explanation"></div>
   </div>
 
   <!-- F18: Chat (4. zalozka) -->
@@ -2018,9 +1995,8 @@ let state = {
   currentPlayerId: null,
   // F31: Grafy
   overviewChart: 'body-time',   // 'body-time' | 'day-of-week' | 'km'
-  hraciMode: 'stats',           // 'stats' | 'charts'
-  playerChart: 'body-time',     // 'body-time' | 'day-of-week' | 'cviky' | 'km' | 'stretching'
-  playerChartPlayerId: null     // hrac jehoz grafy zobrazujeme (default = currentPlayerId)
+  playerCardModes: {},          // { [playerId]: 'stats' | 'charts' } — per-card mode
+  playerCardCharts: {}          // { [playerId]: 'body-time' | 'day-of-week' | 'cviky' | 'km' | 'stretching' }
 };
 
 // F19: localStorage klice
@@ -3143,8 +3119,10 @@ function renderPlayers() {
     const bC = state.cviky.filter(c => c.player_id === p.id).reduce((s, c) => s + Number(c.body), 0);
     const bA = state.aktivity.filter(a => a.player_id === p.id).reduce((s, a) => s + Number(a.body), 0);
     const stats = calcPlayerStats(p.id);
+    const mode = state.playerCardModes[p.id] || 'stats';
+    const chartType = state.playerCardCharts[p.id] || 'body-time';
     return `
-      <div class="player-card">
+      <div class="player-card" data-player-card-id="${p.id}">
         <div class="player-card-header">
           <div class="player-big-av-wrap">
             <div class="player-big-av-emoji">${avatarEmoji(p.jmeno)}</div>
@@ -3156,6 +3134,12 @@ function renderPlayers() {
           </div>
           <div class="player-total">${(bC + bA).toFixed(0)}</div>
         </div>
+        <!-- F31: per-card Statistiky/Grafy prepinac -->
+        <div class="view-mode-toggle">
+          <button type="button" class="view-mode-btn${mode === 'stats' ? ' active' : ''}" onclick="setPlayerCardMode('${p.id}', 'stats')">📊 Statistiky</button>
+          <button type="button" class="view-mode-btn${mode === 'charts' ? ' active' : ''}" onclick="setPlayerCardMode('${p.id}', 'charts')">📈 Grafy</button>
+        </div>
+        <div class="player-card-stats-section"${mode === 'stats' ? '' : ' style="display:none;"'}>
         <div class="player-card-stats">
           <div class="player-card-stat"><div class="player-card-stat-label">Max shyby</div><div class="player-card-stat-value">${p.max_shyby || '—'}</div></div>
           <div class="player-card-stat"><div class="player-card-stat-label">Max dřep</div><div class="player-card-stat-value">${p.max_drep ? p.max_drep + ' kg' : '—'}</div></div>
@@ -3210,6 +3194,16 @@ function renderPlayers() {
             </div>
           </div>
         </div>
+        </div><!-- /player-card-stats-section -->
+        <div class="player-card-charts-section"${mode === 'charts' ? '' : ' style="display:none;"'}>
+          <div class="charts-tabs">
+            ${['body-time','day-of-week','cviky','km','stretching'].map(ct => {
+              const lbl = { 'body-time':'Body v čase', 'day-of-week':'Den v týdnu', 'cviky':'Cviky', 'km':'Km', 'stretching':'Stretching' }[ct];
+              return `<button type="button" class="chart-tab${chartType === ct ? ' active' : ''}" onclick="setPlayerCardChart('${p.id}', '${ct}')">${lbl}</button>`;
+            }).join('')}
+          </div>
+          <div class="player-card-chart-container">${mode === 'charts' ? renderPlayerCardChart(p, chartType) : ''}</div>
+        </div>
         ${(isAdmin() || p.id === state.currentPlayerId) ? `
         <div class="player-card-actions">
           <button onclick="openPlayerEdit('${p.id}')">✏️ Upravit</button>
@@ -3218,6 +3212,45 @@ function renderPlayers() {
         </div>` : ''}
       </div>`;
   }).join('');
+}
+
+// F31: Render konkretniho grafu pro kartu hrace
+function renderPlayerCardChart(player, chartType) {
+  switch (chartType) {
+    case 'body-time': return renderPlayerChartBodyTime(player);
+    case 'day-of-week': return renderPlayerChartDayOfWeek(player);
+    case 'cviky': return renderPlayerChartCviky(player);
+    case 'km': return renderPlayerChartKm(player);
+    case 'stretching': return renderPlayerChartStretching(player);
+    default: return '';
+  }
+}
+
+function setPlayerCardMode(playerId, mode) {
+  state.playerCardModes[playerId] = mode;
+  const card = document.querySelector(`[data-player-card-id="${playerId}"]`);
+  if (!card) { renderPlayers(); return; }
+  card.querySelectorAll('.view-mode-toggle .view-mode-btn').forEach(b => b.classList.toggle('active', b.textContent.includes(mode === 'stats' ? 'Statistiky' : 'Grafy')));
+  card.querySelector('.player-card-stats-section').style.display = mode === 'stats' ? '' : 'none';
+  card.querySelector('.player-card-charts-section').style.display = mode === 'charts' ? '' : 'none';
+  // Lazy render grafu pri prvnim prepnuti
+  if (mode === 'charts') {
+    const container = card.querySelector('.player-card-chart-container');
+    if (container && !container.innerHTML.trim()) {
+      const player = state.players.find(p => p.id === playerId);
+      const chartType = state.playerCardCharts[playerId] || 'body-time';
+      container.innerHTML = renderPlayerCardChart(player, chartType);
+    }
+  }
+}
+
+function setPlayerCardChart(playerId, chartType) {
+  state.playerCardCharts[playerId] = chartType;
+  const card = document.querySelector(`[data-player-card-id="${playerId}"]`);
+  if (!card) { renderPlayers(); return; }
+  card.querySelectorAll('.charts-tabs .chart-tab').forEach(b => b.classList.toggle('active', b.textContent.trim() === ({ 'body-time':'Body v čase', 'day-of-week':'Den v týdnu', 'cviky':'Cviky', 'km':'Km', 'stretching':'Stretching' }[chartType])));
+  const player = state.players.find(p => p.id === playerId);
+  card.querySelector('.player-card-chart-container').innerHTML = renderPlayerCardChart(player, chartType);
 }
 
 // F25: Admin reset hesla hrace (smaze password_hash, hrac musi znova nastavit pri dalsim loginu)
@@ -3881,54 +3914,6 @@ function renderPlayerChartStretching(player) {
   </div>`;
 }
 
-function renderPlayerChart() {
-  const el = document.getElementById('player-chart-container');
-  if (!el) return;
-  if (!state.players.length) { el.innerHTML = '<div class="chart-empty">Načítám data…</div>'; return; }
-  // Pokud neni vybran hrac, default = currentPlayer nebo prvni hrac
-  if (!state.playerChartPlayerId) state.playerChartPlayerId = state.currentPlayerId || state.players[0].id;
-  const player = state.players.find(p => p.id === state.playerChartPlayerId);
-  if (!player) { el.innerHTML = '<div class="chart-empty">Hráč nenalezen.</div>'; return; }
-
-  // Vykresli player tabs
-  const tabsEl = document.getElementById('player-chart-player-tabs');
-  if (tabsEl) {
-    tabsEl.innerHTML = state.players.filter(p => p.aktivni).map(p => {
-      const active = p.id === state.playerChartPlayerId;
-      return `<button type="button" class="player-tab${active ? ' active' : ''}" onclick="setPlayerChartPlayer('${p.id}')"><span class="player-tab-dot" style="background:${p.barva}"></span>${p.jmeno}</button>`;
-    }).join('');
-  }
-
-  let html = '';
-  switch (state.playerChart) {
-    case 'body-time': html = renderPlayerChartBodyTime(player); break;
-    case 'day-of-week': html = renderPlayerChartDayOfWeek(player); break;
-    case 'cviky': html = renderPlayerChartCviky(player); break;
-    case 'km': html = renderPlayerChartKm(player); break;
-    case 'stretching': html = renderPlayerChartStretching(player); break;
-  }
-  el.innerHTML = html;
-}
-
-function setPlayerChart(type) {
-  state.playerChart = type;
-  document.querySelectorAll('[data-pl-chart]').forEach(b => b.classList.toggle('active', b.dataset.plChart === type));
-  renderPlayerChart();
-}
-
-function setPlayerChartPlayer(playerId) {
-  state.playerChartPlayerId = playerId;
-  renderPlayerChart();
-}
-
-function setHraciMode(mode) {
-  state.hraciMode = mode;
-  document.querySelectorAll('[data-hraci-mode]').forEach(b => b.classList.toggle('active', b.dataset.hraciMode === mode));
-  document.getElementById('hraci-stats-section').style.display = mode === 'stats' ? '' : 'none';
-  document.getElementById('hraci-charts-section').style.display = mode === 'charts' ? '' : 'none';
-  if (mode === 'charts') renderPlayerChart();
-}
-
 function renderAllViews() {
   renderWeekLabel();
   updatePeriodUI();
@@ -3940,9 +3925,8 @@ function renderAllViews() {
   renderPlayers();
   renderScoringExplanation();
   renderChat();
-  // F31: Grafy
+  // F31: Grafy v Prehledu
   renderOverviewChart();
-  if (state.hraciMode === 'charts') renderPlayerChart();
 }
 
 // ============================================================
