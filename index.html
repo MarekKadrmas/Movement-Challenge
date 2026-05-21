@@ -237,20 +237,8 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 .leader-name { flex: 1; font-weight: 600; font-size: 15px; color: var(--text); }
 .leader-stats { text-align: right; }
 .leader-points { font-weight: 700; font-size: 15px; color: var(--text); font-variant-numeric: tabular-nums; }
-.leader-streak { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-
-/* F32: Streak hero banner v Prehledu */
-.streak-banner {
-  display: flex; align-items: center; gap: 12px;
-  padding: 12px 14px;
-  background: linear-gradient(135deg, #fff7ed, #ffedd5);
-  border: 1px solid #fed7aa; border-radius: 14px;
-  margin-bottom: 12px;
-}
-.streak-banner-icon { font-size: 32px; line-height: 1; }
-.streak-banner-text { flex: 1; min-width: 0; }
-.streak-banner-num { font-size: 22px; font-weight: 900; color: #c2410c; line-height: 1.1; }
-.streak-banner-msg { font-size: 11px; color: #ea580c; font-weight: 700; margin-top: 2px; }
+/* F32: mini-streak vedle jmena v leaderboardu */
+.name-streak { font-size: 11px; color: #ea580c; font-weight: 700; margin-left: 6px; white-space: nowrap; }
 
 .section-title {
   display: flex; align-items: baseline; justify-content: space-between;
@@ -1157,9 +1145,6 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
   </nav>
 
   <div id="view-prehled">
-    <!-- F32: Streak hero banner pro aktualniho hrace -->
-    <div id="streak-banner" class="streak-banner" style="display:none;"></div>
-
     <div class="hero">
       <div class="hero-label">Leaderboard</div>
       <div class="hero-title">Celkové pořadí</div>
@@ -1807,33 +1792,6 @@ function streakLabel(n) {
   return 'dní';
 }
 
-// F32: Streak hero banner pro current player
-function renderStreakBanner() {
-  const el = document.getElementById('streak-banner');
-  if (!el) return;
-  if (!state.currentPlayerId || !state.players.length) { el.style.display = 'none'; return; }
-  const me = state.players.find(p => p.id === state.currentPlayerId);
-  if (!me) { el.style.display = 'none'; return; }
-  const streak = computeStreak(state.currentPlayerId);
-  if (streak <= 0) { el.style.display = 'none'; return; }
-
-  // Mam jiz dnes zapis? Pokud ne, jine motivacni hlasce.
-  const today = new Date(); today.setHours(0,0,0,0);
-  const todayStr = dateToStr(today);
-  const todayHas = state.cviky.some(c => c.player_id === me.id && c.datum === todayStr) ||
-                   state.aktivity.some(a => a.player_id === me.id && a.datum === todayStr);
-  const msg = todayHas
-    ? `Drž to, ${me.jmeno}! Pokračuj zítra.`
-    : `Pozor, ${me.jmeno}! Dnes ještě nic — neztrať sérii.`;
-
-  el.style.display = '';
-  el.innerHTML = `
-    <div class="streak-banner-icon">🔥</div>
-    <div class="streak-banner-text">
-      <div class="streak-banner-num">${streak} ${streakLabel(streak)} v řadě</div>
-      <div class="streak-banner-msg">${msg}</div>
-    </div>`;
-}
 
 function toast(msg, type='success') {
   const t = document.getElementById('toast');
@@ -1953,10 +1911,9 @@ function renderLeaderboardTotal() {
         ${isFirst ? '<div class="leader-avatar-emoji">😎</div>' : ''}
         <div class="leader-avatar" style="background:${p.barva}">${initials(p.jmeno)}</div>
       </div>
-      <div class="leader-name">${p.jmeno}</div>
+      <div class="leader-name">${p.jmeno}${p.streak > 0 ? `<span class="name-streak">🔥 ${p.streak}</span>` : ''}</div>
       <div class="leader-stats">
         <div class="leader-points">${Math.round(p.total)}</div>
-        <div class="leader-streak">${p.streak > 0 ? `🔥 ${p.streak} ${streakLabel(p.streak)}` : '—'}</div>
       </div>
     </div>
   `}).join('');
@@ -1978,7 +1935,7 @@ function renderLeaderboardWeek() {
     if (state.tab === 'vse' || state.tab === 'stretching') {
       body += state.aktivity.filter(a => a.player_id === p.id && inRange(a) && isStretchActivity(a)).reduce((s, a) => s + Number(a.body), 0);
     }
-    return { ...p, body };
+    return { ...p, body, streak: computeStreak(p.id) };
   }).sort((a, b) => b.body - a.body);
 
   const el = document.getElementById('leaderboard-week');
@@ -1992,7 +1949,7 @@ function renderLeaderboardWeek() {
         ${isFirst ? '<div class="leader-avatar-emoji">😎</div>' : ''}
         <div class="leader-avatar" style="background:${p.barva}">${initials(p.jmeno)}</div>
       </div>
-      <div class="leader-name">${p.jmeno}</div>
+      <div class="leader-name">${p.jmeno}${p.streak > 0 ? `<span class="name-streak">🔥 ${p.streak}</span>` : ''}</div>
       <div class="leader-stats"><div class="leader-points">${Math.round(p.body)}</div></div>
     </div>
   `}).join('');
@@ -2765,7 +2722,6 @@ function renderAllViews() {
   renderAllEntries();
   renderPlayers();
   renderScoringExplanation();
-  renderStreakBanner();  // F32
 }
 
 // ============================================================
