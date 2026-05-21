@@ -235,10 +235,35 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
   filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
 }
 .leader-name { flex: 1; font-weight: 600; font-size: 15px; color: var(--text); }
-.leader-stats { text-align: right; }
+.leader-stats { text-align: right; width: 90px; flex-shrink: 0; }
 .leader-points { font-weight: 700; font-size: 15px; color: var(--text); font-variant-numeric: tabular-nums; }
 /* F32: mini-streak vedle jmena v leaderboardu */
 .name-streak { font-size: 11px; color: #ea580c; font-weight: 700; margin-left: 6px; white-space: nowrap; }
+
+/* F35: period tabs v hero leaderboardu (Tyden/Mesic/Celkova historie) */
+.period-tabs {
+  display: flex; gap: 4px; margin-bottom: 10px;
+  background: var(--border-soft); padding: 4px; border-radius: 100px;
+}
+.period-tab {
+  flex: 1; padding: 7px 6px; border-radius: 100px;
+  font-family: inherit; font-size: 11px; font-weight: 700;
+  background: transparent; border: none; color: var(--text-muted);
+  cursor: pointer; white-space: nowrap;
+}
+.period-tab.active { background: var(--bg-card); color: var(--text); box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+
+/* F35: period nav (jen pro week/month) */
+#period-nav-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 10px; }
+#period-nav-row .period-label { font-size: 12px; font-weight: 700; min-width: 140px; text-align: center; }
+
+/* F35: % bar pod body (oproti #1) */
+.leader-pct-bar {
+  height: 3px; border-radius: 2px; margin-top: 4px;
+  background: var(--player-color, var(--border)); opacity: 0.85;
+  margin-left: auto;
+  transition: width 0.3s;
+}
 
 .section-title {
   display: flex; align-items: baseline; justify-content: space-between;
@@ -1166,10 +1191,26 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
   </nav>
 
   <div id="view-prehled">
+    <!-- F35: Sjednoceny leaderboard - hero box s 3 obdobími + kategoriemi + (volitelne) datum navigaci -->
     <div class="hero">
       <div class="hero-label">Leaderboard</div>
-      <div class="hero-title">Celkové pořadí</div>
-      <!-- F15: filtry kategorii v celkovem LB - tabs+tabulka v jednom lehce sedem boxu -->
+      <div class="hero-title">Pořadí</div>
+
+      <!-- Period tabs (NEW): Tyden / Mesic / Celkova historie -->
+      <div class="period-tabs">
+        <button type="button" class="period-tab" data-period="week" onclick="setLeaderboardPeriod('week')">Týden</button>
+        <button type="button" class="period-tab" data-period="month" onclick="setLeaderboardPeriod('month')">Měsíc</button>
+        <button type="button" class="period-tab active" data-period="all" onclick="setLeaderboardPeriod('all')">Celková historie</button>
+      </div>
+
+      <!-- Period navigation (jen pro week/month, schované pro 'all') -->
+      <div class="period-nav" id="period-nav-row" style="display:none;">
+        <button type="button" class="period-nav-btn" onclick="movePeriod(-1)">‹</button>
+        <div class="period-label" id="period-label">Tento týden</div>
+        <button type="button" class="period-nav-btn" onclick="movePeriod(1)">›</button>
+      </div>
+
+      <!-- Category tabs (Dohromady / Cviky / Aktivity / Stretching) -->
       <div class="hero-section-wrap">
         <div class="category-tabs" id="total-category-tabs">
           <button type="button" class="cat-tab active" data-total-cat="all" onclick="setTotalCategory('all')">Dohromady</button>
@@ -1178,33 +1219,6 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
           <button type="button" class="cat-tab" data-total-cat="stretching" onclick="setTotalCategory('stretching')">Stretching</button>
         </div>
         <div class="leaderboard" id="leaderboard-total">
-          <div class="loading">Načítám...</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- F11: kategorie sekce s boxiky a ramecek v barve kategorie -->
-    <div class="category-section" id="category-section" data-cat="vse">
-      <div class="category-tabs">
-        <button type="button" class="cat-tab active" data-tab="vse">Dohromady</button>
-        <button type="button" class="cat-tab" data-tab="cviky">Cviky</button>
-        <button type="button" class="cat-tab" data-tab="aktivity">Aktivity</button>
-        <button type="button" class="cat-tab" data-tab="stretching">Stretching</button>
-      </div>
-      <div class="category-body">
-        <!-- F12: Filtr obdobi -->
-        <div class="period-selector">
-          <div class="period-mode-toggle">
-            <button type="button" class="period-mode-btn active" data-mode="week" onclick="setPeriodMode('week')">Týden</button>
-            <button type="button" class="period-mode-btn" data-mode="month" onclick="setPeriodMode('month')">Měsíc</button>
-          </div>
-          <div class="period-nav">
-            <button type="button" class="period-nav-btn" onclick="movePeriod(-1)">‹</button>
-            <div class="period-label" id="period-label">Tento týden</div>
-            <button type="button" class="period-nav-btn" onclick="movePeriod(1)">›</button>
-          </div>
-        </div>
-        <div class="leaderboard" id="leaderboard-week">
           <div class="loading">Načítám...</div>
         </div>
       </div>
@@ -1650,8 +1664,8 @@ let state = {
   historyPlayerFilter: 'all', historyTypeFilter: 'all',
   // F4: pocet "mesicu zpet" pri zobrazeni Historie (default 1 = 30 dni)
   historyMonthsLoaded: 1,
-  // F12: filtr obdobi (mode + anchor date pro pocitani rangu)
-  periodMode: 'week', periodAnchor: null,
+  // F12 + F35: filtr obdobi sjednoceneho leaderboardu (week/month/all + anchor)
+  totalPeriod: 'all', periodMode: 'week', periodAnchor: null,
   // F15: filtr kategorii v hlavnim Celkove poradi (all-time)
   totalCategory: 'all',  // 'all' | 'cvik' | 'aktivita' | 'stretching'
   // F19: soft auth - aktualne prihlaseny hrac (z localStorage)
@@ -2022,17 +2036,25 @@ function getPeriodLabel() {
 }
 
 function updatePeriodUI() {
+  // F35: period-tabs (Tyden/Mesic/Celkova historie)
+  document.querySelectorAll('.period-tab').forEach(b => b.classList.toggle('active', b.dataset.period === state.totalPeriod));
+  // period-nav-row jen pro week/month
+  const navRow = document.getElementById('period-nav-row');
+  if (navRow) navRow.style.display = (state.totalPeriod === 'week' || state.totalPeriod === 'month') ? 'flex' : 'none';
+  // period-label
   const lbl = document.getElementById('period-label');
-  if (lbl) lbl.textContent = getPeriodLabel();
-  document.querySelectorAll('.period-mode-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === state.periodMode));
+  if (lbl && state.totalPeriod !== 'all') lbl.textContent = getPeriodLabel();
 }
 
-function setPeriodMode(mode) {
-  state.periodMode = mode;
-  // Reset anchor na dnesek pri prepnuti modu pro jednoduchost
-  state.periodAnchor = new Date();
+function setLeaderboardPeriod(period) {
+  state.totalPeriod = period;
+  // pro week/month synchronizuj periodMode (existujici logika)
+  if (period === 'week' || period === 'month') {
+    state.periodMode = period;
+    state.periodAnchor = new Date();  // reset anchor na dnesek
+  }
   updatePeriodUI();
-  renderLeaderboardWeek();
+  renderLeaderboardTotal();
 }
 
 function movePeriod(delta) {
@@ -2045,31 +2067,46 @@ function movePeriod(delta) {
   }
   state.periodAnchor = a;
   updatePeriodUI();
-  renderLeaderboardWeek();
+  renderLeaderboardTotal();
 }
 
+// F35: SJEDNOCENY leaderboard. Respektuje totalPeriod (week/month/all) + totalCategory (Dohromady/cvik/aktivita/stretching)
 function renderLeaderboardTotal() {
-  // F15: respektuj filter kategorii (all-time)
   const cat = state.totalCategory;
+  const period = state.totalPeriod;
   const isStretch = (a) => isStretchActivity(a);
+
+  // Range pro filtrovani; pro 'all' = nekonecno
+  let inRange;
+  if (period === 'all') {
+    inRange = () => true;
+  } else {
+    const { from, to } = getCurrentPeriodRange();
+    inRange = (e) => e.datum >= from && e.datum <= to;
+  }
+
   const data = state.players.filter(p => p.aktivni).map(p => {
     let total = 0;
     if (cat === 'all' || cat === 'cvik') {
-      total += state.cviky.filter(c => c.player_id === p.id).reduce((s, c) => s + Number(c.body), 0);
+      total += state.cviky.filter(c => c.player_id === p.id && inRange(c)).reduce((s, c) => s + Number(c.body), 0);
     }
     if (cat === 'all' || cat === 'aktivita') {
-      total += state.aktivity.filter(a => a.player_id === p.id && !isStretch(a)).reduce((s, a) => s + Number(a.body), 0);
+      total += state.aktivity.filter(a => a.player_id === p.id && inRange(a) && !isStretch(a)).reduce((s, a) => s + Number(a.body), 0);
     }
     if (cat === 'all' || cat === 'stretching') {
-      total += state.aktivity.filter(a => a.player_id === p.id && isStretch(a)).reduce((s, a) => s + Number(a.body), 0);
+      total += state.aktivity.filter(a => a.player_id === p.id && inRange(a) && isStretch(a)).reduce((s, a) => s + Number(a.body), 0);
     }
     return { ...p, total, streak: computeStreak(p.id) };
   }).sort((a, b) => b.total - a.total);
+
+  // Max body = pro % bar
+  const topPts = data[0]?.total || 0;
 
   const el = document.getElementById('leaderboard-total');
   if (data.length === 0) { el.innerHTML = '<div class="entry-empty">Žádní aktivní hráči</div>'; return; }
   el.innerHTML = data.map((p, i) => {
     const isFirst = i === 0 && p.total > 0;
+    const pct = topPts > 0 ? Math.max(2, Math.round((p.total / topPts) * 100)) : 0;
     return `
     <div class="leader-row ${isFirst ? 'gold' : ''}" onclick="openPlayerEntriesModal('${p.id}')" style="cursor:pointer;">
       ${isFirst ? '<div class="leader-crown">👑</div>' : ''}
@@ -2081,46 +2118,14 @@ function renderLeaderboardTotal() {
       <div class="leader-name">${p.jmeno}${p.streak > 0 ? `<span class="name-streak">🔥 ${p.streak} ${streakLabel(p.streak)}</span>` : ''}</div>
       <div class="leader-stats">
         <div class="leader-points">${Math.round(p.total)}</div>
+        ${p.total > 0 ? `<div class="leader-pct-bar" style="--player-color:${p.barva};width:${pct}%"></div>` : ''}
       </div>
     </div>
   `}).join('');
 }
 
-function renderLeaderboardWeek() {
-  // F12: docasne stale "tento tyden". Pozdeji nahradime period filterem.
-  const { from, to } = getCurrentPeriodRange();
-  const data = state.players.filter(p => p.aktivni).map(p => {
-    let body = 0;
-    const inRange = (e) => e.datum >= from && e.datum <= to;
-    if (state.tab === 'vse' || state.tab === 'cviky') {
-      body += state.cviky.filter(c => c.player_id === p.id && inRange(c)).reduce((s, c) => s + Number(c.body), 0);
-    }
-    if (state.tab === 'vse' || state.tab === 'aktivity') {
-      // 'aktivity' tab = ne-stretching aktivity
-      body += state.aktivity.filter(a => a.player_id === p.id && inRange(a) && !isStretchActivity(a)).reduce((s, a) => s + Number(a.body), 0);
-    }
-    if (state.tab === 'vse' || state.tab === 'stretching') {
-      body += state.aktivity.filter(a => a.player_id === p.id && inRange(a) && isStretchActivity(a)).reduce((s, a) => s + Number(a.body), 0);
-    }
-    return { ...p, body, streak: computeStreak(p.id) };
-  }).sort((a, b) => b.body - a.body);
-
-  const el = document.getElementById('leaderboard-week');
-  el.innerHTML = data.map((p, i) => {
-    const isFirst = i === 0 && p.body > 0;
-    return `
-    <div class="leader-row ${isFirst ? 'gold' : ''}" onclick="openPlayerEntriesModal('${p.id}')" style="cursor:pointer;">
-      ${isFirst ? '<div class="leader-crown">👑</div>' : ''}
-      <div class="leader-rank">${i+1}</div>
-      <div class="leader-av-wrap">
-        ${isFirst ? '<div class="leader-avatar-emoji">😎</div>' : ''}
-        <div class="leader-avatar" style="background:${p.barva}">${initials(p.jmeno)}</div>
-      </div>
-      <div class="leader-name">${p.jmeno}${p.streak > 0 ? `<span class="name-streak">🔥 ${p.streak} ${streakLabel(p.streak)}</span>` : ''}</div>
-      <div class="leader-stats"><div class="leader-points">${Math.round(p.body)}</div></div>
-    </div>
-  `}).join('');
-}
+// F35 LEGACY: stara funkce renderLeaderboardWeek (slouceno do renderLeaderboardTotal). Zachovano jen jako alias.
+function renderLeaderboardWeek() { renderLeaderboardTotal(); }
 
 function renderHeatmap() {
   const HEATMAP_DAYS = 21; // F: 3 tydny zpet (drive 35)
@@ -3650,19 +3655,6 @@ document.querySelectorAll('.nav-btn').forEach(btn => {
     document.getElementById('view-prehled').style.display = state.view === 'prehled' ? '' : 'none';
     document.getElementById('view-historie').style.display = state.view === 'historie' ? '' : 'none';
     document.getElementById('view-hraci').style.display = state.view === 'hraci' ? '' : 'none';
-  });
-});
-
-// F11: category tabs (boxiky pro Dohromady/Cviky/Aktivity/Stretching v dolnim LB)
-// F18 fix: scoped jen na .cat-tab[data-tab] aby neklasovalo s hero tabs (data-total-cat)
-document.querySelectorAll('.cat-tab[data-tab]').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.cat-tab[data-tab]').forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    state.tab = tab.dataset.tab;
-    // propagace barvy do parent sekce
-    document.getElementById('category-section').setAttribute('data-cat', state.tab);
-    renderLeaderboardWeek();
   });
 });
 
