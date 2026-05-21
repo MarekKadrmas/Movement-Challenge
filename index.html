@@ -2,7 +2,7 @@
 <html lang="cs">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#fafafa">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -216,28 +216,54 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
   position: relative;
 }
 .leader-row:last-child { border-bottom: none; }
-.leader-row.gold .leader-rank { color: var(--text); font-weight: 800; }
+/* F36: rank colors - gold/silver/bronze */
+.leader-row.gold .leader-rank { color: #facc15; font-weight: 900; }
+.leader-row.silver .leader-rank { color: #9ca3af; font-weight: 900; }
+.leader-row.bronze .leader-rank { color: #c2410c; font-weight: 900; }
 .leader-rank {
-  font-weight: 600; width: 18px; color: var(--text-dim);
-  font-size: 14px; font-variant-numeric: tabular-nums;
+  font-weight: 700; width: 18px; color: var(--text-dim);
+  font-size: 15px; font-variant-numeric: tabular-nums;
 }
-.leader-crown { position: absolute; left: 12px; top: 0; font-size: 12px; }
 .leader-av-wrap { width: 36px; height: 36px; position: relative; flex-shrink: 0; }
 .leader-avatar {
   width: 36px; height: 36px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  font-weight: 600; font-size: 12px; color: #fff;
+  font-weight: 800; font-size: 12px; color: #000;
 }
-.leader-avatar-emoji {
-  position: absolute; top: -12px; left: 50%;
-  transform: translateX(-50%);
-  font-size: 22px; line-height: 1;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
-}
+/* F36: zlaty/stribrny/bronzovy kroužek kolem avataru pro 1./2./3. */
+.leader-row.gold .leader-avatar { box-shadow: 0 0 0 2.5px #facc15; }
+.leader-row.silver .leader-avatar { box-shadow: 0 0 0 2.5px #9ca3af; }
+.leader-row.bronze .leader-avatar { box-shadow: 0 0 0 2.5px #c2410c; }
 .leader-name { flex: 1; font-weight: 600; font-size: 15px; color: var(--text); }
-.leader-stats { text-align: right; }
+.leader-stats { text-align: right; width: 90px; flex-shrink: 0; }
 .leader-points { font-weight: 700; font-size: 15px; color: var(--text); font-variant-numeric: tabular-nums; }
-.leader-streak { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+/* F32: mini-streak vedle jmena v leaderboardu */
+.name-streak { font-size: 11px; color: #ea580c; font-weight: 700; margin-left: 6px; white-space: nowrap; }
+
+/* F35: period tabs v hero leaderboardu (Tyden/Mesic/Celkova historie) */
+.period-tabs {
+  display: flex; gap: 4px; margin-bottom: 10px;
+  background: var(--border-soft); padding: 4px; border-radius: 100px;
+}
+.period-tab {
+  flex: 1; padding: 7px 6px; border-radius: 100px;
+  font-family: inherit; font-size: 11px; font-weight: 700;
+  background: transparent; border: none; color: var(--text-muted);
+  cursor: pointer; white-space: nowrap;
+}
+.period-tab.active { background: var(--bg-card); color: var(--text); box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+
+/* F35: period nav (jen pro week/month) */
+#period-nav-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 10px; }
+#period-nav-row .period-label { font-size: 12px; font-weight: 700; min-width: 140px; text-align: center; }
+
+/* F35: % bar pod body (oproti #1) */
+.leader-pct-bar {
+  height: 3px; border-radius: 2px; margin-top: 4px;
+  background: var(--player-color, var(--border)); opacity: 0.85;
+  margin-left: auto;
+  transition: width 0.3s;
+}
 
 .section-title {
   display: flex; align-items: baseline; justify-content: space-between;
@@ -490,32 +516,42 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 }
 .entry-day-items { display: flex; flex-direction: column; gap: 6px; }
 
+/* F33: Záznamy redesign v3 (varianta C: levý pruh + avatar + type badge) */
 .entry-card {
   background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: 12px; padding: 12px 14px;
-  display: flex; align-items: center; gap: 12px;
+  border-left: 4px solid var(--border);  /* override pro per-player color inline */
+  border-radius: 10px; padding: 10px 12px;
+  display: flex; align-items: center; gap: 10px;
 }
 .entry-avatar {
-  width: 32px; height: 32px; border-radius: 50%;
+  width: 36px; height: 36px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  font-weight: 600; font-size: 11px; color: #fff;
-  flex-shrink: 0;
+  font-weight: 800; font-size: 11px; color: #000;
+  flex-shrink: 0; position: relative;
 }
+.entry-type-badge {
+  position: absolute; bottom: -3px; right: -3px;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: #fff; display: flex; align-items: center; justify-content: center;
+  font-size: 10px; border: 2px solid var(--bg-card);
+}
+.entry-type-badge.cvik     { color: #1d4ed8; }
+.entry-type-badge.aktivita { color: #15803d; }
+.entry-type-badge.stretch  { color: #7e22ce; }
 .entry-main { flex: 1; min-width: 0; }
-.entry-title { font-weight: 600; font-size: 14px; color: var(--text); margin-bottom: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.entry-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; font-variant-numeric: tabular-nums; }
-.entry-meta { font-size: 11px; color: var(--text-muted); }
+.entry-title { font-weight: 800; font-size: 13.5px; color: var(--text); line-height: 1.2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.entry-meta { font-size: 11px; color: var(--text-muted); margin-top: 2px; font-weight: 600; }
 .entry-points {
-  font-weight: 700; font-size: 15px; color: var(--text);
-  font-variant-numeric: tabular-nums;
+  font-weight: 800; font-size: 14px; color: var(--text);
+  font-variant-numeric: tabular-nums; flex-shrink: 0;
 }
-.entry-actions { display: flex; gap: 4px; margin-left: 6px; }
+.entry-actions { display: flex; gap: 4px; margin-left: 4px; }
 .entry-action-btn {
-  width: 30px; height: 30px; border-radius: 8px;
-  background: transparent; border: 1px solid var(--border);
-  color: var(--text-muted); cursor: pointer;
+  width: 26px; height: 26px; border-radius: 6px;
+  background: transparent; border: 1px solid var(--border-soft);
+  color: var(--text-dim); cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  font-size: 14px; transition: all 0.15s;
+  font-size: 12px;
 }
 .entry-action-btn:active { transform: scale(0.92); }
 .entry-action-btn.delete:active { color: var(--red); border-color: var(--red); }
@@ -573,10 +609,28 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
   background: var(--bg-card); width: 100%; max-width: 480px;
   border-radius: 20px 20px 0 0;
   border: 1px solid var(--border); border-bottom: none;
-  padding: 22px 20px; padding-bottom: calc(22px + env(safe-area-inset-bottom));
-  max-height: 92vh; overflow-y: auto;
+  padding: 22px 20px 0;
+  height: 90vh;  /* F42: fixed vyska — header + footer staticke, body scrolluje */
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  overscroll-behavior: contain;
   animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
+/* F42: modal body (scrollable middle) + footer (sticky bottom) */
+.modal-body {
+  flex: 1 1 auto; overflow-y: auto; overscroll-behavior: contain;
+  margin-right: -4px; padding-right: 4px;  /* misto pro scrollbar */
+}
+.modal-footer {
+  flex-shrink: 0; display: flex; flex-direction: column; gap: 8px;
+  margin: 0 -20px; padding: 14px 20px;
+  padding-bottom: calc(14px + env(safe-area-inset-bottom));
+  background: var(--bg-card);
+  border-top: 1px solid var(--border-soft);
+}
+/* F40: lock background scroll kdyz je modal otevreny (predevsim pro iOS) */
+body.modal-open { overflow: hidden; touch-action: none; }
+body.modal-open .modal { touch-action: auto; }
 .modal-handle { width: 40px; height: 4px; background: var(--border); border-radius: 2px; margin: -10px auto 14px; }
 .modal-title { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 4px; color: var(--text); }
 .modal-subtitle { font-size: 12px; color: var(--text-muted); margin-bottom: 18px; }
@@ -821,16 +875,26 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 .info-box strong { font-weight: 700; }
 
 /* Serie mode */
-.serie-mode-grid { display: grid; grid-template-columns: 1fr 1fr 1.6fr; gap: 8px; margin-bottom: 14px; }
+.serie-mode-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
 .serie-mode-btn {
   background: var(--bg-card); border: 1px solid var(--border); color: var(--text);
-  padding: 12px 6px; border-radius: 12px; cursor: pointer;
+  padding: 14px 6px; border-radius: 12px; cursor: pointer;
   font-family: inherit; text-align: center;
-  min-height: 160px; display: flex; flex-direction: column; justify-content: space-between; align-items: center;
+  min-height: 120px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 2px;
   transition: all 0.15s;
 }
 .serie-mode-btn.active { background: #000; color: #fff; border-color: #000; }
 .serie-mode-btn .label { font-size: 12px; font-weight: 700; margin-top: 6px; }
+.serie-mode-btn .label-sub { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+.serie-mode-btn.active .label-sub { color: rgba(255,255,255,0.7); }
+/* F41: serie-mode ikona velký zaobl. ctverec s cislem/symbolem */
+.serie-mode-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  background: #dbeafe; color: #1d4ed8;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; font-weight: 900;
+}
+.serie-mode-btn.active .serie-mode-icon { background: rgba(255,255,255,0.18); color: #fff; }
 .bubble-stack { display: flex; flex-direction: column; gap: 5px; align-items: center; flex: 1; justify-content: center; padding: 4px 0; }
 .bubble-row { display: flex; gap: 4px; align-items: center; }
 .bubble {
@@ -943,7 +1007,16 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 .player-big-av {
   width: 64px; height: 64px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  font-size: 22px; font-weight: 700; color: #fff;
+  font-size: 22px; font-weight: 800; color: #000;
+}
+/* F39: Streak emblem v rohu avataru */
+.player-big-av-streak {
+  position: absolute; bottom: -3px; right: -3px;
+  background: #fff7ed; border: 2px solid #fff;
+  border-radius: 100px; padding: 2px 7px;
+  font-size: 10px; font-weight: 800; color: #ea580c;
+  white-space: nowrap; line-height: 1;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 .player-big-av-emoji {
   position: absolute; top: -18px; left: 50%;
@@ -964,6 +1037,17 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 .player-card-stat { background: var(--bg); padding: 9px 11px; border-radius: 9px; border: 1px solid var(--border-soft); }
 .player-card-stat-label { color: var(--text-muted); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
 .player-card-stat-value { font-weight: 700; font-size: 14px; margin-top: 2px; font-variant-numeric: tabular-nums; }
+
+/* F34: Personal Records (PR) */
+.pr-section { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border-soft); }
+.pr-section-title { font-size: 11px; font-weight: 800; color: #92400e; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+.pr-list { display: flex; flex-direction: column; gap: 4px; }
+.pr-row { display: flex; align-items: center; gap: 8px; padding: 6px 10px; background: linear-gradient(90deg, #fef3c7 0%, transparent 100%); border-radius: 8px; font-size: 12px; }
+.pr-emoji { font-size: 14px; flex-shrink: 0; }
+.pr-text { flex: 1; min-width: 0; color: var(--text-muted); font-weight: 500; }
+.pr-text strong { color: var(--text); font-weight: 800; }
+.pr-when { font-size: 10px; color: #92400e; font-weight: 700; flex-shrink: 0; }
+
 /* F17: Celkove statistiky cviku na profilu */
 .player-totals { margin-top: 12px; }
 .player-totals-title {
@@ -999,236 +1083,6 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
   font-family: inherit; font-size: 12px; font-weight: 600;
 }
 .player-card-actions button:active { background: var(--bg-card-hover); }
-
-/* F18: Chat */
-.chat-messages {
-  display: flex; flex-direction: column; gap: 8px;
-  padding: 4px;
-  margin-bottom: 14px;
-  max-height: 55vh; overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-}
-.chat-msg {
-  display: flex; gap: 10px; align-items: flex-start;
-  padding: 10px 12px;
-  background: var(--bg-card); border: 1px solid var(--border-soft);
-  border-radius: 14px;
-}
-.chat-msg-avatar {
-  width: 32px; height: 32px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 700; font-size: 11px; color: #000;
-  flex-shrink: 0;
-}
-.chat-msg-body { flex: 1; min-width: 0; }
-.chat-msg-head {
-  display: flex; align-items: baseline; gap: 6px;
-  margin-bottom: 3px;
-}
-.chat-msg-name { font-weight: 700; font-size: 13px; }
-.chat-msg-time { font-size: 11px; color: var(--text-dim); }
-.chat-msg-text { font-size: 14px; line-height: 1.4; word-wrap: break-word; white-space: pre-wrap; }
-.chat-msg-delete {
-  background: none; border: none; cursor: pointer;
-  opacity: 0.4; font-size: 14px; padding: 2px 4px;
-  align-self: flex-start;
-}
-.chat-msg-delete:hover { opacity: 1; }
-
-.chat-composer {
-  background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: 12px; padding: 10px 12px;
-}
-.chat-sender-row {
-  display: flex; align-items: center; gap: 8px;
-  margin-bottom: 8px;
-}
-.chat-sender-label {
-  font-size: 11px; font-weight: 700; color: var(--text-muted);
-  text-transform: uppercase; letter-spacing: 0.05em;
-  flex-shrink: 0;
-}
-.chat-sender-pills { display: flex; gap: 5px; flex-wrap: wrap; flex: 1; }
-.chat-sender-pill {
-  padding: 5px 10px; border-radius: 100px;
-  font-size: 12px; font-weight: 600;
-  background: var(--bg); border: 1px solid var(--border); color: var(--text-muted);
-  cursor: pointer; font-family: inherit;
-}
-.chat-sender-pill.active { background: var(--accent); color: #fff; border-color: var(--accent); }
-
-/* F19: chat sender info pro bezne hrace (read-only, jen info kdo pise) */
-.chat-sender-me {
-  display: flex; align-items: center; gap: 6px;
-  padding: 4px 10px 4px 4px;
-  background: var(--bg); border: 1px solid var(--border);
-  border-radius: 100px;
-  font-size: 12px; font-weight: 600;
-}
-.chat-sender-me-avatar {
-  width: 22px; height: 22px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 700; font-size: 9px; color: #000;
-}
-.chat-input-row { display: flex; gap: 8px; }
-.chat-input-row input {
-  flex: 1; padding: 11px 13px;
-  background: var(--bg); border: 1px solid var(--border);
-  border-radius: 10px; font-family: inherit; font-size: 16px;  /* 16px = iOS Safari nezoomuje pri focus */
-  color: var(--text);
-  -webkit-appearance: none; appearance: none;
-}
-.chat-input-row input:focus { outline: none; border-color: var(--text); }
-.chat-send-btn {
-  padding: 11px 16px; border-radius: 10px;
-  background: var(--accent); color: #fff; border: none;
-  font-family: inherit; font-size: 13px; font-weight: 700;
-  cursor: pointer; flex-shrink: 0;
-}
-.chat-send-btn:active { transform: scale(0.98); }
-.chat-empty {
-  text-align: center; padding: 30px 16px;
-  color: var(--text-muted); font-size: 13px;
-}
-
-/* F21: reply indikator nad inputem */
-.chat-reply-bar {
-  display: flex !important; align-items: center; gap: 8px;
-  padding: 8px 10px; margin-bottom: 8px;
-  background: var(--border-soft); border-radius: 8px;
-  border-left: 3px solid var(--accent);
-}
-.chat-reply-bar[style*="none"] { display: none !important; }
-.chat-reply-icon { font-size: 14px; flex-shrink: 0; }
-.chat-reply-content { flex: 1; min-width: 0; overflow: hidden; }
-.chat-reply-name { font-size: 11px; font-weight: 700; color: var(--text); }
-.chat-reply-preview {
-  font-size: 12px; color: var(--text-muted);
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-}
-.chat-reply-cancel {
-  background: none; border: none; font-size: 18px; cursor: pointer;
-  color: var(--text-muted); padding: 0 4px; flex-shrink: 0;
-}
-
-/* F21: reply preview UVNITR zpravy (kdyz tato zprava je odpoved) */
-.chat-msg-reply-ref {
-  display: flex; gap: 6px; align-items: center;
-  padding: 6px 10px; margin-bottom: 6px;
-  background: var(--border-soft); border-radius: 8px;
-  border-left: 3px solid var(--accent-soft);
-  font-size: 12px;
-}
-.chat-msg-reply-name { font-weight: 700; color: var(--text); flex-shrink: 0; }
-.chat-msg-reply-text {
-  color: var(--text-muted);
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-}
-
-/* F21: reakce pod zpravou */
-.chat-msg-reactions {
-  display: flex; gap: 4px; flex-wrap: wrap;
-  margin-top: 6px;
-}
-.chat-reaction-pill {
-  display: inline-flex; align-items: center; gap: 3px;
-  padding: 2px 8px; border-radius: 100px;
-  background: var(--bg); border: 1px solid var(--border);
-  font-size: 12px; cursor: pointer;
-  font-family: inherit;
-}
-.chat-reaction-pill.mine {
-  background: var(--accent); color: #fff; border-color: var(--accent);
-}
-.chat-reaction-pill .reaction-count { font-weight: 700; font-size: 11px; }
-
-/* F21: long-press / tap effect na zpravu */
-.chat-msg { cursor: pointer; user-select: none; }
-.chat-msg:active { background: var(--bg-card-hover); }
-
-/* F21: action menu modal */
-#chat-action-menu .chat-action-card {
-  background: var(--bg-card); border-radius: 16px;
-  padding: 14px; max-width: 360px; width: 100%;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.25);
-  margin-bottom: 24px;
-}
-.chat-action-emojis {
-  display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px;
-  margin-bottom: 12px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--border-soft);
-}
-.chat-emoji-btn {
-  background: var(--bg); border: 1px solid var(--border);
-  border-radius: 10px; padding: 10px 0;
-  font-size: 22px; cursor: pointer; font-family: inherit;
-}
-.chat-emoji-btn:active { transform: scale(0.92); background: var(--border); }
-.chat-action-btn {
-  display: block; width: 100%; padding: 12px;
-  background: var(--bg); border: 1px solid var(--border);
-  border-radius: 10px; font-family: inherit;
-  font-size: 14px; font-weight: 600; color: var(--text);
-  cursor: pointer; margin-bottom: 6px;
-}
-.chat-action-btn:active { background: var(--border); }
-.chat-action-btn.cancel { color: var(--text-muted); }
-
-/* F22: Reactions list modal */
-.reactions-list { max-height: 60vh; overflow-y: auto; }
-.reaction-group {
-  margin-bottom: 14px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--border-soft);
-}
-.reaction-group:last-child { border-bottom: none; margin-bottom: 0; }
-.reaction-group-header {
-  display: flex; align-items: center; gap: 8px;
-  margin-bottom: 8px;
-  font-weight: 700; font-size: 14px;
-}
-.reaction-group-emoji { font-size: 22px; }
-.reaction-group-count { color: var(--text-muted); font-size: 13px; font-weight: 500; }
-.reaction-row {
-  display: flex; align-items: center; gap: 10px;
-  padding: 8px 10px;
-  border-radius: 10px;
-  cursor: default;
-}
-.reaction-row.mine {
-  background: var(--bg);
-  cursor: pointer;
-}
-.reaction-row.mine:active { transform: scale(0.98); }
-.reaction-row-avatar {
-  width: 32px; height: 32px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 700; font-size: 11px; color: #000;
-}
-.reaction-row-name { flex: 1; font-weight: 600; font-size: 14px; }
-.reaction-row-remove {
-  font-size: 11px; color: var(--text-muted);
-  text-transform: uppercase; letter-spacing: 0.05em;
-  font-weight: 700;
-}
-
-/* F22: reply lepsi vzhled (víc Messenger-like) */
-.chat-msg-reply-ref {
-  display: flex !important; flex-direction: column; align-items: flex-start;
-  gap: 2px;
-  padding: 6px 10px; margin-bottom: 4px;
-  background: var(--bg); border-radius: 8px;
-  border-left: 3px solid var(--accent-soft);
-  font-size: 11px;
-  max-width: 100%;
-}
-.chat-msg-reply-name { font-weight: 700; color: var(--text); font-size: 11px; }
-.chat-msg-reply-text {
-  color: var(--text-muted); font-size: 12px;
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-  max-width: 100%;
-}
 
 /* Nav */
 .nav {
@@ -1371,14 +1225,29 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
     <button class="nav-btn active" data-view="prehled">Přehled</button>
     <button class="nav-btn" data-view="historie">Historie</button>
     <button class="nav-btn" data-view="hraci">Hráči</button>
-    <button class="nav-btn" data-view="chat">Chat</button>
   </nav>
 
   <div id="view-prehled">
+    <!-- F35: Sjednoceny leaderboard - hero box s 3 obdobími + kategoriemi + (volitelne) datum navigaci -->
     <div class="hero">
       <div class="hero-label">Leaderboard</div>
-      <div class="hero-title">Celkové pořadí</div>
-      <!-- F15: filtry kategorii v celkovem LB - tabs+tabulka v jednom lehce sedem boxu -->
+      <div class="hero-title">Pořadí</div>
+
+      <!-- Period tabs: Celkova historie / Tyden / Mesic (Celkova jako prvni = default) -->
+      <div class="period-tabs">
+        <button type="button" class="period-tab active" data-period="all" onclick="setLeaderboardPeriod('all')">Celková historie</button>
+        <button type="button" class="period-tab" data-period="week" onclick="setLeaderboardPeriod('week')">Týden</button>
+        <button type="button" class="period-tab" data-period="month" onclick="setLeaderboardPeriod('month')">Měsíc</button>
+      </div>
+
+      <!-- Period navigation (jen pro week/month, schované pro 'all') -->
+      <div class="period-nav" id="period-nav-row" style="display:none;">
+        <button type="button" class="period-nav-btn" onclick="movePeriod(-1)">‹</button>
+        <div class="period-label" id="period-label">Tento týden</div>
+        <button type="button" class="period-nav-btn" onclick="movePeriod(1)">›</button>
+      </div>
+
+      <!-- Category tabs (Dohromady / Cviky / Aktivity / Stretching) -->
       <div class="hero-section-wrap">
         <div class="category-tabs" id="total-category-tabs">
           <button type="button" class="cat-tab active" data-total-cat="all" onclick="setTotalCategory('all')">Dohromady</button>
@@ -1387,33 +1256,6 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
           <button type="button" class="cat-tab" data-total-cat="stretching" onclick="setTotalCategory('stretching')">Stretching</button>
         </div>
         <div class="leaderboard" id="leaderboard-total">
-          <div class="loading">Načítám...</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- F11: kategorie sekce s boxiky a ramecek v barve kategorie -->
-    <div class="category-section" id="category-section" data-cat="vse">
-      <div class="category-tabs">
-        <button type="button" class="cat-tab active" data-tab="vse">Dohromady</button>
-        <button type="button" class="cat-tab" data-tab="cviky">Cviky</button>
-        <button type="button" class="cat-tab" data-tab="aktivity">Aktivity</button>
-        <button type="button" class="cat-tab" data-tab="stretching">Stretching</button>
-      </div>
-      <div class="category-body">
-        <!-- F12: Filtr obdobi -->
-        <div class="period-selector">
-          <div class="period-mode-toggle">
-            <button type="button" class="period-mode-btn active" data-mode="week" onclick="setPeriodMode('week')">Týden</button>
-            <button type="button" class="period-mode-btn" data-mode="month" onclick="setPeriodMode('month')">Měsíc</button>
-          </div>
-          <div class="period-nav">
-            <button type="button" class="period-nav-btn" onclick="movePeriod(-1)">‹</button>
-            <div class="period-label" id="period-label">Tento týden</div>
-            <button type="button" class="period-nav-btn" onclick="movePeriod(1)">›</button>
-          </div>
-        </div>
-        <div class="leaderboard" id="leaderboard-week">
           <div class="loading">Načítám...</div>
         </div>
       </div>
@@ -1474,67 +1316,10 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
   </div>
 
   <!-- F18: Chat (4. zalozka) -->
-  <div id="view-chat" style="display:none;">
-    <div class="section-title">
-      <h2>Chat</h2>
-    </div>
-    <div class="chat-messages" id="chat-messages">
-      <div class="loading">Načítám zprávy...</div>
-    </div>
-    <div class="chat-composer">
-      <!-- F21: reply indikator -->
-      <div class="chat-reply-bar" id="chat-reply-bar" style="display:none;">
-        <div class="chat-reply-icon">↩️</div>
-        <div class="chat-reply-content">
-          <div class="chat-reply-name" id="chat-reply-name"></div>
-          <div class="chat-reply-preview" id="chat-reply-preview"></div>
-        </div>
-        <button type="button" class="chat-reply-cancel" onclick="cancelReply()">×</button>
-      </div>
-      <div class="chat-sender-row">
-        <span class="chat-sender-label">Píše:</span>
-        <div class="chat-sender-pills" id="chat-sender-pills"></div>
-      </div>
-      <div class="chat-input-row">
-        <input type="text" id="chat-input" placeholder="Napiš zprávu..." maxlength="500" onkeydown="if(event.key==='Enter') sendChatMessage()">
-        <button type="button" class="chat-send-btn" onclick="sendChatMessage()">Odeslat</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- F22: Reactions list modal (kdo dal jakou reakci) -->
-  <div class="modal-overlay" id="reactions-modal" onclick="closeReactionsModal(event)">
-    <div class="modal">
-      <div class="modal-handle"></div>
-      <div class="modal-title">Reakce</div>
-      <div class="modal-subtitle" id="reactions-modal-sub">Kdo reagoval</div>
-      <div id="reactions-list" class="reactions-list"></div>
-      <button class="btn-cancel" onclick="closeReactionsModal()">Zavřít</button>
-    </div>
-  </div>
-
-  <!-- F21: Action menu pro zpravu (reply + reakce) -->
-  <div class="modal-overlay" id="chat-action-menu" onclick="closeChatActionMenu(event)">
-    <div class="chat-action-card" onclick="event.stopPropagation()">
-      <div class="chat-action-emojis">
-        <button type="button" class="chat-emoji-btn" onclick="addChatReaction('👍')">👍</button>
-        <button type="button" class="chat-emoji-btn" onclick="addChatReaction('❤️')">❤️</button>
-        <button type="button" class="chat-emoji-btn" onclick="addChatReaction('🔥')">🔥</button>
-        <button type="button" class="chat-emoji-btn" onclick="addChatReaction('💪')">💪</button>
-        <button type="button" class="chat-emoji-btn" onclick="addChatReaction('😂')">😂</button>
-        <button type="button" class="chat-emoji-btn" onclick="addChatReaction('😮')">😮</button>
-      </div>
-      <button type="button" class="chat-action-btn" onclick="startReplyFromMenu()">↩️ Odpovědět</button>
-      <button type="button" class="chat-action-btn cancel" onclick="closeChatActionMenu()">Zrušit</button>
-    </div>
-  </div>
 
 </main>
 
 <div class="fab-group">
-  <button class="fab refresh" id="fab-refresh" onclick="refreshApp()" aria-label="Obnovit">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>
-  </button>
   <button class="fab primary" onclick="openModal()" aria-label="Přidat záznam">+</button>
 </div>
 
@@ -1546,6 +1331,8 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
     <div class="modal-handle"></div>
     <div class="modal-title" id="modal-title">Nový záznam</div>
     <div class="modal-subtitle" id="modal-subtitle">Nejdřív vyber kdo zadává</div>
+
+    <div class="modal-body">
 
     <!-- F19: vyber hrace - skryto pro bezne hrace (predvyplneno), zobrazeno pro admina -->
     <div class="field" id="player-select-field">
@@ -1578,30 +1365,22 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
         </div>
 
         <div class="field">
-          <label>Způsob zápisu</label>
+          <label>Co chceš zapsat?</label>
           <div class="serie-mode-grid">
             <button class="serie-mode-btn active" data-mode="single">
-              <div class="bubble-stack">
-                <div class="bubble">Opakování</div>
-                <div class="bubble">Váha</div>
-              </div>
-              <div class="label">Bez sérií</div>
+              <div class="serie-mode-icon">1</div>
+              <div class="label">Jedna sada</div>
+              <div class="label-sub">např. 20 shybů</div>
             </button>
             <button class="serie-mode-btn" data-mode="same">
-              <div class="bubble-stack">
-                <div class="bubble">Série</div>
-                <div class="bubble">Opakování</div>
-                <div class="bubble">Váha</div>
-              </div>
+              <div class="serie-mode-icon">🔁</div>
               <div class="label">Stejné série</div>
+              <div class="label-sub">6× po 18 shybech</div>
             </button>
             <button class="serie-mode-btn" data-mode="varied">
-              <div class="bubble-stack">
-                <div class="bubble-row"><div class="bubble-num">1</div><div class="bubble">Opakování</div><div class="bubble">Váha</div></div>
-                <div class="bubble-row" style="opacity:0.5"><div class="bubble-num">2</div><div class="bubble">Opakování</div><div class="bubble">Váha</div></div>
-                <div class="bubble-row" style="opacity:0.25"><div class="bubble-num">3</div><div class="bubble">Opakování</div><div class="bubble">Váha</div></div>
-              </div>
+              <div class="serie-mode-icon">📊</div>
               <div class="label">Různé série</div>
+              <div class="label-sub">10/8/6/5 shybů</div>
             </button>
           </div>
         </div>
@@ -1721,9 +1500,13 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
       </div>
     </div>
 
-    <button class="btn-submit" id="submit-btn" onclick="submitEntry()">Zapsat</button>
-    <button class="btn-danger" id="delete-btn" style="display:none;" onclick="deleteCurrentEntry()">Smazat záznam</button>
-    <button class="btn-cancel" onclick="closeModal()">Zrušit</button>
+    </div><!-- /modal-body -->
+
+    <div class="modal-footer">
+      <button class="btn-submit" id="submit-btn" onclick="submitEntry()">Zapsat</button>
+      <button class="btn-danger" id="delete-btn" style="display:none;" onclick="deleteCurrentEntry()">Smazat záznam</button>
+      <button class="btn-cancel" onclick="closeModal()">Zrušit</button>
+    </div>
   </div>
 </div>
 
@@ -1813,7 +1596,7 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
         <div class="ph-subtitle" id="ph-subtitle">Všechny záznamy</div>
       </div>
       <div class="ph-stats">
-        <div class="ph-stats-points" id="ph-total">0.0</div>
+        <div class="ph-stats-points" id="ph-total">0</div>
         <div class="ph-stats-label">celkem b.</div>
       </div>
     </div>
@@ -1902,7 +1685,7 @@ const FIELD_LABELS = {
 };
 
 let state = {
-  players: [], cviky: [], aktivity: [], history: [], chatMessages: [],
+  players: [], cviky: [], aktivity: [], history: [],
   selectedPlayer: null, selectedCvik: null, selectedLevel: null, selectedStretch: null,
   serieMode: 'single', variedSeries: [],
   entryType: 'cvik', view: 'prehled', tab: 'vse',
@@ -1916,16 +1699,10 @@ let state = {
   historyPlayerFilter: 'all', historyTypeFilter: 'all',
   // F4: pocet "mesicu zpet" pri zobrazeni Historie (default 1 = 30 dni)
   historyMonthsLoaded: 1,
-  // F12: filtr obdobi (mode + anchor date pro pocitani rangu)
-  periodMode: 'week', periodAnchor: null,
+  // F12 + F35: filtr obdobi sjednoceneho leaderboardu (week/month/all + anchor)
+  totalPeriod: 'all', periodMode: 'week', periodAnchor: null,
   // F15: filtr kategorii v hlavnim Celkove poradi (all-time)
   totalCategory: 'all',  // 'all' | 'cvik' | 'aktivita' | 'stretching'
-  // F18: chat - kdo prave pise (player_id)
-  chatSender: null,  // F19: bude se priradit z currentPlayerId po loginu
-  // F21: chat replies + reakce
-  chatReplyTo: null,          // ID zpravy na kterou se odpovida
-  chatReactions: [],          // pole reakci nactenych z DB
-  chatActiveMessage: null,    // ID zpravy s otevrenym menu (long-press / klik)
   // F19: soft auth - aktualne prihlaseny hrac (z localStorage)
   currentPlayerId: null
 };
@@ -2065,12 +1842,172 @@ function computeStreak(playerId) {
   let streak = 0;
   const today = new Date(); today.setHours(0,0,0,0);
   const check = new Date(today);
+  // Fix 2026-05-21: pokud dnes jeste neni zapis, dat "grace day" - zacni od vcerejska.
+  // Streak se prerusi az kdyz dnes I vcera neni nic.
+  if (!dates.has(dateToStr(check))) {
+    check.setDate(check.getDate() - 1);
+    if (!dates.has(dateToStr(check))) return 0;
+  }
   while (dates.has(dateToStr(check))) {
     streak++;
     check.setDate(check.getDate() - 1);
   }
   return streak;
 }
+
+// Slovo dnu pro cestinu: 1 den / 2-4 dny / 5+ dni
+function streakLabel(n) {
+  if (n === 1) return 'den';
+  if (n < 5) return 'dny';
+  return 'dní';
+}
+
+// F34: Historicky nejdelsi streak (jakykoliv vrchol v historii, ne aktualni)
+function longestStreakEver(playerId) {
+  const dates = new Set();
+  state.cviky.filter(c => c.player_id === playerId).forEach(c => dates.add(c.datum));
+  state.aktivity.filter(a => a.player_id === playerId).forEach(a => dates.add(a.datum));
+  if (dates.size === 0) return { length: 0, end: null };
+  const sorted = [...dates].sort();
+  let best = 0, bestEnd = null, current = 0, currentStart = null;
+  let prevDate = null;
+  for (const dStr of sorted) {
+    const d = new Date(dStr + 'T00:00:00');
+    if (prevDate) {
+      const diff = Math.round((d - prevDate) / 86400000);
+      if (diff === 1) { current++; }
+      else { current = 1; currentStart = dStr; }
+    } else { current = 1; currentStart = dStr; }
+    if (current > best) { best = current; bestEnd = dStr; }
+    prevDate = d;
+  }
+  return { length: best, end: bestEnd };
+}
+
+// F34: Personal records (PR) — 6 START PR
+//   1-4: Nejvic shybu/drepu/kliku/dipu v 1 den
+//   5: Nejvic bodu za 1 den
+//   6: Nejdelsi 1 beh (km)
+//   7: Nejdelsi streak historicky
+// Vraci pole { id, label, value, valueFmt, when } seřazené tak jak chceme zobrazit
+function computePersonalRecords(playerId) {
+  const records = [];
+
+  // 1-4: max ops 1 cviku v 1 dni (per cvik typ)
+  const cvikTypes = [
+    { type: 'Shyby', emoji: '💪', singular: 'shyb' },
+    { type: 'Dřep',  emoji: '🦵', singular: 'dřep' },
+    { type: 'Kliky', emoji: '💥', singular: 'klik' },
+    { type: 'Dipy',  emoji: '🤸', singular: 'dip' }
+  ];
+  for (const ct of cvikTypes) {
+    const perDay = {};
+    state.cviky.filter(c => c.player_id === playerId && c.cvik === ct.type).forEach(c => {
+      const ops = Number(c.opakovani) || 0;
+      perDay[c.datum] = (perDay[c.datum] || 0) + ops;
+    });
+    let maxDay = null, maxOps = 0;
+    for (const [date, ops] of Object.entries(perDay)) {
+      if (ops > maxOps) { maxOps = ops; maxDay = date; }
+    }
+    if (maxOps > 0) {
+      records.push({
+        id: `most_${ct.type.toLowerCase()}_day`,
+        emoji: ct.emoji,
+        label: `Nejvíc ${ct.type.toLowerCase()} v jeden den`,
+        value: maxOps,
+        valueFmt: `${maxOps}× ${ct.type.toLowerCase()}`,
+        when: maxDay
+      });
+    }
+  }
+
+  // 5: Nejvic bodu za 1 den (cviky + aktivity vse)
+  const pointsPerDay = {};
+  state.cviky.filter(c => c.player_id === playerId).forEach(c => {
+    pointsPerDay[c.datum] = (pointsPerDay[c.datum] || 0) + (Number(c.body) || 0);
+  });
+  state.aktivity.filter(a => a.player_id === playerId).forEach(a => {
+    pointsPerDay[a.datum] = (pointsPerDay[a.datum] || 0) + (Number(a.body) || 0);
+  });
+  let maxPtsDay = null, maxPts = 0;
+  for (const [date, pts] of Object.entries(pointsPerDay)) {
+    if (pts > maxPts) { maxPts = pts; maxPtsDay = date; }
+  }
+  if (maxPts > 0) {
+    records.push({
+      id: 'most_points_day',
+      emoji: '🏆',
+      label: 'Nejvíc bodů za 1 den',
+      value: maxPts,
+      valueFmt: `${Math.round(maxPts)} bodů`,
+      when: maxPtsDay
+    });
+  }
+
+  // 6: Nejdelsi 1 beh (km)
+  let maxKm = 0, maxKmDay = null;
+  state.aktivity.filter(a => a.player_id === playerId && a.km).forEach(a => {
+    const km = Number(a.km) || 0;
+    if (km > maxKm) { maxKm = km; maxKmDay = a.datum; }
+  });
+  if (maxKm > 0) {
+    records.push({
+      id: 'longest_run',
+      emoji: '🏃',
+      label: 'Nejdelší 1 běh',
+      value: maxKm,
+      valueFmt: `${maxKm} km`,
+      when: maxKmDay
+    });
+  }
+
+  // 7: Nejdelsi streak historicky
+  const ls = longestStreakEver(playerId);
+  if (ls.length > 0) {
+    records.push({
+      id: 'longest_streak',
+      emoji: '🔥',
+      label: 'Nejdelší streak',
+      value: ls.length,
+      valueFmt: `${ls.length} ${streakLabel(ls.length)} v řadě`,
+      when: ls.end
+    });
+  }
+
+  return records;
+}
+
+// F34: Toast pri prekonani PR. Volame PO ulozeni zaznamu (loadData uz proběhl).
+// Porovna PRed-stav a po-stav, vraci pole PR ktere se zmenily.
+// Idealne: spocitej PR pred ulozenim, ulozit, spocitej PR po ulozeni, diff.
+function diffPRs(beforeArr, afterArr) {
+  const changed = [];
+  for (const after of afterArr) {
+    const before = beforeArr.find(b => b.id === after.id);
+    if (!before || after.value > before.value) {
+      changed.push({ ...after, previousValue: before ? before.value : null });
+    }
+  }
+  return changed;
+}
+
+// Format datumu pro PR zobrazeni (16. 5.)
+function prDateFmt(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr + 'T00:00:00');
+  return `${d.getDate()}. ${d.getMonth() + 1}.`;
+}
+
+// F34: PR toast (vetsi, slavnostni). Pouziva existujici toast() s delayem mezi vice PR.
+function prToast(pr) {
+  const isFirst = pr.previousValue === null;
+  const msg = isFirst
+    ? `🎉 Tvůj první rekord! ${pr.valueFmt}`
+    : `🎉 Nový rekord! ${pr.valueFmt} (předtím ${pr.id === 'most_points_day' ? Math.round(pr.previousValue) + ' bodů' : pr.previousValue})`;
+  toast(msg, 'success');
+}
+
 
 function toast(msg, type='success') {
   const t = document.getElementById('toast');
@@ -2134,17 +2071,25 @@ function getPeriodLabel() {
 }
 
 function updatePeriodUI() {
+  // F35: period-tabs (Tyden/Mesic/Celkova historie)
+  document.querySelectorAll('.period-tab').forEach(b => b.classList.toggle('active', b.dataset.period === state.totalPeriod));
+  // period-nav-row jen pro week/month
+  const navRow = document.getElementById('period-nav-row');
+  if (navRow) navRow.style.display = (state.totalPeriod === 'week' || state.totalPeriod === 'month') ? 'flex' : 'none';
+  // period-label
   const lbl = document.getElementById('period-label');
-  if (lbl) lbl.textContent = getPeriodLabel();
-  document.querySelectorAll('.period-mode-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === state.periodMode));
+  if (lbl && state.totalPeriod !== 'all') lbl.textContent = getPeriodLabel();
 }
 
-function setPeriodMode(mode) {
-  state.periodMode = mode;
-  // Reset anchor na dnesek pri prepnuti modu pro jednoduchost
-  state.periodAnchor = new Date();
+function setLeaderboardPeriod(period) {
+  state.totalPeriod = period;
+  // pro week/month synchronizuj periodMode (existujici logika)
+  if (period === 'week' || period === 'month') {
+    state.periodMode = period;
+    state.periodAnchor = new Date();  // reset anchor na dnesek
+  }
   updatePeriodUI();
-  renderLeaderboardWeek();
+  renderLeaderboardTotal();
 }
 
 function movePeriod(delta) {
@@ -2157,83 +2102,69 @@ function movePeriod(delta) {
   }
   state.periodAnchor = a;
   updatePeriodUI();
-  renderLeaderboardWeek();
+  renderLeaderboardTotal();
 }
 
+// F35: SJEDNOCENY leaderboard. Respektuje totalPeriod (week/month/all) + totalCategory (Dohromady/cvik/aktivita/stretching)
 function renderLeaderboardTotal() {
-  // F15: respektuj filter kategorii (all-time)
   const cat = state.totalCategory;
+  const period = state.totalPeriod;
   const isStretch = (a) => isStretchActivity(a);
+
+  // Range pro filtrovani; pro 'all' = nekonecno
+  let inRange;
+  if (period === 'all') {
+    inRange = () => true;
+  } else {
+    const { from, to } = getCurrentPeriodRange();
+    inRange = (e) => e.datum >= from && e.datum <= to;
+  }
+
   const data = state.players.filter(p => p.aktivni).map(p => {
     let total = 0;
     if (cat === 'all' || cat === 'cvik') {
-      total += state.cviky.filter(c => c.player_id === p.id).reduce((s, c) => s + Number(c.body), 0);
+      total += state.cviky.filter(c => c.player_id === p.id && inRange(c)).reduce((s, c) => s + Number(c.body), 0);
     }
     if (cat === 'all' || cat === 'aktivita') {
-      total += state.aktivity.filter(a => a.player_id === p.id && !isStretch(a)).reduce((s, a) => s + Number(a.body), 0);
+      total += state.aktivity.filter(a => a.player_id === p.id && inRange(a) && !isStretch(a)).reduce((s, a) => s + Number(a.body), 0);
     }
     if (cat === 'all' || cat === 'stretching') {
-      total += state.aktivity.filter(a => a.player_id === p.id && isStretch(a)).reduce((s, a) => s + Number(a.body), 0);
+      total += state.aktivity.filter(a => a.player_id === p.id && inRange(a) && isStretch(a)).reduce((s, a) => s + Number(a.body), 0);
     }
     return { ...p, total, streak: computeStreak(p.id) };
   }).sort((a, b) => b.total - a.total);
 
+  // Max body = pro % bar
+  const topPts = data[0]?.total || 0;
+
   const el = document.getElementById('leaderboard-total');
   if (data.length === 0) { el.innerHTML = '<div class="entry-empty">Žádní aktivní hráči</div>'; return; }
   el.innerHTML = data.map((p, i) => {
-    const isFirst = i === 0 && p.total > 0;
+    // F36: zlato/stribro/bronz pro #1/#2/#3 (jen pokud maji body)
+    let medalClass = '';
+    if (p.total > 0) {
+      if (i === 0) medalClass = 'gold';
+      else if (i === 1) medalClass = 'silver';
+      else if (i === 2) medalClass = 'bronze';
+    }
+    const pct = topPts > 0 ? Math.max(2, Math.round((p.total / topPts) * 100)) : 0;
     return `
-    <div class="leader-row ${isFirst ? 'gold' : ''}" onclick="openPlayerEntriesModal('${p.id}')" style="cursor:pointer;">
-      ${isFirst ? '<div class="leader-crown">👑</div>' : ''}
+    <div class="leader-row ${medalClass}" onclick="openPlayerEntriesModal('${p.id}')" style="cursor:pointer;">
       <div class="leader-rank">${i+1}</div>
       <div class="leader-av-wrap">
-        ${isFirst ? '<div class="leader-avatar-emoji">😎</div>' : ''}
         <div class="leader-avatar" style="background:${p.barva}">${initials(p.jmeno)}</div>
       </div>
-      <div class="leader-name">${p.jmeno}</div>
+      <div class="leader-name">${p.jmeno}${p.streak > 0 ? `<span class="name-streak">🔥 ${p.streak} ${streakLabel(p.streak)}</span>` : ''}</div>
       <div class="leader-stats">
-        <div class="leader-points">${p.total.toFixed(1)}</div>
-        <div class="leader-streak">${p.streak > 0 ? `🔥 ${p.streak} ${p.streak === 1 ? 'den' : p.streak < 5 ? 'dny' : 'dní'}` : '—'}</div>
+        <div class="leader-points">${Math.round(p.total)}</div>
+        ${p.total > 0 ? `<div class="leader-pct-bar" style="--player-color:${p.barva};width:${pct}%"></div>` : ''}
       </div>
     </div>
   `}).join('');
 }
 
-function renderLeaderboardWeek() {
-  // F12: docasne stale "tento tyden". Pozdeji nahradime period filterem.
-  const { from, to } = getCurrentPeriodRange();
-  const data = state.players.filter(p => p.aktivni).map(p => {
-    let body = 0;
-    const inRange = (e) => e.datum >= from && e.datum <= to;
-    if (state.tab === 'vse' || state.tab === 'cviky') {
-      body += state.cviky.filter(c => c.player_id === p.id && inRange(c)).reduce((s, c) => s + Number(c.body), 0);
-    }
-    if (state.tab === 'vse' || state.tab === 'aktivity') {
-      // 'aktivity' tab = ne-stretching aktivity
-      body += state.aktivity.filter(a => a.player_id === p.id && inRange(a) && !isStretchActivity(a)).reduce((s, a) => s + Number(a.body), 0);
-    }
-    if (state.tab === 'vse' || state.tab === 'stretching') {
-      body += state.aktivity.filter(a => a.player_id === p.id && inRange(a) && isStretchActivity(a)).reduce((s, a) => s + Number(a.body), 0);
-    }
-    return { ...p, body };
-  }).sort((a, b) => b.body - a.body);
-
-  const el = document.getElementById('leaderboard-week');
-  el.innerHTML = data.map((p, i) => {
-    const isFirst = i === 0 && p.body > 0;
-    return `
-    <div class="leader-row ${isFirst ? 'gold' : ''}" onclick="openPlayerEntriesModal('${p.id}')" style="cursor:pointer;">
-      ${isFirst ? '<div class="leader-crown">👑</div>' : ''}
-      <div class="leader-rank">${i+1}</div>
-      <div class="leader-av-wrap">
-        ${isFirst ? '<div class="leader-avatar-emoji">😎</div>' : ''}
-        <div class="leader-avatar" style="background:${p.barva}">${initials(p.jmeno)}</div>
-      </div>
-      <div class="leader-name">${p.jmeno}</div>
-      <div class="leader-stats"><div class="leader-points">${p.body.toFixed(1)}</div></div>
-    </div>
-  `}).join('');
-}
+// F35 LEGACY: stara funkce renderLeaderboardWeek (slouceno do renderLeaderboardTotal). Zachovano jen jako alias.
+function renderLeaderboardWeek() { renderLeaderboardTotal(); }
 
 function renderHeatmap() {
   const HEATMAP_DAYS = 21; // F: 3 tydny zpet (drive 35)
@@ -2294,10 +2225,11 @@ function renderHeatmap() {
       const pts = pointsForDay(p.id, dStr);
       const lvl = levelNum(pts);
       const cls = lvl === 0 ? '' : `${colorKey}-${lvl}`;
-      html += `<div class="heatmap-cell ${cls}" data-date="${dStr}" data-player="${p.id}" title="${p.jmeno} · ${d.toLocaleDateString('cs-CZ')} · ${pts.toFixed(1)} bodů"></div>`;
+      html += `<div class="heatmap-cell ${cls}" data-date="${dStr}" data-player="${p.id}" title="${p.jmeno} · ${d.toLocaleDateString('cs-CZ')} · ${Math.round(pts)} bodů"></div>`;
     });
   });
-  html += '</div><div class="heatmap-legend"><span>Méně</span><div class="heatmap-legend-cells"><div class="heatmap-cell"></div><div class="heatmap-cell gen-1"></div><div class="heatmap-cell gen-2"></div><div class="heatmap-cell gen-3"></div><div class="heatmap-cell gen-4"></div><div class="heatmap-cell gen-5"></div><div class="heatmap-cell gen-6"></div><div class="heatmap-cell gen-7"></div></div><span>Více</span></div>';
+  // F37: legenda s konkretnimi rozsahy bodů (kraje "0 b. / den" a "300+ b. / den")
+  html += '</div><div class="heatmap-legend"><span>0 b. / den</span><div class="heatmap-legend-cells"><div class="heatmap-cell"></div><div class="heatmap-cell gen-1"></div><div class="heatmap-cell gen-2"></div><div class="heatmap-cell gen-3"></div><div class="heatmap-cell gen-4"></div><div class="heatmap-cell gen-5"></div><div class="heatmap-cell gen-6"></div><div class="heatmap-cell gen-7"></div></div><span>300+ b. / den</span></div>';
 
   const el = document.getElementById('heatmap-container');
   el.innerHTML = html;
@@ -2319,7 +2251,7 @@ function openDayDetail(playerId, dateStr) {
     list.innerHTML = '<div class="entry-empty">Žádné záznamy v tento den</div>';
   } else {
     const all = [...cviky.map(c => ({ ...c, _type: 'cvik' })), ...aktivity.map(a => ({ ...a, _type: 'aktivita' }))];
-    list.innerHTML = `<div style="text-align:center;font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;color:var(--accent);margin-bottom:16px;">+${totalBody.toFixed(1)} bodů</div>` + all.map(e => renderEntryCard(e, false)).join('');
+    list.innerHTML = `<div style="text-align:center;font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;color:var(--accent);margin-bottom:16px;">+${Math.round(totalBody)} bodů</div>` + all.map(e => renderEntryCard(e, false)).join('');
   }
   document.getElementById('day-modal').classList.add('active');
 }
@@ -2390,7 +2322,7 @@ function groupEntriesByDate(entries) {
 // Vykresli skupinu zaznamu s headerem (datum + celkem bodu) + entries
 function renderEntryGroup(group) {
   const label = formatDateDisplay(group.dateStr);
-  const total = Math.round(group.totalBody * 10) / 10;
+  const total = Math.round(group.totalBody);
   const items = group.entries.map(e => renderEntryCard(e, true)).join('');
   return `
     <div class="entry-day-group">
@@ -2435,7 +2367,7 @@ function renderPlayerEntries() {
   if (!playerId) return;
   const entries = collectEntries({ playerId, typeFilter: state.peTypeFilter });
   const total = entries.reduce((s, e) => s + Number(e.body), 0);
-  document.getElementById('ph-total').textContent = total.toFixed(1);
+  document.getElementById('ph-total').textContent = Math.round(total);
   const subEl = document.getElementById('ph-subtitle');
   const typeLabels = { all: 'Všechny záznamy', cvik: 'Pouze cviky', aktivita: 'Pouze aktivity', stretching: 'Pouze stretching' };
   subEl.textContent = typeLabels[state.peTypeFilter];
@@ -2504,215 +2436,10 @@ function setTotalCategory(cat) {
   renderLeaderboardTotal();
 }
 
-// === F18: Chat ===
-
-function buildChatSenderPills() {
-  const wrap = document.getElementById('chat-sender-pills');
-  if (!wrap) return;
-  // F19 fix: chat sender vzdy = currentPlayerId (i admin pise jen jako Marek)
-  state.chatSender = state.currentPlayerId;
-  const me = state.players.find(p => p.id === state.chatSender);
-  wrap.innerHTML = me ? `<div class="chat-sender-me"><div class="chat-sender-me-avatar" style="background:${me.barva}">${initials(me.jmeno)}</div><span>${me.jmeno}</span></div>` : '';
-}
-
-function setChatSender(playerId) {
-  state.chatSender = playerId;
-  buildChatSenderPills();
-}
-
-function chatEscape(s) {
-  return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-}
-
-function renderChat() {
-  const el = document.getElementById('chat-messages');
-  if (!el) return;
-  buildChatSenderPills();
-  updateReplyBar();
-  if (state.chatMessages.length === 0) {
-    el.innerHTML = '<div class="chat-empty">Zatím žádné zprávy. Napiš první!</div>';
-    return;
-  }
-  const sorted = [...state.chatMessages].sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
-  el.innerHTML = sorted.map(m => {
-    const player = state.players.find(p => p.id === m.player_id);
-    if (!player) return '';
-    const d = new Date(m.created_at);
-    const today = new Date(); today.setHours(0,0,0,0);
-    const msgDay = new Date(d); msgDay.setHours(0,0,0,0);
-    let timeStr;
-    if (msgDay.getTime() === today.getTime()) timeStr = `${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;
-    else timeStr = `${d.getDate()}.${d.getMonth()+1}. ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;
-    // F21: reply preview pokud zprava odpovida na jinou
-    let replyHtml = '';
-    if (m.reply_to_id) {
-      const orig = state.chatMessages.find(x => x.id === m.reply_to_id);
-      if (orig) {
-        const origPlayer = state.players.find(p => p.id === orig.player_id);
-        replyHtml = `<div class="chat-msg-reply-ref">
-          <span class="chat-msg-reply-name">${origPlayer ? origPlayer.jmeno : '?'}:</span>
-          <span class="chat-msg-reply-text">${chatEscape(orig.text)}</span>
-        </div>`;
-      }
-    }
-    // F21: reakce - seskupit per emoji
-    const reactions = state.chatReactions.filter(r => r.message_id === m.id);
-    let reactionsHtml = '';
-    if (reactions.length > 0) {
-      const grouped = {};
-      reactions.forEach(r => {
-        if (!grouped[r.emoji]) grouped[r.emoji] = [];
-        grouped[r.emoji].push(r);
-      });
-      reactionsHtml = '<div class="chat-msg-reactions">' + Object.keys(grouped).map(emoji => {
-        const list = grouped[emoji];
-        const mine = state.currentPlayerId && list.some(r => r.player_id === state.currentPlayerId);
-        return `<button type="button" class="chat-reaction-pill ${mine ? 'mine' : ''}" onclick="event.stopPropagation(); showReactionsList('${m.id}')">${emoji} <span class="reaction-count">${list.length}</span></button>`;
-      }).join('') + '</div>';
-    }
-    // F19: delete jen vlastní zprávy nebo admin
-    const canDelete = isAdmin() || m.player_id === state.currentPlayerId;
-    return `
-      <div class="chat-msg" onclick="openChatActionMenu('${m.id}')">
-        <div class="chat-msg-avatar" style="background:${player.barva}">${initials(player.jmeno)}</div>
-        <div class="chat-msg-body">
-          <div class="chat-msg-head">
-            <span class="chat-msg-name">${player.jmeno}</span>
-            <span class="chat-msg-time">${timeStr}</span>
-          </div>
-          ${replyHtml}
-          <div class="chat-msg-text">${chatEscape(m.text)}</div>
-          ${reactionsHtml}
-        </div>
-        ${canDelete ? `<button type="button" class="chat-msg-delete" onclick="event.stopPropagation(); deleteChatMessage('${m.id}')" title="Smazat">🗑️</button>` : ''}
-      </div>`;
-  }).join('');
-  el.scrollTop = el.scrollHeight;
-}
-
-// F21: Reply / action menu funkce
-function openChatActionMenu(messageId) {
-  state.chatActiveMessage = messageId;
-  document.getElementById('chat-action-menu').classList.add('active');
-}
-
-function closeChatActionMenu(event) {
-  if (event && event.target.id !== 'chat-action-menu') return;
-  document.getElementById('chat-action-menu').classList.remove('active');
-  state.chatActiveMessage = null;
-}
-
-function startReplyFromMenu() {
-  state.chatReplyTo = state.chatActiveMessage;
-  document.getElementById('chat-action-menu').classList.remove('active');
-  state.chatActiveMessage = null;
-  updateReplyBar();
-  // Synchronni focus - iOS Safari otevre klavesnici a sam scrolluje input nad ni.
-  // Zadny explicit scrollIntoView (zpusoboval double-jump).
-  const inp = document.getElementById('chat-input');
-  if (inp) inp.focus();
-}
-
-function cancelReply() {
-  state.chatReplyTo = null;
-  updateReplyBar();
-}
-
-function updateReplyBar() {
-  const bar = document.getElementById('chat-reply-bar');
-  if (!bar) return;
-  if (!state.chatReplyTo) {
-    bar.style.display = 'none';
-    return;
-  }
-  const orig = state.chatMessages.find(m => m.id === state.chatReplyTo);
-  if (!orig) { bar.style.display = 'none'; return; }
-  const player = state.players.find(p => p.id === orig.player_id);
-  bar.style.display = '';
-  document.getElementById('chat-reply-name').textContent = `Odpovídáš ${player ? player.jmeno : '?'}`;
-  document.getElementById('chat-reply-preview').textContent = orig.text;
-}
-
-// F21: pridat/odebrat reakci
-async function addChatReaction(emoji) {
-  const messageId = state.chatActiveMessage;
-  if (!messageId) return;
-  document.getElementById('chat-action-menu').classList.remove('active');
-  state.chatActiveMessage = null;
-  await toggleChatReaction(messageId, emoji);
-}
-
-async function toggleChatReaction(messageId, emoji) {
-  if (!state.chatSender) { toast('Vyber kdo píše', 'error'); return; }
-  // Pokud uz mam stejnou reakci, odeber. Jinak pridej.
-  const existing = state.chatReactions.find(r => r.message_id === messageId && r.player_id === state.chatSender && r.emoji === emoji);
-  try {
-    if (existing) {
-      const { error } = await db.from('chat_reactions').delete().eq('id', existing.id);
-      if (error) throw error;
-    } else {
-      const { error } = await db.from('chat_reactions').insert({ message_id: messageId, player_id: state.chatSender, emoji });
-      if (error) throw error;
-    }
-    await loadChatReactions();
-    renderChat();
-  } catch (e) {
-    toast('Chyba reakce: ' + e.message, 'error');
-  }
-}
-
-async function loadChatReactions() {
-  const { data, error } = await db.from('chat_reactions').select('*').limit(2000);
-  if (!error) state.chatReactions = data || [];
-}
-
-// F22: Modal "Kdo reagoval" - seznam reaktoru
-function showReactionsList(messageId) {
-  const reactions = state.chatReactions.filter(r => r.message_id === messageId);
-  if (reactions.length === 0) return;
-  const grouped = {};
-  reactions.forEach(r => {
-    if (!grouped[r.emoji]) grouped[r.emoji] = [];
-    grouped[r.emoji].push(r);
-  });
-  const html = Object.keys(grouped).map(emoji => {
-    const list = grouped[emoji];
-    return `
-      <div class="reaction-group">
-        <div class="reaction-group-header">
-          <span class="reaction-group-emoji">${emoji}</span>
-          <span class="reaction-group-count">${list.length}</span>
-        </div>
-        ${list.map(r => {
-          const player = state.players.find(p => p.id === r.player_id);
-          const isMine = r.player_id === state.currentPlayerId;
-          const onclickAttr = isMine ? `onclick="removeMyReaction('${r.id}')"` : '';
-          return `<div class="reaction-row ${isMine ? 'mine' : ''}" ${onclickAttr}>
-            <div class="reaction-row-avatar" style="background:${player ? player.barva : '#ccc'}">${player ? initials(player.jmeno) : '?'}</div>
-            <span class="reaction-row-name">${player ? player.jmeno : '?'}</span>
-            ${isMine ? '<span class="reaction-row-remove">Odebrat</span>' : ''}
-          </div>`;
-        }).join('')}
-      </div>`;
-  }).join('');
-  document.getElementById('reactions-list').innerHTML = html;
-  document.getElementById('reactions-modal').classList.add('active');
-}
-
-function closeReactionsModal(event) {
-  if (event && event.target.id !== 'reactions-modal') return;
-  document.getElementById('reactions-modal').classList.remove('active');
-}
-
-async function removeMyReaction(reactionId) {
-  try {
-    const { error } = await db.from('chat_reactions').delete().eq('id', reactionId);
-    if (error) throw error;
-    await loadChatReactions();
-    closeReactionsModal();
-    renderChat();
-  } catch (e) { toast('Chyba: ' + e.message, 'error'); }
-}
+// === F18: Chat (REMOVED 2026-05-21 — Marek decision: use Messenger instead) ===
+// HTML, CSS, state, render, send, delete, reactions, replies — all removed.
+// DB tables chat_messages + chat_reactions remain for historical data backup.
+// ─── Original chat block was here (~210 lines), see git history (commit before this) ───
 
 // === F19: Soft auth (localStorage + admin flag) ===
 
@@ -2808,7 +2535,6 @@ function showLoginIfNeeded() {
 
 function selectPlayer(playerId) {
   state.currentPlayerId = playerId;
-  state.chatSender = playerId;   // F18: pro chat synchronizovat
   localStorage.setItem(CURRENT_PLAYER_KEY, playerId);
   // F19 fix: pokud byl vybran admin, oznacit zarizeni jako admin-device (trvale)
   const player = state.players.find(p => p.id === playerId);
@@ -2860,47 +2586,6 @@ function openSwitchPlayer() {
   document.getElementById('login-overlay').classList.add('active');
 }
 
-async function sendChatMessage() {
-  const inp = document.getElementById('chat-input');
-  const text = (inp.value || '').trim();
-  if (!text) return;
-  if (!state.chatSender) { toast('Vyber kdo píše', 'error'); return; }
-  inp.disabled = true;
-  try {
-    const payload = { player_id: state.chatSender, text };
-    if (state.chatReplyTo) payload.reply_to_id = state.chatReplyTo;  // F21
-    const { error } = await db.from('chat_messages').insert(payload);
-    if (error) throw error;
-    inp.value = '';
-    state.chatReplyTo = null;  // F21: po odeslani zrusit reply mode
-    await loadChatMessages();
-    await loadChatReactions();
-    renderChat();
-  } catch (e) {
-    toast('Chyba: ' + e.message, 'error');
-  } finally {
-    inp.disabled = false;
-    inp.focus();
-  }
-}
-
-async function deleteChatMessage(id) {
-  if (!confirm('Smazat zprávu?')) return;
-  try {
-    const { error } = await db.from('chat_messages').delete().eq('id', id);
-    if (error) throw error;
-    await loadChatMessages();
-    renderChat();
-  } catch (e) {
-    toast('Chyba: ' + e.message, 'error');
-  }
-}
-
-async function loadChatMessages() {
-  const { data, error } = await db.from('chat_messages').select('*').order('created_at', { ascending: true }).limit(500);
-  if (!error) state.chatMessages = data || [];
-}
-
 function renderEntryCard(e, withActions) {
   const player = state.players.find(p => p.id === e.player_id);
   if (!player) return '';
@@ -2930,12 +2615,15 @@ function renderEntryCard(e, withActions) {
     if (isStretchActivity(e)) { isStretch = true; title = e.nazev; }
     else { title = e.nazev; }
   }
-  const typeIcon = e._type === 'cvik' ? '💪' : (isStretch ? '🧘' : '🏃');
+  // F33: type badge na avataru (cvik/aktivita/stretch)
+  const typeBadge = e._type === 'cvik'
+    ? '<span class="entry-type-badge cvik">💪</span>'
+    : (isStretch ? '<span class="entry-type-badge stretch">🧘</span>' : '<span class="entry-type-badge aktivita">🏃</span>');
+  // Meta = jmeno · uroven/detail · datum
   const meta = e._type === 'cvik' || isStretch
-    ? `${typeIcon} ${player.jmeno} · ${formatDate(e.datum)}`
-    : `${typeIcon} ${player.jmeno} · úroveň ${e.uroven} · ${formatDate(e.datum)}`;
+    ? `${player.jmeno} · ${formatDate(e.datum)}${sub ? ' · ' + sub : ''}`
+    : `${player.jmeno} · úroveň ${e.uroven} · ${formatDate(e.datum)}`;
   // F19: edit/delete jen pro vlastní záznam (kromě adminu)
-  // Vzdy renderujeme aby se nemenila vyska karty pri prepnuti admin/hrac (jen schovame vizuálně)
   const canEdit = withActions && canEditEntry(e);
   const actions = withActions ? `
     <div class="entry-actions" style="${canEdit ? '' : 'visibility:hidden;pointer-events:none;'}">
@@ -2943,15 +2631,13 @@ function renderEntryCard(e, withActions) {
       <button class="entry-action-btn delete" data-id="${e.id}" data-type="${e._type}" data-action="delete">🗑️</button>
     </div>` : '';
   return `
-    <div class="entry-card">
-      <div class="entry-bar" style="background:${player.barva}"></div>
-      <div class="entry-avatar" style="background:${player.barva}">${initials(player.jmeno)}</div>
+    <div class="entry-card" style="border-left-color:${player.barva}">
+      <div class="entry-avatar" style="background:${player.barva}">${initials(player.jmeno)}${typeBadge}</div>
       <div class="entry-main">
         <div class="entry-title">${title}</div>
         <div class="entry-meta">${meta}</div>
-        ${sub ? `<div class="entry-sub">${sub}</div>` : ''}
       </div>
-      <div class="entry-points">+${Number(e.body).toFixed(1)}</div>
+      <div class="entry-points">+${Math.round(Number(e.body))}</div>
       ${actions}
     </div>`;
 }
@@ -3050,12 +2736,14 @@ function renderPlayers() {
     const bC = state.cviky.filter(c => c.player_id === p.id).reduce((s, c) => s + Number(c.body), 0);
     const bA = state.aktivity.filter(a => a.player_id === p.id).reduce((s, a) => s + Number(a.body), 0);
     const stats = calcPlayerStats(p.id);
+    const streak = computeStreak(p.id);
     return `
       <div class="player-card">
         <div class="player-card-header">
           <div class="player-big-av-wrap">
             <div class="player-big-av-emoji">${avatarEmoji(p.jmeno)}</div>
             <div class="player-big-av" style="background:${p.barva}">${initials(p.jmeno)}</div>
+            ${streak > 0 ? `<div class="player-big-av-streak">🔥 ${streak}</div>` : ''}
           </div>
           <div class="player-info">
             <div class="player-name">${p.jmeno}</div>
@@ -3069,6 +2757,24 @@ function renderPlayers() {
           <div class="player-card-stat"><div class="player-card-stat-label">Max kliky</div><div class="player-card-stat-value">${p.max_kliky || '—'}</div></div>
           <div class="player-card-stat"><div class="player-card-stat-label">Max dipy</div><div class="player-card-stat-value">${p.max_dipy || '—'}</div></div>
         </div>
+        <!-- F34: Personal Records -->
+        ${(() => {
+          const prs = computePersonalRecords(p.id);
+          if (prs.length === 0) return '';
+          return `
+          <div class="pr-section">
+            <div class="pr-section-title">🏅 Rekordy</div>
+            <div class="pr-list">
+              ${prs.map(r => `
+                <div class="pr-row">
+                  <span class="pr-emoji">${r.emoji}</span>
+                  <span class="pr-text"><strong>${r.valueFmt}</strong> · ${r.label.replace(/^Nejvíc /, '').replace(/^Nejdelší /, '')}</span>
+                  <span class="pr-when">${prDateFmt(r.when)}</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>`;
+        })()}
         <!-- F17: celkove statistiky za celou dobu -->
         <div class="player-totals">
           <div class="player-totals-title">Celkem za celou dobu</div>
@@ -3249,7 +2955,6 @@ function renderAllViews() {
   renderAllEntries();
   renderPlayers();
   renderScoringExplanation();
-  renderChat();
 }
 
 // ============================================================
@@ -3273,10 +2978,12 @@ function openModal() {
   }
   updateFormDisabled();
   document.getElementById('modal').classList.add('active');
+  document.body.classList.add('modal-open');  // F40: lock background scroll
 }
 
 function closeModal() {
   document.getElementById('modal').classList.remove('active');
+  document.body.classList.remove('modal-open');  // F40: unlock background scroll
   state.selectedPlayer = null; state.selectedCvik = null; state.selectedLevel = null; state.selectedStretch = null;
   state.entryType = 'cvik'; state.editMode = false; state.editId = null; state.editTable = null;
   state.serieMode = 'single'; state.variedSeries = [];
@@ -3479,7 +3186,7 @@ function updateCvikPointsPreview() {
     total = Math.round(total * 10) / 10;
   }
   if (total > 0) {
-    disp.textContent = `+${total.toFixed(1)} bodů`;
+    disp.textContent = `+${Math.round(total)} bodů`;
     disp.classList.add('show');
   } else {
     disp.classList.remove('show');
@@ -3519,6 +3226,12 @@ function addVariedSerie() {
   const lastVaha = state.variedSeries.length > 0 ? state.variedSeries[state.variedSeries.length-1].vaha : 0;
   state.variedSeries.push({op:'',vaha:lastVaha});
   renderVariedSeries();
+  // F43: po pridani serie scrollnout tlacitko "Pridat serii" do viewportu
+  // aby Marek mohl postupne pridavat dalsi (drive se mu schovavalo dole)
+  requestAnimationFrame(() => {
+    const btn = document.querySelector('.add-serie-btn');
+    if (btn) btn.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  });
 }
 
 function updateFormDisabled() {
@@ -3615,6 +3328,8 @@ async function submitEntry() {
   const origText = state.editMode ? 'Uložit změny' : 'Zapsat';
   btn.disabled = true;
   btn.textContent = 'Ukládám...';
+  // F34: zachyt PR PRED ulozenim aby pak diff
+  const beforePRs = computePersonalRecords(state.selectedPlayer);
   try {
     if (state.entryType === 'cvik') {
       if (!state.selectedCvik) { toast('Vyber cvik', 'error'); btn.disabled = false; btn.textContent = origText; return; }
@@ -3676,7 +3391,7 @@ async function submitEntry() {
       } else {
         const { error } = await db.from('cviky').insert(payload);
         if (error) throw error;
-        toast(`+${totalBody.toFixed(1)} bodů!`, 'success');
+        toast(`+${Math.round(totalBody)} bodů!`, 'success');
       }
     } else if (state.entryType === 'aktivita') {
       const nazev = document.getElementById('aktivita-nazev').value.trim();
@@ -3732,6 +3447,10 @@ async function submitEntry() {
     }
     closeModal();
     await loadData();
+    // F34: po loadData spocitej PR znovu a ukaz toast pro kazdy prekonany
+    const afterPRs = computePersonalRecords(state.selectedPlayer);
+    const newPRs = diffPRs(beforePRs, afterPRs);
+    newPRs.forEach((pr, i) => setTimeout(() => prToast(pr), 1500 + i * 3500));
     // Pokud je otevreny player-entries-modal (F6), prerenderovat ho aby se zobrazil novy stav
     const pem = document.getElementById('player-entries-modal');
     if (pem && pem.classList.contains('active')) renderPlayerEntries();
@@ -3986,41 +3705,21 @@ document.querySelectorAll('.nav-btn').forEach(btn => {
     document.getElementById('view-prehled').style.display = state.view === 'prehled' ? '' : 'none';
     document.getElementById('view-historie').style.display = state.view === 'historie' ? '' : 'none';
     document.getElementById('view-hraci').style.display = state.view === 'hraci' ? '' : 'none';
-    document.getElementById('view-chat').style.display = state.view === 'chat' ? '' : 'none';  // F18
-  });
-});
-
-// F11: category tabs (boxiky pro Dohromady/Cviky/Aktivity/Stretching v dolnim LB)
-// F18 fix: scoped jen na .cat-tab[data-tab] aby neklasovalo s hero tabs (data-total-cat)
-document.querySelectorAll('.cat-tab[data-tab]').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.cat-tab[data-tab]').forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    state.tab = tab.dataset.tab;
-    // propagace barvy do parent sekce
-    document.getElementById('category-section').setAttribute('data-cat', state.tab);
-    renderLeaderboardWeek();
   });
 });
 
 async function loadData() {
   try {
-    const [pRes, cRes, aRes, hRes, chRes, crRes] = await Promise.all([
+    const [pRes, cRes, aRes, hRes] = await Promise.all([
       db.from('players').select('*').order('created_at', { ascending: true }),  // F16: stari hraci prvni, novi posledni
       db.from('cviky').select('*').order('created_at', { ascending: false }),
       db.from('aktivity').select('*').order('created_at', { ascending: false }),
-      db.from('player_history').select('*').order('created_at', { ascending: false }),
-      db.from('chat_messages').select('*').order('created_at', { ascending: true }).limit(500),  // F18
-      db.from('chat_reactions').select('*').limit(2000)  // F21
+      db.from('player_history').select('*').order('created_at', { ascending: false })
     ]);
     if (pRes.error) throw pRes.error;
     if (cRes.error) throw cRes.error;
     if (aRes.error) throw aRes.error;
     if (hRes.error) throw hRes.error;
-    if (chRes.error) console.warn('chat_messages neexistuje:', chRes.error.message);
-    if (crRes.error) console.warn('chat_reactions neexistuje:', crRes.error.message);
-    state.chatMessages = chRes.data || [];
-    state.chatReactions = crRes.data || [];
     state.players = pRes.data || [];
     state.cviky = cRes.data || [];
     state.aktivity = aRes.data || [];
@@ -4029,7 +3728,6 @@ async function loadData() {
     const savedId = localStorage.getItem(CURRENT_PLAYER_KEY);
     if (savedId && state.players.find(p => p.id === savedId)) {
       state.currentPlayerId = savedId;
-      state.chatSender = savedId;
     } else if (savedId) {
       // ulozeny hrac uz neexistuje (smazany) - clean
       localStorage.removeItem(CURRENT_PLAYER_KEY);
@@ -4042,14 +3740,6 @@ async function loadData() {
     document.getElementById('connection-status').textContent = 'chyba spojení';
     toast('Chyba načítání: ' + e.message, 'error');
   }
-}
-
-async function refreshApp() {
-  const btn = document.getElementById('fab-refresh');
-  btn.classList.add('spinning');
-  toast('Obnovuji data...', 'info');
-  await loadData();
-  setTimeout(() => btn.classList.remove('spinning'), 800);
 }
 
 db.channel('public:all-test-v12')
