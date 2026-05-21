@@ -981,7 +981,16 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 .player-big-av {
   width: 64px; height: 64px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  font-size: 22px; font-weight: 700; color: #fff;
+  font-size: 22px; font-weight: 800; color: #000;
+}
+/* F39: Streak emblem v rohu avataru */
+.player-big-av-streak {
+  position: absolute; bottom: -3px; right: -3px;
+  background: #fff7ed; border: 2px solid #fff;
+  border-radius: 100px; padding: 2px 7px;
+  font-size: 10px; font-weight: 800; color: #ea580c;
+  white-space: nowrap; line-height: 1;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 .player-big-av-emoji {
   position: absolute; top: -18px; left: 50%;
@@ -2706,12 +2715,14 @@ function renderPlayers() {
     const bC = state.cviky.filter(c => c.player_id === p.id).reduce((s, c) => s + Number(c.body), 0);
     const bA = state.aktivity.filter(a => a.player_id === p.id).reduce((s, a) => s + Number(a.body), 0);
     const stats = calcPlayerStats(p.id);
+    const streak = computeStreak(p.id);
     return `
       <div class="player-card">
         <div class="player-card-header">
           <div class="player-big-av-wrap">
             <div class="player-big-av-emoji">${avatarEmoji(p.jmeno)}</div>
             <div class="player-big-av" style="background:${p.barva}">${initials(p.jmeno)}</div>
+            ${streak > 0 ? `<div class="player-big-av-streak">🔥 ${streak}</div>` : ''}
           </div>
           <div class="player-info">
             <div class="player-name">${p.jmeno}</div>
