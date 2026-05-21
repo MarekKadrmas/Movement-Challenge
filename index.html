@@ -2,7 +2,7 @@
 <html lang="cs">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#fafafa">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -610,7 +610,7 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
   border-radius: 20px 20px 0 0;
   border: 1px solid var(--border); border-bottom: none;
   padding: 22px 20px; padding-bottom: calc(22px + env(safe-area-inset-bottom));
-  max-height: 92vh; overflow-y: auto;
+  max-height: 92vh; min-height: 70vh; overflow-y: auto;
   animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .modal-handle { width: 40px; height: 4px; background: var(--border); border-radius: 2px; margin: -10px auto 14px; }
@@ -1196,11 +1196,11 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
       <div class="hero-label">Leaderboard</div>
       <div class="hero-title">Pořadí</div>
 
-      <!-- Period tabs (NEW): Tyden / Mesic / Celkova historie -->
+      <!-- Period tabs: Celkova historie / Tyden / Mesic (Celkova jako prvni = default) -->
       <div class="period-tabs">
+        <button type="button" class="period-tab active" data-period="all" onclick="setLeaderboardPeriod('all')">Celková historie</button>
         <button type="button" class="period-tab" data-period="week" onclick="setLeaderboardPeriod('week')">Týden</button>
         <button type="button" class="period-tab" data-period="month" onclick="setLeaderboardPeriod('month')">Měsíc</button>
-        <button type="button" class="period-tab active" data-period="all" onclick="setLeaderboardPeriod('all')">Celková historie</button>
       </div>
 
       <!-- Period navigation (jen pro week/month, schované pro 'all') -->
