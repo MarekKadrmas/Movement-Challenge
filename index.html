@@ -3226,6 +3226,12 @@ function addVariedSerie() {
   const lastVaha = state.variedSeries.length > 0 ? state.variedSeries[state.variedSeries.length-1].vaha : 0;
   state.variedSeries.push({op:'',vaha:lastVaha});
   renderVariedSeries();
+  // F43: po pridani serie scrollnout tlacitko "Pridat serii" do viewportu
+  // aby Marek mohl postupne pridavat dalsi (drive se mu schovavalo dole)
+  requestAnimationFrame(() => {
+    const btn = document.querySelector('.add-serie-btn');
+    if (btn) btn.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  });
 }
 
 function updateFormDisabled() {
