@@ -861,18 +861,26 @@ body.modal-open .modal { touch-action: auto; }
 .info-box strong { font-weight: 700; }
 
 /* Serie mode */
-.serie-mode-grid { display: grid; grid-template-columns: 1fr 1fr 1.6fr; gap: 8px; margin-bottom: 14px; }
+.serie-mode-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
 .serie-mode-btn {
   background: var(--bg-card); border: 1px solid var(--border); color: var(--text);
-  padding: 12px 6px; border-radius: 12px; cursor: pointer;
+  padding: 14px 6px; border-radius: 12px; cursor: pointer;
   font-family: inherit; text-align: center;
-  min-height: 160px; display: flex; flex-direction: column; justify-content: space-between; align-items: center;
+  min-height: 120px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 2px;
   transition: all 0.15s;
 }
 .serie-mode-btn.active { background: #000; color: #fff; border-color: #000; }
 .serie-mode-btn .label { font-size: 12px; font-weight: 700; margin-top: 6px; }
 .serie-mode-btn .label-sub { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
-.serie-mode-btn.active .label-sub { color: var(--text-muted); }
+.serie-mode-btn.active .label-sub { color: rgba(255,255,255,0.7); }
+/* F41: serie-mode ikona velký zaobl. ctverec s cislem/symbolem */
+.serie-mode-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  background: #dbeafe; color: #1d4ed8;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; font-weight: 900;
+}
+.serie-mode-btn.active .serie-mode-icon { background: rgba(255,255,255,0.18); color: #fff; }
 .bubble-stack { display: flex; flex-direction: column; gap: 5px; align-items: center; flex: 1; justify-content: center; padding: 4px 0; }
 .bubble-row { display: flex; gap: 4px; align-items: center; }
 .bubble {
@@ -1344,30 +1352,19 @@ body.modal-open .modal { touch-action: auto; }
           <label>Co chceš zapsat?</label>
           <div class="serie-mode-grid">
             <button class="serie-mode-btn active" data-mode="single">
-              <div class="bubble-stack">
-                <div class="bubble">Opakování</div>
-                <div class="bubble">Váha</div>
-              </div>
+              <div class="serie-mode-icon">1</div>
               <div class="label">Jedna sada</div>
               <div class="label-sub">např. 20 shybů</div>
             </button>
             <button class="serie-mode-btn" data-mode="same">
-              <div class="bubble-stack">
-                <div class="bubble">Série</div>
-                <div class="bubble">Opakování</div>
-                <div class="bubble">Váha</div>
-              </div>
+              <div class="serie-mode-icon">🔁</div>
               <div class="label">Stejné série</div>
-              <div class="label-sub">6× po 18</div>
+              <div class="label-sub">6× po 18 shybech</div>
             </button>
             <button class="serie-mode-btn" data-mode="varied">
-              <div class="bubble-stack">
-                <div class="bubble-row"><div class="bubble-num">1</div><div class="bubble">Opakování</div><div class="bubble">Váha</div></div>
-                <div class="bubble-row" style="opacity:0.5"><div class="bubble-num">2</div><div class="bubble">Opakování</div><div class="bubble">Váha</div></div>
-                <div class="bubble-row" style="opacity:0.25"><div class="bubble-num">3</div><div class="bubble">Opakování</div><div class="bubble">Váha</div></div>
-              </div>
+              <div class="serie-mode-icon">📊</div>
               <div class="label">Různé série</div>
-              <div class="label-sub">10 / 8 / 6</div>
+              <div class="label-sub">10/8/6/5 shybů</div>
             </button>
           </div>
         </div>
