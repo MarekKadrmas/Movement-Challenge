@@ -609,10 +609,24 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
   background: var(--bg-card); width: 100%; max-width: 480px;
   border-radius: 20px 20px 0 0;
   border: 1px solid var(--border); border-bottom: none;
-  padding: 22px 20px; padding-bottom: calc(22px + env(safe-area-inset-bottom));
-  max-height: 92vh; min-height: 70vh; overflow-y: auto;
-  overscroll-behavior: contain;  /* F40: scroll uvnitr modalu nepropaguje na body */
+  padding: 22px 20px 0;
+  height: 90vh;  /* F42: fixed vyska — header + footer staticke, body scrolluje */
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  overscroll-behavior: contain;
   animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+/* F42: modal body (scrollable middle) + footer (sticky bottom) */
+.modal-body {
+  flex: 1 1 auto; overflow-y: auto; overscroll-behavior: contain;
+  margin-right: -4px; padding-right: 4px;  /* misto pro scrollbar */
+}
+.modal-footer {
+  flex-shrink: 0; display: flex; flex-direction: column; gap: 8px;
+  margin: 0 -20px; padding: 14px 20px;
+  padding-bottom: calc(14px + env(safe-area-inset-bottom));
+  background: var(--bg-card);
+  border-top: 1px solid var(--border-soft);
 }
 /* F40: lock background scroll kdyz je modal otevreny (predevsim pro iOS) */
 body.modal-open { overflow: hidden; touch-action: none; }
@@ -1318,6 +1332,8 @@ body.modal-open .modal { touch-action: auto; }
     <div class="modal-title" id="modal-title">Nový záznam</div>
     <div class="modal-subtitle" id="modal-subtitle">Nejdřív vyber kdo zadává</div>
 
+    <div class="modal-body">
+
     <!-- F19: vyber hrace - skryto pro bezne hrace (predvyplneno), zobrazeno pro admina -->
     <div class="field" id="player-select-field">
       <label>Kdo zadává <span style="color: var(--accent)">*</span></label>
@@ -1484,9 +1500,13 @@ body.modal-open .modal { touch-action: auto; }
       </div>
     </div>
 
-    <button class="btn-submit" id="submit-btn" onclick="submitEntry()">Zapsat</button>
-    <button class="btn-danger" id="delete-btn" style="display:none;" onclick="deleteCurrentEntry()">Smazat záznam</button>
-    <button class="btn-cancel" onclick="closeModal()">Zrušit</button>
+    </div><!-- /modal-body -->
+
+    <div class="modal-footer">
+      <button class="btn-submit" id="submit-btn" onclick="submitEntry()">Zapsat</button>
+      <button class="btn-danger" id="delete-btn" style="display:none;" onclick="deleteCurrentEntry()">Smazat záznam</button>
+      <button class="btn-cancel" onclick="closeModal()">Zrušit</button>
+    </div>
   </div>
 </div>
 
