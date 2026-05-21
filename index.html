@@ -2078,7 +2078,7 @@ function renderLeaderboardTotal() {
         ${isFirst ? '<div class="leader-avatar-emoji">😎</div>' : ''}
         <div class="leader-avatar" style="background:${p.barva}">${initials(p.jmeno)}</div>
       </div>
-      <div class="leader-name">${p.jmeno}${p.streak > 0 ? `<span class="name-streak">🔥 ${p.streak}</span>` : ''}</div>
+      <div class="leader-name">${p.jmeno}${p.streak > 0 ? `<span class="name-streak">🔥 ${p.streak} ${streakLabel(p.streak)}</span>` : ''}</div>
       <div class="leader-stats">
         <div class="leader-points">${Math.round(p.total)}</div>
       </div>
@@ -2116,7 +2116,7 @@ function renderLeaderboardWeek() {
         ${isFirst ? '<div class="leader-avatar-emoji">😎</div>' : ''}
         <div class="leader-avatar" style="background:${p.barva}">${initials(p.jmeno)}</div>
       </div>
-      <div class="leader-name">${p.jmeno}${p.streak > 0 ? `<span class="name-streak">🔥 ${p.streak}</span>` : ''}</div>
+      <div class="leader-name">${p.jmeno}${p.streak > 0 ? `<span class="name-streak">🔥 ${p.streak} ${streakLabel(p.streak)}</span>` : ''}</div>
       <div class="leader-stats"><div class="leader-points">${Math.round(p.body)}</div></div>
     </div>
   `}).join('');
