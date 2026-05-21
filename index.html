@@ -975,6 +975,17 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 .player-card-stat { background: var(--bg); padding: 9px 11px; border-radius: 9px; border: 1px solid var(--border-soft); }
 .player-card-stat-label { color: var(--text-muted); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
 .player-card-stat-value { font-weight: 700; font-size: 14px; margin-top: 2px; font-variant-numeric: tabular-nums; }
+
+/* F34: Personal Records (PR) */
+.pr-section { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border-soft); }
+.pr-section-title { font-size: 11px; font-weight: 800; color: #92400e; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+.pr-list { display: flex; flex-direction: column; gap: 4px; }
+.pr-row { display: flex; align-items: center; gap: 8px; padding: 6px 10px; background: linear-gradient(90deg, #fef3c7 0%, transparent 100%); border-radius: 8px; font-size: 12px; }
+.pr-emoji { font-size: 14px; flex-shrink: 0; }
+.pr-text { flex: 1; min-width: 0; color: var(--text-muted); font-weight: 500; }
+.pr-text strong { color: var(--text); font-weight: 800; }
+.pr-when { font-size: 10px; color: #92400e; font-weight: 700; flex-shrink: 0; }
+
 /* F17: Celkove statistiky cviku na profilu */
 .player-totals { margin-top: 12px; }
 .player-totals-title {
@@ -1802,6 +1813,152 @@ function streakLabel(n) {
   return 'dní';
 }
 
+// F34: Historicky nejdelsi streak (jakykoliv vrchol v historii, ne aktualni)
+function longestStreakEver(playerId) {
+  const dates = new Set();
+  state.cviky.filter(c => c.player_id === playerId).forEach(c => dates.add(c.datum));
+  state.aktivity.filter(a => a.player_id === playerId).forEach(a => dates.add(a.datum));
+  if (dates.size === 0) return { length: 0, end: null };
+  const sorted = [...dates].sort();
+  let best = 0, bestEnd = null, current = 0, currentStart = null;
+  let prevDate = null;
+  for (const dStr of sorted) {
+    const d = new Date(dStr + 'T00:00:00');
+    if (prevDate) {
+      const diff = Math.round((d - prevDate) / 86400000);
+      if (diff === 1) { current++; }
+      else { current = 1; currentStart = dStr; }
+    } else { current = 1; currentStart = dStr; }
+    if (current > best) { best = current; bestEnd = dStr; }
+    prevDate = d;
+  }
+  return { length: best, end: bestEnd };
+}
+
+// F34: Personal records (PR) — 6 START PR
+//   1-4: Nejvic shybu/drepu/kliku/dipu v 1 den
+//   5: Nejvic bodu za 1 den
+//   6: Nejdelsi 1 beh (km)
+//   7: Nejdelsi streak historicky
+// Vraci pole { id, label, value, valueFmt, when } seřazené tak jak chceme zobrazit
+function computePersonalRecords(playerId) {
+  const records = [];
+
+  // 1-4: max ops 1 cviku v 1 dni (per cvik typ)
+  const cvikTypes = [
+    { type: 'Shyby', emoji: '💪', singular: 'shyb' },
+    { type: 'Dřep',  emoji: '🦵', singular: 'dřep' },
+    { type: 'Kliky', emoji: '💥', singular: 'klik' },
+    { type: 'Dipy',  emoji: '🤸', singular: 'dip' }
+  ];
+  for (const ct of cvikTypes) {
+    const perDay = {};
+    state.cviky.filter(c => c.player_id === playerId && c.cvik === ct.type).forEach(c => {
+      const ops = Number(c.opakovani) || 0;
+      perDay[c.datum] = (perDay[c.datum] || 0) + ops;
+    });
+    let maxDay = null, maxOps = 0;
+    for (const [date, ops] of Object.entries(perDay)) {
+      if (ops > maxOps) { maxOps = ops; maxDay = date; }
+    }
+    if (maxOps > 0) {
+      records.push({
+        id: `most_${ct.type.toLowerCase()}_day`,
+        emoji: ct.emoji,
+        label: `Nejvíc ${ct.type.toLowerCase()} v jeden den`,
+        value: maxOps,
+        valueFmt: `${maxOps}× ${ct.type.toLowerCase()}`,
+        when: maxDay
+      });
+    }
+  }
+
+  // 5: Nejvic bodu za 1 den (cviky + aktivity vse)
+  const pointsPerDay = {};
+  state.cviky.filter(c => c.player_id === playerId).forEach(c => {
+    pointsPerDay[c.datum] = (pointsPerDay[c.datum] || 0) + (Number(c.body) || 0);
+  });
+  state.aktivity.filter(a => a.player_id === playerId).forEach(a => {
+    pointsPerDay[a.datum] = (pointsPerDay[a.datum] || 0) + (Number(a.body) || 0);
+  });
+  let maxPtsDay = null, maxPts = 0;
+  for (const [date, pts] of Object.entries(pointsPerDay)) {
+    if (pts > maxPts) { maxPts = pts; maxPtsDay = date; }
+  }
+  if (maxPts > 0) {
+    records.push({
+      id: 'most_points_day',
+      emoji: '🏆',
+      label: 'Nejvíc bodů za 1 den',
+      value: maxPts,
+      valueFmt: `${Math.round(maxPts)} bodů`,
+      when: maxPtsDay
+    });
+  }
+
+  // 6: Nejdelsi 1 beh (km)
+  let maxKm = 0, maxKmDay = null;
+  state.aktivity.filter(a => a.player_id === playerId && a.km).forEach(a => {
+    const km = Number(a.km) || 0;
+    if (km > maxKm) { maxKm = km; maxKmDay = a.datum; }
+  });
+  if (maxKm > 0) {
+    records.push({
+      id: 'longest_run',
+      emoji: '🏃',
+      label: 'Nejdelší 1 běh',
+      value: maxKm,
+      valueFmt: `${maxKm} km`,
+      when: maxKmDay
+    });
+  }
+
+  // 7: Nejdelsi streak historicky
+  const ls = longestStreakEver(playerId);
+  if (ls.length > 0) {
+    records.push({
+      id: 'longest_streak',
+      emoji: '🔥',
+      label: 'Nejdelší streak',
+      value: ls.length,
+      valueFmt: `${ls.length} ${streakLabel(ls.length)} v řadě`,
+      when: ls.end
+    });
+  }
+
+  return records;
+}
+
+// F34: Toast pri prekonani PR. Volame PO ulozeni zaznamu (loadData uz proběhl).
+// Porovna PRed-stav a po-stav, vraci pole PR ktere se zmenily.
+// Idealne: spocitej PR pred ulozenim, ulozit, spocitej PR po ulozeni, diff.
+function diffPRs(beforeArr, afterArr) {
+  const changed = [];
+  for (const after of afterArr) {
+    const before = beforeArr.find(b => b.id === after.id);
+    if (!before || after.value > before.value) {
+      changed.push({ ...after, previousValue: before ? before.value : null });
+    }
+  }
+  return changed;
+}
+
+// Format datumu pro PR zobrazeni (16. 5.)
+function prDateFmt(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr + 'T00:00:00');
+  return `${d.getDate()}. ${d.getMonth() + 1}.`;
+}
+
+// F34: PR toast (vetsi, slavnostni). Pouziva existujici toast() s delayem mezi vice PR.
+function prToast(pr) {
+  const isFirst = pr.previousValue === null;
+  const msg = isFirst
+    ? `🎉 Tvůj první rekord! ${pr.valueFmt}`
+    : `🎉 Nový rekord! ${pr.valueFmt} (předtím ${pr.id === 'most_points_day' ? Math.round(pr.previousValue) + ' bodů' : pr.previousValue})`;
+  toast(msg, 'success');
+}
+
 
 function toast(msg, type='success') {
   const t = document.getElementById('toast');
@@ -2553,6 +2710,24 @@ function renderPlayers() {
           <div class="player-card-stat"><div class="player-card-stat-label">Max kliky</div><div class="player-card-stat-value">${p.max_kliky || '—'}</div></div>
           <div class="player-card-stat"><div class="player-card-stat-label">Max dipy</div><div class="player-card-stat-value">${p.max_dipy || '—'}</div></div>
         </div>
+        <!-- F34: Personal Records -->
+        ${(() => {
+          const prs = computePersonalRecords(p.id);
+          if (prs.length === 0) return '';
+          return `
+          <div class="pr-section">
+            <div class="pr-section-title">🏅 Rekordy</div>
+            <div class="pr-list">
+              ${prs.map(r => `
+                <div class="pr-row">
+                  <span class="pr-emoji">${r.emoji}</span>
+                  <span class="pr-text"><strong>${r.valueFmt}</strong> · ${r.label.replace(/^Nejvíc /, '').replace(/^Nejdelší /, '')}</span>
+                  <span class="pr-when">${prDateFmt(r.when)}</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>`;
+        })()}
         <!-- F17: celkove statistiky za celou dobu -->
         <div class="player-totals">
           <div class="player-totals-title">Celkem za celou dobu</div>
@@ -3098,6 +3273,8 @@ async function submitEntry() {
   const origText = state.editMode ? 'Uložit změny' : 'Zapsat';
   btn.disabled = true;
   btn.textContent = 'Ukládám...';
+  // F34: zachyt PR PRED ulozenim aby pak diff
+  const beforePRs = computePersonalRecords(state.selectedPlayer);
   try {
     if (state.entryType === 'cvik') {
       if (!state.selectedCvik) { toast('Vyber cvik', 'error'); btn.disabled = false; btn.textContent = origText; return; }
@@ -3215,6 +3392,10 @@ async function submitEntry() {
     }
     closeModal();
     await loadData();
+    // F34: po loadData spocitej PR znovu a ukaz toast pro kazdy prekonany
+    const afterPRs = computePersonalRecords(state.selectedPlayer);
+    const newPRs = diffPRs(beforePRs, afterPRs);
+    newPRs.forEach((pr, i) => setTimeout(() => prToast(pr), 1500 + i * 3500));
     // Pokud je otevreny player-entries-modal (F6), prerenderovat ho aby se zobrazil novy stav
     const pem = document.getElementById('player-entries-modal');
     if (pem && pem.classList.contains('active')) renderPlayerEntries();
