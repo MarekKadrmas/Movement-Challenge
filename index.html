@@ -1855,6 +1855,21 @@ function computeStreak(playerId) {
   return streak;
 }
 
+// F44: Helper pro zaokrouhleni body PRI SOUCTU (aby UI total matchoval s souctem zaokrouhlenych radku)
+// Drive: total = Math.round(sum(body)) - mohlo lisit od souctu zaokrouhlenych radku
+// Nyni: total = sum(round(body)) - presne to co Marek vidi v UI
+function sumRoundedBody(items) {
+  return items.reduce((s, e) => s + Math.round(Number(e.body) || 0), 0);
+}
+
+// F44: Helper pro lock/unlock body scroll pri jakemkoli otevrenem modalu
+function lockBodyScroll() { document.body.classList.add('modal-open'); }
+function unlockBodyScroll() {
+  // pouze pokud zadny aktivni modal
+  const anyActive = document.querySelector('.modal-overlay.active') || document.querySelector('.date-picker-overlay.active');
+  if (!anyActive) document.body.classList.remove('modal-open');
+}
+
 // Slovo dnu pro cestinu: 1 den / 2-4 dny / 5+ dni
 function streakLabel(n) {
   if (n === 1) return 'den';
@@ -1925,10 +1940,10 @@ function computePersonalRecords(playerId) {
   // 5: Nejvic bodu za 1 den (cviky + aktivity vse)
   const pointsPerDay = {};
   state.cviky.filter(c => c.player_id === playerId).forEach(c => {
-    pointsPerDay[c.datum] = (pointsPerDay[c.datum] || 0) + (Number(c.body) || 0);
+    pointsPerDay[c.datum] = (pointsPerDay[c.datum] || 0) + Math.round(Number(c.body) || 0);
   });
   state.aktivity.filter(a => a.player_id === playerId).forEach(a => {
-    pointsPerDay[a.datum] = (pointsPerDay[a.datum] || 0) + (Number(a.body) || 0);
+    pointsPerDay[a.datum] = (pointsPerDay[a.datum] || 0) + Math.round(Number(a.body) || 0);
   });
   let maxPtsDay = null, maxPts = 0;
   for (const [date, pts] of Object.entries(pointsPerDay)) {
@@ -2123,13 +2138,13 @@ function renderLeaderboardTotal() {
   const data = state.players.filter(p => p.aktivni).map(p => {
     let total = 0;
     if (cat === 'all' || cat === 'cvik') {
-      total += state.cviky.filter(c => c.player_id === p.id && inRange(c)).reduce((s, c) => s + Number(c.body), 0);
+      total += sumRoundedBody(state.cviky.filter(c => c.player_id === p.id && inRange(c)));
     }
     if (cat === 'all' || cat === 'aktivita') {
-      total += state.aktivity.filter(a => a.player_id === p.id && inRange(a) && !isStretch(a)).reduce((s, a) => s + Number(a.body), 0);
+      total += sumRoundedBody(state.aktivity.filter(a => a.player_id === p.id && inRange(a) && !isStretch(a)));
     }
     if (cat === 'all' || cat === 'stretching') {
-      total += state.aktivity.filter(a => a.player_id === p.id && inRange(a) && isStretch(a)).reduce((s, a) => s + Number(a.body), 0);
+      total += sumRoundedBody(state.aktivity.filter(a => a.player_id === p.id && inRange(a) && isStretch(a)));
     }
     return { ...p, total, streak: computeStreak(p.id) };
   }).sort((a, b) => b.total - a.total);
@@ -2176,8 +2191,8 @@ function renderHeatmap() {
 
   function pointsForDay(playerId, dateStr) {
     let pts = 0;
-    state.cviky.filter(c => c.player_id === playerId && c.datum === dateStr).forEach(c => pts += Number(c.body));
-    state.aktivity.filter(a => a.player_id === playerId && a.datum === dateStr).forEach(a => pts += Number(a.body));
+    state.cviky.filter(c => c.player_id === playerId && c.datum === dateStr).forEach(c => pts += Math.round(Number(c.body) || 0));
+    state.aktivity.filter(a => a.player_id === playerId && a.datum === dateStr).forEach(a => pts += Math.round(Number(a.body) || 0));
     return pts;
   }
   // 7 urovni intenzity (0 az 7)
@@ -2254,8 +2269,9 @@ function openDayDetail(playerId, dateStr) {
     list.innerHTML = `<div style="text-align:center;font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;color:var(--accent);margin-bottom:16px;">+${Math.round(totalBody)} bodů</div>` + all.map(e => renderEntryCard(e, false)).join('');
   }
   document.getElementById('day-modal').classList.add('active');
+  lockBodyScroll();
 }
-function closeDayModal() { document.getElementById('day-modal').classList.remove('active'); }
+function closeDayModal() { document.getElementById('day-modal').classList.remove('active'); unlockBodyScroll(); }
 
 function renderRecent() {
   const all = [...state.cviky.map(c => ({ ...c, _type: 'cvik' })), ...state.aktivity.map(a => ({ ...a, _type: 'aktivita' }))]
@@ -2314,7 +2330,7 @@ function groupEntriesByDate(entries) {
     if (!groups.has(d)) groups.set(d, { dateStr: d, entries: [], totalBody: 0 });
     const g = groups.get(d);
     g.entries.push(e);
-    g.totalBody += Number(e.body) || 0;
+    g.totalBody += Math.round(Number(e.body) || 0);  // F44: konzistentne se zaokrouhlenymi UI
   }
   return [...groups.values()].sort((a, b) => b.dateStr.localeCompare(a.dateStr));
 }
@@ -2350,10 +2366,12 @@ function openPlayerEntriesModal(playerId) {
   document.querySelectorAll('.ph-subtab').forEach(t => t.classList.toggle('active', t.dataset.peType === 'all'));
   renderPlayerEntries();
   document.getElementById('player-entries-modal').classList.add('active');
+  lockBodyScroll();
 }
 
 function closePlayerEntriesModal() {
   document.getElementById('player-entries-modal').classList.remove('active');
+  unlockBodyScroll();
 }
 
 function setPlayerEntriesFilter(type) {
@@ -2733,8 +2751,8 @@ function renderPlayers() {
     return '😎';
   }
   el.innerHTML = state.players.map(p => {
-    const bC = state.cviky.filter(c => c.player_id === p.id).reduce((s, c) => s + Number(c.body), 0);
-    const bA = state.aktivity.filter(a => a.player_id === p.id).reduce((s, a) => s + Number(a.body), 0);
+    const bC = sumRoundedBody(state.cviky.filter(c => c.player_id === p.id));
+    const bA = sumRoundedBody(state.aktivity.filter(a => a.player_id === p.id));
     const stats = calcPlayerStats(p.id);
     const streak = computeStreak(p.id);
     return `
@@ -2978,12 +2996,12 @@ function openModal() {
   }
   updateFormDisabled();
   document.getElementById('modal').classList.add('active');
-  document.body.classList.add('modal-open');  // F40: lock background scroll
+  lockBodyScroll();  // F44
 }
 
 function closeModal() {
   document.getElementById('modal').classList.remove('active');
-  document.body.classList.remove('modal-open');  // F40: unlock background scroll
+  unlockBodyScroll();  // F44
   state.selectedPlayer = null; state.selectedCvik = null; state.selectedLevel = null; state.selectedStretch = null;
   state.entryType = 'cvik'; state.editMode = false; state.editId = null; state.editTable = null;
   state.serieMode = 'single'; state.variedSeries = [];
@@ -3027,10 +3045,12 @@ function openDatePicker() {
   state.pickerMonth = d.getMonth();
   renderDatePicker();
   document.getElementById('date-picker-overlay').classList.add('active');
+  lockBodyScroll();
 }
 
 function closeDatePicker() {
   document.getElementById('date-picker-overlay').classList.remove('active');
+  unlockBodyScroll();
   updateDateTrigger();
 }
 
@@ -3575,6 +3595,7 @@ function openPlayerEdit(playerId) {
   document.getElementById('pe-dipy').value = player.max_dipy || '';
 
   document.getElementById('player-modal').classList.add('active');
+  lockBodyScroll();
 }
 
 function buildEditorPills() {
@@ -3599,6 +3620,7 @@ function buildEditorPills() {
 
 function closePlayerModal() {
   document.getElementById('player-modal').classList.remove('active');
+  unlockBodyScroll();
   state.playerBeingEdited = null;
   state.editorPlayer = null;
 }
@@ -3688,10 +3710,12 @@ function openPlayerHistory(playerId) {
     }).join('');
   }
   document.getElementById('history-modal').classList.add('active');
+  lockBodyScroll();
 }
 
 function closeHistoryModal() {
   document.getElementById('history-modal').classList.remove('active');
+  unlockBodyScroll();
 }
 
 // ============================================================
