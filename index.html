@@ -216,24 +216,24 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
   position: relative;
 }
 .leader-row:last-child { border-bottom: none; }
-.leader-row.gold .leader-rank { color: var(--text); font-weight: 800; }
+/* F36: rank colors - gold/silver/bronze */
+.leader-row.gold .leader-rank { color: #facc15; font-weight: 900; }
+.leader-row.silver .leader-rank { color: #9ca3af; font-weight: 900; }
+.leader-row.bronze .leader-rank { color: #c2410c; font-weight: 900; }
 .leader-rank {
-  font-weight: 600; width: 18px; color: var(--text-dim);
-  font-size: 14px; font-variant-numeric: tabular-nums;
+  font-weight: 700; width: 18px; color: var(--text-dim);
+  font-size: 15px; font-variant-numeric: tabular-nums;
 }
-.leader-crown { position: absolute; left: 12px; top: 0; font-size: 12px; }
 .leader-av-wrap { width: 36px; height: 36px; position: relative; flex-shrink: 0; }
 .leader-avatar {
   width: 36px; height: 36px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  font-weight: 600; font-size: 12px; color: #fff;
+  font-weight: 800; font-size: 12px; color: #000;
 }
-.leader-avatar-emoji {
-  position: absolute; top: -12px; left: 50%;
-  transform: translateX(-50%);
-  font-size: 22px; line-height: 1;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
-}
+/* F36: zlaty/stribrny/bronzovy kroužek kolem avataru pro 1./2./3. */
+.leader-row.gold .leader-avatar { box-shadow: 0 0 0 2.5px #facc15; }
+.leader-row.silver .leader-avatar { box-shadow: 0 0 0 2.5px #9ca3af; }
+.leader-row.bronze .leader-avatar { box-shadow: 0 0 0 2.5px #c2410c; }
 .leader-name { flex: 1; font-weight: 600; font-size: 15px; color: var(--text); }
 .leader-stats { text-align: right; width: 90px; flex-shrink: 0; }
 .leader-points { font-weight: 700; font-size: 15px; color: var(--text); font-variant-numeric: tabular-nums; }
@@ -867,6 +867,8 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 }
 .serie-mode-btn.active { background: #000; color: #fff; border-color: #000; }
 .serie-mode-btn .label { font-size: 12px; font-weight: 700; margin-top: 6px; }
+.serie-mode-btn .label-sub { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+.serie-mode-btn.active .label-sub { color: var(--text-muted); }
 .bubble-stack { display: flex; flex-direction: column; gap: 5px; align-items: center; flex: 1; justify-content: center; padding: 4px 0; }
 .bubble-row { display: flex; gap: 4px; align-items: center; }
 .bubble {
@@ -1326,14 +1328,15 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
         </div>
 
         <div class="field">
-          <label>Způsob zápisu</label>
+          <label>Co chceš zapsat?</label>
           <div class="serie-mode-grid">
             <button class="serie-mode-btn active" data-mode="single">
               <div class="bubble-stack">
                 <div class="bubble">Opakování</div>
                 <div class="bubble">Váha</div>
               </div>
-              <div class="label">Bez sérií</div>
+              <div class="label">Jedna sada</div>
+              <div class="label-sub">např. 20 shybů</div>
             </button>
             <button class="serie-mode-btn" data-mode="same">
               <div class="bubble-stack">
@@ -1342,6 +1345,7 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
                 <div class="bubble">Váha</div>
               </div>
               <div class="label">Stejné série</div>
+              <div class="label-sub">6× po 18</div>
             </button>
             <button class="serie-mode-btn" data-mode="varied">
               <div class="bubble-stack">
@@ -1350,6 +1354,7 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
                 <div class="bubble-row" style="opacity:0.25"><div class="bubble-num">3</div><div class="bubble">Opakování</div><div class="bubble">Váha</div></div>
               </div>
               <div class="label">Různé série</div>
+              <div class="label-sub">10 / 8 / 6</div>
             </button>
           </div>
         </div>
@@ -2105,14 +2110,18 @@ function renderLeaderboardTotal() {
   const el = document.getElementById('leaderboard-total');
   if (data.length === 0) { el.innerHTML = '<div class="entry-empty">Žádní aktivní hráči</div>'; return; }
   el.innerHTML = data.map((p, i) => {
-    const isFirst = i === 0 && p.total > 0;
+    // F36: zlato/stribro/bronz pro #1/#2/#3 (jen pokud maji body)
+    let medalClass = '';
+    if (p.total > 0) {
+      if (i === 0) medalClass = 'gold';
+      else if (i === 1) medalClass = 'silver';
+      else if (i === 2) medalClass = 'bronze';
+    }
     const pct = topPts > 0 ? Math.max(2, Math.round((p.total / topPts) * 100)) : 0;
     return `
-    <div class="leader-row ${isFirst ? 'gold' : ''}" onclick="openPlayerEntriesModal('${p.id}')" style="cursor:pointer;">
-      ${isFirst ? '<div class="leader-crown">👑</div>' : ''}
+    <div class="leader-row ${medalClass}" onclick="openPlayerEntriesModal('${p.id}')" style="cursor:pointer;">
       <div class="leader-rank">${i+1}</div>
       <div class="leader-av-wrap">
-        ${isFirst ? '<div class="leader-avatar-emoji">😎</div>' : ''}
         <div class="leader-avatar" style="background:${p.barva}">${initials(p.jmeno)}</div>
       </div>
       <div class="leader-name">${p.jmeno}${p.streak > 0 ? `<span class="name-streak">🔥 ${p.streak} ${streakLabel(p.streak)}</span>` : ''}</div>
@@ -2189,7 +2198,8 @@ function renderHeatmap() {
       html += `<div class="heatmap-cell ${cls}" data-date="${dStr}" data-player="${p.id}" title="${p.jmeno} · ${d.toLocaleDateString('cs-CZ')} · ${Math.round(pts)} bodů"></div>`;
     });
   });
-  html += '</div><div class="heatmap-legend"><span>Méně</span><div class="heatmap-legend-cells"><div class="heatmap-cell"></div><div class="heatmap-cell gen-1"></div><div class="heatmap-cell gen-2"></div><div class="heatmap-cell gen-3"></div><div class="heatmap-cell gen-4"></div><div class="heatmap-cell gen-5"></div><div class="heatmap-cell gen-6"></div><div class="heatmap-cell gen-7"></div></div><span>Více</span></div>';
+  // F37: legenda s konkretnimi rozsahy bodů (kraje "0 b. / den" a "300+ b. / den")
+  html += '</div><div class="heatmap-legend"><span>0 b. / den</span><div class="heatmap-legend-cells"><div class="heatmap-cell"></div><div class="heatmap-cell gen-1"></div><div class="heatmap-cell gen-2"></div><div class="heatmap-cell gen-3"></div><div class="heatmap-cell gen-4"></div><div class="heatmap-cell gen-5"></div><div class="heatmap-cell gen-6"></div><div class="heatmap-cell gen-7"></div></div><span>300+ b. / den</span></div>';
 
   const el = document.getElementById('heatmap-container');
   el.innerHTML = html;
