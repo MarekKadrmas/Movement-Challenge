@@ -1596,7 +1596,7 @@ body.modal-open .modal { touch-action: auto; }
         <div class="ph-subtitle" id="ph-subtitle">Všechny záznamy</div>
       </div>
       <div class="ph-stats">
-        <div class="ph-stats-points" id="ph-total">0.0</div>
+        <div class="ph-stats-points" id="ph-total">0</div>
         <div class="ph-stats-label">celkem b.</div>
       </div>
     </div>
@@ -2322,7 +2322,7 @@ function groupEntriesByDate(entries) {
 // Vykresli skupinu zaznamu s headerem (datum + celkem bodu) + entries
 function renderEntryGroup(group) {
   const label = formatDateDisplay(group.dateStr);
-  const total = Math.round(group.totalBody * 10) / 10;
+  const total = Math.round(group.totalBody);
   const items = group.entries.map(e => renderEntryCard(e, true)).join('');
   return `
     <div class="entry-day-group">
