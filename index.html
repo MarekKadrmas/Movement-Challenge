@@ -631,6 +631,28 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 /* F40: lock background scroll kdyz je modal otevreny (predevsim pro iOS) */
 body.modal-open { overflow: hidden; touch-action: none; }
 body.modal-open .modal { touch-action: auto; }
+
+/* F45: Guest mode banner + skryt editacni prvky */
+.guest-banner {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px;
+  background: #fef9c3; border-bottom: 1px solid #fde047;
+  color: #713f12; font-size: 12px; font-weight: 700;
+  position: sticky; top: 0; z-index: 90;
+}
+.guest-banner-icon { font-size: 16px; line-height: 1; flex-shrink: 0; }
+.guest-banner-msg { flex: 1; line-height: 1.3; }
+.guest-banner-msg small { display: block; font-weight: 500; color: #a16207; margin-top: 1px; font-size: 10px; }
+.guest-banner-btn {
+  padding: 6px 12px; background: #18181b; color: #fff; border-radius: 100px;
+  font-size: 11px; font-weight: 700; border: none; cursor: pointer;
+  font-family: inherit; flex-shrink: 0;
+}
+/* V guest mode skryt FAB+, edit/delete actions, player-card-actions */
+body.guest-mode .fab-group { display: none; }
+body.guest-mode .entry-actions { display: none !important; }
+body.guest-mode .player-card-actions { display: none !important; }
+body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 .modal-handle { width: 40px; height: 4px; background: var(--border); border-radius: 2px; margin: -10px auto 14px; }
 .modal-title { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 4px; color: var(--text); }
 .modal-subtitle { font-size: 12px; color: var(--text-muted); margin-bottom: 18px; }
@@ -1219,6 +1241,13 @@ body.modal-open .modal { touch-action: auto; }
   </div>
 </div>
 
+<!-- F45: Guest banner (zobrazi se jen pri ?guest=true) -->
+<div class="guest-banner" id="guest-banner" style="display:none;">
+  <span class="guest-banner-icon">👀</span>
+  <div class="guest-banner-msg">Prohlížíš jako návštěvník<small>Nemůžeš měnit záznamy</small></div>
+  <button class="guest-banner-btn" onclick="exitGuestMode()">Přihlásit</button>
+</div>
+
 <main class="main">
 
   <nav class="nav">
@@ -1704,7 +1733,9 @@ let state = {
   // F15: filtr kategorii v hlavnim Celkove poradi (all-time)
   totalCategory: 'all',  // 'all' | 'cvik' | 'aktivita' | 'stretching'
   // F19: soft auth - aktualne prihlaseny hrac (z localStorage)
-  currentPlayerId: null
+  currentPlayerId: null,
+  // F45: guest mode (URL ?guest=true) - read-only verze pro kamarády
+  isGuest: false
 };
 
 // F19: localStorage klice
@@ -2467,6 +2498,7 @@ function getCurrentPlayer() {
 }
 
 function isAdmin() {
+  if (state.isGuest) return false;  // F45: guest nemá admin práva
   const p = getCurrentPlayer();
   if (!p || !p.is_admin) return false;
   // F25: admin musi byt aktivni (Mára si muze vypnout admin mode aby se choval jako hrac)
@@ -2475,6 +2507,7 @@ function isAdmin() {
 }
 
 function canEditEntry(entry) {
+  if (state.isGuest) return false;  // F45: guest nic needitiuje
   // Vlastní záznam nebo admin
   return isAdmin() || entry.player_id === state.currentPlayerId;
 }
@@ -2540,6 +2573,12 @@ async function startLoginFlow(playerId) {
 
 function showLoginIfNeeded() {
   const overlay = document.getElementById('login-overlay');
+  // F45: guest mode skipuje login
+  if (state.isGuest) {
+    overlay.classList.remove('active');
+    document.getElementById('header-me').style.display = 'none';
+    return false;
+  }
   if (!state.currentPlayerId) {
     renderLoginScreen();
     overlay.classList.add('active');
@@ -2549,6 +2588,11 @@ function showLoginIfNeeded() {
   overlay.classList.remove('active');
   updateHeaderMe();
   return false;
+}
+
+// F45: ukoncit guest mode (kliknuti na "Přihlásit" v banneru) — reload bez ?guest=true
+function exitGuestMode() {
+  window.location.href = window.location.pathname;
 }
 
 function selectPlayer(playerId) {
@@ -3772,6 +3816,20 @@ db.channel('public:all-test-v12')
   .on('postgres_changes', { event: '*', schema: 'public', table: 'players' }, () => loadData())
   .on('postgres_changes', { event: '*', schema: 'public', table: 'player_history' }, () => loadData())
   .subscribe();
+
+// F45: detekce guest mode pres URL ?guest=true
+(function detectGuest() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('guest') === 'true') {
+    state.isGuest = true;
+    document.body.classList.add('guest-mode');
+    // Banner zobrazit po nacteni
+    setTimeout(() => {
+      const b = document.getElementById('guest-banner');
+      if (b) b.style.display = 'flex';
+    }, 100);
+  }
+})();
 
 loadData();
 
