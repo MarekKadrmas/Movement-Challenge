@@ -1532,9 +1532,6 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 </main>
 
 <div class="fab-group">
-  <button class="fab refresh" id="fab-refresh" onclick="refreshApp()" aria-label="Obnovit">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>
-  </button>
   <button class="fab primary" onclick="openModal()" aria-label="Přidat záznam">+</button>
 </div>
 
@@ -2192,7 +2189,7 @@ function renderLeaderboardTotal() {
       </div>
       <div class="leader-name">${p.jmeno}</div>
       <div class="leader-stats">
-        <div class="leader-points">${p.total.toFixed(1)}</div>
+        <div class="leader-points">${Math.round(p.total)}</div>
         <div class="leader-streak">${p.streak > 0 ? `🔥 ${p.streak} ${p.streak === 1 ? 'den' : p.streak < 5 ? 'dny' : 'dní'}` : '—'}</div>
       </div>
     </div>
@@ -2230,7 +2227,7 @@ function renderLeaderboardWeek() {
         <div class="leader-avatar" style="background:${p.barva}">${initials(p.jmeno)}</div>
       </div>
       <div class="leader-name">${p.jmeno}</div>
-      <div class="leader-stats"><div class="leader-points">${p.body.toFixed(1)}</div></div>
+      <div class="leader-stats"><div class="leader-points">${Math.round(p.body)}</div></div>
     </div>
   `}).join('');
 }
@@ -2294,7 +2291,7 @@ function renderHeatmap() {
       const pts = pointsForDay(p.id, dStr);
       const lvl = levelNum(pts);
       const cls = lvl === 0 ? '' : `${colorKey}-${lvl}`;
-      html += `<div class="heatmap-cell ${cls}" data-date="${dStr}" data-player="${p.id}" title="${p.jmeno} · ${d.toLocaleDateString('cs-CZ')} · ${pts.toFixed(1)} bodů"></div>`;
+      html += `<div class="heatmap-cell ${cls}" data-date="${dStr}" data-player="${p.id}" title="${p.jmeno} · ${d.toLocaleDateString('cs-CZ')} · ${Math.round(pts)} bodů"></div>`;
     });
   });
   html += '</div><div class="heatmap-legend"><span>Méně</span><div class="heatmap-legend-cells"><div class="heatmap-cell"></div><div class="heatmap-cell gen-1"></div><div class="heatmap-cell gen-2"></div><div class="heatmap-cell gen-3"></div><div class="heatmap-cell gen-4"></div><div class="heatmap-cell gen-5"></div><div class="heatmap-cell gen-6"></div><div class="heatmap-cell gen-7"></div></div><span>Více</span></div>';
@@ -2319,7 +2316,7 @@ function openDayDetail(playerId, dateStr) {
     list.innerHTML = '<div class="entry-empty">Žádné záznamy v tento den</div>';
   } else {
     const all = [...cviky.map(c => ({ ...c, _type: 'cvik' })), ...aktivity.map(a => ({ ...a, _type: 'aktivita' }))];
-    list.innerHTML = `<div style="text-align:center;font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;color:var(--accent);margin-bottom:16px;">+${totalBody.toFixed(1)} bodů</div>` + all.map(e => renderEntryCard(e, false)).join('');
+    list.innerHTML = `<div style="text-align:center;font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;color:var(--accent);margin-bottom:16px;">+${Math.round(totalBody)} bodů</div>` + all.map(e => renderEntryCard(e, false)).join('');
   }
   document.getElementById('day-modal').classList.add('active');
 }
@@ -2435,7 +2432,7 @@ function renderPlayerEntries() {
   if (!playerId) return;
   const entries = collectEntries({ playerId, typeFilter: state.peTypeFilter });
   const total = entries.reduce((s, e) => s + Number(e.body), 0);
-  document.getElementById('ph-total').textContent = total.toFixed(1);
+  document.getElementById('ph-total').textContent = Math.round(total);
   const subEl = document.getElementById('ph-subtitle');
   const typeLabels = { all: 'Všechny záznamy', cvik: 'Pouze cviky', aktivita: 'Pouze aktivity', stretching: 'Pouze stretching' };
   subEl.textContent = typeLabels[state.peTypeFilter];
@@ -2951,7 +2948,7 @@ function renderEntryCard(e, withActions) {
         <div class="entry-meta">${meta}</div>
         ${sub ? `<div class="entry-sub">${sub}</div>` : ''}
       </div>
-      <div class="entry-points">+${Number(e.body).toFixed(1)}</div>
+      <div class="entry-points">+${Math.round(Number(e.body))}</div>
       ${actions}
     </div>`;
 }
@@ -3479,7 +3476,7 @@ function updateCvikPointsPreview() {
     total = Math.round(total * 10) / 10;
   }
   if (total > 0) {
-    disp.textContent = `+${total.toFixed(1)} bodů`;
+    disp.textContent = `+${Math.round(total)} bodů`;
     disp.classList.add('show');
   } else {
     disp.classList.remove('show');
@@ -3676,7 +3673,7 @@ async function submitEntry() {
       } else {
         const { error } = await db.from('cviky').insert(payload);
         if (error) throw error;
-        toast(`+${totalBody.toFixed(1)} bodů!`, 'success');
+        toast(`+${Math.round(totalBody)} bodů!`, 'success');
       }
     } else if (state.entryType === 'aktivita') {
       const nazev = document.getElementById('aktivita-nazev').value.trim();
@@ -4042,14 +4039,6 @@ async function loadData() {
     document.getElementById('connection-status').textContent = 'chyba spojení';
     toast('Chyba načítání: ' + e.message, 'error');
   }
-}
-
-async function refreshApp() {
-  const btn = document.getElementById('fab-refresh');
-  btn.classList.add('spinning');
-  toast('Obnovuji data...', 'info');
-  await loadData();
-  setTimeout(() => btn.classList.remove('spinning'), 800);
 }
 
 db.channel('public:all-test-v12')
