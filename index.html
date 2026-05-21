@@ -611,8 +611,12 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
   border: 1px solid var(--border); border-bottom: none;
   padding: 22px 20px; padding-bottom: calc(22px + env(safe-area-inset-bottom));
   max-height: 92vh; min-height: 70vh; overflow-y: auto;
+  overscroll-behavior: contain;  /* F40: scroll uvnitr modalu nepropaguje na body */
   animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
+/* F40: lock background scroll kdyz je modal otevreny (predevsim pro iOS) */
+body.modal-open { overflow: hidden; touch-action: none; }
+body.modal-open .modal { touch-action: auto; }
 .modal-handle { width: 40px; height: 4px; background: var(--border); border-radius: 2px; margin: -10px auto 14px; }
 .modal-title { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 4px; color: var(--text); }
 .modal-subtitle { font-size: 12px; color: var(--text-muted); margin-bottom: 18px; }
@@ -2957,10 +2961,12 @@ function openModal() {
   }
   updateFormDisabled();
   document.getElementById('modal').classList.add('active');
+  document.body.classList.add('modal-open');  // F40: lock background scroll
 }
 
 function closeModal() {
   document.getElementById('modal').classList.remove('active');
+  document.body.classList.remove('modal-open');  // F40: unlock background scroll
   state.selectedPlayer = null; state.selectedCvik = null; state.selectedLevel = null; state.selectedStretch = null;
   state.entryType = 'cvik'; state.editMode = false; state.editId = null; state.editTable = null;
   state.serieMode = 'single'; state.variedSeries = [];
