@@ -491,32 +491,42 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 }
 .entry-day-items { display: flex; flex-direction: column; gap: 6px; }
 
+/* F33: Záznamy redesign v3 (varianta C: levý pruh + avatar + type badge) */
 .entry-card {
   background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: 12px; padding: 12px 14px;
-  display: flex; align-items: center; gap: 12px;
+  border-left: 4px solid var(--border);  /* override pro per-player color inline */
+  border-radius: 10px; padding: 10px 12px;
+  display: flex; align-items: center; gap: 10px;
 }
 .entry-avatar {
-  width: 32px; height: 32px; border-radius: 50%;
+  width: 36px; height: 36px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  font-weight: 600; font-size: 11px; color: #fff;
-  flex-shrink: 0;
+  font-weight: 800; font-size: 11px; color: #000;
+  flex-shrink: 0; position: relative;
 }
+.entry-type-badge {
+  position: absolute; bottom: -3px; right: -3px;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: #fff; display: flex; align-items: center; justify-content: center;
+  font-size: 10px; border: 2px solid var(--bg-card);
+}
+.entry-type-badge.cvik     { color: #1d4ed8; }
+.entry-type-badge.aktivita { color: #15803d; }
+.entry-type-badge.stretch  { color: #7e22ce; }
 .entry-main { flex: 1; min-width: 0; }
-.entry-title { font-weight: 600; font-size: 14px; color: var(--text); margin-bottom: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.entry-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; font-variant-numeric: tabular-nums; }
-.entry-meta { font-size: 11px; color: var(--text-muted); }
+.entry-title { font-weight: 800; font-size: 13.5px; color: var(--text); line-height: 1.2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.entry-meta { font-size: 11px; color: var(--text-muted); margin-top: 2px; font-weight: 600; }
 .entry-points {
-  font-weight: 700; font-size: 15px; color: var(--text);
-  font-variant-numeric: tabular-nums;
+  font-weight: 800; font-size: 14px; color: var(--text);
+  font-variant-numeric: tabular-nums; flex-shrink: 0;
 }
-.entry-actions { display: flex; gap: 4px; margin-left: 6px; }
+.entry-actions { display: flex; gap: 4px; margin-left: 4px; }
 .entry-action-btn {
-  width: 30px; height: 30px; border-radius: 8px;
-  background: transparent; border: 1px solid var(--border);
-  color: var(--text-muted); cursor: pointer;
+  width: 26px; height: 26px; border-radius: 6px;
+  background: transparent; border: 1px solid var(--border-soft);
+  color: var(--text-dim); cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  font-size: 14px; transition: all 0.15s;
+  font-size: 12px;
 }
 .entry-action-btn:active { transform: scale(0.92); }
 .entry-action-btn.delete:active { color: var(--red); border-color: var(--red); }
@@ -2403,12 +2413,15 @@ function renderEntryCard(e, withActions) {
     if (isStretchActivity(e)) { isStretch = true; title = e.nazev; }
     else { title = e.nazev; }
   }
-  const typeIcon = e._type === 'cvik' ? '💪' : (isStretch ? '🧘' : '🏃');
+  // F33: type badge na avataru (cvik/aktivita/stretch)
+  const typeBadge = e._type === 'cvik'
+    ? '<span class="entry-type-badge cvik">💪</span>'
+    : (isStretch ? '<span class="entry-type-badge stretch">🧘</span>' : '<span class="entry-type-badge aktivita">🏃</span>');
+  // Meta = jmeno · uroven/detail · datum
   const meta = e._type === 'cvik' || isStretch
-    ? `${typeIcon} ${player.jmeno} · ${formatDate(e.datum)}`
-    : `${typeIcon} ${player.jmeno} · úroveň ${e.uroven} · ${formatDate(e.datum)}`;
+    ? `${player.jmeno} · ${formatDate(e.datum)}${sub ? ' · ' + sub : ''}`
+    : `${player.jmeno} · úroveň ${e.uroven} · ${formatDate(e.datum)}`;
   // F19: edit/delete jen pro vlastní záznam (kromě adminu)
-  // Vzdy renderujeme aby se nemenila vyska karty pri prepnuti admin/hrac (jen schovame vizuálně)
   const canEdit = withActions && canEditEntry(e);
   const actions = withActions ? `
     <div class="entry-actions" style="${canEdit ? '' : 'visibility:hidden;pointer-events:none;'}">
@@ -2416,13 +2429,11 @@ function renderEntryCard(e, withActions) {
       <button class="entry-action-btn delete" data-id="${e.id}" data-type="${e._type}" data-action="delete">🗑️</button>
     </div>` : '';
   return `
-    <div class="entry-card">
-      <div class="entry-bar" style="background:${player.barva}"></div>
-      <div class="entry-avatar" style="background:${player.barva}">${initials(player.jmeno)}</div>
+    <div class="entry-card" style="border-left-color:${player.barva}">
+      <div class="entry-avatar" style="background:${player.barva}">${initials(player.jmeno)}${typeBadge}</div>
       <div class="entry-main">
         <div class="entry-title">${title}</div>
         <div class="entry-meta">${meta}</div>
-        ${sub ? `<div class="entry-sub">${sub}</div>` : ''}
       </div>
       <div class="entry-points">+${Math.round(Number(e.body))}</div>
       ${actions}
