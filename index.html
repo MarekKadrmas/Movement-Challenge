@@ -1715,6 +1715,16 @@ const STRETCH_LABELS = { krat: 'Krátký', dlou: 'Delší' };
 // Při změně exponentu je nutné dopočítat multiplikátor (anchor 120 shybů Máry = 150 b.).
 const CVIK_EXPONENT = 0.55;
 const CVIK_MULTIPLIER = 0.5833;
+// F47b: faktor objemu — aby pár opakování nedalo moc bodů (záleží i na absolutním počtu, ne jen % maxima).
+// Plný kredit od CVIK_VOLUME_REF opakování; míň reps → úměrně míň (jen tlumí, max 1×).
+// Nedotkne se velkých sérií (Mára/Péťa 20+), anchor 120 shybů = 150 zůstává.
+const CVIK_VOLUME_REF = 15;
+const CVIK_VOLUME_POW = 0.4;
+function volumeFactor(totalReps) {
+  const r = Number(totalReps) || 0;
+  if (r <= 0) return 0;
+  return Math.min(1, Math.pow(r / CVIK_VOLUME_REF, CVIK_VOLUME_POW));
+}
 
 const FIELD_LABELS = {
   vaha: 'Váha (kg)',
@@ -1842,7 +1852,7 @@ function vypocitejBodyCvik(player, cvik, opakovani, pridanaVaha) {
       break;
     }
   }
-  return Math.round(body * CVIK_MULTIPLIER * 10) / 10;
+  return Math.round(body * CVIK_MULTIPLIER * volumeFactor(op) * 10) / 10;
 }
 
 // F47: Body za záznam s různými sériemi (varied mód).
@@ -1890,8 +1900,9 @@ function vypocitejBodyCvikVaried(player, cvik, list) {
     default: return 0;
   }
   if (E <= 0) return 0;
+  const totalReps = clean.reduce((s, x) => s + x.op, 0);
   const body = Math.pow(E, CVIK_EXPONENT) * base * (useWk ? wk : 1);
-  return Math.round(body * CVIK_MULTIPLIER * 10) / 10;
+  return Math.round(body * CVIK_MULTIPLIER * volumeFactor(totalReps) * 10) / 10;
 }
 
 function initials(name) { return name.substring(0, 2).toUpperCase(); }
