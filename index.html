@@ -1710,8 +1710,11 @@ const LEVEL_HINTS = {
 const STRETCH_POINTS = { krat: 20, dlou: 40 };
 const STRETCH_LABELS = { krat: 'Krátký', dlou: 'Delší' };
 
-// Multiplikátor cviků - kalibrováno tak, aby 120 shybů ≈ 150 b. (na úrovni aktivit)
-const CVIK_MULTIPLIER = 0.345;
+// Bodování cviků - kalibrováno tak, aby 120 shybů ≈ 150 b. (na úrovni aktivit).
+// CVIK_EXPONENT ladí "úsilí vs objem": nižší = víc se cení vymáčknout max, míň hrubý objem.
+// Při změně exponentu je nutné dopočítat multiplikátor (anchor 120 shybů Máry = 150 b.).
+const CVIK_EXPONENT = 0.55;
+const CVIK_MULTIPLIER = 0.5833;
 
 const FIELD_LABELS = {
   vaha: 'Váha (kg)',
@@ -1805,7 +1808,7 @@ function vypocitejBodyCvik(player, cvik, opakovani, pridanaVaha) {
       if (!player.max_shyby) return 0;
       const rel = (player.vaha + pridana) / player.vaha;
       const proc = (op * rel) / player.max_shyby;
-      body = Math.pow(proc, 0.85) * 100 * wk;
+      body = Math.pow(proc, CVIK_EXPONENT) * 100 * wk;
       break;
     }
     case 'Dřep': {
@@ -1813,13 +1816,13 @@ function vypocitejBodyCvik(player, cvik, opakovani, pridanaVaha) {
       if (pridana > 0) {
         // Silovy drep s pridanou vahou — relativni sila × opakovani
         const relSila = pridana / (player.vaha * wk);
-        body = Math.pow(relSila * op, 0.85) * 30;
+        body = Math.pow(relSila * op, CVIK_EXPONENT) * 30;
       } else {
         // F14 Bug 2 fix: bodyweight drep — pocita se jako % z hypotetickeho max_reps
         // (max_drep * 0.5 = priblizny odhad kolik bezvazovych drepu hrac zvladne v 1 serii)
         const maxReps = Math.max(20, Math.round(player.max_drep * 0.5));
         const proc = op / maxReps;
-        body = Math.pow(proc, 0.85) * 30 * wk;
+        body = Math.pow(proc, CVIK_EXPONENT) * 30 * wk;
       }
       break;
     }
@@ -1828,17 +1831,66 @@ function vypocitejBodyCvik(player, cvik, opakovani, pridanaVaha) {
       const pbEf = 0.69 * player.vaha;
       const pbOp = player.max_kliky || 20;
       const rel = (ef * op) / (pbEf * pbOp);
-      body = Math.pow(rel, 0.85) * 80 * wk;
+      body = Math.pow(rel, CVIK_EXPONENT) * 80 * wk;
       break;
     }
     case 'Dipy': {
       const rel = (player.vaha + pridana) / player.vaha;
       const pb = player.max_dipy || 15;
       const proc = (op * rel) / pb;
-      body = Math.pow(proc, 0.85) * 80 * wk;
+      body = Math.pow(proc, CVIK_EXPONENT) * 80 * wk;
       break;
     }
   }
+  return Math.round(body * CVIK_MULTIPLIER * 10) / 10;
+}
+
+// F47: Body za záznam s různými sériemi (varied mód).
+// KLÍČOVÉ: úsilí se přes série SČÍTÁ LINEÁRNĚ a mocninná křivka se aplikuje JEDNOU na součet.
+// Díky tomu je jedno, jestli uděláš 100 shybů najednou nebo 10×10 — body stejné (žádný gaming),
+// a objem má klesající návratnost (cení se makat, ne mít čas nasekat stovky).
+function vypocitejBodyCvikVaried(player, cvik, list) {
+  if (!player || !Array.isArray(list)) return 0;
+  const wk = wilksKoef(player.vaha, player.pohlavi);
+  const clean = list
+    .map(s => ({ op: parseInt(s.op) || 0, vaha: parseFloat(s.vaha) || 0 }))
+    .filter(s => s.op > 0);
+  if (!clean.length) return 0;
+
+  let base, useWk = true, E = 0;  // E = lineární součet úsilí (to, co jde dovnitř mocniny)
+  switch (cvik) {
+    case 'Shyby':
+      if (!player.max_shyby) return 0;
+      base = 100;
+      for (const s of clean) E += (s.op * (player.vaha + s.vaha) / player.vaha) / player.max_shyby;
+      break;
+    case 'Dipy':
+      base = 80;
+      for (const s of clean) E += (s.op * (player.vaha + s.vaha) / player.vaha) / (player.max_dipy || 15);
+      break;
+    case 'Kliky': {
+      base = 80;
+      const pbEf = 0.69 * player.vaha, pbOp = player.max_kliky || 20;
+      for (const s of clean) E += ((0.69 * player.vaha + s.vaha) * s.op) / (pbEf * pbOp);
+      break;
+    }
+    case 'Dřep': {
+      if (!player.max_drep) return 0;
+      base = 30;
+      const anyWeighted = clean.some(s => s.vaha > 0);
+      useWk = !anyWeighted;  // silový dřep (s váhou) Wilks nepoužívá, bezvážný ano
+      if (anyWeighted) {
+        for (const s of clean) E += (s.vaha / (player.vaha * wk)) * s.op;  // bezvážná warmup série → 0
+      } else {
+        const maxReps = Math.max(20, Math.round(player.max_drep * 0.5));
+        for (const s of clean) E += s.op / maxReps;
+      }
+      break;
+    }
+    default: return 0;
+  }
+  if (E <= 0) return 0;
+  const body = Math.pow(E, CVIK_EXPONENT) * base * (useWk ? wk : 1);
   return Math.round(body * CVIK_MULTIPLIER * 10) / 10;
 }
 
@@ -2926,15 +2978,30 @@ function renderScoringExplanation() {
   const muz = state.players.find(p => p.aktivni && p.pohlavi === 'M');
   const zena = state.players.find(p => p.aktivni && p.pohlavi === 'Z');
 
-  let priklady = '';
-  if (muz) {
-    const b10shyby = vypocitejBodyCvik(muz, 'Shyby', 10, 0);
-    const b100shyby = vypocitejBodyCvik(muz, 'Shyby', 100, 0);
-    priklady += `<div class="example"><strong>${muz.jmeno}</strong> (${muz.vaha} kg, max ${muz.max_shyby} shybů): 10 shybů = <strong>${b10shyby.toFixed(1)} bodů</strong>, 100 shybů = <strong>${b100shyby.toFixed(1)} bodů</strong></div>`;
+  // F47: tabulka příkladů na shybech referenčního hráče — ukazuje klesající návratnost objemu
+  let exampleTable = '';
+  const ref = (state.currentPlayerId && state.players.find(p => p.id === state.currentPlayerId && p.max_shyby)) || muz;
+  if (ref && ref.max_shyby) {
+    const reps = [10, ref.max_shyby, 50, 120, 200];
+    const rows = [...new Set(reps)].sort((a, b) => a - b).map(r => {
+      const b = Math.round(vypocitejBodyCvik(ref, 'Shyby', r, 0));
+      const note = r === ref.max_shyby ? ' <span style="color:var(--text-dim)">(tvůj max v 1 sérii)</span>' : '';
+      return `<tr><td>${r} shybů${note}</td><td class="pts">${b}</td></tr>`;
+    }).join('');
+    exampleTable = `
+      <p style="margin-top:12px"><strong style="color:var(--text)">Příklad — Shyby (${ref.jmeno}, ${ref.vaha} kg, max ${ref.max_shyby}):</strong></p>
+      <table class="points-table" style="margin-top:6px">
+        <tr><th>Výkon</th><th class="pts">Body</th></tr>
+        ${rows}
+      </table>
+      <p style="margin-top:8px;font-size:12px;color:var(--text-dim)">Všimni si: dvojnásobek opakování ≠ dvojnásobek bodů. Objem má <strong>klesající návratnost</strong> — cení se vymáčknout se, ne mít čas nasekat stovky. Pro srovnání: hodina běhu (aktivita úroveň 3) = 100 b., závod = 220 b.</p>`;
   }
-  if (zena) {
-    const b10shyby = vypocitejBodyCvik(zena, 'Shyby', 10, 0);
-    priklady += `<div class="example"><strong>${zena.jmeno}</strong> (${zena.vaha} kg, max ${zena.max_shyby} shybů): 10 shybů = <strong>${b10shyby.toFixed(1)} bodů</strong> — díky Wilks koeficientu má víc bodů než muž za stejný počet</div>`;
+
+  let priklady = exampleTable;
+  if (zena && zena.max_shyby) {
+    const bMax = Math.round(vypocitejBodyCvik(zena, 'Shyby', zena.max_shyby, 0));
+    const bMaxMuz = ref ? Math.round(vypocitejBodyCvik(ref, 'Shyby', zena.max_shyby, 0)) : null;
+    priklady += `<div class="info-box" style="margin-top:12px"><span class="info-icon">⚖️</span><strong>Relativně k tvému maximu.</strong> ${zena.jmeno} (max ${zena.max_shyby} shybů) dostane za ${zena.max_shyby} shybů <strong>${bMax} b.</strong>${bMaxMuz !== null ? ` — víc než ${ref.jmeno} za stejný počet (${bMaxMuz} b.)` : ''}, protože je to její max a Wilks koeficient kompenzuje pohlaví. Kdo má nižší PB, dostane za stejný výkon víc bodů.</div>`;
   }
 
   const html = `
@@ -2955,14 +3022,14 @@ function renderScoringExplanation() {
         <div class="arrow">›</div>
       </div>
       <div class="content">
-        <p>Body za cvik závisí na třech věcech:</p>
+        <p>Body za cvik nejsou za absolutní čísla, ale za <strong style="color:var(--text)">úsilí vůči tvým možnostem</strong>. Záleží na:</p>
         <ul style="margin:8px 0 0 16px;line-height:1.7">
-          <li><strong style="color:var(--text)">Počet opakování</strong> — víc opakování = víc bodů</li>
-          <li><strong style="color:var(--text)">Tvůj osobní rekord (PB)</strong> — kdo má nižší max, dostane víc bodů za stejný výkon</li>
-          <li><strong style="color:var(--text)">Pohlaví & váha (Wilks)</strong> — kompenzuje fyzické rozdíly</li>
+          <li><strong style="color:var(--text)">Kolik zvládneš vůči svému maximu (PB)</strong> — kdo má nižší max, dostane za stejný počet víc bodů</li>
+          <li><strong style="color:var(--text)">Objemu s klesající návratností</strong> — víc opakování = víc bodů, ale 2× opakování ≠ 2× body. Cení se vymáčknout se, ne mít čas nasekat stovky</li>
+          <li><strong style="color:var(--text)">Pohlaví & váze (Wilks koeficient)</strong> — kompenzuje fyzické rozdíly</li>
         </ul>
         ${priklady}
-        <p style="margin-top:10px;font-style:italic;color:var(--text-dim)">Vzorec používá Wilksův koeficient a mocninnou křivku, takže menší výkon dostane výrazně méně bodů, ale rekordní výkon nebude přemrštěný.</p>
+        <p style="margin-top:10px;font-style:italic;color:var(--text-dim)">Je jedno, jestli opakování rozdělíš do víc sérií nebo zapíšeš najednou — rozhoduje celková odvedená práce, ne počet sérií.</p>
       </div>
     </div>
 
@@ -2996,9 +3063,8 @@ function renderScoringExplanation() {
       <div class="content">
         <table class="points-table">
           <tr><th>Délka</th><th>Čas</th><th class="pts">Body</th></tr>
-          <tr><td>Krátké</td><td>~5 min</td><td class="pts">15</td></tr>
-          <tr><td>Střední</td><td>~15 min</td><td class="pts">30</td></tr>
-          <tr><td>Dlouhé</td><td>~30+ min</td><td class="pts">50</td></tr>
+          <tr><td>Krátký</td><td>~10 min</td><td class="pts">20</td></tr>
+          <tr><td>Delší</td><td>~20+ min</td><td class="pts">40</td></tr>
         </table>
       </div>
     </div>
@@ -3251,12 +3317,8 @@ function updateCvikPointsPreview() {
     const vaha = parseFloat(document.getElementById('cvik-same-vaha').value) || 0;
     if (series > 0 && ops > 0) total = vypocitejBodyCvik(player, state.selectedCvik, series * ops, vaha);
   } else if (state.serieMode === 'varied') {
-    state.variedSeries.forEach(s => {
-      const op = parseInt(s.op) || 0;
-      const vaha = parseFloat(s.vaha) || 0;
-      if (op > 0) total += vypocitejBodyCvik(player, state.selectedCvik, op, vaha);
-    });
-    total = Math.round(total * 10) / 10;
+    // F47: lineární součet úsilí přes série → křivka jednou (viz vypocitejBodyCvikVaried)
+    total = vypocitejBodyCvikVaried(player, state.selectedCvik, state.variedSeries);
   }
   if (total > 0) {
     disp.textContent = `+${Math.round(total)} bodů`;
@@ -3431,16 +3493,15 @@ async function submitEntry() {
       } else if (state.serieMode === 'varied') {
         const valid = state.variedSeries.filter(s => parseInt(s.op) > 0);
         if (valid.length === 0) { toast('Vyplň alespoň jednu sérii', 'error'); btn.disabled = false; btn.textContent = origText; return; }
-        let body = 0;
         const list = [];
         valid.forEach(s => {
           const op = parseInt(s.op);
           const vaha = parseFloat(s.vaha) || 0;
           totalOps += op;
-          body += vypocitejBodyCvik(player, state.selectedCvik, op, vaha);
           list.push({ op: op, vaha: vaha });
         });
-        totalBody = Math.round(body * 10) / 10;
+        // F47: lineární součet úsilí přes série → křivka jednou (žádný gaming přes počet sérií)
+        totalBody = vypocitejBodyCvikVaried(player, state.selectedCvik, list);
         // Prumerna pridana vaha pro DB (jen orientacni, hlavni je JSON)
         pridanaVaha = Math.round((list.reduce((s, x) => s + (x.vaha || 0), 0) / list.length) * 10) / 10;
         poznamka = JSON.stringify({ mode: 'varied', list: list });
