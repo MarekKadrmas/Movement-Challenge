@@ -2974,25 +2974,41 @@ async function resetPlayerPassword(playerId) {
 }
 
 function renderScoringExplanation() {
-  // F47: tabulka příkladů — kolik bodů dostane každý hráč za daný počet shybů.
+  // F47: tabulka příkladů — kolik bodů za shyby podle toho, co kdo REÁLNĚ dělá (z dat).
+  // Běžně = průměr zapsaných shybů, Rekordní den = nejvíc zapsaných. Bez dat = odhad z maxima.
   let priklady = '';
   const refPlayers = state.players.filter(p => p.aktivni && p.max_shyby).sort((a, b) => b.max_shyby - a.max_shyby);
   if (refPlayers.length) {
-    const counts = [10, 20, 30];
+    const byP = {};
+    state.cviky.filter(c => c.cvik === 'Shyby').forEach(c => { (byP[c.player_id] = byP[c.player_id] || []).push(Number(c.opakovani) || 0); });
+    const round5 = n => Math.max(5, Math.round(n / 5) * 5);
+    let hasFallback = false;
     const rows = refPlayers.map(p => {
-      const cells = counts.map(n => `<td class="pts">${Math.round(vypocitejBodyCvik(p, 'Shyby', n, 0))}</td>`).join('');
+      const arr = byP[p.id];
+      let bezne, velky, star = '';
+      if (arr && arr.length) {
+        bezne = round5(arr.reduce((a, b) => a + b, 0) / arr.length);
+        velky = round5(Math.max(...arr));
+        if (velky <= bezne) velky = round5(bezne * 1.6);
+      } else {
+        bezne = p.max_shyby; velky = p.max_shyby * 2; star = '*'; hasFallback = true;
+      }
+      const bB = Math.round(vypocitejBodyCvik(p, 'Shyby', bezne, 0));
+      const bV = Math.round(vypocitejBodyCvik(p, 'Shyby', velky, 0));
       const mine = p.id === state.currentPlayerId ? ' style="background:var(--bg-card-hover)"' : '';
-      return `<tr${mine}><td>${p.jmeno}</td>${cells}</tr>`;
+      const cell = (n, b) => `<td class="pts"><span style="font-weight:400;color:var(--text-muted)">${n} shybů</span><span style="display:block;font-weight:700">${b} b</span></td>`;
+      return `<tr${mine}><td>${p.jmeno}${star}</td>${cell(bezne, bB)}${cell(velky, bV)}</tr>`;
     }).join('');
     priklady = `
-      <p style="margin-top:12px"><strong style="color:var(--text)">Kolik bodů dostaneš za shyby</strong></p>
+      <p style="margin-top:12px"><strong style="color:var(--text)">Kolik bodů za shyby</strong> <span style="color:var(--text-dim);font-size:12px">— podle toho, co kdo reálně dělá</span></p>
       <table class="points-table" style="margin-top:6px">
-        <tr><th>Hráč</th><th class="pts">10 shybů</th><th class="pts">20 shybů</th><th class="pts">30 shybů</th></tr>
+        <tr><th>Hráč</th><th class="pts">Běžně</th><th class="pts">Rekordní den</th></tr>
         ${rows}
       </table>
+      ${hasFallback ? '<p style="font-size:11px;color:var(--text-dim);margin-top:6px">* zatím shyby nezapisoval(a) — odhad podle maxima</p>' : ''}
       <div class="info-box" style="margin-top:12px">
         <span class="info-icon">⚖️</span>
-        <strong>Proč nemá každý za stejný počet stejně?</strong> Body se počítají podle toho, kolik je daný počet <em>vůči tvému osobnímu maximu</em> — a Wilks koeficient vyrovnává pohlaví a váhu. Kdo má nižší max, má 10 shybů „těžších", takže za ně dostane víc bodů. Ostatní cviky (dřep, kliky, dipy) fungují stejně.
+        <strong>Proč nemá každý za stejný počet stejně?</strong> Body se počítají podle toho, kolik je výkon <em>vůči tvému osobnímu maximu</em> — a Wilks koeficient vyrovnává pohlaví a váhu. Kdo má nižší max, dostane za stejný počet víc. Ostatní cviky (dřep, kliky, dipy) fungují stejně.
       </div>`;
   }
 
