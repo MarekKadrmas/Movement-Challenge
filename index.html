@@ -2864,6 +2864,7 @@ function renderPlayers() {
     if (n.includes('nat')) return '🦄';
     if (n.includes('péť') || n.includes('pet')) return '🐯';
     if (n.includes('káť') || n.includes('kat')) return '🐶';
+    if (n.includes('luk')) return '🐼';  // Lukáš (přidán 2026-06-04)
     return '😎';
   }
   el.innerHTML = state.players.map(p => {
