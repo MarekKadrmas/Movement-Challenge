@@ -359,6 +359,14 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 .heatmap-cell.katka-5 { background: #f97316; }
 .heatmap-cell.katka-6 { background: #ea580c; }
 .heatmap-cell.katka-7 { background: #c2410c; }
+/* Lukas - tyrkysova (cyan) */
+.heatmap-cell.lukas-1 { background: #cffafe; }
+.heatmap-cell.lukas-2 { background: #a5f3fc; }
+.heatmap-cell.lukas-3 { background: #67e8f9; }
+.heatmap-cell.lukas-4 { background: #22d3ee; }
+.heatmap-cell.lukas-5 { background: #06b6d4; }
+.heatmap-cell.lukas-6 { background: #0891b2; }
+.heatmap-cell.lukas-7 { background: #0e7490; }
 /* Fallback obecny */
 .heatmap-cell.gen-1 { background: #e5e7eb; }
 .heatmap-cell.gen-2 { background: #d1d5db; }
@@ -2318,6 +2326,7 @@ function renderHeatmap() {
     if (n.includes('nat')) return 'nat'; // Natalka i Natalka
     if (n.includes('péť') || n.includes('pet')) return 'peta';
     if (n.includes('káť') || n.includes('kat')) return 'katka'; // F16: barva pro Katu
+    if (n.includes('luk')) return 'lukas'; // Lukáš - tyrkysova
     return 'gen';
   }
 
