@@ -1758,6 +1758,8 @@ let state = {
   historyPlayerFilter: 'all', historyTypeFilter: 'all',
   // F4: pocet "mesicu zpet" pri zobrazeni Historie (default 1 = 30 dni)
   historyMonthsLoaded: 1,
+  // F50: pocet "mesicu zpet" v Poslednich zaznamech na Prehledu (default 1 = 30 dni)
+  recentMonthsLoaded: 1,
   // F12 + F35: filtr obdobi sjednoceneho leaderboardu (week/month/all + anchor)
   totalPeriod: 'all', periodMode: 'week', periodAnchor: null,
   // F15: filtr kategorii v hlavnim Celkove poradi (all-time)
@@ -2387,13 +2389,31 @@ function closeDayModal() { document.getElementById('day-modal').classList.remove
 
 function renderRecent() {
   const all = [...state.cviky.map(c => ({ ...c, _type: 'cvik' })), ...state.aktivity.map(a => ({ ...a, _type: 'aktivita' }))]
-    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 10);
+    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
   const el = document.getElementById('recent-entries');
   if (all.length === 0) { el.innerHTML = '<div class="entry-empty">Zatím žádné záznamy. Klepni na + a začni!</div>'; return; }
+  // F50: misto pevnych 10 zaznamu ukazujeme posledni N mesicu (30 dni * recentMonthsLoaded)
+  const cutoffDate = new Date(); cutoffDate.setHours(0,0,0,0);
+  cutoffDate.setDate(cutoffDate.getDate() - 30 * state.recentMonthsLoaded);
+  const cutoffStr = dateToStr(cutoffDate);
+  const visible = all.filter(e => e.datum >= cutoffStr);
+  const hasOlder = all.some(e => e.datum < cutoffStr);
   // F5: skupiny dnu i v Poslednich zaznamech (stejne jako F3 v Historii)
-  const groups = groupEntriesByDate(all);
-  el.innerHTML = groups.map(renderEntryGroup).join('');
+  const groups = groupEntriesByDate(visible);
+  let html = groups.map(renderEntryGroup).join('');
+  if (hasOlder) html += loadMoreRecentButtonHtml();
+  el.innerHTML = html;
   attachEntryActions(el);
+}
+
+function loadMoreRecentButtonHtml() {
+  const nextMonths = state.recentMonthsLoaded + 1;
+  return `<button type="button" class="load-more-btn" onclick="loadMoreRecent()">Načíst další měsíc <span class="load-more-hint">(zobrazí posledních ${nextMonths * 30} dní)</span></button>`;
+}
+
+function loadMoreRecent() {
+  state.recentMonthsLoaded += 1;
+  renderRecent();
 }
 
 function renderAllEntries() {
