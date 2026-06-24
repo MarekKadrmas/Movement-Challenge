@@ -1628,6 +1628,7 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
     <div class="modal-title">Upravit parametry hráče</div>
     <div class="modal-subtitle" id="player-modal-subtitle">Vyber kdo provádí úpravu</div>
 
+    <div class="modal-body">
     <div class="field">
       <label>Kdo upravuje <span style="color: var(--accent)">*</span></label>
       <div class="player-pills" id="editor-pills"></div>
@@ -1684,9 +1685,12 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
         Lezecké maximum nastav ručně — používá se pro výpočet bodů za lezení (cesta na maxu = nejvíc bodů).
       </div>
     </div>
+    </div><!-- /modal-body -->
 
-    <button class="btn-submit" id="player-submit-btn" onclick="submitPlayerEdit()">Uložit změny</button>
-    <button class="btn-cancel" onclick="closePlayerModal()">Zrušit</button>
+    <div class="modal-footer">
+      <button class="btn-submit" id="player-submit-btn" onclick="submitPlayerEdit()">Uložit změny</button>
+      <button class="btn-cancel" onclick="closePlayerModal()">Zrušit</button>
+    </div>
   </div>
 </div>
 
