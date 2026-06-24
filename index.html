@@ -3536,6 +3536,11 @@ function addLezeniRoute() {
   const last = state.lezeniRoutes[state.lezeniRoutes.length-1];
   state.lezeniRoutes.push({ grade:'', sys: last ? last.sys : defaultLezeniSys(), idx:null });
   renderLezeniRoutes();
+  // scroll na tlačítko "Přidat cestu" (jako F43 u cviků)
+  requestAnimationFrame(() => {
+    const btn = document.querySelector('#form-lezeni .add-serie-btn');
+    if (btn) btn.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  });
 }
 
 function updateLezeniPointsPreview() {
@@ -3863,7 +3868,8 @@ async function submitEntry() {
       if (valid.length === 0) { toast('Přidej alespoň jednu cestu s gradem', 'error'); btn.disabled = false; btn.textContent = origText; return; }
       const list = valid.map(r => ({ grade: r.grade, sys: r.sys, idx: r.idx }));
       const routes = list.map(r => ({ discipline: disc, idx: r.idx }));
-      const body = vypocitejBodyLezeni(player, routes);
+      // aktivity.body je integer → zaokrouhlit (aktivity mají vždy celé body)
+      const body = Math.round(vypocitejBodyLezeni(player, routes));
       const payload = {
         player_id: state.selectedPlayer,
         nazev: disc === 'boulder' ? 'Lezení – boulder' : 'Lezení – lano',
