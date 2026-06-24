@@ -1021,26 +1021,26 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 .habit-today-progress { font-size: 13px; color: var(--text-muted); font-weight: 600; white-space: nowrap; }
 .habit-today-progress b { color: var(--text); }
 .habit-card {
-  display: flex; align-items: center; gap: 12px;
+  display: flex; align-items: center; gap: 10px;
   background: var(--bg-card); border: 1px solid var(--border);
   border-left: 3px solid var(--hc, var(--accent));
-  border-radius: 14px; padding: 12px 14px; margin-bottom: 10px;
+  border-radius: 12px; padding: 8px 12px; margin-bottom: 7px;
 }
 .habit-card.done { background: color-mix(in srgb, var(--hc) 10%, var(--bg-card)); }
-.habit-icon { font-size: 24px; line-height: 1; flex-shrink: 0; width: 32px; text-align: center; }
+.habit-icon { font-size: 20px; line-height: 1; flex-shrink: 0; width: 26px; text-align: center; }
 .habit-main { flex: 1; min-width: 0; }
-.habit-name { font-weight: 800; font-size: 15px; color: var(--text); line-height: 1.2; }
-.habit-sub { font-size: 12px; color: var(--text-muted); margin-top: 3px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.habit-name { font-weight: 800; font-size: 14px; color: var(--text); line-height: 1.2; }
+.habit-sub { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
 .habit-streak { font-weight: 700; color: var(--text); }
-.habit-dots { display: flex; gap: 4px; margin-top: 7px; }
-.habit-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--border); }
+.habit-dots { display: flex; gap: 3px; margin-top: 5px; }
+.habit-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border); }
 .habit-dot.on { background: var(--hc, var(--accent)); }
 .habit-dot.today { box-shadow: 0 0 0 2px color-mix(in srgb, var(--hc) 40%, transparent); }
 .habit-check {
-  flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%;
+  flex-shrink: 0; width: 34px; height: 34px; border-radius: 50%;
   border: 2px solid var(--border); background: transparent;
   display: flex; align-items: center; justify-content: center;
-  font-size: 20px; cursor: pointer; color: transparent; transition: all .15s;
+  font-size: 17px; cursor: pointer; color: transparent; transition: all .15s;
 }
 .habit-check.checked { background: var(--hc, var(--accent)); border-color: var(--hc, var(--accent)); color: #fff; }
 .habit-edit-btn { flex-shrink: 0; background: transparent; border: none; color: var(--text-muted); font-size: 16px; cursor: pointer; padding: 4px; }
@@ -1104,20 +1104,22 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 .habit-preset-tile.custom { border-left-color: var(--accent); border-style: dashed; justify-content: center; font-weight: 800; color: var(--accent); }
 .habit-preset-empty { text-align: center; color: var(--text-muted); padding: 20px; font-size: 13px; }
 /* F52: týdenní proužek nahoře */
-.habit-week-strip { display: flex; gap: 6px; margin-bottom: 14px; }
-.hws-day { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px; background: transparent; border: none; cursor: pointer; padding: 4px 0; border-radius: 12px; }
-.hws-day.sel { background: var(--bg-card); }
+.habit-week-strip { display: flex; gap: 4px; margin-bottom: 14px; }
+.hws-day { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; background: transparent; border: none; cursor: pointer; padding: 5px 0 4px; border-radius: 12px; }
+.hws-day.sel { background: var(--bg-card); box-shadow: inset 0 0 0 1.5px var(--accent); }
 .hws-day.future { opacity: .4; }
 .hws-dow { font-size: 11px; font-weight: 700; color: var(--text-muted); }
+.hws-day.sel .hws-dow { color: var(--accent); }
 .hws-ring {
-  width: 36px; height: 36px; border-radius: 50%;
+  position: relative; width: 34px; height: 34px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  background: conic-gradient(var(--accent) calc(var(--p) * 1%), var(--border) 0);
+  background: conic-gradient(var(--col, var(--accent)) calc(var(--p) * 1%), var(--border) 0);
 }
-.hws-ring::before { content: ''; position: absolute; width: 30px; height: 30px; border-radius: 50%; background: var(--bg); }
-.hws-num, .hws-check { position: relative; font-size: 13px; font-weight: 700; color: var(--text); }
-.hws-check { color: var(--accent); }
-.hws-day.sel .hws-num { color: var(--accent); }
+.hws-ring::before { content: ''; position: absolute; width: 28px; height: 28px; border-radius: 50%; background: var(--bg); }
+.hws-day.sel .hws-ring::before { background: var(--bg-card); }
+.hws-num, .hws-check { position: relative; font-size: 12.5px; font-weight: 700; color: var(--text); }
+.hws-check { color: #16a34a; }
+.hws-today-mark { width: 4px; height: 4px; border-radius: 50%; background: var(--accent); }
 .habit-back { background: transparent; border: none; color: var(--text-muted); font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; padding: 0 0 12px; }
 .habit-sublabel { color: var(--text-muted); font-weight: 500; font-size: 12px; }
 .habit-seg { display: flex; gap: 6px; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 4px; }
@@ -3651,13 +3653,16 @@ function renderHabitWeekStrip(){
     const d = new Date(start); d.setDate(d.getDate() + i); d.setHours(0,0,0,0);
     const ds = dateToStr(d);
     const future = ds > todayS;
+    const isToday = ds === todayS;
     const due = mine.filter(h => habitDueOn(h, d));
     const done = due.filter(h => isHabitDone(h.id, pid, ds)).length;
     const pct = due.length ? Math.round(done / due.length * 100) : 0;
     const full = due.length && done >= due.length;
-    html += `<button class="hws-day ${ds === sel ? 'sel' : ''} ${future ? 'future' : ''}" ${future ? 'disabled' : ''} onclick="setHabitDay('${ds}')">
+    const col = pct > 0 ? `hsl(${Math.round(pct * 1.2)} 75% 45%)` : 'var(--border)';  // 0%=červená → 100%=zelená
+    html += `<button class="hws-day ${ds === sel ? 'sel' : ''} ${future ? 'future' : ''} ${isToday ? 'today' : ''}" ${future ? 'disabled' : ''} onclick="setHabitDay('${ds}')">
       <div class="hws-dow">${HABIT_DEN_NAMES[(d.getDay()+6)%7]}</div>
-      <div class="hws-ring" style="--p:${pct}">${full ? '<span class="hws-check">✓</span>' : `<span class="hws-num">${d.getDate()}</span>`}</div>
+      <div class="hws-ring" style="--p:${pct};--col:${col}">${full ? '<span class="hws-check">✓</span>' : `<span class="hws-num">${d.getDate()}</span>`}</div>
+      ${isToday ? '<div class="hws-today-mark"></div>' : ''}
     </button>`;
   }
   el.innerHTML = html;
@@ -3739,11 +3744,14 @@ function renderNavyky(){
     }
     if (h.mira_typ === 'measurable' && h.cil_hodnota != null) parts.push(`🎯 ${habitFmtNum(h.cil_hodnota)} ${habitEsc(h.cil_jednotka || '')}`.trim());
     if (h.kotva) parts.push(`⛓ ${habitEsc(h.kotva)}`);
+    let dots = '';
+    for (let i = 6; i >= 0; i--){ const d = new Date(); d.setHours(0,0,0,0); d.setDate(d.getDate() - i); const ds = dateToStr(d); const on = isHabitDone(h.id, pid, ds); dots += `<div class="habit-dot ${on?'on':''} ${ds===today?'today':''}"></div>`; }
     return `<div class="habit-card ${done?'done':''}" style="--hc:${c};${dueT||done?'':'opacity:.62'}">
       <div class="habit-icon">${h.ikona || '🎯'}</div>
       <div class="habit-main">
         <div class="habit-name">${habitEsc(h.nazev)}</div>
         <div class="habit-sub">${parts.join(' · ')}</div>
+        <div class="habit-dots">${dots}</div>
       </div>
       <button class="habit-edit-btn" onclick="openHabitModal('${h.id}')">✏️</button>
       <button class="habit-check ${done?'checked':''}" onclick="toggleHabitToday('${h.id}')" aria-label="Splnit dnes">✓</button>
