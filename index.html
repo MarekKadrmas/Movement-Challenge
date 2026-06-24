@@ -1016,8 +1016,9 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 }
 
 /* ===== F52: Habit tracker ===== */
-.habit-hero { text-align: left; }
-.habit-today-progress { margin-top: 10px; font-size: 13px; color: var(--text-muted); font-weight: 600; }
+.habit-header { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin: 6px 2px 14px; }
+.habit-h-title { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; color: var(--text); }
+.habit-today-progress { font-size: 13px; color: var(--text-muted); font-weight: 600; white-space: nowrap; }
 .habit-today-progress b { color: var(--text); }
 .habit-card {
   display: flex; align-items: center; gap: 12px;
@@ -1071,11 +1072,10 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 .habit-color-opt.active { border-color: var(--text); }
 /* F52 v2: soukromí, katalog, formulář */
 .habit-privacy {
-  display: flex; gap: 8px; align-items: flex-start;
   background: color-mix(in srgb, var(--accent) 8%, var(--bg-card));
   border: 1px solid var(--border); border-radius: 12px;
-  padding: 10px 12px; margin-bottom: 14px;
-  font-size: 12.5px; color: var(--text-muted); line-height: 1.35;
+  padding: 9px 12px; margin-bottom: 14px;
+  font-size: 12.5px; color: var(--text-muted); line-height: 1.4;
 }
 .habit-privacy b { color: var(--text); }
 .habit-search {
@@ -1505,10 +1505,9 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 
   <!-- F52: Návyky (habit tracker) -->
   <div id="view-navyky" style="display:none;">
-    <div class="hero habit-hero">
-      <div class="hero-label">Habit tracker</div>
-      <div class="hero-title" id="habit-hero-title">Moje návyky</div>
-      <div class="habit-today-progress" id="habit-today-progress"></div>
+    <div class="habit-header">
+      <div class="habit-h-title" id="habit-hero-title">Moje návyky</div>
+      <span class="habit-today-progress" id="habit-today-progress"></span>
     </div>
     <div class="habit-week-strip" id="habit-week-strip"></div>
     <div class="habit-privacy">🔒 Tvůj habit tracker je <b>soukromý</b> — vidíš ho jen ty, nikdo jiný ze hry na něj nevidí.</div>
@@ -3740,14 +3739,11 @@ function renderNavyky(){
     }
     if (h.mira_typ === 'measurable' && h.cil_hodnota != null) parts.push(`🎯 ${habitFmtNum(h.cil_hodnota)} ${habitEsc(h.cil_jednotka || '')}`.trim());
     if (h.kotva) parts.push(`⛓ ${habitEsc(h.kotva)}`);
-    let dots = '';
-    for (let i = 6; i >= 0; i--){ const d = new Date(); d.setHours(0,0,0,0); d.setDate(d.getDate() - i); const on = isHabitDone(h.id, pid, dateToStr(d)); dots += `<div class="habit-dot ${on?'on':''} ${i===0?'today':''}"></div>`; }
     return `<div class="habit-card ${done?'done':''}" style="--hc:${c};${dueT||done?'':'opacity:.62'}">
       <div class="habit-icon">${h.ikona || '🎯'}</div>
       <div class="habit-main">
         <div class="habit-name">${habitEsc(h.nazev)}</div>
         <div class="habit-sub">${parts.join(' · ')}</div>
-        <div class="habit-dots">${dots}</div>
       </div>
       <button class="habit-edit-btn" onclick="openHabitModal('${h.id}')">✏️</button>
       <button class="habit-check ${done?'checked':''}" onclick="toggleHabitToday('${h.id}')" aria-label="Splnit dnes">✓</button>
