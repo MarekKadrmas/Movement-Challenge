@@ -2007,6 +2007,7 @@ const LANO_GRADES = [
 ].map((r,i) => ({ idx:i, french:r[0], uiaa:r[1], yds:r[2] }));
 const LEZENI_COLS = { boulder: ['font','v'], lano: ['french','uiaa','yds'] };
 const LEZENI_SYS_LABEL = { font:'Font', v:'V-scale', french:'French', uiaa:'UIAA', yds:'YDS' };
+const LEZENI_SYS_EXAMPLE = { font:'6A', v:'V3', french:'6a', uiaa:'7-', yds:'5.10c' };  // ukázka v rozbalovátku
 function lezeniTable(disc) { return disc === 'boulder' ? BOULDER_GRADES : LANO_GRADES; }
 function lezeniNorm(s) { return String(s||'').trim().toLowerCase().replace(/\s+/g,''); }
 // najdi řádek podle gradu v jakémkoli systému disciplíny → {idx,...} nebo null
@@ -3508,7 +3509,7 @@ function renderLezeniRoutes() {
   el.innerHTML = state.lezeniRoutes.map((r, i) => {
     const sys = LEZENI_COLS[disc].includes(r.sys) ? r.sys : sysList[0];
     const opts = grades.map(g => `<option value="${g[sys]}" ${lezeniNorm(g[sys])===lezeniNorm(r.grade)?'selected':''}>${g[sys]}</option>`).join('');
-    const sysOpts = sysList.map(s => `<option value="${s}" ${s===sys?'selected':''}>${LEZENI_SYS_LABEL[s]}</option>`).join('');
+    const sysOpts = sysList.map(s => `<option value="${s}" ${s===sys?'selected':''}>${LEZENI_SYS_LABEL[s]} (${LEZENI_SYS_EXAMPLE[s]})</option>`).join('');
     const conv = (r.idx!=null) ? `<div class="lezeni-conv">= ${lezeniConvStr(disc, r.idx)}</div>` : '';
     return `<div class="serie-row" style="grid-template-columns: 32px 1fr 1.4fr 32px;">
       <div class="serie-num">${i+1}</div>
