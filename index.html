@@ -996,6 +996,24 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
   color: var(--text-muted); font-family: inherit; font-size: 13px; font-weight: 600;
   cursor: pointer; margin-top: 4px;
 }
+/* F51: lezení — selecty v řádku cesty + převodní hint */
+.serie-row select {
+  padding: 12px; font-size: 15px;
+  background: var(--bg-card); border: 1px solid var(--border); color: var(--text);
+  border-radius: 10px; font-family: inherit;
+  width: 100%; height: 48px; box-sizing: border-box;
+  -webkit-appearance: none; appearance: none;
+}
+.serie-row select:focus { outline: none; border-color: var(--text); }
+.lezeni-conv {
+  font-size: 12px; color: var(--text-muted);
+  margin: -2px 0 8px 40px; font-weight: 600;
+}
+#pe-boulder, #pe-lano {
+  padding: 14px; font-size: 15px; width: 100%; height: 48px; box-sizing: border-box;
+  background: var(--bg-card); border: 1px solid var(--border); color: var(--text);
+  border-radius: 10px; font-family: inherit; -webkit-appearance: none; appearance: none;
+}
 
 /* Tlacitka */
 .btn-submit {
@@ -1397,6 +1415,9 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
         <button class="type-btn" data-type="stretching">
           <span class="icon">🧘</span>Stretching
         </button>
+        <button class="type-btn" data-type="lezeni">
+          <span class="icon">🧗</span>Lezení
+        </button>
       </div>
 
       <div id="form-cvik">
@@ -1536,6 +1557,40 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
         </div>
       </div>
 
+      <!-- F51: LEZENÍ -->
+      <div id="form-lezeni" style="display:none;">
+        <div class="field">
+          <label>Disciplína</label>
+          <div class="serie-mode-grid" style="grid-template-columns: repeat(2, 1fr);">
+            <button type="button" class="serie-mode-btn active" data-lezeni-disc="boulder">
+              <div class="serie-mode-icon">🪨</div>
+              <div class="label">Boulder</div>
+              <div class="label-sub">Font / V-scale</div>
+            </button>
+            <button type="button" class="serie-mode-btn" data-lezeni-disc="lano">
+              <div class="serie-mode-icon">🧗</div>
+              <div class="label">Lano</div>
+              <div class="label-sub">French / UIAA / YDS</div>
+            </button>
+          </div>
+        </div>
+        <div class="field" id="lezeni-nomax-warn" style="display:none;">
+          <div class="info-box" style="border-color:#f59e0b;">
+            <span class="info-icon">⚠️</span>
+            <span id="lezeni-nomax-text">Nemáš v profilu nastavený maximální grade pro tuto disciplínu — bez něj nejde spočítat body. Doplň ho v kartě hráče (tlačítko ✏️).</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>Cesty</label>
+          <div class="serie-row-header" style="grid-template-columns: 32px 1fr 1.4fr 32px;">
+            <div>#</div><div>Grade</div><div>Systém</div><div></div>
+          </div>
+          <div id="lezeni-routes-list"></div>
+          <button type="button" class="add-serie-btn" onclick="addLezeniRoute()">+ Přidat cestu</button>
+        </div>
+        <div class="level-points-display" id="lezeni-points-display"></div>
+      </div>
+
       <!-- Datum zaznamu — klikatelny trigger pro vlastni kalendar -->
       <div class="field custom-date-field">
         <div class="date-trigger" id="date-trigger" onclick="openDatePicker()">
@@ -1612,6 +1667,21 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
           <label>Max dipy</label>
           <input type="number" id="pe-dipy" inputmode="numeric" min="0">
         </div>
+      </div>
+      <!-- F51: lezecké osobáky (nastavují se ručně) -->
+      <div class="field-row">
+        <div class="field">
+          <label>Max boulder 🪨</label>
+          <select id="pe-boulder"></select>
+        </div>
+        <div class="field">
+          <label>Max lano 🧗</label>
+          <select id="pe-lano"></select>
+        </div>
+      </div>
+      <div class="info-box" style="margin-top:-4px;">
+        <span class="info-icon">🧗</span>
+        Lezecké maximum nastav ručně — používá se pro výpočet bodů za lezení (cesta na maxu = nejvíc bodů).
       </div>
     </div>
 
@@ -1740,7 +1810,9 @@ const FIELD_LABELS = {
   max_shyby: 'Max shyby',
   max_drep: 'Max dřep (kg)',
   max_kliky: 'Max kliky',
-  max_dipy: 'Max dipy'
+  max_dipy: 'Max dipy',
+  max_boulder: 'Max boulder',
+  max_lano: 'Max lano'
 };
 
 let state = {
@@ -1767,7 +1839,9 @@ let state = {
   // F19: soft auth - aktualne prihlaseny hrac (z localStorage)
   currentPlayerId: null,
   // F45: guest mode (URL ?guest=true) - read-only verze pro kamarády
-  isGuest: false
+  isGuest: false,
+  // F51: lezení — disciplína + seznam cest [{grade, sys, idx}]
+  lezeniDisc: 'boulder', lezeniRoutes: []
 };
 
 // F19: localStorage klice
@@ -1913,6 +1987,63 @@ function vypocitejBodyCvikVaried(player, cvik, list) {
   const totalReps = clean.reduce((s, x) => s + x.op, 0);
   const body = Math.pow(E, CVIK_EXPONENT) * base * (useWk ? wk : 1);
   return Math.round(body * CVIK_MULTIPLIER * volumeFactor(totalReps) * 10) / 10;
+}
+
+// ===== F51: LEZENÍ (boulder + lano) — převody grade + bodování =====
+// Každý řádek = jeden kanonický index obtížnosti (idx). Převod = najdi řádek, vezmi jiný sloupec.
+const BOULDER_GRADES = [
+  ['3','VB'],['4','V0'],['5','V1'],['5+','V2'],['6A','V3'],['6A+','V3'],
+  ['6B','V4'],['6B+','V4'],['6C','V5'],['6C+','V5'],['7A','V6'],['7A+','V7'],
+  ['7B','V8'],['7B+','V8'],['7C','V9'],['7C+','V10'],['8A','V11'],['8A+','V12'],
+  ['8B','V13'],['8B+','V14'],['8C','V15'],['8C+','V16']
+].map((r,i) => ({ idx:i, font:r[0], v:r[1] }));
+const LANO_GRADES = [
+  ['4','4','5.5'],['5a','5-','5.6'],['5b','5','5.7'],['5c','5+','5.8'],
+  ['6a','6-','5.9'],['6a+','6','5.10a'],['6b','6+','5.10c'],['6b+','7-','5.10d'],
+  ['6c','7','5.11a'],['6c+','7+','5.11c'],['7a','8-','5.11d'],['7a+','8','5.12a'],
+  ['7b','8+','5.12b'],['7b+','9-','5.12c'],['7c','9','5.12d'],['7c+','9+','5.13a'],
+  ['8a','10-','5.13b'],['8a+','10','5.13c'],['8b','10+','5.13d'],['8b+','11-','5.14a'],
+  ['8c','11','5.14b'],['8c+','11+','5.14c'],['9a','12-','5.14d']
+].map((r,i) => ({ idx:i, french:r[0], uiaa:r[1], yds:r[2] }));
+const LEZENI_COLS = { boulder: ['font','v'], lano: ['french','uiaa','yds'] };
+const LEZENI_SYS_LABEL = { font:'Font', v:'V-scale', french:'French', uiaa:'UIAA', yds:'YDS' };
+function lezeniTable(disc) { return disc === 'boulder' ? BOULDER_GRADES : LANO_GRADES; }
+function lezeniNorm(s) { return String(s||'').trim().toLowerCase().replace(/\s+/g,''); }
+// najdi řádek podle gradu v jakémkoli systému disciplíny → {idx,...} nebo null
+function lezeniFind(disc, raw) {
+  const n = lezeniNorm(raw);
+  for (const row of lezeniTable(disc)) for (const c of LEZENI_COLS[disc]) if (lezeniNorm(row[c]) === n) return row;
+  return null;
+}
+function lezeniRowAt(disc, idx) {
+  const t = lezeniTable(disc);
+  return t[Math.max(0, Math.min(t.length-1, Math.round(idx)))];
+}
+// převod idx → čitelný řetězec všech systémů, např. "6A · V3" / "6a · UIAA 6- · 5.9"
+function lezeniConvStr(disc, idx) {
+  const row = lezeniRowAt(disc, idx);
+  return LEZENI_COLS[disc].map(c => (c==='font'||c==='french') ? row[c] : LEZENI_SYS_LABEL[c]+' '+row[c]).join(' · ');
+}
+// Bodování: relativně k osobáku. Lehká cesta (pod maxem) = málo; cesta na maxu = MULT.
+const LEZENI_REL_POW = 2;      // strmost poklesu pod maxem
+const LEZENI_EXP = 0.5;        // klesající návratnost přes součet cest
+const LEZENI_RATIO_CAP = 1.5;  // pojistka proti podstřelenému maxu
+const LEZENI_MULT = { boulder: 50, lano: 90 };  // lano > boulder
+// routes = [{discipline,idx}], player.max_boulder / player.max_lano = osobák (idx)
+function vypocitejBodyLezeni(player, routes) {
+  if (!player || !Array.isArray(routes)) return 0;
+  const maxIdx = { boulder: player.max_boulder, lano: player.max_lano };
+  const E = { boulder: 0, lano: 0 };
+  for (const r of routes) {
+    const mi = maxIdx[r.discipline];
+    if (mi == null || mi === '' || r.idx == null) continue;
+    let ratio = (Number(r.idx) + 1) / (Number(mi) + 1);
+    if (ratio > LEZENI_RATIO_CAP) ratio = LEZENI_RATIO_CAP;
+    E[r.discipline] += Math.pow(ratio, LEZENI_REL_POW);
+  }
+  let body = 0;
+  for (const d of ['boulder','lano']) if (E[d] > 0) body += Math.pow(E[d], LEZENI_EXP) * LEZENI_MULT[d];
+  return Math.round(body * 10) / 10;
 }
 
 function initials(name) { return name.substring(0, 2).toUpperCase(); }
@@ -2752,7 +2883,7 @@ function openSwitchPlayer() {
 function renderEntryCard(e, withActions) {
   const player = state.players.find(p => p.id === e.player_id);
   if (!player) return '';
-  let title, sub = '', isStretch = false;
+  let title, sub = '', isStretch = false, isLezeni = false;
 
   if (e._type === 'cvik') {
     // Detekce serii v poznamce (JSON)
@@ -2775,15 +2906,25 @@ function renderEntryCard(e, withActions) {
       title = `${e.cvik} × ${e.opakovani}${e.pridana_vaha > 0 ? ` (+${e.pridana_vaha} kg)` : ''}`;
     }
   } else {
-    if (isStretchActivity(e)) { isStretch = true; title = e.nazev; }
+    // F51: lezení — hezký rozpis cest
+    let lez = null;
+    if (e.poznamka) { try { const pp = JSON.parse(e.poznamka); if (pp && pp.mode === 'lezeni') lez = pp; } catch(_) {} }
+    if (lez) {
+      isLezeni = true;
+      const disc = lez.discipline;
+      const primSys = disc === 'boulder' ? 'font' : 'french';
+      const grades = (lez.routes || []).map(r => { const row = (r.idx != null) ? lezeniRowAt(disc, r.idx) : null; return row ? row[primSys] : r.grade; });
+      title = `🧗 Lezení – ${disc === 'boulder' ? 'boulder' : 'lano'} · ${grades.length} ${grades.length===1?'cesta':(grades.length<5?'cesty':'cest')}`;
+      sub = grades.join(' · ');
+    } else if (isStretchActivity(e)) { isStretch = true; title = e.nazev; }
     else { title = e.nazev; }
   }
   // F33: type badge na avataru (cvik/aktivita/stretch)
   const typeBadge = e._type === 'cvik'
     ? '<span class="entry-type-badge cvik">💪</span>'
-    : (isStretch ? '<span class="entry-type-badge stretch">🧘</span>' : '<span class="entry-type-badge aktivita">🏃</span>');
+    : (isStretch ? '<span class="entry-type-badge stretch">🧘</span>' : (isLezeni ? '<span class="entry-type-badge cvik">🧗</span>' : '<span class="entry-type-badge aktivita">🏃</span>'));
   // Meta = jmeno · uroven/detail · datum
-  const meta = e._type === 'cvik' || isStretch
+  const meta = (e._type === 'cvik' || isStretch || isLezeni)
     ? `${player.jmeno} · ${formatDate(e.datum)}${sub ? ' · ' + sub : ''}`
     : `${player.jmeno} · úroveň ${e.uroven} · ${formatDate(e.datum)}`;
   // F19: edit/delete jen pro vlastní záznam (kromě adminu)
@@ -2920,6 +3061,8 @@ function renderPlayers() {
           <div class="player-card-stat"><div class="player-card-stat-label">Max dřep</div><div class="player-card-stat-value">${p.max_drep ? p.max_drep + ' kg' : '—'}</div></div>
           <div class="player-card-stat"><div class="player-card-stat-label">Max kliky</div><div class="player-card-stat-value">${p.max_kliky || '—'}</div></div>
           <div class="player-card-stat"><div class="player-card-stat-label">Max dipy</div><div class="player-card-stat-value">${p.max_dipy || '—'}</div></div>
+          <div class="player-card-stat"><div class="player-card-stat-label">Max boulder 🪨</div><div class="player-card-stat-value">${p.max_boulder != null ? `${lezeniRowAt('boulder',p.max_boulder).font} <span style="opacity:.6;font-size:.85em">${lezeniRowAt('boulder',p.max_boulder).v}</span>` : '—'}</div></div>
+          <div class="player-card-stat"><div class="player-card-stat-label">Max lano 🧗</div><div class="player-card-stat-value">${p.max_lano != null ? `${lezeniRowAt('lano',p.max_lano).french} <span style="opacity:.6;font-size:.85em">${lezeniRowAt('lano',p.max_lano).uiaa}</span>` : '—'}</div></div>
         </div>
         <!-- F34: Personal Records -->
         ${(() => {
@@ -3173,6 +3316,7 @@ function closeModal() {
   state.selectedPlayer = null; state.selectedCvik = null; state.selectedLevel = null; state.selectedStretch = null;
   state.entryType = 'cvik'; state.editMode = false; state.editId = null; state.editTable = null;
   state.serieMode = 'single'; state.variedSeries = [];
+  state.lezeniDisc = 'boulder'; state.lezeniRoutes = [];
 }
 
 function resetFormFields() {
@@ -3198,6 +3342,11 @@ function resetFormFields() {
   document.getElementById('stretch-points-display').classList.remove('show');
   const cvikDisp = document.getElementById('cvik-points-display');
   if (cvikDisp) cvikDisp.classList.remove('show');  // F20
+  // F51: reset lezení
+  state.lezeniDisc = 'boulder'; state.lezeniRoutes = [{ grade:'', sys:'font', idx:null }];
+  document.querySelectorAll('[data-lezeni-disc]').forEach(b => b.classList.toggle('active', b.dataset.lezeniDisc === 'boulder'));
+  const lezDisp = document.getElementById('lezeni-points-display'); if (lezDisp) lezDisp.classList.remove('show');
+  renderLezeniRoutes();
   // Reset datum na dnes
   state.selectedDate = todayStr();
   updateDateTrigger();
@@ -3328,7 +3477,82 @@ function setEntryType(type) {
   document.getElementById('form-cvik').style.display = type === 'cvik' ? '' : 'none';
   document.getElementById('form-aktivita').style.display = type === 'aktivita' ? '' : 'none';
   document.getElementById('form-stretching').style.display = type === 'stretching' ? '' : 'none';
+  document.getElementById('form-lezeni').style.display = type === 'lezeni' ? '' : 'none';
   if (type === 'cvik') updateCvikPointsPreview();
+  if (type === 'lezeni') { if (!state.lezeniRoutes.length) state.lezeniRoutes = [{ grade:'', sys: defaultLezeniSys(), idx:null }]; renderLezeniRoutes(); }
+}
+
+// ===== F51: Lezení — UI logika =====
+function defaultLezeniSys() { return state.lezeniDisc === 'boulder' ? 'font' : 'french'; }
+
+function setLezeniDisc(disc) {
+  state.lezeniDisc = disc;
+  document.querySelectorAll('[data-lezeni-disc]').forEach(b => b.classList.toggle('active', b.dataset.lezeniDisc === disc));
+  // přepočítej idx u existujících cest podle nové disciplíny (grade necháme, znova najdeme)
+  state.lezeniRoutes.forEach(r => { if (!LEZENI_COLS[disc].includes(r.sys)) r.sys = defaultLezeniSys(); const row = r.grade ? lezeniFind(disc, r.grade) : null; r.idx = row ? row.idx : null; });
+  renderLezeniRoutes();
+}
+
+function lezeniDiscMax() {
+  const p = state.players.find(x => x.id === state.selectedPlayer);
+  if (!p) return null;
+  return state.lezeniDisc === 'boulder' ? p.max_boulder : p.max_lano;
+}
+
+function renderLezeniRoutes() {
+  const el = document.getElementById('lezeni-routes-list');
+  if (!el) return;
+  const disc = state.lezeniDisc;
+  const grades = lezeniTable(disc);
+  const sysList = LEZENI_COLS[disc];
+  el.innerHTML = state.lezeniRoutes.map((r, i) => {
+    const sys = LEZENI_COLS[disc].includes(r.sys) ? r.sys : sysList[0];
+    const opts = grades.map(g => `<option value="${g[sys]}" ${lezeniNorm(g[sys])===lezeniNorm(r.grade)?'selected':''}>${g[sys]}</option>`).join('');
+    const sysOpts = sysList.map(s => `<option value="${s}" ${s===sys?'selected':''}>${LEZENI_SYS_LABEL[s]}</option>`).join('');
+    const conv = (r.idx!=null) ? `<div class="lezeni-conv">= ${lezeniConvStr(disc, r.idx)}</div>` : '';
+    return `<div class="serie-row" style="grid-template-columns: 32px 1fr 1.4fr 32px;">
+      <div class="serie-num">${i+1}</div>
+      <select data-idx="${i}" data-field="grade"><option value="">—</option>${opts}</select>
+      <select data-idx="${i}" data-field="sys">${sysOpts}</select>
+      <button class="remove-btn" data-idx="${i}" type="button">×</button>
+    </div>${conv}`;
+  }).join('');
+  el.querySelectorAll('select').forEach(sel => sel.addEventListener('change', e => {
+    const idx = parseInt(e.target.dataset.idx), field = e.target.dataset.field;
+    if (field === 'sys') { state.lezeniRoutes[idx].sys = e.target.value; }
+    else { state.lezeniRoutes[idx].grade = e.target.value; const row = lezeniFind(disc, e.target.value); state.lezeniRoutes[idx].idx = row ? row.idx : null; }
+    renderLezeniRoutes();
+  }));
+  el.querySelectorAll('.remove-btn').forEach(btn => btn.addEventListener('click', e => {
+    state.lezeniRoutes.splice(parseInt(e.target.dataset.idx), 1);
+    if (!state.lezeniRoutes.length) state.lezeniRoutes = [{ grade:'', sys: defaultLezeniSys(), idx:null }];
+    renderLezeniRoutes();
+  }));
+  updateLezeniPointsPreview();
+}
+
+function addLezeniRoute() {
+  const last = state.lezeniRoutes[state.lezeniRoutes.length-1];
+  state.lezeniRoutes.push({ grade:'', sys: last ? last.sys : defaultLezeniSys(), idx:null });
+  renderLezeniRoutes();
+}
+
+function updateLezeniPointsPreview() {
+  const disp = document.getElementById('lezeni-points-display');
+  const warn = document.getElementById('lezeni-nomax-warn');
+  if (!disp) return;
+  const p = state.players.find(x => x.id === state.selectedPlayer);
+  const maxIdx = lezeniDiscMax();
+  const hasMax = !(maxIdx == null || maxIdx === '');
+  if (warn) {
+    warn.style.display = (p && !hasMax && state.lezeniRoutes.some(r => r.idx!=null)) ? '' : 'none';
+    const t = document.getElementById('lezeni-nomax-text');
+    if (t) t.textContent = `${p ? p.jmeno : 'Hráč'} nemá v profilu nastavený max grade pro ${state.lezeniDisc === 'boulder' ? 'boulder' : 'lano'} — bez něj nejdou spočítat body. Doplň ho v kartě hráče (✏️).`;
+  }
+  const routes = state.lezeniRoutes.filter(r => r.idx != null).map(r => ({ discipline: state.lezeniDisc, idx: r.idx }));
+  const total = (p && hasMax) ? vypocitejBodyLezeni(p, routes) : 0;
+  if (total > 0) { disp.textContent = `+${Math.round(total)} bodů`; disp.classList.add('show'); }
+  else disp.classList.remove('show');
 }
 
 function setSerieMode(mode) {
@@ -3444,6 +3668,7 @@ function buildPlayerPills() {
       pill.style.background = color; pill.style.borderColor = color;
       state.selectedPlayer = pill.dataset.playerId;
       updateFormDisabled();
+      if (state.entryType === 'lezeni') renderLezeniRoutes();
     });
   });
 }
@@ -3458,7 +3683,8 @@ document.querySelectorAll('.type-btn').forEach(btn => {
 document.querySelectorAll('.serie-mode-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     if (!state.selectedPlayer) return;
-    setSerieMode(btn.dataset.mode);
+    if (btn.dataset.lezeniDisc) setLezeniDisc(btn.dataset.lezeniDisc);  // F51: přepínač disciplíny
+    else setSerieMode(btn.dataset.mode);
   });
 });
 
@@ -3627,6 +3853,34 @@ async function submitEntry() {
         if (error) throw error;
         toast(`+${body} bodů!`, 'success');
       }
+    } else if (state.entryType === 'lezeni') {
+      const player = state.players.find(p => p.id === state.selectedPlayer);
+      const disc = state.lezeniDisc;
+      const maxIdx = disc === 'boulder' ? player.max_boulder : player.max_lano;
+      if (maxIdx == null || maxIdx === '') { toast(`${player.jmeno} nemá nastavený max grade pro ${disc} — doplň ho v profilu`, 'error'); btn.disabled = false; btn.textContent = origText; return; }
+      const valid = state.lezeniRoutes.filter(r => r.idx != null);
+      if (valid.length === 0) { toast('Přidej alespoň jednu cestu s gradem', 'error'); btn.disabled = false; btn.textContent = origText; return; }
+      const list = valid.map(r => ({ grade: r.grade, sys: r.sys, idx: r.idx }));
+      const routes = list.map(r => ({ discipline: disc, idx: r.idx }));
+      const body = vypocitejBodyLezeni(player, routes);
+      const payload = {
+        player_id: state.selectedPlayer,
+        nazev: disc === 'boulder' ? 'Lezení – boulder' : 'Lezení – lano',
+        uroven: 1,
+        body: body,
+        datum: getEntryDate(),
+        je_stretching: false,
+        poznamka: JSON.stringify({ mode: 'lezeni', discipline: disc, routes: list })
+      };
+      if (state.editMode) {
+        const { error } = await db.from('aktivity').update(payload).eq('id', state.editId);
+        if (error) throw error;
+        toast('Záznam upraven', 'success');
+      } else {
+        const { error } = await db.from('aktivity').insert(payload);
+        if (error) throw error;
+        toast(`+${Math.round(body)} bodů!`, 'success');
+      }
     }
     closeModal();
     await loadData();
@@ -3667,6 +3921,8 @@ function openEditModal(id, type) {
     if (pill) pill.click();
   }, 50);
   const isStretching = type === 'aktivita' && isStretchActivity(entry);
+  let lezeniData = null;
+  if (type === 'aktivita' && entry.poznamka) { try { const pp = JSON.parse(entry.poznamka); if (pp && pp.mode === 'lezeni') lezeniData = pp; } catch(_) {} }
   if (type === 'cvik') {
     setEntryType('cvik');
     state.selectedCvik = entry.cvik;
@@ -3696,6 +3952,12 @@ function openEditModal(id, type) {
       document.getElementById('cvik-single-vaha').value = entry.pridana_vaha || 0;
     }
     setSerieMode(mode);
+  } else if (lezeniData) {
+    setEntryType('lezeni');
+    setLezeniDisc(lezeniData.discipline || 'boulder');
+    state.lezeniRoutes = (lezeniData.routes || []).map(r => ({ grade: r.grade, sys: r.sys || defaultLezeniSys(), idx: (r.idx != null ? r.idx : (lezeniFind(lezeniData.discipline, r.grade) || {}).idx) }));
+    if (!state.lezeniRoutes.length) state.lezeniRoutes = [{ grade:'', sys: defaultLezeniSys(), idx:null }];
+    renderLezeniRoutes();
   } else if (isStretching) {
     setEntryType('stretching');
     let stretchKey = 'stred';
@@ -3756,9 +4018,25 @@ function openPlayerEdit(playerId) {
   document.getElementById('pe-drep').value = player.max_drep || '';
   document.getElementById('pe-kliky').value = player.max_kliky || '';
   document.getElementById('pe-dipy').value = player.max_dipy || '';
+  // F51: lezecké osobáky (select s gradi + převodem)
+  fillLezeniMaxSelect('pe-boulder', 'boulder', player.max_boulder);
+  fillLezeniMaxSelect('pe-lano', 'lano', player.max_lano);
 
   document.getElementById('player-modal').classList.add('active');
   lockBodyScroll();
+}
+
+// F51: naplní select lezeckým gradem (value = idx); zobrazí primární systém + převod
+function fillLezeniMaxSelect(elId, disc, currentIdx) {
+  const sel = document.getElementById(elId);
+  if (!sel) return;
+  const prim = disc === 'boulder' ? 'font' : 'french';
+  let html = '<option value="">— nenastaveno —</option>';
+  html += lezeniTable(disc).map(g => {
+    const label = disc === 'boulder' ? `${g.font} (${g.v})` : `${g.french} (UIAA ${g.uiaa})`;
+    return `<option value="${g.idx}" ${String(g.idx)===String(currentIdx)?'selected':''}>${label}</option>`;
+  }).join('');
+  sel.innerHTML = html;
 }
 
 function buildEditorPills() {
@@ -3801,7 +4079,10 @@ async function submitPlayerEdit() {
     max_shyby: parseInt(document.getElementById('pe-shyby').value) || null,
     max_drep: parseFloat(document.getElementById('pe-drep').value) || null,
     max_kliky: parseInt(document.getElementById('pe-kliky').value) || null,
-    max_dipy: parseInt(document.getElementById('pe-dipy').value) || null
+    max_dipy: parseInt(document.getElementById('pe-dipy').value) || null,
+    // F51: idx může být 0 (validní grade) → nepoužívat || null
+    max_boulder: document.getElementById('pe-boulder').value === '' ? null : parseInt(document.getElementById('pe-boulder').value),
+    max_lano: document.getElementById('pe-lano').value === '' ? null : parseInt(document.getElementById('pe-lano').value)
   };
 
   // Najdi rozdily
