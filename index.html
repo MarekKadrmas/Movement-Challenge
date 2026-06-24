@@ -1015,6 +1015,61 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
   border-radius: 10px; font-family: inherit; -webkit-appearance: none; appearance: none;
 }
 
+/* ===== F52: Habit tracker ===== */
+.habit-hero { text-align: left; }
+.habit-today-progress { margin-top: 10px; font-size: 13px; color: var(--text-muted); font-weight: 600; }
+.habit-today-progress b { color: var(--text); }
+.habit-card {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-left: 3px solid var(--hc, var(--accent));
+  border-radius: 14px; padding: 12px 14px; margin-bottom: 10px;
+}
+.habit-card.done { background: color-mix(in srgb, var(--hc) 10%, var(--bg-card)); }
+.habit-icon { font-size: 24px; line-height: 1; flex-shrink: 0; width: 32px; text-align: center; }
+.habit-main { flex: 1; min-width: 0; }
+.habit-name { font-weight: 800; font-size: 15px; color: var(--text); line-height: 1.2; }
+.habit-sub { font-size: 12px; color: var(--text-muted); margin-top: 3px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.habit-streak { font-weight: 700; color: var(--text); }
+.habit-dots { display: flex; gap: 4px; margin-top: 7px; }
+.habit-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--border); }
+.habit-dot.on { background: var(--hc, var(--accent)); }
+.habit-dot.today { box-shadow: 0 0 0 2px color-mix(in srgb, var(--hc) 40%, transparent); }
+.habit-check {
+  flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%;
+  border: 2px solid var(--border); background: transparent;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; cursor: pointer; color: transparent; transition: all .15s;
+}
+.habit-check.checked { background: var(--hc, var(--accent)); border-color: var(--hc, var(--accent)); color: #fff; }
+.habit-edit-btn { flex-shrink: 0; background: transparent; border: none; color: var(--text-muted); font-size: 16px; cursor: pointer; padding: 4px; }
+.habit-add-btn {
+  width: 100%; padding: 14px; border-radius: 12px;
+  background: transparent; border: 1.5px dashed var(--border);
+  color: var(--text-muted); font-family: inherit; font-size: 14px; font-weight: 700;
+  cursor: pointer; margin-top: 4px;
+}
+.habit-empty { text-align: center; padding: 30px 16px; color: var(--text-muted); }
+.habit-empty .icon { font-size: 40px; margin-bottom: 10px; }
+.habit-empty .title { font-weight: 800; color: var(--text); font-size: 16px; margin-bottom: 4px; }
+.habit-catalog, .habit-icon-picker { display: flex; flex-wrap: wrap; gap: 8px; }
+.habit-cat-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 9px 12px; border-radius: 999px; cursor: pointer;
+  background: var(--bg); border: 1px solid var(--border);
+  font-size: 13px; font-weight: 600; color: var(--text);
+}
+.habit-cat-chip.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+.habit-icon-opt {
+  width: 44px; height: 44px; border-radius: 10px; cursor: pointer;
+  background: var(--bg); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center; font-size: 22px;
+}
+.habit-icon-opt.active { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--bg)); }
+.habit-color-picker { display: flex; gap: 10px; flex-wrap: wrap; }
+.habit-color-opt { width: 32px; height: 32px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
+.habit-color-opt.active { border-color: var(--text); }
+
 /* Tlacitka */
 .btn-submit {
   width: 100%; background: #000; color: #fff;
@@ -1289,6 +1344,7 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
     <button class="nav-btn active" data-view="prehled">Přehled</button>
     <button class="nav-btn" data-view="historie">Historie</button>
     <button class="nav-btn" data-view="hraci">Hráči</button>
+    <button class="nav-btn" data-view="navyky">Návyky</button>
   </nav>
 
   <div id="view-prehled">
@@ -1379,9 +1435,67 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
     <div id="scoring-explanation"></div>
   </div>
 
-  <!-- F18: Chat (4. zalozka) -->
+  <!-- F52: Návyky (habit tracker) -->
+  <div id="view-navyky" style="display:none;">
+    <div class="hero habit-hero">
+      <div class="hero-label">Habit tracker</div>
+      <div class="hero-title" id="habit-hero-title">Moje návyky</div>
+      <div class="habit-today-progress" id="habit-today-progress"></div>
+    </div>
+    <div id="habit-list"></div>
+    <button type="button" class="habit-add-btn" id="habit-add-btn" onclick="openHabitModal()">+ Nový návyk</button>
+  </div>
 
 </main>
+
+<!-- F52: HABIT modal (nový/úprava návyku) -->
+<div class="modal-overlay" id="habit-modal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="habit-modal-title">Nový návyk</div>
+    <div class="modal-subtitle">Vyber z nabídky nebo si vytvoř vlastní</div>
+
+    <div class="modal-body">
+      <div class="field" id="habit-catalog-field">
+        <label>Z nabídky</label>
+        <div class="habit-catalog" id="habit-catalog"></div>
+      </div>
+      <div class="field">
+        <label>Název návyku</label>
+        <input type="text" id="habit-nazev" placeholder="Např. Pít 2 l vody" maxlength="40">
+      </div>
+      <div class="field">
+        <label>Ikona</label>
+        <div class="habit-icon-picker" id="habit-icon-picker"></div>
+      </div>
+      <div class="field">
+        <label>Jak často?</label>
+        <div class="serie-mode-grid" style="grid-template-columns:1fr 1fr;">
+          <button type="button" class="serie-mode-btn active" data-habit-freq="daily">
+            <div class="serie-mode-icon">📅</div><div class="label">Každý den</div>
+          </button>
+          <button type="button" class="serie-mode-btn" data-habit-freq="weekly">
+            <div class="serie-mode-icon">🗓️</div><div class="label">Týdně</div>
+          </button>
+        </div>
+        <div class="field" id="habit-weekly-target" style="display:none;margin-top:10px;">
+          <label>Kolikrát za týden?</label>
+          <input type="number" id="habit-freq-cil" inputmode="numeric" min="1" max="7" value="3">
+        </div>
+      </div>
+      <div class="field">
+        <label>Barva</label>
+        <div class="habit-color-picker" id="habit-color-picker"></div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-submit" id="habit-submit-btn" onclick="submitHabit()">Vytvořit návyk</button>
+      <button class="btn-danger" id="habit-delete-btn" style="display:none;" onclick="deleteCurrentHabit()">Smazat návyk</button>
+      <button class="btn-cancel" onclick="closeHabitModal()">Zrušit</button>
+    </div>
+  </div>
+</div>
 
 <div class="fab-group">
   <button class="fab primary" onclick="openModal()" aria-label="Přidat záznam">+</button>
@@ -1819,6 +1933,22 @@ const FIELD_LABELS = {
   max_lano: 'Max lano'
 };
 
+// F52: Habit tracker — katalog tipů, ikony, barvy
+const HABIT_CATALOG = [
+  { nazev: 'Pít 2 l vody', ikona: '💧' },
+  { nazev: 'Číst', ikona: '📖' },
+  { nazev: 'Meditace', ikona: '🧘' },
+  { nazev: 'Brzy spát', ikona: '🛌' },
+  { nazev: 'Bez cukru', ikona: '🚫' },
+  { nazev: 'Ranní strečink', ikona: '🤸' },
+  { nazev: 'Studená sprcha', ikona: '🧊' },
+  { nazev: 'Vitamíny', ikona: '💊' },
+  { nazev: 'Bez telefonu večer', ikona: '📵' },
+  { nazev: 'Procházka', ikona: '🚶' }
+];
+const HABIT_ICONS = ['💧','📖','🧘','🛌','🚫','🤸','🧊','💊','📵','🚶','🏃','🥗','✍️','🎯','🌅','🦷','🧹','💪','☀️','🙏'];
+const HABIT_COLORS = ['#4ADE80','#F472B6','#60A5FA','#FB923C','#A78BFA','#22D3EE','#F87171','#FACC15'];
+
 let state = {
   players: [], cviky: [], aktivity: [], history: [],
   selectedPlayer: null, selectedCvik: null, selectedLevel: null, selectedStretch: null,
@@ -1845,7 +1975,10 @@ let state = {
   // F45: guest mode (URL ?guest=true) - read-only verze pro kamarády
   isGuest: false,
   // F51: lezení — disciplína + seznam cest [{grade, sys, idx}]
-  lezeniDisc: 'boulder', lezeniRoutes: []
+  lezeniDisc: 'boulder', lezeniRoutes: [],
+  // F52: habit tracker
+  habits: [], habitLogs: [],
+  habitEditId: null, habitFreq: 'daily', habitIcon: '💧', habitColor: '#4ADE80'
 };
 
 // F19: localStorage klice
@@ -3289,6 +3422,180 @@ function renderAllViews() {
   renderAllEntries();
   renderPlayers();
   renderScoringExplanation();
+  renderNavyky();
+}
+
+// ============================================================
+//  F52: HABIT TRACKER
+// ============================================================
+function habitEsc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function currentHabitPlayer(){ return state.currentPlayerId; }
+function habitLogsFor(habitId, pid){ return state.habitLogs.filter(l => l.habit_id === habitId && l.player_id === pid); }
+function isHabitDone(habitId, pid, dateStr){ return state.habitLogs.some(l => l.habit_id === habitId && l.player_id === pid && l.datum === dateStr); }
+function habitDayStreak(habitId, pid){
+  const done = new Set(habitLogsFor(habitId, pid).map(l => l.datum));
+  let streak = 0, d = new Date(); d.setHours(0,0,0,0);
+  if (!done.has(dateToStr(d))) d.setDate(d.getDate() - 1);  // dnes ještě nesplněno → streak se nezlomí
+  while (done.has(dateToStr(d))) { streak++; d.setDate(d.getDate() - 1); }
+  return streak;
+}
+function habitWeekCount(habitId, pid){
+  const start = startOfWeek();
+  return habitLogsFor(habitId, pid).filter(l => new Date(l.datum) >= start).length;
+}
+function dniLabel(n){ return n === 1 ? 'den' : (n >= 2 && n <= 4 ? 'dny' : 'dní'); }
+
+function renderNavyky(){
+  const wrap = document.getElementById('habit-list');
+  if (!wrap) return;
+  const prog = document.getElementById('habit-today-progress');
+  const titleEl = document.getElementById('habit-hero-title');
+  const addBtn = document.getElementById('habit-add-btn');
+  const pid = currentHabitPlayer();
+  if (!pid){
+    titleEl.textContent = 'Moje návyky'; prog.textContent = ''; addBtn.style.display = 'none';
+    wrap.innerHTML = '<div class="habit-empty"><div class="icon">🔒</div><div class="title">Přihlas se</div><div>Návyky jsou osobní — přihlas se jako hráč a začni si je budovat.</div></div>';
+    return;
+  }
+  addBtn.style.display = '';
+  const player = state.players.find(p => p.id === pid);
+  titleEl.textContent = player ? `Návyky · ${player.jmeno}` : 'Moje návyky';
+  const mine = state.habits.filter(h => h.player_id === pid)
+    .sort((a,b) => (a.poradi - b.poradi) || (new Date(a.created_at) - new Date(b.created_at)));
+  const today = todayStr();
+  if (mine.length === 0){
+    prog.textContent = '';
+    wrap.innerHTML = '<div class="habit-empty"><div class="icon">🎯</div><div class="title">Zatím žádný návyk</div><div>Klepni na „+ Nový návyk" a vyber si z nabídky nebo vytvoř vlastní.</div></div>';
+    return;
+  }
+  const daily = mine.filter(h => h.frekvence_typ === 'daily');
+  const doneToday = daily.filter(h => isHabitDone(h.id, pid, today)).length;
+  prog.innerHTML = daily.length ? `Dnes splněno <b>${doneToday}/${daily.length}</b>` : '';
+  wrap.innerHTML = mine.map(h => {
+    const c = h.barva || 'var(--accent)';
+    const done = isHabitDone(h.id, pid, today);
+    let sub;
+    if (h.frekvence_typ === 'weekly'){
+      const wc = habitWeekCount(h.id, pid);
+      sub = `<span class="habit-streak">${wc}/${h.frekvence_cil}×</span> tento týden`;
+    } else {
+      const st = habitDayStreak(h.id, pid);
+      sub = `<span class="habit-streak">🔥 ${st}</span> ${dniLabel(st)} v řadě`;
+    }
+    let dots = '';
+    for (let i = 6; i >= 0; i--){ const d = new Date(); d.setHours(0,0,0,0); d.setDate(d.getDate() - i); const on = isHabitDone(h.id, pid, dateToStr(d)); dots += `<div class="habit-dot ${on?'on':''} ${i===0?'today':''}"></div>`; }
+    return `<div class="habit-card ${done?'done':''}" style="--hc:${c}">
+      <div class="habit-icon">${h.ikona || '🎯'}</div>
+      <div class="habit-main">
+        <div class="habit-name">${habitEsc(h.nazev)}</div>
+        <div class="habit-sub">${sub}</div>
+        <div class="habit-dots">${dots}</div>
+      </div>
+      <button class="habit-edit-btn" onclick="openHabitModal('${h.id}')">✏️</button>
+      <button class="habit-check ${done?'checked':''}" onclick="toggleHabitToday('${h.id}')" aria-label="Splnit dnes">✓</button>
+    </div>`;
+  }).join('');
+}
+
+async function toggleHabitToday(id){
+  const pid = currentHabitPlayer(); if (!pid) return;
+  const today = todayStr();
+  const existing = state.habitLogs.find(l => l.habit_id === id && l.player_id === pid && l.datum === today);
+  try {
+    if (existing){
+      const { error } = await db.from('habit_logs').delete().eq('id', existing.id); if (error) throw error;
+      state.habitLogs = state.habitLogs.filter(l => l.id !== existing.id);
+    } else {
+      const { data, error } = await db.from('habit_logs').insert({ habit_id: id, player_id: pid, datum: today }).select(); if (error) throw error;
+      if (data && data[0]) state.habitLogs.push(data[0]);
+    }
+    renderNavyky();
+  } catch(e){ toast('Chyba: ' + e.message, 'error'); }
+}
+
+function setHabitFreq(f){
+  state.habitFreq = f;
+  document.querySelectorAll('[data-habit-freq]').forEach(b => b.classList.toggle('active', b.dataset.habitFreq === f));
+  document.getElementById('habit-weekly-target').style.display = f === 'weekly' ? '' : 'none';
+}
+function buildHabitCatalog(){
+  const el = document.getElementById('habit-catalog');
+  el.innerHTML = HABIT_CATALOG.map(c => `<div class="habit-cat-chip" data-nazev="${habitEsc(c.nazev)}" data-ikona="${c.ikona}">${c.ikona} ${c.nazev}</div>`).join('');
+  el.querySelectorAll('.habit-cat-chip').forEach(chip => chip.addEventListener('click', () => {
+    document.getElementById('habit-nazev').value = chip.dataset.nazev;
+    state.habitIcon = chip.dataset.ikona; syncHabitPickers();
+    el.querySelectorAll('.habit-cat-chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+  }));
+}
+function buildHabitIconPicker(){
+  const el = document.getElementById('habit-icon-picker');
+  el.innerHTML = HABIT_ICONS.map(ic => `<div class="habit-icon-opt" data-ic="${ic}">${ic}</div>`).join('');
+  el.querySelectorAll('.habit-icon-opt').forEach(o => o.addEventListener('click', () => { state.habitIcon = o.dataset.ic; syncHabitPickers(); }));
+}
+function buildHabitColorPicker(){
+  const el = document.getElementById('habit-color-picker');
+  el.innerHTML = HABIT_COLORS.map(col => `<div class="habit-color-opt" data-col="${col}" style="background:${col}"></div>`).join('');
+  el.querySelectorAll('.habit-color-opt').forEach(o => o.addEventListener('click', () => { state.habitColor = o.dataset.col; syncHabitPickers(); }));
+}
+function syncHabitPickers(){
+  document.querySelectorAll('#habit-icon-picker .habit-icon-opt').forEach(o => o.classList.toggle('active', o.dataset.ic === state.habitIcon));
+  document.querySelectorAll('#habit-color-picker .habit-color-opt').forEach(o => o.classList.toggle('active', o.dataset.col === state.habitColor));
+}
+
+function openHabitModal(id){
+  if (!currentHabitPlayer()){ toast('Nejdřív se přihlas', 'error'); return; }
+  buildHabitCatalog(); buildHabitIconPicker(); buildHabitColorPicker();
+  const h = id ? state.habits.find(x => x.id === id) : null;
+  state.habitEditId = id || null;
+  document.getElementById('habit-modal-title').textContent = h ? 'Upravit návyk' : 'Nový návyk';
+  document.getElementById('habit-submit-btn').textContent = h ? 'Uložit změny' : 'Vytvořit návyk';
+  document.getElementById('habit-delete-btn').style.display = h ? '' : 'none';
+  document.getElementById('habit-catalog-field').style.display = h ? 'none' : '';
+  document.getElementById('habit-nazev').value = h ? h.nazev : '';
+  state.habitIcon = h ? (h.ikona || '💧') : '💧';
+  state.habitColor = h ? (h.barva || HABIT_COLORS[0]) : HABIT_COLORS[0];
+  setHabitFreq(h ? h.frekvence_typ : 'daily');
+  document.getElementById('habit-freq-cil').value = h ? h.frekvence_cil : 3;
+  syncHabitPickers();
+  document.getElementById('habit-modal').classList.add('active');
+  lockBodyScroll();
+}
+function closeHabitModal(){
+  document.getElementById('habit-modal').classList.remove('active');
+  unlockBodyScroll();
+  state.habitEditId = null;
+}
+async function submitHabit(){
+  const pid = currentHabitPlayer();
+  if (!pid){ toast('Nejdřív se přihlas', 'error'); return; }
+  const nazev = document.getElementById('habit-nazev').value.trim();
+  if (!nazev){ toast('Zadej název návyku', 'error'); return; }
+  const freq = state.habitFreq;
+  const cil = freq === 'weekly' ? Math.max(1, Math.min(7, parseInt(document.getElementById('habit-freq-cil').value) || 3)) : 1;
+  const btn = document.getElementById('habit-submit-btn'); btn.disabled = true;
+  try {
+    const payload = { player_id: pid, nazev, ikona: state.habitIcon, barva: state.habitColor, frekvence_typ: freq, frekvence_cil: cil };
+    if (state.habitEditId){
+      const { error } = await db.from('habits').update(payload).eq('id', state.habitEditId); if (error) throw error;
+      toast('Návyk upraven', 'success');
+    } else {
+      payload.poradi = state.habits.filter(h => h.player_id === pid).length;
+      const { error } = await db.from('habits').insert(payload); if (error) throw error;
+      toast('Návyk vytvořen 🎯', 'success');
+    }
+    closeHabitModal();
+    await loadData();
+    renderNavyky();
+  } catch(e){ toast('Chyba: ' + e.message, 'error'); } finally { btn.disabled = false; }
+}
+async function deleteCurrentHabit(){
+  if (!state.habitEditId) return;
+  if (!confirm('Smazat tento návyk i jeho historii?')) return;
+  try {
+    const { error } = await db.from('habits').delete().eq('id', state.habitEditId); if (error) throw error;
+    toast('Návyk smazán', 'success'); closeHabitModal(); await loadData(); renderNavyky();
+  } catch(e){ toast('Chyba: ' + e.message, 'error'); }
 }
 
 // ============================================================
@@ -3692,6 +3999,7 @@ document.querySelectorAll('.type-btn').forEach(btn => {
 
 document.querySelectorAll('.serie-mode-btn').forEach(btn => {
   btn.addEventListener('click', () => {
+    if (btn.dataset.habitFreq) { setHabitFreq(btn.dataset.habitFreq); return; }  // F52: habit modal, nezávisí na hráči
     if (!state.selectedPlayer) return;
     if (btn.dataset.lezeniDisc) setLezeniDisc(btn.dataset.lezeniDisc);  // F51: přepínač disciplíny
     else setSerieMode(btn.dataset.mode);
@@ -4184,6 +4492,8 @@ document.querySelectorAll('.nav-btn').forEach(btn => {
     document.getElementById('view-prehled').style.display = state.view === 'prehled' ? '' : 'none';
     document.getElementById('view-historie').style.display = state.view === 'historie' ? '' : 'none';
     document.getElementById('view-hraci').style.display = state.view === 'hraci' ? '' : 'none';
+    document.getElementById('view-navyky').style.display = state.view === 'navyky' ? '' : 'none';
+    if (state.view === 'navyky') renderNavyky();
   });
 });
 
@@ -4203,6 +4513,15 @@ async function loadData() {
     state.cviky = cRes.data || [];
     state.aktivity = aRes.data || [];
     state.history = hRes.data || [];
+    // F52: návyky — odděleně a chráněně (tabulky nemusí existovat, než se spustí SQL → appka nesmí spadnout)
+    try {
+      const [habRes, logRes] = await Promise.all([
+        db.from('habits').select('*').eq('archived', false),
+        db.from('habit_logs').select('*')
+      ]);
+      state.habits = habRes.error ? [] : (habRes.data || []);
+      state.habitLogs = logRes.error ? [] : (logRes.data || []);
+    } catch (_) { state.habits = []; state.habitLogs = []; }
     // F19: nacist current player z localStorage a overit ze existuje
     const savedId = localStorage.getItem(CURRENT_PLAYER_KEY);
     if (savedId && state.players.find(p => p.id === savedId)) {
