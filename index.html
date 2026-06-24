@@ -1517,10 +1517,7 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
   <!-- F52: Návyky (habit tracker) -->
   <div id="view-navyky" style="display:none;">
     <div class="habit-header">
-      <div>
-        <div class="habit-h-title" id="habit-hero-title">Moje návyky</div>
-        <div class="habit-privacy-mini" id="habit-privacy-mini">🔒 Soukromé — vidíš jen ty</div>
-      </div>
+      <div class="habit-h-title" id="habit-hero-title">Moje návyky</div>
       <span class="habit-today-progress" id="habit-today-progress"></span>
     </div>
     <div class="habit-week-strip" id="habit-week-strip"></div>
@@ -3743,16 +3740,13 @@ function renderNavyky(){
   const prog = document.getElementById('habit-today-progress');
   const titleEl = document.getElementById('habit-hero-title');
   const addBtn = document.getElementById('habit-add-btn');
-  const privacy = document.getElementById('habit-privacy-mini');
   const pid = currentHabitPlayer();
   if (!pid){
     titleEl.textContent = 'Moje návyky'; prog.textContent = ''; addBtn.style.display = 'none';
-    if (privacy) privacy.style.display = 'none';
     wrap.innerHTML = '<div class="habit-empty"><div class="icon">🔒</div><div class="title">Přihlas se</div><div>Návyky jsou osobní — přihlas se jako hráč a začni si je budovat.</div></div>';
     return;
   }
   addBtn.style.display = '';
-  if (privacy) privacy.style.display = '';
   const player = state.players.find(p => p.id === pid);
   titleEl.textContent = player ? `Návyky · ${player.jmeno}` : 'Moje návyky';
   renderHabitWeekStrip();
@@ -3767,11 +3761,18 @@ function renderNavyky(){
     wrap.innerHTML = '<div class="habit-empty"><div class="icon">🎯</div><div class="title">Zatím žádný návyk</div><div>Klepni na „+ Nový návyk" a vyber si z nabídky nebo vytvoř vlastní.</div></div>';
     return;
   }
-  // počítá jen návyky, které vybraný den mají být (denní + konkrétní dny)
-  const due = mine.filter(h => habitDueOn(h, selDate));
+  // u zvoleného dne ukazuj jen návyky, které tehdy UŽ existovaly (vznikly v ten den nebo dřív)
+  const existed = mine.filter(h => (h.created_at || '').slice(0, 10) <= sel);
+  if (existed.length === 0){
+    prog.textContent = '';
+    wrap.innerHTML = `<div class="habit-empty"><div class="icon">🌱</div><div class="title">${dayLabel}</div><div>V tento den jsi ještě žádné návyky neměl.</div></div>`;
+    return;
+  }
+  // počítá jen návyky naplánované na ten den (denní + konkrétní dny); týdenní mají vlastní progres
+  const due = existed.filter(h => habitDueOn(h, selDate));
   const doneToday = due.filter(h => habitIsDoneOn(h, pid, sel)).length;
-  prog.innerHTML = due.length ? `${dayLabel} splněno <b>${doneToday}/${due.length}</b>` : `${dayLabel}: žádný naplánovaný návyk 🌿`;
-  wrap.innerHTML = mine.map(h => {
+  prog.innerHTML = due.length ? `${dayLabel} splněno <b>${doneToday}/${due.length}</b>` : '';
+  wrap.innerHTML = existed.map(h => {
     const c = h.barva || 'var(--accent)';
     const z = habitEffZapis(h);
     const log = habitLogObj(h.id, pid, sel);
