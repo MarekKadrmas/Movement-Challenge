@@ -1091,7 +1091,7 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
   font-size: 13px; font-weight: 600; white-space: nowrap;
 }
 .habit-cat-tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
-.habit-preset-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.habit-preset-grid { display: flex; flex-direction: column; gap: 8px; }
 .habit-preset-tile {
   display: flex; align-items: center; gap: 10px; cursor: pointer;
   background: var(--bg-card); border: 1px solid var(--border);
@@ -1102,7 +1102,22 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 .habit-preset-tile .pt-name { font-size: 13.5px; font-weight: 700; color: var(--text); line-height: 1.2; }
 .habit-preset-tile .pt-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
 .habit-preset-tile.custom { border-left-color: var(--accent); border-style: dashed; justify-content: center; font-weight: 800; color: var(--accent); }
-.habit-preset-empty { grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 20px; font-size: 13px; }
+.habit-preset-empty { text-align: center; color: var(--text-muted); padding: 20px; font-size: 13px; }
+/* F52: týdenní proužek nahoře */
+.habit-week-strip { display: flex; gap: 6px; margin-bottom: 14px; }
+.hws-day { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px; background: transparent; border: none; cursor: pointer; padding: 4px 0; border-radius: 12px; }
+.hws-day.sel { background: var(--bg-card); }
+.hws-day.future { opacity: .4; }
+.hws-dow { font-size: 11px; font-weight: 700; color: var(--text-muted); }
+.hws-ring {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: conic-gradient(var(--accent) calc(var(--p) * 1%), var(--border) 0);
+}
+.hws-ring::before { content: ''; position: absolute; width: 30px; height: 30px; border-radius: 50%; background: var(--bg); }
+.hws-num, .hws-check { position: relative; font-size: 13px; font-weight: 700; color: var(--text); }
+.hws-check { color: var(--accent); }
+.hws-day.sel .hws-num { color: var(--accent); }
 .habit-back { background: transparent; border: none; color: var(--text-muted); font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; padding: 0 0 12px; }
 .habit-sublabel { color: var(--text-muted); font-weight: 500; font-size: 12px; }
 .habit-seg { display: flex; gap: 6px; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 4px; }
@@ -1495,6 +1510,7 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
       <div class="hero-title" id="habit-hero-title">Moje návyky</div>
       <div class="habit-today-progress" id="habit-today-progress"></div>
     </div>
+    <div class="habit-week-strip" id="habit-week-strip"></div>
     <div class="habit-privacy">🔒 Tvůj habit tracker je <b>soukromý</b> — vidíš ho jen ty, nikdo jiný ze hry na něj nevidí.</div>
     <div id="habit-list"></div>
     <button type="button" class="habit-add-btn" id="habit-add-btn" onclick="openHabitModal()">+ Nový návyk</button>
@@ -2160,7 +2176,8 @@ let state = {
   habits: [], habitLogs: [],
   habitEditId: null, habitView: 'catalog', habitCat: 'dop', habitSearch: '',
   habitFreq: 'daily', habitIcon: '💧', habitColor: '#4ADE80',
-  habitMira: 'binary', habitDays: 0, habitCast: ''
+  habitMira: 'binary', habitDays: 0, habitCast: '',
+  habitDay: null  // vybraný den v tabu Návyky (null = dnes)
 };
 
 // F19: localStorage klice
@@ -3614,12 +3631,39 @@ function habitEsc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&'
 function currentHabitPlayer(){ return state.currentPlayerId; }
 function habitLogsFor(habitId, pid){ return state.habitLogs.filter(l => l.habit_id === habitId && l.player_id === pid); }
 function isHabitDone(habitId, pid, dateStr){ return state.habitLogs.some(l => l.habit_id === habitId && l.player_id === pid && l.datum === dateStr); }
-function habitTodayDow(){ return (new Date().getDay() + 6) % 7; }  // 0=Po .. 6=Ne
-function habitDueToday(h){
-  if (h.frekvence_typ === 'specific_days') return ((h.frekvence_dny || 0) & (1 << habitTodayDow())) !== 0;
+function habitStrToDate(s){ const p = (s || todayStr()).split('-').map(Number); return new Date(p[0], p[1]-1, p[2]); }
+function habitDueOn(h, d){
+  if (h.frekvence_typ === 'specific_days') return ((h.frekvence_dny || 0) & (1 << ((d.getDay() + 6) % 7))) !== 0;
   if (h.frekvence_typ === 'weekly') return false;  // týdenní nemá pevný den
   return true;
 }
+function habitDueToday(h){ return habitDueOn(h, new Date()); }
+function renderHabitWeekStrip(){
+  const el = document.getElementById('habit-week-strip'); if (!el) return;
+  const pid = currentHabitPlayer();
+  const mine = pid ? state.habits.filter(h => h.player_id === pid) : [];
+  if (!pid || !mine.length){ el.innerHTML = ''; el.style.display = 'none'; return; }
+  el.style.display = '';
+  const sel = state.habitDay || todayStr();
+  const todayS = todayStr();
+  const start = startOfWeek();
+  let html = '';
+  for (let i = 0; i < 7; i++){
+    const d = new Date(start); d.setDate(d.getDate() + i); d.setHours(0,0,0,0);
+    const ds = dateToStr(d);
+    const future = ds > todayS;
+    const due = mine.filter(h => habitDueOn(h, d));
+    const done = due.filter(h => isHabitDone(h.id, pid, ds)).length;
+    const pct = due.length ? Math.round(done / due.length * 100) : 0;
+    const full = due.length && done >= due.length;
+    html += `<button class="hws-day ${ds === sel ? 'sel' : ''} ${future ? 'future' : ''}" ${future ? 'disabled' : ''} onclick="setHabitDay('${ds}')">
+      <div class="hws-dow">${HABIT_DEN_NAMES[(d.getDay()+6)%7]}</div>
+      <div class="hws-ring" style="--p:${pct}">${full ? '<span class="hws-check">✓</span>' : `<span class="hws-num">${d.getDate()}</span>`}</div>
+    </button>`;
+  }
+  el.innerHTML = html;
+}
+function setHabitDay(ds){ state.habitDay = ds; renderHabitWeekStrip(); renderNavyky(); }
 function habitDayStreak(habitId, pid){
   const done = new Set(habitLogsFor(habitId, pid).map(l => l.datum));
   let streak = 0, d = new Date(); d.setHours(0,0,0,0);
@@ -3663,22 +3707,26 @@ function renderNavyky(){
   if (privacy) privacy.style.display = '';
   const player = state.players.find(p => p.id === pid);
   titleEl.textContent = player ? `Návyky · ${player.jmeno}` : 'Moje návyky';
+  renderHabitWeekStrip();
   const mine = state.habits.filter(h => h.player_id === pid)
     .sort((a,b) => (a.poradi - b.poradi) || (new Date(a.created_at) - new Date(b.created_at)));
   const today = todayStr();
+  const sel = state.habitDay || today;
+  const selDate = habitStrToDate(sel);
+  const dayLabel = sel === today ? 'Dnes' : formatDate(sel);
   if (mine.length === 0){
     prog.textContent = '';
     wrap.innerHTML = '<div class="habit-empty"><div class="icon">🎯</div><div class="title">Zatím žádný návyk</div><div>Klepni na „+ Nový návyk" a vyber si z nabídky nebo vytvoř vlastní.</div></div>';
     return;
   }
-  // "Dnes splněno" počítá jen návyky, které dnes mají být (denní + konkrétní dny dnes)
-  const due = mine.filter(habitDueToday);
-  const doneToday = due.filter(h => isHabitDone(h.id, pid, today)).length;
-  prog.innerHTML = due.length ? `Dnes splněno <b>${doneToday}/${due.length}</b>` : 'Dnes nemáš žádný naplánovaný návyk 🌿';
+  // počítá jen návyky, které vybraný den mají být (denní + konkrétní dny)
+  const due = mine.filter(h => habitDueOn(h, selDate));
+  const doneToday = due.filter(h => isHabitDone(h.id, pid, sel)).length;
+  prog.innerHTML = due.length ? `${dayLabel} splněno <b>${doneToday}/${due.length}</b>` : `${dayLabel}: žádný naplánovaný návyk 🌿`;
   wrap.innerHTML = mine.map(h => {
     const c = h.barva || 'var(--accent)';
-    const done = isHabitDone(h.id, pid, today);
-    const dueT = habitDueToday(h);
+    const done = isHabitDone(h.id, pid, sel);
+    const dueT = habitDueOn(h, selDate);
     const parts = [];
     if (h.frekvence_typ === 'weekly'){
       parts.push(`<span class="habit-streak">${habitWeekCount(h.id, pid)}/${h.frekvence_cil}×</span> týdně`);
@@ -3709,15 +3757,16 @@ function renderNavyky(){
 
 async function toggleHabitToday(id){
   const pid = currentHabitPlayer(); if (!pid) return;
-  const today = todayStr();
+  const sel = state.habitDay || todayStr();
+  if (sel > todayStr()) return;  // budoucnost nejde odškrtnout
   const h = state.habits.find(x => x.id === id);
-  const existing = state.habitLogs.find(l => l.habit_id === id && l.player_id === pid && l.datum === today);
+  const existing = state.habitLogs.find(l => l.habit_id === id && l.player_id === pid && l.datum === sel);
   try {
     if (existing){
       const { error } = await db.from('habit_logs').delete().eq('id', existing.id); if (error) throw error;
       state.habitLogs = state.habitLogs.filter(l => l.id !== existing.id);
     } else {
-      const row = { habit_id: id, player_id: pid, datum: today };
+      const row = { habit_id: id, player_id: pid, datum: sel };
       if (h && h.mira_typ === 'measurable' && h.cil_hodnota != null) row.hodnota = h.cil_hodnota;  // ťuknutí = splněn celý cíl
       const { data, error } = await db.from('habit_logs').insert(row).select(); if (error) throw error;
       if (data && data[0]) state.habitLogs.push(data[0]);
@@ -4834,7 +4883,7 @@ document.querySelectorAll('.nav-btn').forEach(btn => {
     document.getElementById('view-historie').style.display = state.view === 'historie' ? '' : 'none';
     document.getElementById('view-hraci').style.display = state.view === 'hraci' ? '' : 'none';
     document.getElementById('view-navyky').style.display = state.view === 'navyky' ? '' : 'none';
-    if (state.view === 'navyky') renderNavyky();
+    if (state.view === 'navyky') { state.habitDay = todayStr(); renderNavyky(); }
   });
 });
 
