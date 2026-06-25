@@ -1083,13 +1083,14 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 .mcell.blank { background: transparent; }
 /* roční heatmap per návyk: čtverečky nalepené bez mezer; hranice měsíců = zubatá linka kreslená DO čtverečků (box-shadow, layout se nehne) */
 .yh-scroll { overflow-x: auto; padding: 8px 2px 4px; -webkit-overflow-scrolling: touch; }
-.yh-wrap { position: relative; width: max-content; --yh-grid: color-mix(in srgb, var(--text) 10%, transparent); --yh-month: color-mix(in srgb, var(--text) 42%, transparent); }
+.yh-wrap { position: relative; width: max-content; --yh-grid: var(--border); --yh-month: color-mix(in srgb, var(--text) 42%, transparent); }
 .yh-months { position: relative; height: 14px; margin-bottom: 3px; }
 .yh-months span { position: absolute; transform: translateX(-50%); font-size: 9px; font-weight: 700; color: var(--text-muted); white-space: nowrap; }
 .yh-grid { display: grid; grid-auto-flow: column; grid-template-rows: repeat(7, 12px); grid-auto-columns: 12px; gap: 0; }
-.ycell { width: 12px; height: 12px; background: var(--border); }
+/* stejný jazyk jako Měsíc: splněno = zelená, zmeškáno = plná šedá, neaktivní/budoucí = prázdný obrys */
+.ycell { width: 12px; height: 12px; border-radius: 2px; background: var(--border); }
 .ycell.blank { background: transparent !important; box-shadow: none !important; }
-.ycell.na { background: color-mix(in srgb, var(--border) 45%, transparent); }
+.ycell.na { background: transparent; }
 .habit-empty { text-align: center; padding: 30px 16px; color: var(--text-muted); }
 .habit-empty .icon { font-size: 40px; margin-bottom: 10px; }
 .habit-empty .title { font-weight: 800; color: var(--text); font-size: 16px; margin-bottom: 4px; }
