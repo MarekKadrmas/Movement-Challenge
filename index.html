@@ -1084,6 +1084,7 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 .yheat { display: grid; grid-auto-flow: column; grid-template-rows: repeat(7, 1fr); gap: 2px; overflow-x: auto; padding-bottom: 6px; }
 .ycell { width: 9px; height: 9px; border-radius: 2px; background: var(--border); }
 .ycell.blank { background: transparent; }
+.ycell.na { background: transparent; }
 .habit-empty { text-align: center; padding: 30px 16px; color: var(--text-muted); }
 .habit-empty .icon { font-size: 40px; margin-bottom: 10px; }
 .habit-empty .title { font-weight: 800; color: var(--text); font-size: 16px; margin-bottom: 4px; }
@@ -3867,19 +3868,21 @@ function statYearHtml(pid, mine){
   let h = `<div class="stat-nav"><button onclick="moveStat(-1)">‹</button><div>${y}</div><button onclick="moveStat(1)">›</button></div>`;
   const start = new Date(y, 0, 1), end = new Date(y, 11, 31);
   const lead = (start.getDay() + 6) % 7;
-  let cells = ''; for (let i = 0; i < lead; i++) cells += `<div class="ycell blank"></div>`;
   const tS = todayStr();
-  for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)){
-    const ds = dateToStr(d);
-    let style = '';
-    if (ds <= tS){ const c = dayCompletion(pid, mine, new Date(d)); if (c != null) style = statCellStyle('#22c55e', c); }
-    cells += `<div class="ycell" style="${style}" title="${ds}"></div>`;
-  }
-  h += `<div class="stat-summary">Vyplnění dnů (denní návyky):</div><div class="yheat">${cells}</div>`;
-  h += `<div class="stat-summary">Letos splněno:</div>`;
+  // STEJNÝ vzor jako Měsíc: každý návyk svoje políčka (rok), zelené = splněno
   for (const hb of mine){
-    const cnt = habitLogsFor(hb.id, pid).filter(l => (l.datum||'').slice(0,4) === String(y) && habitIsDoneOn(hb, pid, l.datum)).length;
-    h += `<div class="stat-habcard"><div class="stat-habhead"><span>${hb.ikona||'🎯'} ${habitEsc(hb.nazev)}</span><b>${cnt}×</b></div></div>`;
+    const isWM = hb.frekvence_typ === 'weekly' || hb.frekvence_typ === 'monthly';
+    let cells = ''; for (let i = 0; i < lead; i++) cells += `<div class="ycell blank"></div>`;
+    let done = 0;
+    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)){
+      const ds = dateToStr(d);
+      const existed = (hb.created_at||'').slice(0,10) <= ds && ds <= tS;
+      const a = existed && (isWM || habitDueOn(hb, d));
+      const fr = a ? habitFractionOn(hb, pid, ds) : 0;
+      if (a && habitIsDoneOn(hb, pid, ds)) done++;
+      cells += `<div class="ycell ${a?'':'na'}" style="${statCellStyle('#22c55e', fr)}"></div>`;
+    }
+    h += `<div class="stat-habcard"><div class="stat-habhead"><span>${hb.ikona||'🎯'} ${habitEsc(hb.nazev)}</span><b>${done}×</b></div><div class="yheat">${cells}</div></div>`;
   }
   return h;
 }
