@@ -1083,14 +1083,14 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 .mcell.blank { background: transparent; }
 /* roční heatmap per návyk: čtverečky nalepené bez mezer; hranice měsíců = zubatá linka kreslená DO čtverečků (box-shadow, layout se nehne) */
 .yh-scroll { overflow-x: auto; padding: 8px 2px 4px; -webkit-overflow-scrolling: touch; }
-.yh-wrap { position: relative; width: max-content; --yh-grid: var(--border); --yh-month: color-mix(in srgb, var(--text) 45%, transparent); }
+.yh-wrap { position: relative; width: max-content; --yh-grid: var(--border); --yh-month: color-mix(in srgb, var(--text) 32%, transparent); }
 .yh-months { position: relative; height: 14px; margin-bottom: 3px; }
 .yh-months span { position: absolute; transform: translateX(-50%); font-size: 9px; font-weight: 700; color: var(--text-muted); white-space: nowrap; }
 .yh-plot { position: relative; width: max-content; }
 .yh-grid { display: grid; grid-auto-flow: column; grid-template-rows: repeat(7, 12px); grid-auto-columns: 12px; gap: 2px; }
 /* hranice měsíců = jeden souvislý SVG tah v mezerách (spojitý i v ohybu) */
 .yh-lines { position: absolute; left: 0; top: 0; pointer-events: none; }
-.yh-lines path { fill: none; stroke: var(--yh-month); stroke-width: 1.5px; stroke-linecap: square; stroke-linejoin: miter; }
+.yh-lines path { fill: none; stroke: var(--yh-month); stroke-width: 1px; stroke-linecap: round; stroke-linejoin: round; }
 /* stejný jazyk jako Měsíc: splněno = zelená, zmeškáno = plná šedá, neaktivní/budoucí = prázdný obrys */
 .ycell { width: 12px; height: 12px; border-radius: 2px; background: var(--border); }
 .ycell.blank { background: transparent !important; box-shadow: none !important; }
@@ -3903,22 +3903,19 @@ function statYearHtml(pid, mine){
   weeks.forEach((wk, wi) => wk.forEach(ds => { const m = moOf(ds); if (m === null) return; if (mc[m] === undefined) mc[m] = [wi, wi]; else mc[m][1] = wi; }));
   let labels = '';
   for (const m in mc){ const cx = ((mc[m][0] + mc[m][1]) / 2) * P + CELL / 2; labels += `<span style="left:${cx}px">${ML[m]}</span>`; }
-  // hranice měsíců = JEDNA souvislá zubatá čára (SVG tah v mezerách); segmenty dlouhé na celou rozteč → v ohybu se spojí
-  const segs = [];
-  for (let c = 0; c < ncols; c++){
-    for (let r = 0; r < 7; r++){
-      const mo = moOf(weeks[c][r]); if (mo === null) continue;
-      if (c > 0){ const lm = moOf(weeks[c - 1][r]); if (lm !== null && lm !== mo){
-        const x = c * P - GAP / 2, y1 = Math.max(0, r * P - GAP / 2), y2 = Math.min(Hpx, (r + 1) * P - GAP / 2);
-        segs.push(`M${x} ${y1}L${x} ${y2}`);
-      }}
-      if (r > 0){ const tm = moOf(weeks[c][r - 1]); if (tm !== null && tm !== mo){
-        const y = r * P - GAP / 2, x1 = Math.max(0, c * P - GAP / 2), x2 = Math.min(W, (c + 1) * P - GAP / 2);
-        segs.push(`M${x1} ${y}L${x2} ${y}`);
-      }}
-    }
+  // hranice měsíců = decentní souvislá čára se zaoblenými ohyby (SVG tah v mezerách); jedna pro všechny návyky
+  const R = 3;  // poloměr zaoblení v zubu
+  const dArr = [];
+  for (let mm = 1; mm <= 11; mm++){
+    if (mc[mm] === undefined) continue;
+    const c0 = mc[mm][0];                                  // sloupec s 1. dnem měsíce
+    const r0 = (new Date(y, mm, 1).getDay() + 6) % 7;      // řádek (Po=0) 1. dne
+    const xl = c0 * P - GAP / 2;                            // svislá hranice vlevo od sloupce c0
+    if (r0 === 0){ dArr.push(`M${xl} 0L${xl} ${Hpx}`); continue; }  // měsíc začíná v pondělí → rovná čára
+    const xr = (c0 + 1) * P - GAP / 2, ys = r0 * P - GAP / 2;       // horní část vpravo od c0 + výška zubu
+    dArr.push(`M${xr} 0L${xr} ${ys - R}Q${xr} ${ys} ${xr - R} ${ys}L${xl + R} ${ys}Q${xl} ${ys} ${xl} ${ys + R}L${xl} ${Hpx}`);
   }
-  const svg = `<svg class="yh-lines" width="${W}" height="${Hpx}" viewBox="0 0 ${W} ${Hpx}"><path d="${segs.join('')}"/></svg>`;
+  const svg = `<svg class="yh-lines" width="${W}" height="${Hpx}" viewBox="0 0 ${W} ${Hpx}"><path d="${dArr.join('')}"/></svg>`;
   // KAŽDÝ návyk = souvislý roční heatmap; čtverečky s mezerou, hranice měsíců = souvislá čára
   for (const hb of mine){
     const isWM = hb.frekvence_typ === 'weekly' || hb.frekvence_typ === 'monthly';
