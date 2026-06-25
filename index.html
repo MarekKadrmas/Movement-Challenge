@@ -1084,8 +1084,9 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 /* roční heatmap per návyk: týdny jako sloupce, měsíce oddělené linkou + popiskem */
 .yh-scroll { overflow-x: auto; padding: 8px 2px 4px; -webkit-overflow-scrolling: touch; }
 .yh-row { display: flex; gap: 2px; width: max-content; }
-.yweek { display: flex; flex-direction: column; }
-.yweek.sep { border-left: 1.5px solid color-mix(in srgb, var(--text-muted) 32%, transparent); margin-left: 3px; padding-left: 3px; }
+.yweek { display: flex; flex-direction: column; position: relative; }
+/* hranice měsíce = tenká linka v mezeře mezi týdny; čtverečky se NEPOSUNOU */
+.yweek.sep::before { content: ''; position: absolute; left: -2px; top: 13px; bottom: 0; width: 1.5px; background: color-mix(in srgb, var(--text-muted) 38%, transparent); }
 .yweek-lbl { height: 13px; line-height: 13px; font-size: 9px; font-weight: 700; color: var(--text-muted); white-space: nowrap; }
 .yweek-cells { display: grid; grid-template-rows: repeat(7, 12px); gap: 2px; }
 .ycell { width: 12px; height: 12px; border-radius: 3px; background: var(--border); }
