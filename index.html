@@ -3778,7 +3778,12 @@ function renderHabitWeekStrip(){
   }
   el.innerHTML = html;
 }
-function setHabitDay(ds){ state.habitDay = ds; renderHabitWeekStrip(); renderNavyky(); }
+function setHabitDay(ds){
+  const sy = window.scrollY;                         // zachovej pozici scrollu — žádný skok nahoru
+  state.habitDay = ds; renderHabitWeekStrip(); renderNavyky();
+  window.scrollTo(0, sy);
+  requestAnimationFrame(() => window.scrollTo(0, sy));
+}
 
 // ===== Statistiky (Týden / Měsíc / Rok) =====
 const MESICE = ['Leden','Únor','Březen','Duben','Květen','Červen','Červenec','Srpen','Září','Říjen','Listopad','Prosinec'];
