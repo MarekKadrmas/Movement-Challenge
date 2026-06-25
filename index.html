@@ -3871,28 +3871,23 @@ function statMonthHtml(pid, mine){
 function statYearHtml(pid, mine){
   const base = statBase(); const y = base.getFullYear();
   let h = `<div class="stat-nav"><button onclick="moveStat(-1)">‹</button><div>${y}</div><button onclick="moveStat(1)">›</button></div>`;
+  const start = new Date(y, 0, 1), end = new Date(y, 11, 31);
+  const lead = (start.getDay() + 6) % 7;
   const tS = todayStr();
-  const ML = ['L','Ú','B','D','K','Č','Č','S','Z','Ř','L','P'];
-  // přehledné: každý návyk = 12 měsíčních sloupců (výška = % splnění měsíce) + % za rok
-  for (const hb of mine){
-    const isWM = hb.frekvence_typ === 'weekly' || hb.frekvence_typ === 'monthly';
-    let bars = '', labels = '', yDone = 0, yAppl = 0;
-    for (let m = 0; m < 12; m++){
-      const di = new Date(y, m + 1, 0).getDate(); let dDone = 0, dAppl = 0;
-      for (let day = 1; day <= di; day++){
-        const dd = new Date(y, m, day); const ds = dateToStr(dd);
-        const existed = (hb.created_at||'').slice(0,10) <= ds && ds <= tS;
-        const a = existed && (isWM || habitDueOn(hb, dd));
-        if (a){ dAppl++; if (habitIsDoneOn(hb, pid, ds)) dDone++; }
-      }
-      yDone += dDone; yAppl += dAppl;
-      const pct = dAppl ? Math.round(dDone / dAppl * 100) : 0;
-      bars += `<div class="ybar"><div class="ybar-fill" style="height:${pct}%"></div></div>`;
-      labels += `<span>${ML[m]}</span>`;
-    }
-    const yPct = yAppl ? Math.round(yDone / yAppl * 100) : 0;
-    h += `<div class="stat-habcard"><div class="stat-habhead"><span>${hb.ikona||'🎯'} ${habitEsc(hb.nazev)}</span><b>${yPct} %</b></div><div class="ybar-row">${bars}</div><div class="ybar-labels">${labels}</div></div>`;
+  // JEDEN roční přehled: 365 čtverečků (den = čtvereček), zelený podle splnění daného dne
+  let cells = ''; for (let i = 0; i < lead; i++) cells += `<div class="ycell blank"></div>`;
+  let sum = 0, cnt = 0;
+  for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)){
+    const ds = dateToStr(d);
+    if (ds > tS){ cells += `<div class="ycell na"></div>`; continue; }
+    const c = dayCompletion(pid, mine, new Date(d));
+    if (c == null){ cells += `<div class="ycell na"></div>`; continue; }
+    sum += c; cnt++;
+    cells += `<div class="ycell" style="${statCellStyle('#22c55e', c)}" title="${ds}"></div>`;
   }
+  const yPct = cnt ? Math.round(sum / cnt * 100) : 0;
+  h += `<div class="stat-summary"><b>${yPct} %</b> splněno za rok ${y}</div>`;
+  h += `<div class="yheat">${cells}</div>`;
   return h;
 }
 // streak ke vybranému dni; počítá jen DUE dny (ne-due dny řetěz nelámou); splněno = frakce ≥ 1
