@@ -1120,13 +1120,14 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 .hws-dow { font-size: 11px; font-weight: 700; color: var(--text-muted); }
 .hws-day.sel .hws-dow { color: var(--text); font-weight: 800; }
 .hws-ring {
-  width: 36px; height: 36px; border-radius: 50%; box-sizing: border-box;
-  border: 2.5px solid var(--col, var(--border));
+  position: relative; width: 38px; height: 38px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
+  background: conic-gradient(var(--col, var(--border)) calc(var(--p, 0) * 1%), color-mix(in srgb, var(--col, var(--border)) 32%, var(--bg)) 0);
 }
+.hws-ring::before { content: ''; position: absolute; inset: 3.5px; border-radius: 50%; background: var(--bg); }
 /* vybraný den = jemný prstýnek kolem kolečka (barva progresu uvnitř zůstává vidět) */
 .hws-day.sel .hws-ring { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--text); }
-.hws-num { font-size: 13px; font-weight: 700; color: var(--text); }
+.hws-num { position: relative; z-index: 1; font-size: 12.5px; font-weight: 700; color: var(--text); }
 .hws-day.sel .hws-num { font-weight: 800; }
 .hws-today-mark { width: 4px; height: 4px; border-radius: 50%; background: var(--text); margin-top: 1px; }
 .habit-back { background: transparent; border: none; color: var(--text-muted); font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; padding: 0 0 12px; }
@@ -3676,6 +3677,16 @@ function habitDueOn(h, d){
   return true;
 }
 function habitDueToday(h){ return habitDueOn(h, new Date()); }
+function habitRingColor(pct){
+  // 0=červená, ~33=oranžová, ~66=žlutá, 100=zelená (piecewise hue)
+  if (pct <= 0) return '#ef4444';
+  if (pct >= 100) return '#22c55e';
+  const f = pct / 100; let hue;
+  if (f <= 0.34) hue = f / 0.34 * 30;            // → 30 (oranžová)
+  else if (f <= 0.67) hue = 30 + (f - 0.34) / 0.33 * 25;  // → 55 (žlutá)
+  else hue = 55 + (f - 0.67) / 0.33 * 65;        // → 120 (zelená)
+  return `hsl(${Math.round(hue)} 85% 50%)`;
+}
 function renderHabitWeekStrip(){
   const el = document.getElementById('habit-week-strip'); if (!el) return;
   const pid = currentHabitPlayer();
@@ -3694,15 +3705,11 @@ function renderHabitWeekStrip(){
     const due = mine.filter(h => habitDueOn(h, d));
     const done = due.filter(h => habitIsDoneOn(h, pid, ds)).length;
     const pct = due.length ? Math.round(done / due.length * 100) : 0;
-    // barva kroužku podle progresu: 0%=červená, 50%=oranžová, 100%=zelená; bez naplánovaných = šedá
-    let col;
-    if (!due.length || future) col = 'var(--border)';
-    else if (pct <= 0) col = '#ef4444';
-    else if (pct >= 100) col = '#22c55e';
-    else col = `hsl(${Math.round(Math.pow(pct / 100, 2) * 120)} 80% 45%)`;
+    // barva podle progresu (0 červená → 100 zelená); bez naplánovaných / budoucí = šedá
+    const col = (!due.length || future) ? 'var(--border)' : habitRingColor(pct);
     html += `<button class="hws-day ${ds === sel ? 'sel' : ''} ${future ? 'future' : ''} ${isToday ? 'today' : ''}" ${future ? 'disabled' : ''} onclick="setHabitDay('${ds}')">
       <div class="hws-dow">${HABIT_DEN_NAMES[(d.getDay()+6)%7]}</div>
-      <div class="hws-ring" style="--col:${col}"><span class="hws-num">${d.getDate()}</span></div>
+      <div class="hws-ring" style="--p:${pct};--col:${col}"><span class="hws-num">${d.getDate()}</span></div>
       ${isToday ? '<div class="hws-today-mark"></div>' : ''}
     </button>`;
   }
