@@ -1054,6 +1054,7 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 }
 .habit-check.checked { background: var(--hc, var(--accent)); border-color: var(--hc, var(--accent)); color: #fff; }
 .habit-edit-btn { flex-shrink: 0; background: transparent; border: none; color: var(--text-muted); font-size: 16px; cursor: pointer; padding: 4px; }
+.habit-detail-btn { flex-shrink: 0; width: 34px; height: 34px; border-radius: 50%; border: 1.5px solid var(--border); background: transparent; color: var(--text-muted); font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 .habit-add-btn {
   width: 100%; padding: 14px; border-radius: 12px;
   background: transparent; border: 1.5px dashed var(--border);
@@ -1122,7 +1123,7 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 .hws-ring {
   position: relative; width: 38px; height: 38px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  background: conic-gradient(var(--col, var(--border)) calc(var(--p, 0) * 1%), color-mix(in srgb, var(--col, var(--border)) 32%, var(--bg)) 0);
+  background: conic-gradient(var(--col, var(--border)) calc(var(--p, 0) * 1%), var(--border) 0);
 }
 .hws-ring::before { content: ''; position: absolute; inset: 3.5px; border-radius: 50%; background: var(--bg); }
 /* vybraný den = jemný prstýnek kolem kolečka (barva progresu uvnitř zůstává vidět) */
@@ -3703,13 +3704,15 @@ function renderHabitWeekStrip(){
     const future = ds > todayS;
     const isToday = ds === todayS;
     const due = mine.filter(h => habitDueOn(h, d));
-    const done = due.filter(h => habitIsDoneOn(h, pid, ds)).length;
-    const pct = due.length ? Math.round(done / due.length * 100) : 0;
-    // barva podle progresu (0 červená → 100 zelená); bez naplánovaných / budoucí = šedá
-    const col = (!due.length || future) ? 'var(--border)' : habitRingColor(pct);
+    // průměrná FRAKCE splnění (i částečně splněné měřitelné se počítají poměrně)
+    const frac = due.length ? due.reduce((s, h) => s + habitFractionOn(h, pid, ds), 0) / due.length : 0;
+    const pct = Math.round(frac * 100);
+    const neutral = !due.length || future;
+    const col = neutral ? 'var(--border)' : habitRingColor(pct);
+    const dp = neutral ? 0 : Math.max(5, pct);  // i 0 % ukáže ~5 % barvy po obvodu
     html += `<button class="hws-day ${ds === sel ? 'sel' : ''} ${future ? 'future' : ''} ${isToday ? 'today' : ''}" ${future ? 'disabled' : ''} onclick="setHabitDay('${ds}')">
       <div class="hws-dow">${HABIT_DEN_NAMES[(d.getDay()+6)%7]}</div>
-      <div class="hws-ring" style="--p:${pct};--col:${col}"><span class="hws-num">${d.getDate()}</span></div>
+      <div class="hws-ring" style="--p:${dp};--col:${col}"><span class="hws-num">${d.getDate()}</span></div>
       ${isToday ? '<div class="hws-today-mark"></div>' : ''}
     </button>`;
   }
@@ -3817,6 +3820,7 @@ function renderNavyky(){
         <div class="habit-dots">${dots}</div>
       </div>
       <button class="habit-edit-btn" onclick="openHabitModal('${h.id}')">✏️</button>
+      ${z !== 'check' ? `<button class="habit-detail-btn" onclick="openHabitValue('${h.id}')" aria-label="Zadat hodnotu">${z === 'slider' ? '🎚️' : '🔢'}</button>` : ''}
       <button class="habit-check ${done?'checked':''}" onclick="toggleHabitToday('${h.id}')" aria-label="Splnit">✓</button>
     </div>`;
   }).join('');
@@ -3826,16 +3830,19 @@ async function toggleHabitToday(id){
   const pid = currentHabitPlayer(); if (!pid) return;
   const sel = state.habitDay || todayStr();
   if (sel > todayStr()) return;  // budoucnost nejde odškrtnout
-  const h = state.habits.find(x => x.id === id);
-  if (h && habitEffZapis(h) !== 'check'){ openHabitValue(id); return; }  // měřitelné → okno hodnoty
+  const h = state.habits.find(x => x.id === id); if (!h) return;
+  const z = habitEffZapis(h);
   const existing = habitLogObj(id, pid, sel);
+  const isDone = habitIsDoneOn(h, pid, sel);
   try {
-    if (existing){
-      const { error } = await db.from('habit_logs').delete().eq('id', existing.id); if (error) throw error;
-      state.habitLogs = state.habitLogs.filter(l => l.id !== existing.id);
+    if (isDone){
+      // splněno → ťuknutí zruší
+      if (existing){ const { error } = await db.from('habit_logs').delete().eq('id', existing.id); if (error) throw error; state.habitLogs = state.habitLogs.filter(l => l.id !== existing.id); }
     } else {
-      const { data, error } = await db.from('habit_logs').insert({ habit_id: id, player_id: pid, datum: sel }).select(); if (error) throw error;
-      if (data && data[0]) state.habitLogs.push(data[0]);
+      // nesplněno / částečně → ťuknutí splní NAPLNO
+      const full = z === 'check' ? null : (Number(h.cil_hodnota) || null);
+      if (existing){ const { error } = await db.from('habit_logs').update({ hodnota: full }).eq('id', existing.id); if (error) throw error; existing.hodnota = full; }
+      else { const { data, error } = await db.from('habit_logs').insert({ habit_id: id, player_id: pid, datum: sel, hodnota: full }).select(); if (error) throw error; if (data && data[0]) state.habitLogs.push(data[0]); }
     }
     renderNavyky();
   } catch(e){ toast('Chyba: ' + e.message, 'error'); }
@@ -4027,6 +4034,15 @@ function habitIsDoneOn(h, pid, ds){
   const cil = Number(h.cil_hodnota) || 0;
   const val = log.hodnota != null ? Number(log.hodnota) : cil;
   return cil > 0 ? val >= cil : true;  // měřitelný = splněno až po dosažení cíle
+}
+// frakce splnění daný den (0..1): binární 0/1, měřitelný = hodnota/cíl (max 1)
+function habitFractionOn(h, pid, ds){
+  const log = habitLogObj(h.id, pid, ds);
+  if (!log) return 0;
+  if (habitEffZapis(h) === 'check') return 1;
+  const cil = Number(h.cil_hodnota) || 0;
+  const val = log.hodnota != null ? Number(log.hodnota) : cil;
+  return cil > 0 ? Math.min(1, val / cil) : 1;
 }
 function setHabitCast(k){ state.habitCast = k; renderHabitCastChips(); updateHabitIntent(); }
 function renderHabitCastChips(){
