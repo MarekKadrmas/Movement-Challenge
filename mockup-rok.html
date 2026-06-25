@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup — roční přehled s hranicemi měsíců</title>
+<style>
+  :root{
+    --cell: 15px;          /* velikost čtverečku */
+    --empty: #e9edf2;      /* prázdný čtvereček */
+    --done:  #22c55e;      /* splněno */
+    --grid:  rgba(15,23,42,.10);  /* tenká mřížka aby byly vidět čtverečky (žádná MEZERA) */
+    --month: rgba(15,23,42,.42);  /* hranice měsíce — tenká, jen vizuální odlišení */
+  }
+  *{box-sizing:border-box;}
+  body{font-family:-apple-system,Segoe UI,Roboto,system-ui,sans-serif;background:#f6f7f9;color:#0f172a;margin:0;padding:24px;}
+  h1{font-size:18px;margin:0 0 4px;}
+  p.note{font-size:13px;color:#64748b;margin:0 0 20px;max-width:640px;line-height:1.5;}
+  .card{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:18px 18px 22px;max-width:880px;}
+  .legend{display:flex;gap:18px;align-items:center;font-size:12px;color:#64748b;margin-bottom:14px;}
+  .legend i{display:inline-block;width:13px;height:13px;border-radius:3px;vertical-align:-2px;margin-right:5px;}
+  .scroll{overflow-x:auto;padding-bottom:6px;}
+  .wrap{position:relative;width:max-content;}
+  .labels{position:relative;height:18px;margin-bottom:4px;}
+  .labels span{position:absolute;font-size:11px;color:#475569;font-weight:600;white-space:nowrap;}
+  /* mřížka: 7 řádků, sloupce = týdny, NULOVÁ mezera = čtverečky nalepené */
+  .grid{display:grid;grid-auto-flow:column;grid-template-rows:repeat(7,var(--cell));grid-auto-columns:var(--cell);gap:0;}
+  .c{width:var(--cell);height:var(--cell);background:var(--empty);}
+  .c.done{background:var(--done);}
+  .c.blank{background:transparent;box-shadow:none !important;}
+</style>
+</head>
+<body>
+  <h1>Roční přehled — takhle to chápu</h1>
+  <p class="note">365 čtverečků nalepených těsně vedle sebe (žádné mezery). Do nich je <b>zakreslená hranice měsíců</b> — tlustá čára, která vede přesně mezi čtverečky jednoho a druhého měsíce. <b>Není rovná</b> — má „zub" tam, kde měsíc přeskočí uprostřed týdne. Žádný čtvereček se nikam nepohnul.</p>
+  <div class="card">
+    <div class="legend">
+      <span><i style="background:var(--empty)"></i>nesplněno</span>
+      <span><i style="background:var(--done)"></i>splněno</span>
+      <span><i style="background:var(--month);border-radius:0;width:1.5px;height:13px"></i>hranice měsíce</span>
+    </div>
+    <div class="scroll">
+      <div class="wrap">
+        <div class="labels" id="labels"></div>
+        <div class="grid" id="grid"></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+(function(){
+  var YEAR = 2026;
+  var MES = ['Led','Úno','Bře','Dub','Kvě','Čvn','Čvc','Srp','Zář','Říj','Lis','Pro'];
+  var CELL = 15;
+
+  // posbírej všechny dny roku
+  var days = [];
+  var d = new Date(YEAR,0,1);
+  while (d.getFullYear() === YEAR){ days.push(new Date(d)); d.setDate(d.getDate()+1); }
+
+  // pondělí = 0 .. neděle = 6
+  function mon0(dt){ return (dt.getDay()+6)%7; }
+  var lead = mon0(days[0]);                 // prázdné buňky před 1.1.
+  var total = lead + days.length;
+  var cols = Math.ceil(total/7);
+  total = cols*7;                            // doplň trailing blanky
+
+  // měsíc buňky podle indexu v mřížce (null = blank)
+  function monthAt(k){
+    var di = k - lead;
+    if (di < 0 || di >= days.length) return null;
+    return days[di].getMonth();
+  }
+
+  var grid = document.getElementById('grid');
+  for (var k=0;k<total;k++){
+    var cell = document.createElement('div');
+    cell.className = 'c';
+    var m = monthAt(k);
+    if (m === null){ cell.className = 'c blank'; grid.appendChild(cell); continue; }
+
+    var di = k - lead;
+    // ukázková data: ať to vypadá jako reálný heatmap
+    if ((di*7 + 3) % 5 === 0 || di % 9 === 0) cell.classList.add('done');
+
+    // hranice měsíců — kreslené DO čtverečku (box-shadow = neposouvá layout)
+    var sh = ['inset 0 0 0 1px var(--grid)'];   // tenká mřížka, ať jsou čtverečky vidět
+    var L = k-7;                                  // soused vlevo (stejný řádek, předchozí týden)
+    if (L >= 0 && monthAt(L) !== null && monthAt(L) !== m)
+      sh.push('inset 1.5px 0 0 0 var(--month)');
+    if (k % 7 !== 0){                             // soused nahoře (stejný týden, předchozí den)
+      var T = k-1;
+      if (monthAt(T) !== null && monthAt(T) !== m)
+        sh.push('inset 0 1.5px 0 0 var(--month)');
+    }
+    cell.style.boxShadow = sh.join(',');
+    grid.appendChild(cell);
+  }
+
+  // popisky měsíců — VYCENTROVANÉ nad svým blokem (ne nad čárou)
+  var labels = document.getElementById('labels');
+  var first = {}, last = {};
+  for (var i=0;i<days.length;i++){
+    var mo = days[i].getMonth();
+    var col = Math.floor((lead + i)/7);
+    if (first[mo] === undefined) first[mo] = col;
+    last[mo] = col;
+  }
+  for (var mo2 in first){
+    var center = ((first[mo2] + last[mo2]) / 2) * CELL + CELL/2;
+    var s = document.createElement('span');
+    s.textContent = MES[mo2];
+    s.style.left = center + 'px';
+    s.style.transform = 'translateX(-50%)';
+    labels.appendChild(s);
+  }
+})();
+</script>
+</body>
+</html>

@@ -1081,18 +1081,15 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 .mcell { aspect-ratio: 1; border-radius: 4px; background: var(--border); }
 .mcell.na { background: transparent; box-shadow: inset 0 0 0 1px var(--border); opacity: .45; }
 .mcell.blank { background: transparent; }
-/* roční heatmap per návyk: týdny jako sloupce, měsíce oddělené linkou + popiskem */
+/* roční heatmap per návyk: čtverečky nalepené bez mezer; hranice měsíců = zubatá linka kreslená DO čtverečků (box-shadow, layout se nehne) */
 .yh-scroll { overflow-x: auto; padding: 8px 2px 4px; -webkit-overflow-scrolling: touch; }
-.yh-row { display: flex; gap: 2px; width: max-content; }
-.yweek { display: flex; flex-direction: column; position: relative; }
-/* hranice měsíce = tenká linka v mezeře mezi týdny; čtverečky se NEPOSUNOU */
-.yweek.sep::before { content: ''; position: absolute; left: -2px; top: 13px; bottom: 0; width: 1.5px; background: color-mix(in srgb, var(--text-muted) 38%, transparent); }
-.yweek-lbl { height: 13px; line-height: 13px; font-size: 9px; font-weight: 700; color: var(--text-muted); white-space: nowrap; }
-.yweek-cells { display: grid; grid-template-rows: repeat(7, 12px); gap: 2px; }
-.ycell { width: 12px; height: 12px; border-radius: 3px; background: var(--border); }
-.ycell.blank { background: transparent; }
+.yh-wrap { position: relative; width: max-content; --yh-grid: color-mix(in srgb, var(--text) 10%, transparent); --yh-month: color-mix(in srgb, var(--text) 42%, transparent); }
+.yh-months { position: relative; height: 14px; margin-bottom: 3px; }
+.yh-months span { position: absolute; transform: translateX(-50%); font-size: 9px; font-weight: 700; color: var(--text-muted); white-space: nowrap; }
+.yh-grid { display: grid; grid-auto-flow: column; grid-template-rows: repeat(7, 12px); grid-auto-columns: 12px; gap: 0; }
+.ycell { width: 12px; height: 12px; background: var(--border); }
+.ycell.blank { background: transparent !important; box-shadow: none !important; }
 .ycell.na { background: color-mix(in srgb, var(--border) 45%, transparent); }
-.ycell.ytoday { box-shadow: 0 0 0 1.5px var(--text); }
 .habit-empty { text-align: center; padding: 30px 16px; color: var(--text-muted); }
 .habit-empty .icon { font-size: 40px; margin-bottom: 10px; }
 .habit-empty .title { font-weight: 800; color: var(--text); font-size: 16px; margin-bottom: 4px; }
@@ -3892,28 +3889,38 @@ function statYearHtml(pid, mine){
   const weeks = []; let w = []; for (let i = 0; i < lead; i++) w.push(null);
   for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)){ w.push(dateToStr(d)); if (w.length === 7){ weeks.push(w); w = []; } }
   if (w.length){ while (w.length < 7) w.push(null); weeks.push(w); }
-  // KAŽDÝ návyk = souvislý roční heatmap; měsíce oddělené tenkou linkou + popiskem
+  const moOf = ds => ds ? Number(ds.slice(5, 7)) - 1 : null;
+  // popisky měsíců VYCENTROVANÉ nad svým blokem (stejné pro všechny návyky)
+  const mc = {};  // měsíc -> [prvníSloupec, posledníSloupec]
+  weeks.forEach((wk, wi) => wk.forEach(ds => { const m = moOf(ds); if (m === null) return; if (mc[m] === undefined) mc[m] = [wi, wi]; else mc[m][1] = wi; }));
+  let labels = '';
+  for (const m in mc){ const cx = ((mc[m][0] + mc[m][1]) / 2) * 12 + 6; labels += `<span style="left:${cx}px">${ML[m]}</span>`; }
+  // KAŽDÝ návyk = souvislý roční heatmap; čtverečky nalepené, hranice měsíců zubatá (kreslená do čtverečků)
   for (const hb of mine){
     const isWM = hb.frekvence_typ === 'weekly' || hb.frekvence_typ === 'monthly';
-    let done = 0, cols = '';
-    for (const wk of weeks){
-      const f1 = wk.find(ds => ds && ds.slice(8, 10) === '01');  // týden obsahuje 1. den měsíce?
-      const mo = f1 ? Number(f1.slice(5, 7)) - 1 : -1;
-      const sep = mo > 0;  // linka před každým měsícem kromě ledna
-      let cells = '';
-      for (const ds of wk){
+    let done = 0, cells = '';
+    for (let wi = 0; wi < weeks.length; wi++){
+      for (let r = 0; r < 7; r++){
+        const ds = weeks[wi][r];
         if (!ds){ cells += `<div class="ycell blank"></div>`; continue; }
+        const mo = moOf(ds);
         const dd = habitStrToDate(ds);
         const existed = (hb.created_at||'').slice(0,10) <= ds && ds <= tS;
         const a = existed && (isWM || habitDueOn(hb, dd));
         const fr = a ? habitFractionOn(hb, pid, ds) : 0;
         if (a && habitIsDoneOn(hb, pid, ds)) done++;
-        cells += `<div class="ycell ${a ? '' : 'na'} ${ds === tS ? 'ytoday' : ''}" style="${statCellStyle('#22c55e', fr)}" title="${ds}"></div>`;
+        // hranice měsíce: linka tam, kde se mění měsíc oproti sousedovi vlevo (svisle) / nahoře (zub)
+        const lMo = wi > 0 ? moOf(weeks[wi - 1][r]) : null;   // soused vlevo (předchozí týden, stejný řádek)
+        const tMo = r > 0 ? moOf(weeks[wi][r - 1]) : null;    // soused nahoře (stejný týden, předchozí den)
+        const sh = ['inset 0 0 0 1px var(--yh-grid)'];
+        if (lMo !== null && lMo !== mo) sh.push('inset 1.5px 0 0 0 var(--yh-month)');
+        if (tMo !== null && tMo !== mo) sh.push('inset 0 1.5px 0 0 var(--yh-month)');
+        if (ds === tS) sh.push('inset 0 0 0 1.5px var(--text)');
+        cells += `<div class="ycell ${a ? '' : 'na'} ${ds === tS ? 'ytoday' : ''}" style="${statCellStyle('#22c55e', fr)};box-shadow:${sh.join(',')}" title="${ds}"></div>`;
       }
-      cols += `<div class="yweek ${sep ? 'sep' : ''}"><div class="yweek-lbl">${mo >= 0 ? ML[mo] : ''}</div><div class="yweek-cells">${cells}</div></div>`;
     }
     h += `<div class="stat-habcard"><div class="stat-habhead"><span>${hb.ikona||'🎯'} ${habitEsc(hb.nazev)}</span><b>${done}×</b></div>
-      <div class="yh-scroll"><div class="yh-row">${cols}</div></div></div>`;
+      <div class="yh-scroll"><div class="yh-wrap"><div class="yh-months">${labels}</div><div class="yh-grid">${cells}</div></div></div></div>`;
   }
   return h;
 }
