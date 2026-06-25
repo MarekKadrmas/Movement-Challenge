@@ -3820,6 +3820,17 @@ function renderHabitStats(){
   else if (range === 'mesic') html += statMonthHtml(pid, mine);
   else html += statYearHtml(pid, mine);
   el.innerHTML = html;
+  if (range === 'rok'){
+    // po otevření naroluj každý roční heatmap na aktuální datum (ať se nemusí scrollovat)
+    requestAnimationFrame(() => {
+      const yy = statBase().getFullYear();
+      if (yy !== new Date().getFullYear()) return;  // jiný rok → nech od ledna
+      const start = new Date(yy, 0, 1); const lead = (start.getDay() + 6) % 7;
+      const tIdx = Math.round((habitStrToDate(todayStr()) - start) / 86400000);
+      const colPx = Math.floor((lead + tIdx) / 7) * 14;  // 12px + 2px gap
+      document.querySelectorAll('#habit-stats .yh-scroll').forEach(s => { s.scrollLeft = Math.max(0, colPx - s.clientWidth + 70); });
+    });
+  }
 }
 function statWeekHtml(pid, mine){
   const base = statBase(); const start = new Date(base); start.setHours(0,0,0,0);
