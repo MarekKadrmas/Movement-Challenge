@@ -5256,6 +5256,7 @@ document.querySelectorAll('.nav-btn').forEach(btn => {
     document.getElementById('view-historie').style.display = state.view === 'historie' ? '' : 'none';
     document.getElementById('view-hraci').style.display = state.view === 'hraci' ? '' : 'none';
     document.getElementById('view-navyky').style.display = state.view === 'navyky' ? '' : 'none';
+    const fab = document.querySelector('.fab-group'); if (fab) fab.style.display = state.view === 'navyky' ? 'none' : '';  // na Návycích se přidává přes „+ Nový návyk"
     if (state.view === 'navyky') { state.habitDay = todayStr(); setHabitTab('dnes'); }
   });
 });
