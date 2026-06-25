@@ -1090,7 +1090,7 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 .yh-grid { display: grid; grid-auto-flow: column; grid-template-rows: repeat(7, 12px); grid-auto-columns: 12px; gap: 2px; }
 /* hranice měsíců = jeden souvislý SVG tah v mezerách (spojitý i v ohybu) */
 .yh-lines { position: absolute; left: 0; top: 0; pointer-events: none; }
-.yh-lines path { fill: none; stroke: var(--yh-month); stroke-width: 1px; stroke-linecap: round; stroke-linejoin: round; }
+.yh-lines path { fill: none; stroke: var(--yh-month); stroke-width: 0.75px; stroke-linecap: round; stroke-linejoin: round; }
 /* stejný jazyk jako Měsíc: splněno = zelená výplň (bez okraje), zmeškáno = plná šedá, neaktivní/budoucí = prázdný obrys */
 .ycell { width: 12px; height: 12px; border-radius: 2px; background: var(--border); }
 .ycell.blank { background: transparent !important; box-shadow: none !important; }
@@ -3825,18 +3825,27 @@ function renderHabitStats(){
     <button class="habit-seg-btn ${range==='rok'?'active':''}" onclick="setStatRange('rok')">Rok</button>
   </div>`;
   if (!mine.length){ el.innerHTML = html + '<div class="habit-empty"><div class="icon">📊</div><div>Zatím žádná data — založ si návyk.</div></div>'; return; }
+  // zapamatuj pozici scrollu, ať po překreslení (např. po prokliku dne) pohled neuskočí
+  const prevY = window.scrollY;
+  const prevX = [...el.querySelectorAll('.yh-scroll')].map(s => s.scrollLeft);
   if (range === 'tyden') html += statWeekHtml(pid, mine);
   else if (range === 'mesic') html += statMonthHtml(pid, mine);
   else html += statYearHtml(pid, mine);
   el.innerHTML = html;
+  window.scrollTo(0, prevY);                 // hned vrať svislou pozici
   if (range === 'rok'){
-    // po otevření vycentruj každý roční heatmap na DNEŠEK
     requestAnimationFrame(() => {
-      document.querySelectorAll('#habit-stats .yh-scroll').forEach(s => {
-        const t = s.querySelector('.ytoday'); if (!t) return;
-        const sr = s.getBoundingClientRect(), tr = t.getBoundingClientRect();
-        s.scrollLeft += (tr.left - sr.left) - s.clientWidth / 2 + tr.width / 2;
-      });
+      const scr = document.querySelectorAll('#habit-stats .yh-scroll');
+      if (prevX.length && prevX.length === scr.length){
+        scr.forEach((s, i) => { s.scrollLeft = prevX[i]; });   // re-render → obnov vodorovný scroll
+      } else {
+        scr.forEach(s => {                                      // první otevření → vycentruj na dnešek
+          const t = s.querySelector('.ytoday'); if (!t) return;
+          const sr = s.getBoundingClientRect(), tr = t.getBoundingClientRect();
+          s.scrollLeft += (tr.left - sr.left) - s.clientWidth / 2 + tr.width / 2;
+        });
+      }
+      window.scrollTo(0, prevY);                                // jistota i po layoutu
     });
   }
 }
