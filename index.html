@@ -1136,6 +1136,9 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 .habit-seg { display: flex; gap: 6px; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 4px; }
 .habit-seg-btn { flex: 1; padding: 10px 6px; border: none; background: transparent; color: var(--text-muted); font-family: inherit; font-size: 13px; font-weight: 700; border-radius: 9px; cursor: pointer; }
 .habit-seg-btn.active { background: var(--accent); color: #fff; }
+.habit-freq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.habit-freq-grid .habit-seg-btn { border: 1px solid var(--border); background: var(--bg); border-radius: 10px; padding: 11px 6px; }
+.habit-freq-grid .habit-seg-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
 .habit-days-row { display: flex; gap: 6px; margin-top: 10px; }
 .habit-day-btn { flex: 1; height: 42px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); color: var(--text-muted); font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
 .habit-day-btn.on { background: var(--accent); border-color: var(--accent); color: #fff; }
@@ -1561,14 +1564,15 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
         </div>
         <div class="field">
           <label>Jak často?</label>
-          <div class="habit-seg" id="habit-freq-seg">
+          <div class="habit-freq-grid" id="habit-freq-seg">
             <button type="button" class="habit-seg-btn active" onclick="setHabitFreq('daily')">Každý den</button>
-            <button type="button" class="habit-seg-btn" onclick="setHabitFreq('specific_days')">Konkrétní dny</button>
-            <button type="button" class="habit-seg-btn" onclick="setHabitFreq('weekly')">Nx týdně</button>
+            <button type="button" class="habit-seg-btn" onclick="setHabitFreq('specific_days')">Vybrané dny</button>
+            <button type="button" class="habit-seg-btn" onclick="setHabitFreq('weekly')">Týdně</button>
+            <button type="button" class="habit-seg-btn" onclick="setHabitFreq('monthly')">Měsíčně</button>
           </div>
           <div id="habit-days-row" class="habit-days-row" style="display:none;"></div>
-          <div id="habit-weekly-row" style="display:none;margin-top:10px;">
-            <label class="habit-sublabel">Kolikrát za týden?</label>
+          <div id="habit-count-row" style="display:none;margin-top:10px;">
+            <label class="habit-sublabel" id="habit-count-label">Kolikrát za týden?</label>
             <input type="number" id="habit-freq-cil" inputmode="numeric" min="1" max="7" value="3">
           </div>
         </div>
@@ -2148,6 +2152,8 @@ const HABIT_PRESETS = [
   { kat:'vztahy', nazev:'Společná večeře', ikona:'🍽️', cast:'vecer' },
   { kat:'vztahy', nazev:'Uklidit jednu věc', ikona:'🧽' },
   { kat:'vztahy', nazev:'Naplánovat výdaje', ikona:'💰', fq:'weekly', weekCil:1 },
+  { kat:'vztahy', nazev:'Projít finance', ikona:'📊', fq:'monthly', monthCil:1 },
+  { kat:'vztahy', nazev:'Velký úklid', ikona:'🧽', fq:'monthly', monthCil:1 },
   { kat:'vztahy', nazev:'Odložit do spoření', ikona:'🐷', fq:'weekly', weekCil:1 },
   { kat:'vztahy', nazev:'Péče o mazlíčka', ikona:'🐶' },
   { kat:'vztahy', nazev:'Drobná laskavost pro druhé', ikona:'🤝' },
@@ -3674,7 +3680,7 @@ function habitDueOn(h, d){
   const start = (h.created_at || '').slice(0, 10);
   if (start && dateToStr(d) < start) return false;
   if (h.frekvence_typ === 'specific_days') return ((h.frekvence_dny || 0) & (1 << ((d.getDay() + 6) % 7))) !== 0;
-  if (h.frekvence_typ === 'weekly') return false;  // týdenní nemá pevný den
+  if (h.frekvence_typ === 'weekly' || h.frekvence_typ === 'monthly') return false;  // flexibilní cíl, ne pevný den
   return true;
 }
 function habitDueToday(h){ return habitDueOn(h, new Date()); }
@@ -3746,6 +3752,10 @@ function habitWeekCount(habitId, pid){
   const start = startOfWeek();
   return habitLogsFor(habitId, pid).filter(l => new Date(l.datum) >= start).length;
 }
+function habitMonthCount(habitId, pid){
+  const now = new Date(); const ym = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+  return habitLogsFor(habitId, pid).filter(l => (l.datum || '').slice(0, 7) === ym).length;
+}
 function dniLabel(n){ return n === 1 ? 'den' : (n >= 2 && n <= 4 ? 'dny' : 'dní'); }
 function habitFmtNum(n){ return (Math.round(Number(n) * 100) / 100).toString(); }
 
@@ -3784,20 +3794,25 @@ function renderNavyky(){
     return;
   }
   // denní/konkrétní-dny návyky = denní checklist; týdenní mají vlastní sekci a NEpočítají se do denního kolečka
-  const dailyH = existed.filter(h => h.frekvence_typ !== 'weekly');
+  const dailyH = existed.filter(h => h.frekvence_typ !== 'weekly' && h.frekvence_typ !== 'monthly');
   const weeklyH = existed.filter(h => h.frekvence_typ === 'weekly');
+  const monthlyH = existed.filter(h => h.frekvence_typ === 'monthly');
   const due = dailyH.filter(h => habitDueOn(h, selDate));
   const doneToday = due.filter(h => habitIsDoneOn(h, pid, sel)).length;
   prog.innerHTML = due.length ? `${dayLabel} splněno <b>${doneToday}/${due.length}</b>` : '';
-  let html = dailyH.map(h => habitCardHtml(h, pid, sel, selDate, today, false)).join('');
+  let html = dailyH.map(h => habitCardHtml(h, pid, sel, selDate, today, 'daily')).join('');
   if (weeklyH.length){
     html += `<div class="habit-section-label">📅 Tento týden</div>`;
-    html += weeklyH.map(h => habitCardHtml(h, pid, sel, selDate, today, true)).join('');
+    html += weeklyH.map(h => habitCardHtml(h, pid, sel, selDate, today, 'weekly')).join('');
+  }
+  if (monthlyH.length){
+    html += `<div class="habit-section-label">🗓️ Tento měsíc</div>`;
+    html += monthlyH.map(h => habitCardHtml(h, pid, sel, selDate, today, 'monthly')).join('');
   }
   wrap.innerHTML = html;
 }
 
-function habitCardHtml(h, pid, sel, selDate, today, weeklySection){
+function habitCardHtml(h, pid, sel, selDate, today, section){
   const c = h.barva || 'var(--accent)';
   const z = habitEffZapis(h);
   const log = habitLogObj(h.id, pid, sel);
@@ -3811,8 +3826,11 @@ function habitCardHtml(h, pid, sel, selDate, today, weeklySection){
     measTxt = `${habitFmtNum(val)}/${habitFmtNum(cil)} ${habitEsc(h.cil_jednotka || '')}`.trim();
   }
   const parts = [];
-  if (weeklySection){
+  if (section === 'weekly'){
     parts.push(`<span class="habit-streak">${habitWeekCount(h.id, pid)}/${h.frekvence_cil}×</span> tento týden`);
+    if (z !== 'check' && log) parts.push(measTxt);
+  } else if (section === 'monthly'){
+    parts.push(`<span class="habit-streak">${habitMonthCount(h.id, pid)}/${h.frekvence_cil}×</span> tento měsíc`);
     if (z !== 'check' && log) parts.push(measTxt);
   } else if (h.frekvence_typ === 'specific_days'){
     const days = HABIT_DEN_NAMES.filter((d,i) => (h.frekvence_dny || 0) & (1 << i));
@@ -3827,7 +3845,7 @@ function habitCardHtml(h, pid, sel, selDate, today, weeklySection){
   if (h.kotva) parts.push(`⛓ ${habitEsc(h.kotva)}`);
   let dots = '';
   for (let i = 6; i >= 0; i--){ const d = new Date(); d.setHours(0,0,0,0); d.setDate(d.getDate() - i); const dds = dateToStr(d); const on = habitIsDoneOn(h, pid, dds); dots += `<div class="habit-dot ${on?'on':''} ${dds===today?'today':''}"></div>`; }
-  const dueT = weeklySection ? true : habitDueOn(h, selDate);
+  const dueT = section === 'daily' ? habitDueOn(h, selDate) : true;
   return `<div class="habit-card ${done?'done':''}" style="--hc:${c};${dueT||done?'':'opacity:.62'}">
     ${z !== 'check' ? `<div class="habit-fill" style="width:${progPct}%"></div>` : ''}
     <div class="habit-icon">${h.ikona || '🎯'}</div>
@@ -3996,7 +4014,7 @@ function prefillHabitForm(h, preset){
   state.habitIconAuto = !h && !preset;  // auto-návrh ikony jen u úplně vlastního
   const fq = h ? h.frekvence_typ : (preset ? (preset.fq || 'daily') : 'daily');
   state.habitDays = h ? (h.frekvence_dny || 0) : 0;
-  document.getElementById('habit-freq-cil').value = h ? (h.frekvence_cil || 3) : (preset && preset.fq === 'weekly' ? (preset.weekCil || 3) : 3);
+  document.getElementById('habit-freq-cil').value = h ? (h.frekvence_cil || (fq === 'monthly' ? 1 : 3)) : (preset ? (preset.weekCil || preset.monthCil || (preset.fq === 'monthly' ? 1 : 3)) : 3);
   setHabitFreq(fq);
   const zapis = h ? habitEffZapis(h) : (preset && preset.jed ? 'number' : 'check');
   document.getElementById('habit-cil-hodnota').value = h ? (h.cil_hodnota != null ? h.cil_hodnota : '') : (preset && preset.mer != null ? preset.mer : '');
@@ -4019,10 +4037,18 @@ function onHabitNameInput(){
 }
 function setHabitFreq(f){
   state.habitFreq = f;
-  const order = ['daily','specific_days','weekly'];
+  const order = ['daily','specific_days','weekly','monthly'];
   document.querySelectorAll('#habit-freq-seg .habit-seg-btn').forEach((b,i) => b.classList.toggle('active', order[i] === f));
   document.getElementById('habit-days-row').style.display = f === 'specific_days' ? '' : 'none';
-  document.getElementById('habit-weekly-row').style.display = f === 'weekly' ? '' : 'none';
+  const isCount = f === 'weekly' || f === 'monthly';
+  document.getElementById('habit-count-row').style.display = isCount ? '' : 'none';
+  if (isCount){
+    document.getElementById('habit-count-label').textContent = f === 'weekly' ? 'Kolikrát za týden?' : 'Kolikrát za měsíc?';
+    const inp = document.getElementById('habit-freq-cil');
+    inp.max = f === 'weekly' ? 7 : 31;
+    if (+inp.value > +inp.max) inp.value = inp.max;
+    if (!inp.value || +inp.value < 1) inp.value = f === 'weekly' ? 3 : 1;
+  }
   if (f === 'specific_days'){ if (!state.habitDays) state.habitDays = 31; renderHabitDays(); }  // 31 = Po-Pá
   updateHabitIntent();
 }
@@ -4098,6 +4124,7 @@ function updateHabitIntent(){
   const cast = state.habitCast ? HABIT_CAST_LABEL[state.habitCast] : '';
   let freqTxt;
   if (state.habitFreq === 'weekly') freqTxt = `${document.getElementById('habit-freq-cil').value || 3}× týdně`;
+  else if (state.habitFreq === 'monthly') freqTxt = `${document.getElementById('habit-freq-cil').value || 1}× měsíčně`;
   else if (state.habitFreq === 'specific_days'){ const d = HABIT_DEN_NAMES.filter((x,i) => state.habitDays & (1 << i)); freqTxt = d.length ? d.join(', ') : 'vyber dny'; }
   else freqTxt = 'každý den';
   let s;
@@ -4114,6 +4141,7 @@ async function submitHabit(){
   const freq = state.habitFreq;
   let cil = 1, dny = 0;
   if (freq === 'weekly') cil = Math.max(1, Math.min(7, parseInt(document.getElementById('habit-freq-cil').value) || 3));
+  if (freq === 'monthly') cil = Math.max(1, Math.min(31, parseInt(document.getElementById('habit-freq-cil').value) || 1));
   if (freq === 'specific_days'){ dny = state.habitDays || 0; if (!dny){ toast('Vyber aspoň jeden den', 'error'); return; } }
   const zapis = state.habitZapis;
   const mira = zapis === 'check' ? 'binary' : 'measurable';
