@@ -3864,7 +3864,7 @@ function statWeekHtml(pid, mine){
       const existed = (hb.created_at||'').slice(0,10) <= ds && ds <= todayStr();
       const appl = existed && (isWM || habitDueOn(hb, d));
       const fr = appl ? habitFractionOn(hb, pid, ds) : 0;
-      const oc = appl ? ` onclick="editHabitCell('${hb.id}','${ds}')"` : '';   // proklik = editace dne
+      const oc = appl ? ` onclick="editHabitCell('${hb.id}','${ds}')" data-hid="${hb.id}" data-ds="${ds}"` : '';   // proklik = editace dne
       h += `<div class="stat-box ${appl?'clk':'na'}" style="${statCellStyle('#22c55e', fr)}"${oc}></div>`;
     }
   }
@@ -3944,7 +3944,7 @@ function statYearHtml(pid, mine){
         if (a && habitIsDoneOn(hb, pid, ds)) done++;
         const st = a ? statCellStyle('#22c55e', fr) : '';
         const cls = `ycell ${a ? 'clk' : 'na'}${ds === tS ? ' ytoday' : ''}`;
-        const oc = a ? ` onclick="editHabitCell('${hb.id}','${ds}')"` : '';   // proklik = editace dne
+        const oc = a ? ` onclick="editHabitCell('${hb.id}','${ds}')" data-hid="${hb.id}" data-ds="${ds}"` : '';   // proklik = editace dne
         cells += `<div class="${cls}" style="${st}"${oc} title="${ds}"></div>`;
       }
     }
@@ -4124,13 +4124,43 @@ async function toggleHabitToday(id){
   } catch(e){ toast('Chyba: ' + e.message, 'error'); }
 }
 // proklik čtverečku ve statistikách (Rok / Týden) → editace návyku pro daný den
-function editHabitCell(id, ds){
+async function editHabitCell(id, ds){
   const pid = currentHabitPlayer(); if (!pid) return;
   if (ds > todayStr()) return;                            // budoucnost needitujeme
   const h = state.habits.find(x => x.id === id); if (!h) return;
-  state.habitDay = ds;                                    // zápis/hodnota se vztáhne k tomuto dni
-  if (habitEffZapis(h) === 'check') toggleHabitToday(id); // check = přepnout splněno
-  else openHabitValue(id);                                // měřitelný = otevřít zadání hodnoty
+  if (habitEffZapis(h) !== 'check'){
+    // měřitelný → modal; uložení udělá CHIRURGICKÝ update (bez rebuildu → žádný skok)
+    state.statEditCell = { id, ds }; state.habitDay = ds;
+    openHabitValue(id); return;
+  }
+  // check → přepnout splněno přímo a překreslit JEN tento čtvereček (žádné renderNavyky → scroll se nehne)
+  const existing = habitLogObj(id, pid, ds);
+  try {
+    if (habitIsDoneOn(h, pid, ds)){
+      if (existing){ const { error } = await db.from('habit_logs').delete().eq('id', existing.id); if (error) throw error; state.habitLogs = state.habitLogs.filter(l => l.id !== existing.id); }
+    } else {
+      const { data, error } = await db.from('habit_logs').insert({ habit_id: id, player_id: pid, datum: ds, hodnota: null }).select(); if (error) throw error; if (data && data[0]) state.habitLogs.push(data[0]);
+    }
+    refreshStatCell(id, ds);
+  } catch(e){ toast('Chyba: ' + e.message, 'error'); }
+}
+// překreslí JEN jeden čtvereček (+ počet v hlavičce roční karty) bez rebuildu celé statistiky → nehýbe scrollem
+function refreshStatCell(id, ds){
+  const pid = currentHabitPlayer(); if (!pid) return;
+  const h = state.habits.find(x => x.id === id); if (!h) return;
+  const fr = habitFractionOn(h, pid, ds);
+  document.querySelectorAll(`#habit-stats [data-hid="${id}"][data-ds="${ds}"]`).forEach(c => { c.style.cssText = statCellStyle('#22c55e', fr); });
+  const any = document.querySelector(`#habit-stats .yh-grid [data-hid="${id}"]`);
+  const b = any && any.closest('.stat-habcard') ? any.closest('.stat-habcard').querySelector('.stat-habhead b') : null;
+  if (b){
+    const isWM = h.frekvence_typ === 'weekly' || h.frekvence_typ === 'monthly';
+    const y = statBase().getFullYear(), end = new Date(y, 11, 31), tS = todayStr(); let done = 0;
+    for (let d = new Date(y, 0, 1); d <= end; d.setDate(d.getDate() + 1)){
+      const dd = dateToStr(d); if (dd > tS) break;
+      if ((h.created_at||'').slice(0,10) <= dd && (isWM || habitDueOn(h, d)) && habitIsDoneOn(h, pid, dd)) done++;
+    }
+    b.textContent = done + '×';
+  }
 }
 // ----- zadání hodnoty (číslo / posuvník) -----
 function openHabitValue(id){
@@ -4158,7 +4188,7 @@ function openHabitValue(id){
   document.getElementById('habit-value-modal').classList.add('active'); lockBodyScroll();
 }
 function onHvSlider(v){ const h = state.habits.find(x => x.id === state.habitValueId); const jed = h ? (h.cil_jednotka || '') : ''; document.getElementById('hv-slider-val').textContent = `${v} ${jed}`.trim(); }
-function closeHabitValue(){ document.getElementById('habit-value-modal').classList.remove('active'); unlockBodyScroll(); state.habitValueId = null; }
+function closeHabitValue(){ document.getElementById('habit-value-modal').classList.remove('active'); unlockBodyScroll(); state.habitValueId = null; state.statEditCell = null; }
 async function saveHabitValue(){
   const pid = currentHabitPlayer(); const id = state.habitValueId; if (!pid || !id) return;
   const h = state.habits.find(x => x.id === id); const z = habitEffZapis(h);
@@ -4174,7 +4204,8 @@ async function saveHabitValue(){
       const { data, error } = await db.from('habit_logs').insert({ habit_id: id, player_id: pid, datum: sel, hodnota: val }).select(); if (error) throw error;
       if (data && data[0]) state.habitLogs.push(data[0]);
     }
-    closeHabitValue(); renderNavyky();
+    const se = state.statEditCell; closeHabitValue();
+    if (se && state.habitTab === 'stats') refreshStatCell(se.id, se.ds); else renderNavyky();
   } catch(e){ toast('Chyba: ' + e.message, 'error'); }
 }
 async function clearHabitValue(){
@@ -4183,7 +4214,8 @@ async function clearHabitValue(){
   const existing = habitLogObj(id, pid, sel);
   try {
     if (existing){ const { error } = await db.from('habit_logs').delete().eq('id', existing.id); if (error) throw error; state.habitLogs = state.habitLogs.filter(l => l.id !== existing.id); }
-    closeHabitValue(); renderNavyky();
+    const se = state.statEditCell; closeHabitValue();
+    if (se && state.habitTab === 'stats') refreshStatCell(se.id, se.ds); else renderNavyky();
   } catch(e){ toast('Chyba: ' + e.message, 'error'); }
 }
 
