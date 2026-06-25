@@ -1081,14 +1081,17 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 .mcell { aspect-ratio: 1; border-radius: 4px; background: var(--border); }
 .mcell.na { background: transparent; box-shadow: inset 0 0 0 1px var(--border); opacity: .45; }
 .mcell.blank { background: transparent; }
-/* roční heatmap per návyk: souvislá mřížka + zarovnané popisky měsíců, posuvné */
+/* roční heatmap per návyk: týdny jako sloupce, měsíce oddělené linkou + popiskem */
 .yh-scroll { overflow-x: auto; padding: 8px 2px 4px; -webkit-overflow-scrolling: touch; }
-.yh-months { display: grid; gap: 2px; margin-bottom: 5px; font-size: 9px; font-weight: 700; color: var(--text-muted); width: max-content; }
-.yh-months span { white-space: nowrap; grid-row: 1; }
-.yh-grid { display: grid; grid-auto-flow: column; grid-template-rows: repeat(7, 12px); grid-auto-columns: 12px; gap: 2px; width: max-content; }
+.yh-row { display: flex; gap: 2px; width: max-content; }
+.yweek { display: flex; flex-direction: column; }
+.yweek.sep { border-left: 1.5px solid color-mix(in srgb, var(--text-muted) 32%, transparent); margin-left: 3px; padding-left: 3px; }
+.yweek-lbl { height: 13px; line-height: 13px; font-size: 9px; font-weight: 700; color: var(--text-muted); white-space: nowrap; }
+.yweek-cells { display: grid; grid-template-rows: repeat(7, 12px); gap: 2px; }
 .ycell { width: 12px; height: 12px; border-radius: 3px; background: var(--border); }
 .ycell.blank { background: transparent; }
 .ycell.na { background: color-mix(in srgb, var(--border) 45%, transparent); }
+.ycell.ytoday { box-shadow: 0 0 0 1.5px var(--text); }
 .habit-empty { text-align: center; padding: 30px 16px; color: var(--text-muted); }
 .habit-empty .icon { font-size: 40px; margin-bottom: 10px; }
 .habit-empty .title { font-weight: 800; color: var(--text); font-size: 16px; margin-bottom: 4px; }
@@ -3821,14 +3824,13 @@ function renderHabitStats(){
   else html += statYearHtml(pid, mine);
   el.innerHTML = html;
   if (range === 'rok'){
-    // po otevření naroluj každý roční heatmap na aktuální datum (ať se nemusí scrollovat)
+    // po otevření vycentruj každý roční heatmap na DNEŠEK
     requestAnimationFrame(() => {
-      const yy = statBase().getFullYear();
-      if (yy !== new Date().getFullYear()) return;  // jiný rok → nech od ledna
-      const start = new Date(yy, 0, 1); const lead = (start.getDay() + 6) % 7;
-      const tIdx = Math.round((habitStrToDate(todayStr()) - start) / 86400000);
-      const colPx = Math.floor((lead + tIdx) / 7) * 14;  // 12px + 2px gap
-      document.querySelectorAll('#habit-stats .yh-scroll').forEach(s => { s.scrollLeft = Math.max(0, colPx - s.clientWidth + 70); });
+      document.querySelectorAll('#habit-stats .yh-scroll').forEach(s => {
+        const t = s.querySelector('.ytoday'); if (!t) return;
+        const sr = s.getBoundingClientRect(), tr = t.getBoundingClientRect();
+        s.scrollLeft += (tr.left - sr.left) - s.clientWidth / 2 + tr.width / 2;
+      });
     });
   }
 }
@@ -3885,30 +3887,32 @@ function statYearHtml(pid, mine){
   const tS = todayStr();
   const start = new Date(y, 0, 1), end = new Date(y, 11, 31);
   const lead = (start.getDay() + 6) % 7;
-  const totalDays = Math.round((end - start) / 86400000) + 1;
-  const totalCols = Math.ceil((lead + totalDays) / 7);
-  // popisky měsíců zarovnané nad sloupec, kde měsíc začíná (souvislý heatmap, žádné bloky)
-  let monthLbls = '';
-  for (let m = 0; m < 12; m++){
-    const dayIdx = Math.round((new Date(y, m, 1) - start) / 86400000);
-    const col = Math.floor((lead + dayIdx) / 7) + 1;
-    monthLbls += `<span style="grid-column:${col}">${ML[m]}</span>`;
-  }
-  // KAŽDÝ návyk = svůj souvislý roční heatmap (čtverečky dní za sebou), zelené = splněno
+  // rozdělení roku na týdny (sloupce); každý týden = 7 buněk (dateStr nebo null)
+  const weeks = []; let w = []; for (let i = 0; i < lead; i++) w.push(null);
+  for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)){ w.push(dateToStr(d)); if (w.length === 7){ weeks.push(w); w = []; } }
+  if (w.length){ while (w.length < 7) w.push(null); weeks.push(w); }
+  // KAŽDÝ návyk = souvislý roční heatmap; měsíce oddělené tenkou linkou + popiskem
   for (const hb of mine){
     const isWM = hb.frekvence_typ === 'weekly' || hb.frekvence_typ === 'monthly';
-    let cells = ''; for (let i = 0; i < lead; i++) cells += `<div class="ycell blank"></div>`;
-    let done = 0;
-    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)){
-      const ds = dateToStr(d);
-      const existed = (hb.created_at||'').slice(0,10) <= ds && ds <= tS;
-      const a = existed && (isWM || habitDueOn(hb, d));
-      const fr = a ? habitFractionOn(hb, pid, ds) : 0;
-      if (a && habitIsDoneOn(hb, pid, ds)) done++;
-      cells += `<div class="ycell ${a ? '' : 'na'}" style="${statCellStyle('#22c55e', fr)}" title="${ds}"></div>`;
+    let done = 0, cols = '';
+    for (const wk of weeks){
+      const f1 = wk.find(ds => ds && ds.slice(8, 10) === '01');  // týden obsahuje 1. den měsíce?
+      const mo = f1 ? Number(f1.slice(5, 7)) - 1 : -1;
+      const sep = mo > 0;  // linka před každým měsícem kromě ledna
+      let cells = '';
+      for (const ds of wk){
+        if (!ds){ cells += `<div class="ycell blank"></div>`; continue; }
+        const dd = habitStrToDate(ds);
+        const existed = (hb.created_at||'').slice(0,10) <= ds && ds <= tS;
+        const a = existed && (isWM || habitDueOn(hb, dd));
+        const fr = a ? habitFractionOn(hb, pid, ds) : 0;
+        if (a && habitIsDoneOn(hb, pid, ds)) done++;
+        cells += `<div class="ycell ${a ? '' : 'na'} ${ds === tS ? 'ytoday' : ''}" style="${statCellStyle('#22c55e', fr)}" title="${ds}"></div>`;
+      }
+      cols += `<div class="yweek ${sep ? 'sep' : ''}"><div class="yweek-lbl">${mo >= 0 ? ML[mo] : ''}</div><div class="yweek-cells">${cells}</div></div>`;
     }
     h += `<div class="stat-habcard"><div class="stat-habhead"><span>${hb.ikona||'🎯'} ${habitEsc(hb.nazev)}</span><b>${done}×</b></div>
-      <div class="yh-scroll"><div class="yh-months" style="grid-template-columns:repeat(${totalCols}, 12px)">${monthLbls}</div><div class="yh-grid">${cells}</div></div></div>`;
+      <div class="yh-scroll"><div class="yh-row">${cols}</div></div></div>`;
   }
   return h;
 }
