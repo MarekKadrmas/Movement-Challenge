@@ -1083,10 +1083,14 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 .mcell.blank { background: transparent; }
 /* roční heatmap per návyk: čtverečky nalepené bez mezer; hranice měsíců = zubatá linka kreslená DO čtverečků (box-shadow, layout se nehne) */
 .yh-scroll { overflow-x: auto; padding: 8px 2px 4px; -webkit-overflow-scrolling: touch; }
-.yh-wrap { position: relative; width: max-content; --yh-grid: var(--border); --yh-month: color-mix(in srgb, var(--text) 42%, transparent); }
+.yh-wrap { position: relative; width: max-content; --yh-grid: var(--border); --yh-month: color-mix(in srgb, var(--text) 45%, transparent); }
 .yh-months { position: relative; height: 14px; margin-bottom: 3px; }
 .yh-months span { position: absolute; transform: translateX(-50%); font-size: 9px; font-weight: 700; color: var(--text-muted); white-space: nowrap; }
-.yh-grid { display: grid; grid-auto-flow: column; grid-template-rows: repeat(7, 12px); grid-auto-columns: 12px; gap: 0; }
+.yh-plot { position: relative; width: max-content; }
+.yh-grid { display: grid; grid-auto-flow: column; grid-template-rows: repeat(7, 12px); grid-auto-columns: 12px; gap: 2px; }
+/* hranice měsíců = jeden souvislý SVG tah v mezerách (spojitý i v ohybu) */
+.yh-lines { position: absolute; left: 0; top: 0; pointer-events: none; }
+.yh-lines path { fill: none; stroke: var(--yh-month); stroke-width: 1.5px; stroke-linecap: square; stroke-linejoin: miter; }
 /* stejný jazyk jako Měsíc: splněno = zelená, zmeškáno = plná šedá, neaktivní/budoucí = prázdný obrys */
 .ycell { width: 12px; height: 12px; border-radius: 2px; background: var(--border); }
 .ycell.blank { background: transparent !important; box-shadow: none !important; }
@@ -3891,12 +3895,31 @@ function statYearHtml(pid, mine){
   for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)){ w.push(dateToStr(d)); if (w.length === 7){ weeks.push(w); w = []; } }
   if (w.length){ while (w.length < 7) w.push(null); weeks.push(w); }
   const moOf = ds => ds ? Number(ds.slice(5, 7)) - 1 : null;
+  const CELL = 12, GAP = 2, P = CELL + GAP;             // čtvereček, mezera, rozteč
+  const ncols = weeks.length;
+  const W = ncols * P - GAP, Hpx = 7 * P - GAP;          // rozměry mřížky
   // popisky měsíců VYCENTROVANÉ nad svým blokem (stejné pro všechny návyky)
   const mc = {};  // měsíc -> [prvníSloupec, posledníSloupec]
   weeks.forEach((wk, wi) => wk.forEach(ds => { const m = moOf(ds); if (m === null) return; if (mc[m] === undefined) mc[m] = [wi, wi]; else mc[m][1] = wi; }));
   let labels = '';
-  for (const m in mc){ const cx = ((mc[m][0] + mc[m][1]) / 2) * 12 + 6; labels += `<span style="left:${cx}px">${ML[m]}</span>`; }
-  // KAŽDÝ návyk = souvislý roční heatmap; čtverečky nalepené, hranice měsíců zubatá (kreslená do čtverečků)
+  for (const m in mc){ const cx = ((mc[m][0] + mc[m][1]) / 2) * P + CELL / 2; labels += `<span style="left:${cx}px">${ML[m]}</span>`; }
+  // hranice měsíců = JEDNA souvislá zubatá čára (SVG tah v mezerách); segmenty dlouhé na celou rozteč → v ohybu se spojí
+  const segs = [];
+  for (let c = 0; c < ncols; c++){
+    for (let r = 0; r < 7; r++){
+      const mo = moOf(weeks[c][r]); if (mo === null) continue;
+      if (c > 0){ const lm = moOf(weeks[c - 1][r]); if (lm !== null && lm !== mo){
+        const x = c * P - GAP / 2, y1 = Math.max(0, r * P - GAP / 2), y2 = Math.min(Hpx, (r + 1) * P - GAP / 2);
+        segs.push(`M${x} ${y1}L${x} ${y2}`);
+      }}
+      if (r > 0){ const tm = moOf(weeks[c][r - 1]); if (tm !== null && tm !== mo){
+        const y = r * P - GAP / 2, x1 = Math.max(0, c * P - GAP / 2), x2 = Math.min(W, (c + 1) * P - GAP / 2);
+        segs.push(`M${x1} ${y}L${x2} ${y}`);
+      }}
+    }
+  }
+  const svg = `<svg class="yh-lines" width="${W}" height="${Hpx}" viewBox="0 0 ${W} ${Hpx}"><path d="${segs.join('')}"/></svg>`;
+  // KAŽDÝ návyk = souvislý roční heatmap; čtverečky s mezerou, hranice měsíců = souvislá čára
   for (const hb of mine){
     const isWM = hb.frekvence_typ === 'weekly' || hb.frekvence_typ === 'monthly';
     let done = 0, cells = '';
@@ -3904,24 +3927,18 @@ function statYearHtml(pid, mine){
       for (let r = 0; r < 7; r++){
         const ds = weeks[wi][r];
         if (!ds){ cells += `<div class="ycell blank"></div>`; continue; }
-        const mo = moOf(ds);
         const dd = habitStrToDate(ds);
         const existed = (hb.created_at||'').slice(0,10) <= ds && ds <= tS;
         const a = existed && (isWM || habitDueOn(hb, dd));
         const fr = a ? habitFractionOn(hb, pid, ds) : 0;
         if (a && habitIsDoneOn(hb, pid, ds)) done++;
-        // hranice měsíce: linka tam, kde se mění měsíc oproti sousedovi vlevo (svisle) / nahoře (zub)
-        const lMo = wi > 0 ? moOf(weeks[wi - 1][r]) : null;   // soused vlevo (předchozí týden, stejný řádek)
-        const tMo = r > 0 ? moOf(weeks[wi][r - 1]) : null;    // soused nahoře (stejný týden, předchozí den)
         const sh = ['inset 0 0 0 1px var(--yh-grid)'];
-        if (lMo !== null && lMo !== mo) sh.push('inset 1.5px 0 0 0 var(--yh-month)');
-        if (tMo !== null && tMo !== mo) sh.push('inset 0 1.5px 0 0 var(--yh-month)');
         if (ds === tS) sh.push('inset 0 0 0 1.5px var(--text)');
         cells += `<div class="ycell ${a ? '' : 'na'} ${ds === tS ? 'ytoday' : ''}" style="${statCellStyle('#22c55e', fr)};box-shadow:${sh.join(',')}" title="${ds}"></div>`;
       }
     }
     h += `<div class="stat-habcard"><div class="stat-habhead"><span>${hb.ikona||'🎯'} ${habitEsc(hb.nazev)}</span><b>${done}×</b></div>
-      <div class="yh-scroll"><div class="yh-wrap"><div class="yh-months">${labels}</div><div class="yh-grid">${cells}</div></div></div></div>`;
+      <div class="yh-scroll"><div class="yh-wrap"><div class="yh-months">${labels}</div><div class="yh-plot"><div class="yh-grid">${cells}</div>${svg}</div></div></div></div>`;
   }
   return h;
 }
