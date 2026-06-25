@@ -1062,6 +1062,28 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
   cursor: pointer; margin-top: 4px;
 }
 .habit-section-label { font-size: 12px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: .04em; margin: 16px 2px 8px; }
+/* statistiky */
+.habit-maintabs { display: flex; gap: 6px; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 4px; margin: 0 2px 14px; }
+.habit-maintab { flex: 1; padding: 9px; border: none; background: transparent; color: var(--text-muted); font-family: inherit; font-weight: 700; font-size: 14px; border-radius: 9px; cursor: pointer; }
+.habit-maintab.active { background: var(--accent); color: #fff; }
+.stat-nav { display: flex; align-items: center; justify-content: space-between; margin: 12px 2px; font-weight: 800; color: var(--text); }
+.stat-nav button { width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--border); background: var(--bg-card); color: var(--text); font-size: 16px; cursor: pointer; }
+.stat-grid { display: grid; grid-template-columns: 28px repeat(7, 1fr); gap: 4px; align-items: center; }
+.stat-cell.stat-hd { font-size: 10px; color: var(--text-muted); text-align: center; font-weight: 700; }
+.stat-cell.stat-name { font-size: 16px; text-align: center; }
+.stat-box { aspect-ratio: 1; border-radius: 5px; background: var(--border); }
+.stat-box.na { background: transparent; box-shadow: inset 0 0 0 1px var(--border); opacity: .35; }
+.stat-summary { margin: 14px 2px 8px; font-size: 13px; color: var(--text-muted); font-weight: 600; }
+.stat-summary b { color: var(--text); font-size: 15px; }
+.stat-habcard { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; }
+.stat-habhead { display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 700; color: var(--text); }
+.mcal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; margin-top: 8px; }
+.mcell { aspect-ratio: 1; border-radius: 4px; background: var(--border); }
+.mcell.na { background: transparent; opacity: .3; }
+.mcell.blank { background: transparent; }
+.yheat { display: grid; grid-auto-flow: column; grid-template-rows: repeat(7, 1fr); gap: 2px; overflow-x: auto; padding-bottom: 6px; }
+.ycell { width: 9px; height: 9px; border-radius: 2px; background: var(--border); }
+.ycell.blank { background: transparent; }
 .habit-empty { text-align: center; padding: 30px 16px; color: var(--text-muted); }
 .habit-empty .icon { font-size: 40px; margin-bottom: 10px; }
 .habit-empty .title { font-weight: 800; color: var(--text); font-size: 16px; margin-bottom: 4px; }
@@ -1525,9 +1547,16 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
       <div class="habit-h-title" id="habit-hero-title">Moje návyky</div>
       <span class="habit-today-progress" id="habit-today-progress"></span>
     </div>
-    <div class="habit-week-strip" id="habit-week-strip"></div>
-    <div id="habit-list"></div>
-    <button type="button" class="habit-add-btn" id="habit-add-btn" onclick="openHabitModal()">+ Nový návyk</button>
+    <div class="habit-maintabs">
+      <button type="button" class="habit-maintab active" id="habit-maintab-dnes" onclick="setHabitTab('dnes')">Dnes</button>
+      <button type="button" class="habit-maintab" id="habit-maintab-stats" onclick="setHabitTab('stats')">Statistiky</button>
+    </div>
+    <div id="habit-dnes">
+      <div class="habit-week-strip" id="habit-week-strip"></div>
+      <div id="habit-list"></div>
+      <button type="button" class="habit-add-btn" id="habit-add-btn" onclick="openHabitModal()">+ Nový návyk</button>
+    </div>
+    <div id="habit-stats" style="display:none;"></div>
   </div>
 
 </main>
@@ -2224,7 +2253,10 @@ let state = {
   habitFreq: 'daily', habitIcon: '💧', habitColor: '#4ADE80',
   habitZapis: 'check', habitDays: 0, habitCast: '',
   habitDay: null,    // vybraný den v tabu Návyky (null = dnes)
-  habitValueId: null // návyk, kterému se právě zadává hodnota
+  habitValueId: null, // návyk, kterému se právě zadává hodnota
+  habitTab: 'dnes',  // 'dnes' | 'stats'
+  statRange: 'tyden', // 'tyden' | 'mesic' | 'rok'
+  statAnchor: null   // kotevní datum pro navigaci ve statistikách (null = teď)
 };
 
 // F19: localStorage klice
@@ -3734,6 +3766,124 @@ function renderHabitWeekStrip(){
   el.innerHTML = html;
 }
 function setHabitDay(ds){ state.habitDay = ds; renderHabitWeekStrip(); renderNavyky(); }
+
+// ===== Statistiky (Týden / Měsíc / Rok) =====
+const MESICE = ['Leden','Únor','Březen','Duben','Květen','Červen','Červenec','Srpen','Září','Říjen','Listopad','Prosinec'];
+function setHabitTab(t){
+  state.habitTab = t;
+  document.getElementById('habit-maintab-dnes').classList.toggle('active', t === 'dnes');
+  document.getElementById('habit-maintab-stats').classList.toggle('active', t === 'stats');
+  document.getElementById('habit-dnes').style.display = t === 'dnes' ? '' : 'none';
+  document.getElementById('habit-stats').style.display = t === 'stats' ? '' : 'none';
+  document.getElementById('habit-today-progress').style.display = t === 'dnes' ? '' : 'none';
+  if (t === 'stats') renderHabitStats(); else renderNavyky();
+}
+function statBase(){ return state.statAnchor ? habitStrToDate(state.statAnchor) : new Date(); }
+function setStatRange(r){ state.statRange = r; state.statAnchor = null; renderHabitStats(); }
+function moveStat(dir){
+  const b = statBase(); b.setHours(0,0,0,0);
+  const r = state.statRange || 'tyden';
+  if (r === 'tyden') b.setDate(b.getDate() + dir * 7);
+  else if (r === 'mesic') b.setMonth(b.getMonth() + dir);
+  else b.setFullYear(b.getFullYear() + dir);
+  state.statAnchor = dateToStr(b);
+  renderHabitStats();
+}
+// průměrné % splnění DENNÍCH návyků v daný den (null = nic naplánováno)
+function dayCompletion(pid, mine, d){
+  const due = mine.filter(h => h.frekvence_typ !== 'weekly' && h.frekvence_typ !== 'monthly' && habitDueOn(h, d));
+  if (!due.length) return null;
+  return due.reduce((s, h) => s + habitFractionOn(h, pid, dateToStr(d)), 0) / due.length;
+}
+function statCellStyle(barva, fr){
+  if (fr >= 1) return `background:${barva}`;
+  if (fr > 0) return `background:color-mix(in srgb, ${barva} ${Math.round(fr*100)}%, var(--border))`;
+  return '';
+}
+function renderHabitStats(){
+  const el = document.getElementById('habit-stats'); if (!el) return;
+  const pid = currentHabitPlayer(); if (!pid) { el.innerHTML = ''; return; }
+  const mine = state.habits.filter(h => h.player_id === pid).sort((a,b) => (a.poradi - b.poradi) || (new Date(a.created_at) - new Date(b.created_at)));
+  const range = state.statRange || 'tyden';
+  let html = `<div class="habit-seg" id="stat-range-seg">
+    <button class="habit-seg-btn ${range==='tyden'?'active':''}" onclick="setStatRange('tyden')">Týden</button>
+    <button class="habit-seg-btn ${range==='mesic'?'active':''}" onclick="setStatRange('mesic')">Měsíc</button>
+    <button class="habit-seg-btn ${range==='rok'?'active':''}" onclick="setStatRange('rok')">Rok</button>
+  </div>`;
+  if (!mine.length){ el.innerHTML = html + '<div class="habit-empty"><div class="icon">📊</div><div>Zatím žádná data — založ si návyk.</div></div>'; return; }
+  if (range === 'tyden') html += statWeekHtml(pid, mine);
+  else if (range === 'mesic') html += statMonthHtml(pid, mine);
+  else html += statYearHtml(pid, mine);
+  el.innerHTML = html;
+}
+function statWeekHtml(pid, mine){
+  const base = statBase(); const start = new Date(base); start.setHours(0,0,0,0);
+  start.setDate(start.getDate() - ((start.getDay() + 6) % 7));  // pondělí
+  const days = []; for (let i = 0; i < 7; i++){ const d = new Date(start); d.setDate(d.getDate() + i); days.push(d); }
+  const fmt = d => `${d.getDate()}.${d.getMonth()+1}.`;
+  let h = `<div class="stat-nav"><button onclick="moveStat(-1)">‹</button><div>${fmt(days[0])} – ${fmt(days[6])}</div><button onclick="moveStat(1)">›</button></div>`;
+  h += `<div class="stat-grid"><div class="stat-cell stat-hd"></div>` + days.map(d => `<div class="stat-cell stat-hd">${HABIT_DEN_NAMES[(d.getDay()+6)%7]}</div>`).join('');
+  for (const hb of mine){
+    const isWM = hb.frekvence_typ === 'weekly' || hb.frekvence_typ === 'monthly';
+    h += `<div class="stat-cell stat-name" title="${habitEsc(hb.nazev)}">${hb.ikona||'🎯'}</div>`;
+    for (const d of days){
+      const ds = dateToStr(d);
+      const existed = (hb.created_at||'').slice(0,10) <= ds && ds <= todayStr();
+      const appl = existed && (isWM || habitDueOn(hb, d));
+      const fr = appl ? habitFractionOn(hb, pid, ds) : 0;
+      h += `<div class="stat-box ${appl?'':'na'}" style="${statCellStyle(hb.barva||'#22c55e', fr)}"></div>`;
+    }
+  }
+  h += `</div>`;
+  let sum = 0, cnt = 0; for (const d of days){ if (d > new Date()) continue; const c = dayCompletion(pid, mine, d); if (c != null){ sum += c; cnt++; } }
+  h += `<div class="stat-summary"><b>${cnt?Math.round(sum/cnt*100):0} %</b> splněno tento týden</div>`;
+  return h;
+}
+function statMonthHtml(pid, mine){
+  const base = statBase(); const y = base.getFullYear(), m = base.getMonth();
+  const daysIn = new Date(y, m+1, 0).getDate();
+  const lead = (new Date(y, m, 1).getDay() + 6) % 7;
+  let h = `<div class="stat-nav"><button onclick="moveStat(-1)">‹</button><div>${MESICE[m]} ${y}</div><button onclick="moveStat(1)">›</button></div>`;
+  for (const hb of mine){
+    const isWM = hb.frekvence_typ === 'weekly' || hb.frekvence_typ === 'monthly';
+    let cells = ''; for (let i = 0; i < lead; i++) cells += `<div class="mcell blank"></div>`;
+    let done = 0, appl = 0;
+    for (let day = 1; day <= daysIn; day++){
+      const d = new Date(y, m, day); const ds = dateToStr(d);
+      const existed = (hb.created_at||'').slice(0,10) <= ds && ds <= todayStr();
+      const a = existed && (isWM || habitDueOn(hb, d));
+      const fr = a ? habitFractionOn(hb, pid, ds) : 0;
+      if (a && !isWM) appl++;
+      if (a && fr >= 1) done++;
+      else if (isWM && habitLogObj(hb.id, pid, ds)) done++;
+      cells += `<div class="mcell ${a?'':'na'}" style="${statCellStyle(hb.barva||'#22c55e', fr)}"></div>`;
+    }
+    const stat = isWM ? `${done}×` : (appl ? Math.round(done/appl*100) + ' %' : '—');
+    h += `<div class="stat-habcard"><div class="stat-habhead"><span>${hb.ikona||'🎯'} ${habitEsc(hb.nazev)}</span><b>${stat}</b></div><div class="mcal">${cells}</div></div>`;
+  }
+  return h;
+}
+function statYearHtml(pid, mine){
+  const base = statBase(); const y = base.getFullYear();
+  let h = `<div class="stat-nav"><button onclick="moveStat(-1)">‹</button><div>${y}</div><button onclick="moveStat(1)">›</button></div>`;
+  const start = new Date(y, 0, 1), end = new Date(y, 11, 31);
+  const lead = (start.getDay() + 6) % 7;
+  let cells = ''; for (let i = 0; i < lead; i++) cells += `<div class="ycell blank"></div>`;
+  const tS = todayStr();
+  for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)){
+    const ds = dateToStr(d);
+    let style = '';
+    if (ds <= tS){ const c = dayCompletion(pid, mine, new Date(d)); if (c != null) style = statCellStyle('#22c55e', c); }
+    cells += `<div class="ycell" style="${style}" title="${ds}"></div>`;
+  }
+  h += `<div class="stat-summary">Vyplnění dnů (denní návyky):</div><div class="yheat">${cells}</div>`;
+  h += `<div class="stat-summary">Letos splněno:</div>`;
+  for (const hb of mine){
+    const cnt = habitLogsFor(hb.id, pid).filter(l => (l.datum||'').slice(0,4) === String(y)).length;
+    h += `<div class="stat-habcard"><div class="stat-habhead"><span>${hb.ikona||'🎯'} ${habitEsc(hb.nazev)}</span><b>${cnt}×</b></div></div>`;
+  }
+  return h;
+}
 function habitDayStreak(habitId, pid){
   const done = new Set(habitLogsFor(habitId, pid).map(l => l.datum));
   let streak = 0, d = new Date(); d.setHours(0,0,0,0);
@@ -3814,6 +3964,7 @@ function renderNavyky(){
     html += monthlyH.map(h => habitCardHtml(h, pid, sel, selDate, today, 'monthly')).join('');
   }
   wrap.innerHTML = html;
+  if (state.habitTab === 'stats') renderHabitStats();
 }
 
 function habitCardHtml(h, pid, sel, selDate, today, section){
@@ -5082,7 +5233,7 @@ document.querySelectorAll('.nav-btn').forEach(btn => {
     document.getElementById('view-historie').style.display = state.view === 'historie' ? '' : 'none';
     document.getElementById('view-hraci').style.display = state.view === 'hraci' ? '' : 'none';
     document.getElementById('view-navyky').style.display = state.view === 'navyky' ? '' : 'none';
-    if (state.view === 'navyky') { state.habitDay = todayStr(); renderNavyky(); }
+    if (state.view === 'navyky') { state.habitDay = todayStr(); setHabitTab('dnes'); }
   });
 });
 
