@@ -3779,10 +3779,23 @@ function renderHabitWeekStrip(){
   el.innerHTML = html;
 }
 function setHabitDay(ds){
-  const sy = window.scrollY;                         // zachovej pozici scrollu — žádný skok nahoru
-  state.habitDay = ds; renderHabitWeekStrip(); renderNavyky();
-  window.scrollTo(0, sy);
-  requestAnimationFrame(() => window.scrollTo(0, sy));
+  const sy = window.scrollY;
+  const pid = currentHabitPlayer();
+  const hasContent = pid && state.habits.some(h => h.player_id === pid && (h.created_at || '').slice(0, 10) <= ds);
+  const de = document.documentElement;
+  // u dne s návyky ZAMKNI výšku stránky přes překreslení, aby se layout nepropadl a scroll na iOS neskočil nahoru
+  if (hasContent) de.style.minHeight = de.scrollHeight + 'px';
+  state.habitDay = ds; renderNavyky();   // renderNavyky uvnitř překreslí i proužek dnů
+  if (hasContent){
+    window.scrollTo(0, sy);
+    requestAnimationFrame(() => {
+      window.scrollTo(0, sy);
+      setTimeout(() => { de.style.minHeight = ''; window.scrollTo(0, sy); }, 60);  // uvolni výšku až po usazení layoutu
+    });
+  } else {
+    de.style.minHeight = '';
+    window.scrollTo(0, 0);   // prázdný den → odshora (není co zobrazit)
+  }
 }
 
 // ===== Statistiky (Týden / Měsíc / Rok) =====
