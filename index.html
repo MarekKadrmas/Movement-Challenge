@@ -1069,7 +1069,9 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 .stat-nav { display: flex; align-items: center; justify-content: space-between; margin: 12px 2px; font-weight: 800; color: var(--text); }
 .stat-nav button { width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--border); background: var(--bg-card); color: var(--text); font-size: 16px; cursor: pointer; }
 .stat-grid { display: grid; grid-template-columns: 28px repeat(7, 1fr); gap: 4px; align-items: center; }
-.stat-cell.stat-hd { font-size: 10px; color: var(--text-muted); text-align: center; font-weight: 700; }
+.stat-cell.stat-hd { display: flex; flex-direction: column; align-items: center; gap: 1px; font-size: 10px; color: var(--text-muted); font-weight: 700; }
+.stat-hd-num { font-size: 13px; font-weight: 800; color: var(--text); }
+.stat-cell.stat-hd.today .stat-hd-num { color: #fff; background: var(--accent); width: 19px; height: 19px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 .stat-cell.stat-name { font-size: 16px; text-align: center; }
 .stat-box { aspect-ratio: 1; border-radius: 5px; background: var(--border); }
 .stat-box.na { background: transparent; box-shadow: inset 0 0 0 1px var(--border); opacity: .35; }
@@ -1078,9 +1080,12 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 .stat-habcard { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; }
 .stat-habhead { display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 700; color: var(--text); }
 .mcal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; margin-top: 8px; }
-.mcell { aspect-ratio: 1; border-radius: 4px; background: var(--border); }
+.mcell { aspect-ratio: 1; border-radius: 4px; background: var(--border); display: flex; align-items: center; justify-content: center; }
 .mcell.na { background: transparent; box-shadow: inset 0 0 0 1px var(--border); opacity: .45; }
 .mcell.blank { background: transparent; }
+.mcell.mtoday { box-shadow: inset 0 0 0 2px var(--accent); }
+.mnum { font-size: 11.5px; font-weight: 600; color: var(--text); }
+.mnum.light { color: #fff; }
 /* roční heatmap per návyk: čtverečky nalepené bez mezer; hranice měsíců = zubatá linka kreslená DO čtverečků (box-shadow, layout se nehne) */
 .yh-scroll { overflow-x: auto; padding: 8px 2px 4px; -webkit-overflow-scrolling: touch; }
 .yh-wrap { position: relative; width: max-content; --yh-month: color-mix(in srgb, var(--text) 32%, transparent); }
@@ -3886,7 +3891,7 @@ function statWeekHtml(pid, mine){
   const days = []; for (let i = 0; i < 7; i++){ const d = new Date(start); d.setDate(d.getDate() + i); days.push(d); }
   const fmt = d => `${d.getDate()}.${d.getMonth()+1}.`;
   let h = `<div class="stat-nav"><button onclick="moveStat(-1)">‹</button><div>${fmt(days[0])} – ${fmt(days[6])}</div><button onclick="moveStat(1)">›</button></div>`;
-  h += `<div class="stat-grid"><div class="stat-cell stat-hd"></div>` + days.map(d => `<div class="stat-cell stat-hd">${HABIT_DEN_NAMES[(d.getDay()+6)%7]}</div>`).join('');
+  h += `<div class="stat-grid"><div class="stat-cell stat-hd"></div>` + days.map(d => `<div class="stat-cell stat-hd${dateToStr(d) === todayStr() ? ' today' : ''}">${HABIT_DEN_NAMES[(d.getDay()+6)%7]}<span class="stat-hd-num">${d.getDate()}</span></div>`).join('');
   for (const hb of mine){
     const isWM = hb.frekvence_typ === 'weekly' || hb.frekvence_typ === 'monthly';
     h += `<div class="stat-cell stat-name" title="${habitEsc(hb.nazev)}">${hb.ikona||'🎯'}</div>`;
@@ -3920,7 +3925,7 @@ function statMonthHtml(pid, mine){
       const fr = a ? habitFractionOn(hb, pid, ds) : 0;
       if (a && !isWM) appl++;
       if (a && habitIsDoneOn(hb, pid, ds)) done++;  // splněno = frakce ≥ 1 (i u weekly/monthly)
-      cells += `<div class="mcell ${a?'':'na'}" style="${statCellStyle('#22c55e', fr)}"></div>`;
+      cells += `<div class="mcell ${a?'':'na'} ${ds === todayStr() ? 'mtoday' : ''}" style="${statCellStyle('#22c55e', fr)}"><span class="mnum${(a && fr>=1)?' light':''}">${day}</span></div>`;
     }
     const stat = isWM ? `${done}×` : (appl ? Math.round(done/appl*100) + ' %' : '—');
     h += `<div class="stat-habcard"><div class="stat-habhead"><span>${hb.ikona||'🎯'} ${habitEsc(hb.nazev)}</span><b>${stat}</b></div><div class="mcal">${cells}</div></div>`;
