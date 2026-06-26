@@ -1088,7 +1088,7 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 .mnum.light { color: #fff; }
 /* roční pohled = 12 mini-měsíců VEDLE SEBE (scroll do strany); každý měsíc = mini-kalendář, týdny v řádcích */
 .yh-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 8px 0 4px; }
-.yh-wall { display: flex; gap: 2px; width: max-content; }
+.yh-wall { display: flex; gap: 14px; width: max-content; }
 .yh-mini { width: max-content; }
 .yh-mini-lbl { font-size: 10px; font-weight: 800; color: var(--text); margin-bottom: 3px; }
 .yh-mini.curm .yh-mini-lbl { color: var(--accent); }
@@ -3773,9 +3773,9 @@ function renderHabitWeekStrip(){
   // proužek ukazuje TÝDEN vybraného dne (umožní posun do minulosti i budoucnosti)
   const selD = habitStrToDate(sel);
   const start = new Date(selD); start.setDate(selD.getDate() - ((selD.getDay() + 6) % 7)); start.setHours(0,0,0,0);
-  // tlačítko "Dnes" jen když nejsme v aktuálním týdnu
+  // tlačítko "Dnes" se zobrazí vždy, když nejsi na dnešku → rychlý skok zpět jedním klikem
   const tBtn = document.getElementById('hws-today-btn');
-  if (tBtn){ const cur = startOfWeek(); tBtn.style.display = (start.getTime() === cur.getTime()) ? 'none' : ''; }
+  if (tBtn) tBtn.style.display = (sel === todayS) ? 'none' : '';
   let html = '';
   for (let i = 0; i < 7; i++){
     const d = new Date(start); d.setDate(d.getDate() + i); d.setHours(0,0,0,0);
@@ -3801,6 +3801,20 @@ function renderHabitWeekStrip(){
     </button>`;
   }
   el.innerHTML = html;
+  attachWeekSwipe();
+}
+// swipe doleva/doprava na proužku dnů = listování po týdnech
+function attachWeekSwipe(){
+  const el = document.getElementById('habit-week-strip'); if (!el || el._sw) return; el._sw = true;
+  let x0 = null, y0 = null;
+  el.addEventListener('touchstart', e => { const t = e.touches[0]; x0 = t.clientX; y0 = t.clientY; }, { passive: true });
+  el.addEventListener('touchend', e => {
+    if (x0 == null) return;
+    const t = e.changedTouches[0]; const dx = t.clientX - x0, dy = t.clientY - y0; x0 = null;
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.4){ el._swT = Date.now(); moveHabitWeek(dx < 0 ? 1 : -1); }  // doleva = další týden
+  }, { passive: true });
+  // pokud to byl swipe, potlač klik na den (ať se jen přepne týden)
+  el.addEventListener('click', e => { if (el._swT && Date.now() - el._swT < 400){ e.stopPropagation(); e.preventDefault(); el._swT = 0; } }, true);
 }
 function setHabitDay(ds){
   // výšku Dnes obsahu zamkni (jen ROSTE) PŘED překreslením → kratší/prázdný den stránku nesbalí
@@ -3964,7 +3978,6 @@ function statYearHtml(pid, mine){
         const oc = a ? ` onclick="editHabitCell('${hb.id}','${ds}')" data-hid="${hb.id}" data-ds="${ds}"` : '';   // proklik = editace dne
         cells += `<div class="${cls}" style="${st}"${oc} title="${ds}"><span class="ynum${(a && fr>=1)?' light':''}">${d}</span></div>`;
       }
-      for (let i = lead + daysIn; i < 42; i++) cells += `<div class="ycell blank"></div>`;  // doplň vždy na 6 řádků → uniformní výška měsíců
       const curm = (m === tM && y === tY) ? ' curm' : '';
       wall += `<div class="yh-mini${curm}"><div class="yh-mini-lbl">${ML[m]}</div><div class="yh-mini-dow">${dow}</div><div class="yh-mini-grid">${cells}</div></div>`;
     }
