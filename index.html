@@ -1151,9 +1151,15 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 .habit-preset-tile.custom { border-left-color: var(--accent); border-style: dashed; justify-content: center; font-weight: 800; color: var(--accent); }
 .habit-preset-empty { text-align: center; color: var(--text-muted); padding: 20px; font-size: 13px; }
 /* F52: týdenní proužek nahoře */
+.hws-nav { display: flex; align-items: center; gap: 2px; margin-bottom: 8px; }
+.hws-nav .habit-week-strip { flex: 1; margin-bottom: 0; }
+.hws-arrow { flex: 0 0 auto; width: 26px; height: 40px; border: none; background: transparent; color: var(--text-muted); font-size: 22px; line-height: 1; cursor: pointer; border-radius: 8px; padding: 0; }
+.hws-arrow:active { background: var(--border); }
+.hws-today-btn { display: block; margin: 0 auto 12px; padding: 5px 16px; border: 1px solid var(--border); border-radius: 999px; background: var(--bg-card); color: var(--text); font-family: inherit; font-weight: 700; font-size: 12px; cursor: pointer; }
+.hws-today-btn:active { background: var(--border); }
 .habit-week-strip { display: flex; gap: 4px; margin-bottom: 14px; }
 .hws-day { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; background: transparent; border: none; cursor: pointer; padding: 2px 0; }
-.hws-day.future { opacity: .4; }
+.hws-day.future { opacity: .55; }
 .hws-dow { font-size: 11px; font-weight: 700; color: var(--text-muted); }
 .hws-day.sel .hws-dow { color: var(--text); font-weight: 800; }
 .hws-ring {
@@ -1565,7 +1571,12 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
       <button type="button" class="habit-maintab" id="habit-maintab-stats" onclick="setHabitTab('stats')">Statistiky</button>
     </div>
     <div id="habit-dnes">
-      <div class="habit-week-strip" id="habit-week-strip"></div>
+      <div class="hws-nav">
+        <button class="hws-arrow" onclick="moveHabitWeek(-1)" aria-label="Předchozí týden">‹</button>
+        <div class="habit-week-strip" id="habit-week-strip"></div>
+        <button class="hws-arrow" onclick="moveHabitWeek(1)" aria-label="Další týden">›</button>
+      </div>
+      <button class="hws-today-btn" id="hws-today-btn" onclick="goHabitToday()" style="display:none">⤺ Dnes</button>
       <div id="habit-list"></div>
       <button type="button" class="habit-add-btn" id="habit-add-btn" onclick="openHabitModal()">+ Nový návyk</button>
     </div>
@@ -3751,7 +3762,12 @@ function renderHabitWeekStrip(){
   el.style.display = '';
   const sel = state.habitDay || todayStr();
   const todayS = todayStr();
-  const start = startOfWeek();
+  // proužek ukazuje TÝDEN vybraného dne (umožní posun do minulosti i budoucnosti)
+  const selD = habitStrToDate(sel);
+  const start = new Date(selD); start.setDate(selD.getDate() - ((selD.getDay() + 6) % 7)); start.setHours(0,0,0,0);
+  // tlačítko "Dnes" jen když nejsme v aktuálním týdnu
+  const tBtn = document.getElementById('hws-today-btn');
+  if (tBtn){ const cur = startOfWeek(); tBtn.style.display = (start.getTime() === cur.getTime()) ? 'none' : ''; }
   let html = '';
   for (let i = 0; i < 7; i++){
     const d = new Date(start); d.setDate(d.getDate() + i); d.setHours(0,0,0,0);
@@ -3770,7 +3786,7 @@ function renderHabitWeekStrip(){
       <circle cx="19" cy="19" r="${R}" fill="none" stroke="var(--border)" stroke-width="3.5"/>
       ${dp > 0 ? `<circle cx="19" cy="19" r="${R}" fill="none" stroke="${col}" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="${CIRC.toFixed(1)}" stroke-dashoffset="${(CIRC - arc).toFixed(1)}" transform="rotate(-90 19 19)"/>` : ''}
     </svg>`;
-    html += `<button class="hws-day ${ds === sel ? 'sel' : ''} ${future ? 'future' : ''} ${isToday ? 'today' : ''}" ${future ? 'disabled' : ''} onclick="setHabitDay('${ds}')">
+    html += `<button class="hws-day ${ds === sel ? 'sel' : ''} ${future ? 'future' : ''} ${isToday ? 'today' : ''}" onclick="setHabitDay('${ds}')">
       <div class="hws-dow">${HABIT_DEN_NAMES[(d.getDay()+6)%7]}</div>
       <div class="hws-ring">${ringSvg}<span class="hws-num">${d.getDate()}</span></div>
       ${isToday ? '<div class="hws-today-mark"></div>' : ''}
@@ -3785,6 +3801,13 @@ function setHabitDay(ds){
   if (dnes) dnes.style.minHeight = dnes.offsetHeight + 'px';
   state.habitDay = ds; renderNavyky();
 }
+// posun proužku po týdnech (zachová stejný den v týdnu); záporný = minulost, kladný = budoucnost
+function moveHabitWeek(dir){
+  const d = habitStrToDate(state.habitDay || todayStr());
+  d.setDate(d.getDate() + dir * 7);
+  setHabitDay(dateToStr(d));
+}
+function goHabitToday(){ setHabitDay(todayStr()); }
 
 // ===== Statistiky (Týden / Měsíc / Rok) =====
 const MESICE = ['Leden','Únor','Březen','Duben','Květen','Červen','Červenec','Srpen','Září','Říjen','Listopad','Prosinec'];
