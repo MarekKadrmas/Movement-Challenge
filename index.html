@@ -1037,6 +1037,10 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 #hv-input { width: 100%; box-sizing: border-box; height: 56px; padding: 0 16px; font-size: 22px; font-weight: 700; text-align: center; background: var(--bg-card); border: 1px solid var(--border); color: var(--text); border-radius: 12px; }
 .hv-slider-val { text-align: center; font-size: 30px; font-weight: 800; color: var(--text); margin-bottom: 14px; }
 #hv-slider { width: 100%; height: 30px; accent-color: var(--accent); }
+.hv-check-row { display: flex; gap: 10px; }
+.hv-check-btn { flex: 1; padding: 16px 8px; border: 1.5px solid var(--border); border-radius: 12px; background: var(--bg-card); color: var(--text); font-family: inherit; font-weight: 700; font-size: 15px; cursor: pointer; }
+.hv-check-btn.active#hv-check-yes { background: #22c55e; border-color: #22c55e; color: #fff; }
+.hv-check-btn.active#hv-check-no { background: var(--border); border-color: var(--border); color: var(--text); }
 .habit-icon { font-size: 20px; line-height: 1; flex-shrink: 0; width: 26px; text-align: center; }
 .habit-main { flex: 1; min-width: 0; }
 .habit-name { font-weight: 800; font-size: 14px; color: var(--text); line-height: 1.2; }
@@ -1097,15 +1101,15 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 .yh-mini { width: max-content; }
 .yh-mini-lbl { font-size: 10px; font-weight: 800; color: var(--text); margin-bottom: 3px; text-align: center; }
 .yh-mini.curm .yh-mini-lbl { color: var(--accent); }
-.yh-mini-dow { display: grid; grid-template-columns: repeat(7, 14px); gap: 2px; margin-bottom: 2px; }
-.yh-mini-dow span { font-size: 6.5px; font-weight: 700; color: var(--text-muted); text-align: center; }
-.yh-mini-grid { display: grid; grid-template-columns: repeat(7, 14px); grid-auto-rows: 14px; gap: 2px; }
+.yh-mini-dow { display: grid; grid-template-columns: repeat(7, 16px); gap: 2px; margin-bottom: 2px; }
+.yh-mini-dow span { font-size: 7px; font-weight: 700; color: var(--text-muted); text-align: center; }
+.yh-mini-grid { display: grid; grid-template-columns: repeat(7, 16px); grid-auto-rows: 16px; gap: 2px; }
 /* stejný jazyk jako Měsíc: splněno = zelená výplň, zmeškáno = plná šedá, neaktivní/budoucí = prázdný obrys */
-.ycell { width: 14px; height: 14px; border-radius: 3px; background: var(--border); display: flex; align-items: center; justify-content: center; }
+.ycell { width: 16px; height: 16px; border-radius: 3px; background: var(--border); display: flex; align-items: center; justify-content: center; }
 .ycell.blank { background: transparent !important; box-shadow: none !important; }
 .ycell.na { background: transparent; box-shadow: inset 0 0 0 1px var(--border); }
 .ycell.ytoday { box-shadow: inset 0 0 0 2px var(--accent); }
-.ynum { font-size: 7px; font-weight: 600; line-height: 1; color: var(--text); opacity: .85; }
+.ynum { font-size: 8px; font-weight: 600; line-height: 1; color: var(--text); opacity: .85; }
 .ynum.light { color: #fff; opacity: .95; }
 .ycell.na .ynum { color: var(--text-muted); opacity: .6; }
 .ycell.clk, .stat-box.clk, .mcell.clk { cursor: pointer; }
@@ -1708,9 +1712,15 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
         <div class="hv-slider-val" id="hv-slider-val">0</div>
         <input type="range" id="hv-slider" min="0" max="100" step="1" value="0" oninput="onHvSlider(this.value)">
       </div>
+      <div id="hv-check-wrap" style="display:none;">
+        <div class="hv-check-row">
+          <button type="button" class="hv-check-btn" id="hv-check-yes" onclick="hvSetCheck(true)">✓ Splněno</button>
+          <button type="button" class="hv-check-btn" id="hv-check-no" onclick="hvSetCheck(false)">✗ Nesplněno</button>
+        </div>
+      </div>
     </div>
     <div class="modal-footer">
-      <button class="btn-submit" onclick="saveHabitValue()">Uložit</button>
+      <button class="btn-submit" id="hv-save-btn" onclick="saveHabitValue()">Uložit</button>
       <button class="btn-danger" id="hv-clear" onclick="clearHabitValue()" style="display:none;">Smazat zápis</button>
       <button class="btn-cancel" onclick="closeHabitValue()">Zrušit</button>
     </div>
@@ -3995,7 +4005,8 @@ function statMonthHtml(pid, mine){
       const fr = a ? habitFractionOn(hb, pid, ds) : 0;
       if (a && !isWM) appl++;
       if (a && habitIsDoneOn(hb, pid, ds)) done++;  // splněno = frakce ≥ 1 (i u weekly/monthly)
-      cells += `<div class="mcell ${a?'':'na'} ${ds === todayStr() ? 'mtoday' : ''}" style="${statCellStyle('#22c55e', fr)}"><span class="mnum${(a && fr>=1)?' light':''}">${day}</span></div>`;
+      const oc = a ? ` onclick="editHabitCell('${hb.id}','${ds}')" data-hid="${hb.id}" data-ds="${ds}"` : '';
+      cells += `<div class="mcell ${a?'clk':'na'} ${ds === todayStr() ? 'mtoday' : ''}" style="${statCellStyle('#22c55e', fr)}"${oc}><span class="mnum${(a && fr>=1)?' light':''}">${day}</span></div>`;
     }
     const stat = isWM ? `${done}×` : (appl ? Math.round(done/appl*100) + ' %' : '—');
     h += `<div class="stat-habcard"><div class="stat-habhead"><span>${hb.ikona||'🎯'} ${habitEsc(hb.nazev)}</span><b>${stat}</b></div><div class="mcal">${cells}</div></div>`;
@@ -4209,26 +4220,13 @@ async function toggleHabitToday(id){
     renderNavyky();
   } catch(e){ toast('Chyba: ' + e.message, 'error'); }
 }
-// proklik čtverečku ve statistikách (Rok / Týden) → editace návyku pro daný den
-async function editHabitCell(id, ds){
+// proklik čtverečku ve statistikách (Týden / Měsíc / Rok) → otevře DIALOG na úpravu (check i měřitelný)
+function editHabitCell(id, ds){
   const pid = currentHabitPlayer(); if (!pid) return;
   if (ds > todayStr()) return;                            // budoucnost needitujeme
   const h = state.habits.find(x => x.id === id); if (!h) return;
-  if (habitEffZapis(h) !== 'check'){
-    // měřitelný → modal; uložení udělá CHIRURGICKÝ update (bez rebuildu → žádný skok)
-    state.statEditCell = { id, ds }; state.habitDay = ds;
-    openHabitValue(id); return;
-  }
-  // check → přepnout splněno přímo a překreslit JEN tento čtvereček (žádné renderNavyky → scroll se nehne)
-  const existing = habitLogObj(id, pid, ds);
-  try {
-    if (habitIsDoneOn(h, pid, ds)){
-      if (existing){ const { error } = await db.from('habit_logs').delete().eq('id', existing.id); if (error) throw error; state.habitLogs = state.habitLogs.filter(l => l.id !== existing.id); }
-    } else {
-      const { data, error } = await db.from('habit_logs').insert({ habit_id: id, player_id: pid, datum: ds, hodnota: null }).select(); if (error) throw error; if (data && data[0]) state.habitLogs.push(data[0]);
-    }
-    refreshStatCell(id, ds);
-  } catch(e){ toast('Chyba: ' + e.message, 'error'); }
+  state.statEditCell = { id, ds }; state.habitDay = ds;
+  openHabitValue(id);
 }
 // překreslí JEN jeden čtvereček (+ počet v hlavičce roční karty) bez rebuildu celé statistiky → nehýbe scrollem
 function refreshStatCell(id, ds){
@@ -4261,15 +4259,26 @@ function openHabitValue(id){
   const cur = existing ? (existing.hodnota != null ? Number(existing.hodnota) : cil) : 0;
   document.getElementById('hv-title').textContent = h.nazev;
   document.getElementById('hv-sub').textContent = `Cíl: ${habitFmtNum(cil)} ${jed} · ${sel === todayStr() ? 'dnes' : formatDate(sel)}`.replace(/\s+/g, ' ');
-  document.getElementById('hv-clear').style.display = existing ? '' : 'none';
-  const numWrap = document.getElementById('hv-number-wrap'), slWrap = document.getElementById('hv-slider-wrap');
-  if (z === 'slider'){
-    numWrap.style.display = 'none'; slWrap.style.display = '';
-    const sl = document.getElementById('hv-slider'); sl.max = cil || 100; sl.value = Math.min(cur, cil || 100); onHvSlider(sl.value);
+  const numWrap = document.getElementById('hv-number-wrap'), slWrap = document.getElementById('hv-slider-wrap'), chkWrap = document.getElementById('hv-check-wrap');
+  const saveBtn = document.getElementById('hv-save-btn'), clearBtn = document.getElementById('hv-clear');
+  if (z === 'check'){
+    // check návyk → dialog se dvěma tlačítky Splněno / Nesplněno
+    numWrap.style.display = 'none'; slWrap.style.display = 'none'; chkWrap.style.display = '';
+    saveBtn.style.display = 'none'; clearBtn.style.display = 'none';
+    document.getElementById('hv-sub').textContent = (sel === todayStr() ? 'dnes' : formatDate(sel));
+    const done = habitIsDoneOn(h, pid, sel);
+    document.getElementById('hv-check-yes').classList.toggle('active', done);
+    document.getElementById('hv-check-no').classList.toggle('active', !done);
   } else {
-    slWrap.style.display = 'none'; numWrap.style.display = '';
-    document.getElementById('hv-input').value = cur || '';
-    setTimeout(() => { const inp = document.getElementById('hv-input'); inp.focus(); inp.select(); }, 100);
+    chkWrap.style.display = 'none'; saveBtn.style.display = ''; clearBtn.style.display = existing ? '' : 'none';
+    if (z === 'slider'){
+      numWrap.style.display = 'none'; slWrap.style.display = '';
+      const sl = document.getElementById('hv-slider'); sl.max = cil || 100; sl.value = Math.min(cur, cil || 100); onHvSlider(sl.value);
+    } else {
+      slWrap.style.display = 'none'; numWrap.style.display = '';
+      document.getElementById('hv-input').value = cur || '';
+      setTimeout(() => { const inp = document.getElementById('hv-input'); inp.focus(); inp.select(); }, 100);
+    }
   }
   document.getElementById('habit-value-modal').classList.add('active'); lockBodyScroll();
 }
@@ -4291,7 +4300,7 @@ async function saveHabitValue(){
       if (data && data[0]) state.habitLogs.push(data[0]);
     }
     const se = state.statEditCell; closeHabitValue();
-    if (se && state.habitTab === 'stats') refreshStatCell(se.id, se.ds); else renderNavyky();
+    if (se && state.habitTab === 'stats') renderHabitStats(); else renderNavyky();
   } catch(e){ toast('Chyba: ' + e.message, 'error'); }
 }
 async function clearHabitValue(){
@@ -4301,7 +4310,19 @@ async function clearHabitValue(){
   try {
     if (existing){ const { error } = await db.from('habit_logs').delete().eq('id', existing.id); if (error) throw error; state.habitLogs = state.habitLogs.filter(l => l.id !== existing.id); }
     const se = state.statEditCell; closeHabitValue();
-    if (se && state.habitTab === 'stats') refreshStatCell(se.id, se.ds); else renderNavyky();
+    if (se && state.habitTab === 'stats') renderHabitStats(); else renderNavyky();
+  } catch(e){ toast('Chyba: ' + e.message, 'error'); }
+}
+// check návyk z dialogu: nastav splněno / nesplněno pro daný den
+async function hvSetCheck(done){
+  const pid = currentHabitPlayer(); const id = state.habitValueId; if (!pid || !id) return;
+  const sel = state.habitDay || todayStr();
+  const existing = habitLogObj(id, pid, sel);
+  try {
+    if (done && !existing){ const { data, error } = await db.from('habit_logs').insert({ habit_id: id, player_id: pid, datum: sel, hodnota: null }).select(); if (error) throw error; if (data && data[0]) state.habitLogs.push(data[0]); }
+    else if (!done && existing){ const { error } = await db.from('habit_logs').delete().eq('id', existing.id); if (error) throw error; state.habitLogs = state.habitLogs.filter(l => l.id !== existing.id); }
+    const se = state.statEditCell; closeHabitValue();
+    if (se && state.habitTab === 'stats') renderHabitStats(); else renderNavyky();
   } catch(e){ toast('Chyba: ' + e.message, 'error'); }
 }
 
