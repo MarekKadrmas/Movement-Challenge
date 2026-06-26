@@ -1067,7 +1067,12 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 .habit-maintab { flex: 1; padding: 9px; border: none; background: transparent; color: var(--text-muted); font-family: inherit; font-weight: 700; font-size: 14px; border-radius: 9px; cursor: pointer; }
 .habit-maintab.active { background: var(--accent); color: #fff; }
 .stat-nav { display: flex; align-items: center; justify-content: space-between; margin: 12px 2px; font-weight: 800; color: var(--text); }
-.stat-nav button { width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--border); background: var(--bg-card); color: var(--text); font-size: 16px; cursor: pointer; }
+.stat-arrow { width: 40px; height: 40px; border: none; background: transparent; color: var(--text); cursor: pointer; position: relative; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+.stat-arrow .hws-chev { font-size: 19px; line-height: 1; }
+.stat-arrow .hws-arrow-today { position: absolute; left: 0; right: 0; bottom: 2px; text-align: center; font-size: 6.5px; font-weight: 800; text-transform: uppercase; letter-spacing: .02em; visibility: hidden; }
+.stat-arrow:active { background: var(--border); }
+.stat-arrow.totoday { color: #fff; background: var(--accent); }
+.stat-arrow.totoday .hws-arrow-today { visibility: visible; }
 .stat-grid { display: grid; grid-template-columns: 28px repeat(7, 1fr); gap: 4px; align-items: center; }
 .stat-cell.stat-hd { display: flex; flex-direction: column; align-items: center; gap: 1px; font-size: 10px; color: var(--text-muted); font-weight: 700; }
 .stat-hd-num { font-size: 13px; font-weight: 800; color: var(--text); }
@@ -1159,13 +1164,15 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 .habit-preset-tile.custom { border-left-color: var(--accent); border-style: dashed; justify-content: center; font-weight: 800; color: var(--accent); }
 .habit-preset-empty { text-align: center; color: var(--text-muted); padding: 20px; font-size: 13px; }
 /* F52: týdenní proužek nahoře */
-.hws-nav { display: flex; align-items: center; gap: 2px; margin-bottom: 8px; }
+.hws-nav { display: flex; align-items: flex-start; gap: 2px; margin-bottom: 8px; }
 .hws-nav .habit-week-strip { flex: 1; margin-bottom: 0; }
-.hws-arrow { flex: 0 0 auto; width: 30px; height: 44px; border: none; background: transparent; color: var(--text-muted); cursor: pointer; border-radius: 8px; padding: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; }
-.hws-arrow .hws-chev { font-size: 21px; line-height: 1; }
-.hws-arrow:active { background: var(--border); }
-.hws-arrow-today { visibility: hidden; height: 8px; font-size: 7px; font-weight: 800; line-height: 1; text-transform: uppercase; letter-spacing: .02em; }
-.hws-arrow.totoday { color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); }
+.hws-arrow { flex: 0 0 auto; width: 30px; border: none; background: transparent; color: var(--text-muted); cursor: pointer; padding: 0; position: relative; display: flex; flex-direction: column; align-items: center; }
+.hws-arrow-sp { height: 16px; }   /* zarovná chevron svisle na úroveň koleček dnů */
+.hws-arrow .hws-chev { height: 38px; display: flex; align-items: center; justify-content: center; font-size: 21px; line-height: 1; border-radius: 8px; width: 100%; }
+.hws-arrow:active .hws-chev { background: var(--border); }
+.hws-arrow-today { position: absolute; left: 0; right: 0; bottom: -2px; text-align: center; font-size: 7px; font-weight: 800; line-height: 1; text-transform: uppercase; letter-spacing: .02em; visibility: hidden; }  /* absolutně = nemění layout, šipky se neposouvají */
+.hws-arrow.totoday { color: var(--accent); }
+.hws-arrow.totoday .hws-chev { background: color-mix(in srgb, var(--accent) 14%, transparent); }
 .hws-arrow.totoday .hws-arrow-today { visibility: visible; }
 /* animovaný "slide" přechod (swipe / skok na dnešek) — vždy stejně dlouhý */
 @keyframes slideR { from { opacity: 0; transform: translateX(26px); } to { opacity: 1; transform: translateX(0); } }
@@ -1587,9 +1594,9 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
     </div>
     <div id="habit-dnes">
       <div class="hws-nav">
-        <button class="hws-arrow" id="hws-prev" onclick="moveHabitWeek(-1)" aria-label="Předchozí týden"><span class="hws-chev">‹</span><span class="hws-arrow-today">dnes</span></button>
+        <button class="hws-arrow" id="hws-prev" onclick="moveHabitWeek(-1)" aria-label="Předchozí týden"><span class="hws-arrow-sp"></span><span class="hws-chev">‹</span><span class="hws-arrow-today">dnes</span></button>
         <div class="habit-week-strip" id="habit-week-strip"></div>
-        <button class="hws-arrow" id="hws-next" onclick="moveHabitWeek(1)" aria-label="Další týden"><span class="hws-chev">›</span><span class="hws-arrow-today">dnes</span></button>
+        <button class="hws-arrow" id="hws-next" onclick="moveHabitWeek(1)" aria-label="Další týden"><span class="hws-arrow-sp"></span><span class="hws-chev">›</span><span class="hws-arrow-today">dnes</span></button>
       </div>
       <div id="habit-list"></div>
       <button type="button" class="habit-add-btn" id="habit-add-btn" onclick="openHabitModal()">+ Nový návyk</button>
@@ -3817,15 +3824,21 @@ function renderHabitWeekStrip(){
   applySlide(el);
   attachSwipe(document.getElementById('habit-dnes'), moveHabitWeek);   // swipe kdekoli v Dnes = listování po týdnech
 }
-// obecný vodorovný swipe na elementu → cb(+1 doleva / -1 doprava); potlačí klik, pokud to byl swipe
-function attachSwipe(el, cb){
+// vodorovný swipe na elementu → cb(+1 doleva/-1 doprava). Uzamkne gesto na vodorovné (zakáže svislý scroll),
+// takže při swipu to nestrhne stránku dolů. canSwipe() = volitelná podmínka (Rok swipe nehandluje, scrolluje sám).
+function attachSwipe(el, cb, canSwipe){
   if (!el || el._sw) return; el._sw = true;
-  let x0 = null, y0 = null;
-  el.addEventListener('touchstart', e => { const t = e.touches[0]; x0 = t.clientX; y0 = t.clientY; }, { passive: true });
+  let x0 = null, y0 = null, lock = null;
+  el.addEventListener('touchstart', e => { const t = e.touches[0]; x0 = t.clientX; y0 = t.clientY; lock = null; }, { passive: true });
+  el.addEventListener('touchmove', e => {
+    if (x0 == null) return; const t = e.touches[0]; const dx = t.clientX - x0, dy = t.clientY - y0;
+    if (lock === null && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) lock = (Math.abs(dx) > Math.abs(dy) * 1.2) ? 'h' : 'v';
+    if (lock === 'h' && (!canSwipe || canSwipe())) e.preventDefault();   // vodorovné gesto → zákaz svislého scrollu
+  }, { passive: false });
   el.addEventListener('touchend', e => {
     if (x0 == null) return;
-    const t = e.changedTouches[0]; const dx = t.clientX - x0, dy = t.clientY - y0; x0 = null;
-    if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.3){ el._swT = Date.now(); cb(dx < 0 ? 1 : -1); }  // doleva = další
+    const t = e.changedTouches[0]; const dx = t.clientX - x0, dy = t.clientY - y0; const wasH = lock === 'h'; x0 = null; lock = null;
+    if (wasH && Math.abs(dx) > 40 && (!canSwipe || canSwipe())){ el._swT = Date.now(); cb(dx < 0 ? 1 : -1); }
   }, { passive: true });
   el.addEventListener('click', e => { if (el._swT && Date.now() - el._swT < 400){ e.stopPropagation(); e.preventDefault(); el._swT = 0; } }, true);
 }
@@ -3876,6 +3889,19 @@ function moveStat(dir){
   state.statAnchor = dateToStr(b);
   renderHabitStats();
 }
+function statNow(dir){ _slideDir = dir; state.statAnchor = null; renderHabitStats(); }   // skok na aktuální období
+// nav lišta statistik: ‹ popisek › ; když nejsi v aktuálním období, šipka ke dnešku se zvýrazní + popisek "dnes"
+function statNavHtml(range, base, label){
+  const now = new Date(); now.setHours(0,0,0,0);
+  let cmp = 0;
+  if (range === 'tyden'){ const ws = d => { const x = new Date(d); x.setDate(x.getDate() - ((x.getDay()+6)%7)); x.setHours(0,0,0,0); return x.getTime(); }; cmp = Math.sign(ws(base) - ws(now)); }
+  else if (range === 'mesic'){ const k = d => d.getFullYear()*12 + d.getMonth(); cmp = Math.sign(k(base) - k(now)); }
+  else cmp = Math.sign(base.getFullYear() - now.getFullYear());
+  const pT = cmp > 0, nT = cmp < 0;   // díváme se do budoucna (dnešek vlevo) / minulosti (dnešek vpravo)
+  const prev = `<button class="stat-arrow${pT?' totoday':''}" onclick="${pT?'statNow(-1)':'moveStat(-1)'}"><span class="hws-chev">‹</span><span class="hws-arrow-today">dnes</span></button>`;
+  const next = `<button class="stat-arrow${nT?' totoday':''}" onclick="${nT?'statNow(1)':'moveStat(1)'}"><span class="hws-chev">›</span><span class="hws-arrow-today">dnes</span></button>`;
+  return `<div class="stat-nav">${prev}<div>${label}</div>${next}</div>`;
+}
 // průměrné % splnění DENNÍCH návyků v daný den (null = nic naplánováno)
 function dayCompletion(pid, mine, d){
   const due = mine.filter(h => h.frekvence_typ !== 'weekly' && h.frekvence_typ !== 'monthly' && habitDueOn(h, d));
@@ -3909,7 +3935,7 @@ function renderHabitStats(){
   html += `<div class="stat-anim">${body}</div>`;
   el.innerHTML = html;
   applySlide(el.querySelector('.stat-anim')); _slideDir = 0;   // animovaný přechod období
-  attachSwipe(el, dir => { if ((state.statRange || 'tyden') !== 'rok') moveStat(dir); });  // swipe = posun období (Týden/Měsíc); Rok scrolluje sám
+  attachSwipe(el, dir => moveStat(dir), () => (state.statRange || 'tyden') !== 'rok');  // swipe = posun období (Týden/Měsíc); Rok scrolluje sám
   window.scrollTo(0, prevY);                 // hned vrať svislou pozici
   if (range === 'rok'){
     requestAnimationFrame(() => {
@@ -3932,7 +3958,7 @@ function statWeekHtml(pid, mine){
   start.setDate(start.getDate() - ((start.getDay() + 6) % 7));  // pondělí
   const days = []; for (let i = 0; i < 7; i++){ const d = new Date(start); d.setDate(d.getDate() + i); days.push(d); }
   const fmt = d => `${d.getDate()}.${d.getMonth()+1}.`;
-  let h = `<div class="stat-nav"><button onclick="moveStat(-1)">‹</button><div>${fmt(days[0])} – ${fmt(days[6])}</div><button onclick="moveStat(1)">›</button></div>`;
+  let h = statNavHtml('tyden', base, `${fmt(days[0])} – ${fmt(days[6])}`);
   h += `<div class="stat-grid"><div class="stat-cell stat-hd"></div>` + days.map(d => `<div class="stat-cell stat-hd${dateToStr(d) === todayStr() ? ' today' : ''}">${HABIT_DEN_NAMES[(d.getDay()+6)%7]}<span class="stat-hd-num">${d.getDate()}</span></div>`).join('');
   for (const hb of mine){
     const isWM = hb.frekvence_typ === 'weekly' || hb.frekvence_typ === 'monthly';
@@ -3955,7 +3981,7 @@ function statMonthHtml(pid, mine){
   const base = statBase(); const y = base.getFullYear(), m = base.getMonth();
   const daysIn = new Date(y, m+1, 0).getDate();
   const lead = (new Date(y, m, 1).getDay() + 6) % 7;
-  let h = `<div class="stat-nav"><button onclick="moveStat(-1)">‹</button><div>${MESICE[m]} ${y}</div><button onclick="moveStat(1)">›</button></div>`;
+  let h = statNavHtml('mesic', base, `${MESICE[m]} ${y}`);
   for (const hb of mine){
     const isWM = hb.frekvence_typ === 'weekly' || hb.frekvence_typ === 'monthly';
     let cells = ''; for (let i = 0; i < lead; i++) cells += `<div class="mcell blank"></div>`;
@@ -3976,7 +4002,7 @@ function statMonthHtml(pid, mine){
 }
 function statYearHtml(pid, mine){
   const base = statBase(); const y = base.getFullYear();
-  let h = `<div class="stat-nav"><button onclick="moveStat(-1)">‹</button><div>${y}</div><button onclick="moveStat(1)">›</button></div>`;
+  let h = statNavHtml('rok', base, String(y));
   const ML = ['Led','Úno','Bře','Dub','Kvě','Čvn','Čvc','Srp','Zář','Říj','Lis','Pro'];
   const tS = todayStr();
   const tParts = tS.split('-').map(Number), tY = tParts[0], tM = tParts[1] - 1;   // dnešek → zvýraznění aktuálního měsíce
