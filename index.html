@@ -3782,20 +3782,16 @@ function setHabitDay(ds){
   const sy = window.scrollY;
   const pid = currentHabitPlayer();
   const hasContent = pid && state.habits.some(h => h.player_id === pid && (h.created_at || '').slice(0, 10) <= ds);
-  const de = document.documentElement;
-  // u dne s návyky ZAMKNI výšku stránky přes překreslení, aby se layout nepropadl a scroll na iOS neskočil nahoru
-  if (hasContent) de.style.minHeight = de.scrollHeight + 'px';
-  state.habitDay = ds; renderNavyky();   // renderNavyky uvnitř překreslí i proužek dnů
-  if (hasContent){
-    window.scrollTo(0, sy);
-    requestAnimationFrame(() => {
-      window.scrollTo(0, sy);
-      setTimeout(() => { de.style.minHeight = ''; window.scrollTo(0, sy); }, 60);  // uvolni výšku až po usazení layoutu
-    });
-  } else {
-    de.style.minHeight = '';
-    window.scrollTo(0, 0);   // prázdný den → odshora (není co zobrazit)
-  }
+  const dnes = document.getElementById('habit-dnes');
+  if (dnes) dnes.style.minHeight = '';     // reset, ať změříme přirozenou výšku nového dne
+  state.habitDay = ds; renderNavyky();      // renderNavyky uvnitř překreslí i proužek dnů
+  if (!hasContent){ window.scrollTo(0, 0); return; }   // prázdný den → odshora (není co zobrazit)
+  // KRATŠÍ den (míň návyků) by zkrátil stránku a scroll by spadl nahoru → dorovnej výšku, ať pozice zůstane
+  const needed = sy + window.innerHeight;
+  const docH = document.documentElement.scrollHeight;
+  if (dnes && docH < needed) dnes.style.minHeight = (dnes.offsetHeight + (needed - docH)) + 'px';
+  window.scrollTo(0, sy);
+  requestAnimationFrame(() => window.scrollTo(0, sy));
 }
 
 // ===== Statistiky (Týden / Měsíc / Rok) =====
@@ -3804,7 +3800,9 @@ function setHabitTab(t){
   state.habitTab = t;
   document.getElementById('habit-maintab-dnes').classList.toggle('active', t === 'dnes');
   document.getElementById('habit-maintab-stats').classList.toggle('active', t === 'stats');
-  document.getElementById('habit-dnes').style.display = t === 'dnes' ? '' : 'none';
+  const dnesEl = document.getElementById('habit-dnes');
+  dnesEl.style.display = t === 'dnes' ? '' : 'none';
+  dnesEl.style.minHeight = '';   // zruš případné dorovnání výšky z přepínání dnů
   document.getElementById('habit-stats').style.display = t === 'stats' ? '' : 'none';
   document.getElementById('habit-today-progress').style.display = t === 'dnes' ? '' : 'none';
   if (t === 'stats') renderHabitStats(); else renderNavyky();
