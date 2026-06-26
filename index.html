@@ -1090,7 +1090,7 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 .yh-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 8px 0 4px; }
 .yh-wall { display: flex; gap: 2px; width: max-content; }
 .yh-mini { width: max-content; }
-.yh-mini-lbl { font-size: 10px; font-weight: 800; color: var(--text); margin-bottom: 3px; }
+.yh-mini-lbl { font-size: 10px; font-weight: 800; color: var(--text); margin-bottom: 3px; text-align: center; }
 .yh-mini.curm .yh-mini-lbl { color: var(--accent); }
 .yh-mini-dow { display: grid; grid-template-columns: repeat(7, 14px); gap: 2px; margin-bottom: 2px; }
 .yh-mini-dow span { font-size: 6.5px; font-weight: 700; color: var(--text-muted); text-align: center; }
@@ -1161,12 +1161,17 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 /* F52: týdenní proužek nahoře */
 .hws-nav { display: flex; align-items: center; gap: 2px; margin-bottom: 8px; }
 .hws-nav .habit-week-strip { flex: 1; margin-bottom: 0; }
-.hws-arrow { flex: 0 0 auto; width: 26px; height: 40px; border: none; background: transparent; color: var(--text-muted); cursor: pointer; border-radius: 8px; padding: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0; }
-.hws-arrow .hws-chev { font-size: 22px; line-height: 1; }
+.hws-arrow { flex: 0 0 auto; width: 30px; height: 44px; border: none; background: transparent; color: var(--text-muted); cursor: pointer; border-radius: 8px; padding: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; }
+.hws-arrow .hws-chev { font-size: 21px; line-height: 1; }
 .hws-arrow:active { background: var(--border); }
-.hws-arrow-today { display: none; font-size: 7.5px; font-weight: 800; line-height: 1; text-transform: uppercase; letter-spacing: .02em; }
-.hws-arrow.totoday { color: var(--accent); width: 34px; background: color-mix(in srgb, var(--accent) 12%, transparent); }
-.hws-arrow.totoday .hws-arrow-today { display: block; }
+.hws-arrow-today { visibility: hidden; height: 8px; font-size: 7px; font-weight: 800; line-height: 1; text-transform: uppercase; letter-spacing: .02em; }
+.hws-arrow.totoday { color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); }
+.hws-arrow.totoday .hws-arrow-today { visibility: visible; }
+/* animovaný "slide" přechod (swipe / skok na dnešek) — vždy stejně dlouhý */
+@keyframes slideR { from { opacity: 0; transform: translateX(26px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes slideL { from { opacity: 0; transform: translateX(-26px); } to { opacity: 1; transform: translateX(0); } }
+.anim-r { animation: slideR .26s cubic-bezier(.22,1,.36,1); }
+.anim-l { animation: slideL .26s cubic-bezier(.22,1,.36,1); }
 .habit-week-strip { display: flex; gap: 4px; margin-bottom: 14px; }
 .hws-day { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; background: transparent; border: none; cursor: pointer; padding: 2px 0; touch-action: manipulation; }
 .hws-day.future { opacity: .55; }
@@ -3809,6 +3814,7 @@ function renderHabitWeekStrip(){
     </button>`;
   }
   el.innerHTML = html;
+  applySlide(el);
   attachSwipe(document.getElementById('habit-dnes'), moveHabitWeek);   // swipe kdekoli v Dnes = listování po týdnech
 }
 // obecný vodorovný swipe na elementu → cb(+1 doleva / -1 doprava); potlačí klik, pokud to byl swipe
@@ -3833,13 +3839,17 @@ function setHabitDay(ds){
   window.scrollTo(0, sy);
   requestAnimationFrame(() => window.scrollTo(0, sy));
 }
+// animace přechodu: +1 = nový obsah přijede zprava (další), -1 = zleva (předchozí). Vždy stejně dlouhá.
+let _slideDir = 0;
+function applySlide(el){ if (!el || !_slideDir) return; el.classList.remove('anim-r','anim-l'); void el.offsetWidth; el.classList.add(_slideDir > 0 ? 'anim-r' : 'anim-l'); }
 // posun proužku po týdnech (zachová stejný den v týdnu); záporný = minulost, kladný = budoucnost
 function moveHabitWeek(dir){
+  _slideDir = dir;
   const d = habitStrToDate(state.habitDay || todayStr());
   d.setDate(d.getDate() + dir * 7);
   setHabitDay(dateToStr(d));
 }
-function goHabitToday(){ setHabitDay(todayStr()); }
+function goHabitToday(){ const sel = state.habitDay || todayStr(); _slideDir = (sel > todayStr()) ? -1 : 1; setHabitDay(todayStr()); }
 
 // ===== Statistiky (Týden / Měsíc / Rok) =====
 const MESICE = ['Leden','Únor','Březen','Duben','Květen','Červen','Červenec','Srpen','Září','Říjen','Listopad','Prosinec'];
@@ -3857,6 +3867,7 @@ function setHabitTab(t){
 function statBase(){ return state.statAnchor ? habitStrToDate(state.statAnchor) : new Date(); }
 function setStatRange(r){ state.statRange = r; state.statAnchor = null; renderHabitStats(); }
 function moveStat(dir){
+  _slideDir = dir;
   const b = statBase(); b.setHours(0,0,0,0);
   const r = state.statRange || 'tyden';
   if (r === 'tyden') b.setDate(b.getDate() + dir * 7);
@@ -3891,10 +3902,13 @@ function renderHabitStats(){
   // zapamatuj pozici scrollu, ať po překreslení (např. po prokliku dne) pohled neuskočí
   const prevY = window.scrollY;
   const prevX = [...el.querySelectorAll('.yh-scroll')].map(s => s.scrollLeft);
-  if (range === 'tyden') html += statWeekHtml(pid, mine);
-  else if (range === 'mesic') html += statMonthHtml(pid, mine);
-  else html += statYearHtml(pid, mine);
+  let body = '';
+  if (range === 'tyden') body = statWeekHtml(pid, mine);
+  else if (range === 'mesic') body = statMonthHtml(pid, mine);
+  else body = statYearHtml(pid, mine);
+  html += `<div class="stat-anim">${body}</div>`;
   el.innerHTML = html;
+  applySlide(el.querySelector('.stat-anim')); _slideDir = 0;   // animovaný přechod období
   attachSwipe(el, dir => { if ((state.statRange || 'tyden') !== 'rok') moveStat(dir); });  // swipe = posun období (Týden/Měsíc); Rok scrolluje sám
   window.scrollTo(0, prevY);                 // hned vrať svislou pozici
   if (range === 'rok'){
@@ -4073,6 +4087,7 @@ function renderNavyky(){
   if (existed.length === 0){
     prog.textContent = '';
     wrap.innerHTML = `<div class="habit-empty"><div class="icon">🌱</div><div class="title">${dayLabel}</div><div>V tento den jsi ještě žádné návyky neměl.</div></div>`;
+    applySlide(wrap); _slideDir = 0;
     return;
   }
   // denní/konkrétní-dny návyky = denní checklist; týdenní mají vlastní sekci a NEpočítají se do denního kolečka
@@ -4092,6 +4107,7 @@ function renderNavyky(){
     html += monthlyH.map(h => habitCardHtml(h, pid, sel, selDate, today, 'monthly')).join('');
   }
   wrap.innerHTML = html;
+  applySlide(wrap); _slideDir = 0;   // animovaný přechod seznamu při listování týdnů
   if (state.habitTab === 'stats') renderHabitStats();
 }
 
