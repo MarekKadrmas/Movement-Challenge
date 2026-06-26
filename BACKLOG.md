@@ -10,6 +10,7 @@
 
 ## 📌 Menší / průběžné nápady
 - [ ] Sdílené návyky (Phase 2 F52) — návyky napříč hráči.
+- [ ] **Kopírovat návyk na jiné datum / rozsah** (2026-06-26): u existujícího návyku možnost „zkopírovat" — otevře se kalendář a nastavím OD–DO. Varianty: od data v minulosti, bez konce (do nekonečna), nebo ohraničený začátek+konec. Umožní rychle naklonovat návyk na jiné období.
 - [ ] (sem přibývají další drobnosti)
 
 ## ✅ Hotové milníky (kontext)

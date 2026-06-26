@@ -1086,24 +1086,21 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 .mcell.mtoday { box-shadow: inset 0 0 0 2px var(--accent); }
 .mnum { font-size: 11.5px; font-weight: 600; color: var(--text); }
 .mnum.light { color: #fff; }
-/* roční pohled = kalendář po ŘÁDCÍCH: 7 sloupců (Po–Ne), týdny pod sebou; čísla = decentní doplněk */
-.yh-cal { margin-top: 8px; display: flex; justify-content: center; --yh-month: color-mix(in srgb, var(--text) 30%, transparent); }
-.yh-calinner { width: max-content; }
-.yh-weekhead { display: grid; grid-template-columns: repeat(7, 18px); gap: 2px; margin: 0 0 3px 22px; }
-.yh-weekhead span { text-align: center; font-size: 9px; font-weight: 700; color: var(--text-muted); }
-.yh-body { position: relative; margin-left: 22px; width: max-content; }
-.yh-monthlabels { position: absolute; left: -22px; top: 0; width: 20px; height: 100%; }
-.yh-monthlabels span { position: absolute; right: 3px; transform: translateY(-50%); font-size: 8.5px; font-weight: 700; color: var(--text-muted); white-space: nowrap; }
-.yh-grid { display: grid; grid-template-columns: repeat(7, 18px); grid-auto-rows: 18px; gap: 2px; }
-/* hranice měsíců = souvislý decentní SVG tah v mezerách (vodorovně, zubatý, zaoblené ohyby) */
-.yh-lines { position: absolute; left: 0; top: 0; pointer-events: none; }
-.yh-lines path { fill: none; stroke: var(--yh-month); stroke-width: 0.75px; stroke-linecap: round; stroke-linejoin: round; }
+/* roční pohled = 12 mini-měsíců VEDLE SEBE (scroll do strany); každý měsíc = mini-kalendář, týdny v řádcích */
+.yh-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 8px 0 4px; }
+.yh-wall { display: flex; gap: 14px; width: max-content; }
+.yh-mini { width: max-content; }
+.yh-mini-lbl { font-size: 10px; font-weight: 800; color: var(--text); margin-bottom: 3px; }
+.yh-mini.curm .yh-mini-lbl { color: var(--accent); }
+.yh-mini-dow { display: grid; grid-template-columns: repeat(7, 14px); gap: 2px; margin-bottom: 2px; }
+.yh-mini-dow span { font-size: 6.5px; font-weight: 700; color: var(--text-muted); text-align: center; }
+.yh-mini-grid { display: grid; grid-template-columns: repeat(7, 14px); grid-auto-rows: 14px; gap: 2px; }
 /* stejný jazyk jako Měsíc: splněno = zelená výplň, zmeškáno = plná šedá, neaktivní/budoucí = prázdný obrys */
-.ycell { width: 18px; height: 18px; border-radius: 3px; background: var(--border); display: flex; align-items: center; justify-content: center; }
+.ycell { width: 14px; height: 14px; border-radius: 3px; background: var(--border); display: flex; align-items: center; justify-content: center; }
 .ycell.blank { background: transparent !important; box-shadow: none !important; }
 .ycell.na { background: transparent; box-shadow: inset 0 0 0 1px var(--border); }
 .ycell.ytoday { box-shadow: inset 0 0 0 2px var(--accent); }
-.ynum { font-size: 7.5px; font-weight: 600; line-height: 1; color: var(--text); opacity: .85; }
+.ynum { font-size: 7px; font-weight: 600; line-height: 1; color: var(--text); opacity: .85; }
 .ynum.light { color: #fff; opacity: .95; }
 .ycell.na .ynum { color: var(--text-muted); opacity: .6; }
 .ycell.clk, .stat-box.clk, .mcell.clk { cursor: pointer; }
@@ -1169,7 +1166,7 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 .hws-today-btn { display: block; margin: 0 auto 12px; padding: 5px 16px; border: 1px solid var(--border); border-radius: 999px; background: var(--bg-card); color: var(--text); font-family: inherit; font-weight: 700; font-size: 12px; cursor: pointer; }
 .hws-today-btn:active { background: var(--border); }
 .habit-week-strip { display: flex; gap: 4px; margin-bottom: 14px; }
-.hws-day { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; background: transparent; border: none; cursor: pointer; padding: 2px 0; }
+.hws-day { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; background: transparent; border: none; cursor: pointer; padding: 2px 0; touch-action: manipulation; }
 .hws-day.future { opacity: .55; }
 .hws-dow { font-size: 11px; font-weight: 700; color: var(--text-muted); }
 .hws-day.sel .hws-dow { color: var(--text); font-weight: 800; }
@@ -3806,11 +3803,14 @@ function renderHabitWeekStrip(){
   el.innerHTML = html;
 }
 function setHabitDay(ds){
-  // ZAMKNI výšku Dnes obsahu PŘED překreslením → kratší ANI prázdný den stránku nesbalí,
-  // takže prohlížeč SÁM podrží pozici scrollu (žádné scrollTo → žádný skok, funguje i na iOS).
+  // výšku Dnes obsahu zamkni (jen ROSTE) PŘED překreslením → kratší/prázdný den stránku nesbalí
+  // → prohlížeč podrží scroll; Math.max chrání proti propadu při rychlém klikání; scrollTo = pojistka (i iOS)
   const dnes = document.getElementById('habit-dnes');
-  if (dnes) dnes.style.minHeight = dnes.offsetHeight + 'px';
+  const sy = window.scrollY;
+  if (dnes){ const cur = parseFloat(dnes.style.minHeight) || 0; dnes.style.minHeight = Math.max(cur, dnes.offsetHeight) + 'px'; }
   state.habitDay = ds; renderNavyky();
+  window.scrollTo(0, sy);
+  requestAnimationFrame(() => window.scrollTo(0, sy));
 }
 // posun proužku po týdnech (zachová stejný den v týdnu); záporný = minulost, kladný = budoucnost
 function moveHabitWeek(dir){
@@ -3943,46 +3943,18 @@ function statYearHtml(pid, mine){
   let h = `<div class="stat-nav"><button onclick="moveStat(-1)">‹</button><div>${y}</div><button onclick="moveStat(1)">›</button></div>`;
   const ML = ['Led','Úno','Bře','Dub','Kvě','Čvn','Čvc','Srp','Zář','Říj','Lis','Pro'];
   const tS = todayStr();
-  const start = new Date(y, 0, 1), end = new Date(y, 11, 31);
-  const lead = (start.getDay() + 6) % 7;
-  // rozdělení roku na týdny (sloupce); každý týden = 7 buněk (dateStr nebo null)
-  const weeks = []; let w = []; for (let i = 0; i < lead; i++) w.push(null);
-  for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)){ w.push(dateToStr(d)); if (w.length === 7){ weeks.push(w); w = []; } }
-  if (w.length){ while (w.length < 7) w.push(null); weeks.push(w); }
-  const moOf = ds => ds ? Number(ds.slice(5, 7)) - 1 : null;
-  const CELL = 18, GAP = 2, P = CELL + GAP;             // čtvereček, mezera, rozteč
-  const nrows = weeks.length;                            // týdny = ŘÁDKY
-  const W = 7 * P - GAP, Hpx = nrows * P - GAP;          // 7 sloupců (Po–Ne) × N týdnů
-  // měsíc -> [prvníTýden, posledníTýden] (index týdne = ŘÁDEK)
-  const mc = {};
-  weeks.forEach((wk, wi) => wk.forEach(ds => { const m = moOf(ds); if (m === null) return; if (mc[m] === undefined) mc[m] = [wi, wi]; else mc[m][1] = wi; }));
-  // popisky měsíců VLEVO, vycentrované svisle na svůj blok řádků
-  let labels = '';
-  for (const m in mc){ const cy = ((mc[m][0] + mc[m][1]) / 2) * P + CELL / 2; labels += `<span style="top:${cy}px">${ML[m]}</span>`; }
-  // záhlaví dnů v týdnu
-  const head = HABIT_DEN_NAMES.map(x => `<span>${x}</span>`).join('');
-  // hranice měsíců = souvislá VODOROVNÁ zubatá čára se zaoblenými ohyby (mezi týdny-řádky)
-  const R = 3;
-  const dArr = [];
-  for (let mm = 1; mm <= 11; mm++){
-    if (mc[mm] === undefined) continue;
-    const wi0 = mc[mm][0];                                 // řádek (týden) s 1. dnem měsíce
-    const r0 = (new Date(y, mm, 1).getDay() + 6) % 7;      // sloupec (Po=0) 1. dne
-    const yt = wi0 * P - GAP / 2;                           // vodorovná hranice nad prvním týdnem měsíce
-    if (r0 === 0){ dArr.push(`M0 ${yt}L${W} ${yt}`); continue; }  // měsíc začíná v pondělí → rovná čára
-    const xr = r0 * P - GAP / 2, yb = (wi0 + 1) * P - GAP / 2;     // sloupec zubu + o řádek níž
-    dArr.push(`M${W} ${yt}L${xr + R} ${yt}Q${xr} ${yt} ${xr} ${yt + R}L${xr} ${yb - R}Q${xr} ${yb} ${xr - R} ${yb}L0 ${yb}`);
-  }
-  const svg = `<svg class="yh-lines" width="${W}" height="${Hpx}" viewBox="0 0 ${W} ${Hpx}"><path d="${dArr.join('')}"/></svg>`;
-  // KAŽDÝ návyk = roční kalendář po řádcích (týdny pod sebou, dny zleva doprava)
+  const tParts = tS.split('-').map(Number), tY = tParts[0], tM = tParts[1] - 1;   // dnešek → zvýraznění aktuálního měsíce
+  const dow = HABIT_DEN_NAMES.map(x => `<span>${x}</span>`).join('');
+  // KAŽDÝ návyk = 12 mini-měsíců VEDLE SEBE (scroll do strany); měsíc = mini-kalendář, týdny v řádcích
   for (const hb of mine){
     const isWM = hb.frekvence_typ === 'weekly' || hb.frekvence_typ === 'monthly';
-    let done = 0, cells = '';
-    for (let wi = 0; wi < weeks.length; wi++){
-      for (let r = 0; r < 7; r++){
-        const ds = weeks[wi][r];
-        if (!ds){ cells += `<div class="ycell blank"></div>`; continue; }
-        const dd = habitStrToDate(ds);
+    let done = 0, wall = '';
+    for (let m = 0; m < 12; m++){
+      const lead = (new Date(y, m, 1).getDay() + 6) % 7;
+      const daysIn = new Date(y, m + 1, 0).getDate();
+      let cells = ''; for (let i = 0; i < lead; i++) cells += `<div class="ycell blank"></div>`;
+      for (let d = 1; d <= daysIn; d++){
+        const dd = new Date(y, m, d); const ds = dateToStr(dd);
         const existed = (hb.created_at||'').slice(0,10) <= ds && ds <= tS;
         const a = existed && (isWM || habitDueOn(hb, dd));
         const fr = a ? habitFractionOn(hb, pid, ds) : 0;
@@ -3990,11 +3962,13 @@ function statYearHtml(pid, mine){
         const st = a ? statCellStyle('#22c55e', fr) : '';
         const cls = `ycell ${a ? 'clk' : 'na'}${ds === tS ? ' ytoday' : ''}`;
         const oc = a ? ` onclick="editHabitCell('${hb.id}','${ds}')" data-hid="${hb.id}" data-ds="${ds}"` : '';   // proklik = editace dne
-        cells += `<div class="${cls}" style="${st}"${oc} title="${ds}"><span class="ynum${(a && fr>=1)?' light':''}">${Number(ds.slice(8,10))}</span></div>`;
+        cells += `<div class="${cls}" style="${st}"${oc} title="${ds}"><span class="ynum${(a && fr>=1)?' light':''}">${d}</span></div>`;
       }
+      const curm = (m === tM && y === tY) ? ' curm' : '';
+      wall += `<div class="yh-mini${curm}"><div class="yh-mini-lbl">${ML[m]}</div><div class="yh-mini-dow">${dow}</div><div class="yh-mini-grid">${cells}</div></div>`;
     }
     h += `<div class="stat-habcard"><div class="stat-habhead"><span>${hb.ikona||'🎯'} ${habitEsc(hb.nazev)}</span><b>${done}×</b></div>
-      <div class="yh-cal"><div class="yh-calinner"><div class="yh-weekhead">${head}</div><div class="yh-body"><div class="yh-monthlabels">${labels}</div><div class="yh-grid">${cells}</div>${svg}</div></div></div></div>`;
+      <div class="yh-scroll"><div class="yh-wall">${wall}</div></div></div>`;
   }
   return h;
 }
