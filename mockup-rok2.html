@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup rok — týdny v řádcích</title>
+<style>
+  :root{ --border:#e6e8eb; --text:#0f172a; --muted:#94a3b8; --done:#22c55e; --accent:#2563eb; }
+  *{box-sizing:border-box;}
+  body{font-family:-apple-system,Segoe UI,Roboto,system-ui,sans-serif;background:#f6f7f9;color:var(--text);margin:0;padding:18px;}
+  h2{font-size:15px;margin:0 0 2px;}
+  p.note{font-size:12px;color:#64748b;margin:0 0 12px;}
+  .card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:22px;}
+  .cardhead{font-weight:800;font-size:14px;margin-bottom:10px;}
+
+  /* VARIANTA A — nástěnný kalendář: 12 mini-měsíců v mřížce */
+  .wall{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+  .mini .mlabel{font-size:11px;font-weight:800;color:var(--text);margin-bottom:4px;}
+  .mini .dow{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:2px;}
+  .mini .dow span{font-size:7px;font-weight:700;color:var(--muted);text-align:center;}
+  .mgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
+  .mc{aspect-ratio:1;border-radius:3px;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:7.5px;font-weight:600;color:var(--text);opacity:.85;}
+  .mc.blank{background:transparent;}
+  .mc.na{background:transparent;box-shadow:inset 0 0 0 1px var(--border);color:var(--muted);opacity:.6;}
+  .mc.done{background:var(--done);color:#fff;opacity:1;}
+  .mc.today{box-shadow:inset 0 0 0 2px var(--accent);}
+
+  /* VARIANTA B — souvislý kalendář na celou šířku, týdny pod sebou */
+  .cont .dowrow{display:grid;grid-template-columns:22px repeat(7,1fr);gap:3px;margin-bottom:3px;}
+  .cont .dowrow span{font-size:9px;font-weight:700;color:var(--muted);text-align:center;}
+  .crow{display:grid;grid-template-columns:22px repeat(7,1fr);gap:3px;margin-bottom:3px;align-items:center;}
+  .crow .ml{font-size:8.5px;font-weight:800;color:var(--muted);text-align:right;}
+  .cc{aspect-ratio:1;border-radius:4px;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;color:var(--text);opacity:.85;}
+  .cc.blank{background:transparent;}
+  .cc.na{background:transparent;box-shadow:inset 0 0 0 1px var(--border);color:var(--muted);opacity:.6;}
+  .cc.done{background:var(--done);color:#fff;opacity:1;}
+  .cc.today{box-shadow:inset 0 0 0 2px var(--accent);}
+</style></head>
+<body>
+<h2>Roční pohled — týdny jako ŘÁDKY (2 varianty k výběru)</h2>
+<p class="note">Ukázková data (pár dnů zeleně). Dnešek = modrý rámeček.</p>
+
+<div class="card">
+  <div class="cardhead">VARIANTA A — Nástěnný kalendář (12 měsíců v mřížce, široké)</div>
+  <div class="wall" id="wall"></div>
+</div>
+
+<div class="card">
+  <div class="cardhead">VARIANTA B — Souvislý kalendář (týdny pod sebou, na celou šířku)</div>
+  <div class="cont" id="cont"></div>
+</div>
+
+<script>
+(function(){
+  var Y=2026, TODAY='2026-06-26';
+  var MES=['Leden','Únor','Březen','Duben','Květen','Červen','Červenec','Srpen','Září','Říjen','Listopad','Prosinec'];
+  var DOW=['Po','Út','St','Čt','Pá','So','Ne'];
+  function mon0(dt){return (dt.getDay()+6)%7;}
+  function ds(dt){var m=String(dt.getMonth()+1).padStart(2,'0'),d=String(dt.getDate()).padStart(2,'0');return Y+'-'+m+'-'+d;}
+  // ukázkové "splněno": deterministicky
+  function done(dstr){ if(dstr>TODAY) return false; var n=parseInt(dstr.slice(8,10),10); return (n%3===0)||(n%7===2); }
+  function future(dstr){ return dstr>TODAY; }
+
+  // ---- VARIANTA A: 12 mini měsíců ----
+  var wall=document.getElementById('wall');
+  for(var m=0;m<12;m++){
+    var mini=document.createElement('div'); mini.className='mini';
+    var lab=document.createElement('div'); lab.className='mlabel'; lab.textContent=MES[m]; mini.appendChild(lab);
+    var dow=document.createElement('div'); dow.className='dow'; dow.innerHTML=DOW.map(function(x){return '<span>'+x+'</span>';}).join(''); mini.appendChild(dow);
+    var grid=document.createElement('div'); grid.className='mgrid';
+    var first=new Date(Y,m,1), lead=mon0(first), daysIn=new Date(Y,m+1,0).getDate();
+    for(var i=0;i<lead;i++){ var b=document.createElement('div'); b.className='mc blank'; grid.appendChild(b); }
+    for(var d=1;d<=daysIn;d++){
+      var dstr=ds(new Date(Y,m,d)); var c=document.createElement('div'); c.className='mc'; c.textContent=d;
+      if(future(dstr)) c.className='mc na'; else if(done(dstr)) c.className='mc done';
+      if(dstr===TODAY) c.className+=' today';
+      grid.appendChild(c);
+    }
+    mini.appendChild(grid); wall.appendChild(mini);
+  }
+
+  // ---- VARIANTA B: souvislý kalendář (celý rok), týdny = řádky ----
+  var cont=document.getElementById('cont');
+  var dr=document.createElement('div'); dr.className='dowrow'; dr.innerHTML='<span></span>'+DOW.map(function(x){return '<span>'+x+'</span>';}).join(''); cont.appendChild(dr);
+  var start=new Date(Y,0,1); var lead2=mon0(start);
+  var cur=new Date(start); cur.setDate(cur.getDate()-lead2); // začni od pondělí týdne s 1.1.
+  var seenMonth={};
+  for(var wk=0; wk<53; wk++){
+    var row=document.createElement('div'); row.className='crow';
+    // popisek měsíce vlevo, když v tomto týdnu začíná nový měsíc
+    var lblText='';
+    for(var k=0;k<7;k++){ var dd=new Date(cur); dd.setDate(cur.getDate()+wk*7+k); if(dd.getFullYear()===Y && !seenMonth[dd.getMonth()]){ seenMonth[dd.getMonth()]=true; lblText=MES[dd.getMonth()].slice(0,3); break; } }
+    var ml=document.createElement('div'); ml.className='ml'; ml.textContent=lblText; row.appendChild(ml);
+    for(var k2=0;k2<7;k2++){
+      var dd2=new Date(cur); dd2.setDate(cur.getDate()+wk*7+k2);
+      var cell=document.createElement('div');
+      if(dd2.getFullYear()!==Y){ cell.className='cc blank'; row.appendChild(cell); continue; }
+      var dstr2=ds(dd2); cell.className='cc'; cell.textContent=dd2.getDate();
+      if(future(dstr2)) cell.className='cc na'; else if(done(dstr2)) cell.className='cc done';
+      if(dstr2===TODAY) cell.className+=' today';
+      row.appendChild(cell);
+    }
+    cont.appendChild(row);
+  }
+})();
+</script>
+</body></html>
