@@ -1092,18 +1092,14 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 .yh-months { position: relative; height: 14px; margin-bottom: 3px; }
 .yh-months span { position: absolute; transform: translateX(-50%); font-size: 9px; font-weight: 700; color: var(--text-muted); white-space: nowrap; }
 .yh-plot { position: relative; width: max-content; }
-.yh-grid { display: grid; grid-auto-flow: column; grid-template-rows: repeat(7, 18px); grid-auto-columns: 18px; gap: 2px; }
+.yh-grid { display: grid; grid-auto-flow: column; grid-template-rows: repeat(7, 12px); grid-auto-columns: 12px; gap: 2px; }
 /* hranice měsíců = jeden souvislý SVG tah v mezerách (spojitý i v ohybu) */
 .yh-lines { position: absolute; left: 0; top: 0; pointer-events: none; }
 .yh-lines path { fill: none; stroke: var(--yh-month); stroke-width: 0.75px; stroke-linecap: round; stroke-linejoin: round; }
 /* stejný jazyk jako Měsíc: splněno = zelená výplň (bez okraje), zmeškáno = plná šedá, neaktivní/budoucí = prázdný obrys */
-.ycell { width: 18px; height: 18px; border-radius: 3px; background: var(--border); display: flex; align-items: center; justify-content: center; }
+.ycell { width: 12px; height: 12px; border-radius: 2px; background: var(--border); }
 .ycell.blank { background: transparent !important; box-shadow: none !important; }
 .ycell.na { background: transparent; box-shadow: inset 0 0 0 1px var(--border); }
-.ycell.ytoday { box-shadow: inset 0 0 0 2px var(--accent); }
-.ynum { font-size: 9px; font-weight: 600; line-height: 1; color: var(--text); }
-.ynum.light { color: #fff; }
-.ycell.na .ynum { color: var(--text-muted); opacity: .7; }
 .ycell.clk, .stat-box.clk, .mcell.clk { cursor: pointer; }
 .ycell.clk:active, .stat-box.clk:active, .mcell.clk:active { filter: brightness(.9); }
 .habit-empty { text-align: center; padding: 30px 16px; color: var(--text-muted); }
@@ -3948,7 +3944,7 @@ function statYearHtml(pid, mine){
   for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)){ w.push(dateToStr(d)); if (w.length === 7){ weeks.push(w); w = []; } }
   if (w.length){ while (w.length < 7) w.push(null); weeks.push(w); }
   const moOf = ds => ds ? Number(ds.slice(5, 7)) - 1 : null;
-  const CELL = 18, GAP = 2, P = CELL + GAP;             // čtvereček, mezera, rozteč
+  const CELL = 12, GAP = 2, P = CELL + GAP;             // čtvereček, mezera, rozteč
   const ncols = weeks.length;
   const W = ncols * P - GAP, Hpx = 7 * P - GAP;          // rozměry mřížky
   // popisky měsíců VYCENTROVANÉ nad svým blokem (stejné pro všechny návyky)
@@ -3985,7 +3981,7 @@ function statYearHtml(pid, mine){
         const st = a ? statCellStyle('#22c55e', fr) : '';
         const cls = `ycell ${a ? 'clk' : 'na'}${ds === tS ? ' ytoday' : ''}`;
         const oc = a ? ` onclick="editHabitCell('${hb.id}','${ds}')" data-hid="${hb.id}" data-ds="${ds}"` : '';   // proklik = editace dne
-        cells += `<div class="${cls}" style="${st}"${oc} title="${ds}"><span class="ynum${(a && fr>=1)?' light':''}">${Number(ds.slice(8,10))}</span></div>`;
+        cells += `<div class="${cls}" style="${st}"${oc} title="${ds}"></div>`;
       }
     }
     h += `<div class="stat-habcard"><div class="stat-habhead"><span>${hb.ikona||'🎯'} ${habitEsc(hb.nazev)}</span><b>${done}×</b></div>
