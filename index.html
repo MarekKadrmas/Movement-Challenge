@@ -3964,6 +3964,7 @@ function statYearHtml(pid, mine){
         const oc = a ? ` onclick="editHabitCell('${hb.id}','${ds}')" data-hid="${hb.id}" data-ds="${ds}"` : '';   // proklik = editace dne
         cells += `<div class="${cls}" style="${st}"${oc} title="${ds}"><span class="ynum${(a && fr>=1)?' light':''}">${d}</span></div>`;
       }
+      for (let i = lead + daysIn; i < 42; i++) cells += `<div class="ycell blank"></div>`;  // doplň vždy na 6 řádků → uniformní výška měsíců
       const curm = (m === tM && y === tY) ? ' curm' : '';
       wall += `<div class="yh-mini${curm}"><div class="yh-mini-lbl">${ML[m]}</div><div class="yh-mini-dow">${dow}</div><div class="yh-mini-grid">${cells}</div></div>`;
     }
