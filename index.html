@@ -3779,17 +3779,9 @@ function renderHabitWeekStrip(){
   el.innerHTML = html;
 }
 function setHabitDay(ds){
+  // ZAMKNI výšku Dnes obsahu PŘED překreslením → kratší ANI prázdný den stránku nesbalí,
+  // takže prohlížeč SÁM podrží pozici scrollu (žádné scrollTo → žádný skok, funguje i na iOS).
   const dnes = document.getElementById('habit-dnes');
-  const pid = currentHabitPlayer();
-  const hasContent = pid && state.habits.some(h => h.player_id === pid && (h.created_at || '').slice(0, 10) <= ds);
-  if (!hasContent){
-    if (dnes) dnes.style.minHeight = '';
-    state.habitDay = ds; renderNavyky();
-    window.scrollTo(0, 0);   // prázdný den → odshora (není co zobrazit)
-    return;
-  }
-  // ZAMKNI výšku Dnes obsahu PŘED překreslením na aktuální hodnotu → kratší den (míň návyků)
-  // stránku nesbalí, takže prohlížeč SÁM podrží pozici scrollu (žádné scrollTo → funguje i na iOS).
   if (dnes) dnes.style.minHeight = dnes.offsetHeight + 'px';
   state.habitDay = ds; renderNavyky();
 }
