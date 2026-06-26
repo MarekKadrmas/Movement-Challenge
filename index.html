@@ -3779,19 +3779,19 @@ function renderHabitWeekStrip(){
   el.innerHTML = html;
 }
 function setHabitDay(ds){
-  const sy = window.scrollY;
+  const dnes = document.getElementById('habit-dnes');
   const pid = currentHabitPlayer();
   const hasContent = pid && state.habits.some(h => h.player_id === pid && (h.created_at || '').slice(0, 10) <= ds);
-  const dnes = document.getElementById('habit-dnes');
-  if (dnes) dnes.style.minHeight = '';     // reset, ať změříme přirozenou výšku nového dne
-  state.habitDay = ds; renderNavyky();      // renderNavyky uvnitř překreslí i proužek dnů
-  if (!hasContent){ window.scrollTo(0, 0); return; }   // prázdný den → odshora (není co zobrazit)
-  // KRATŠÍ den (míň návyků) by zkrátil stránku a scroll by spadl nahoru → dorovnej výšku, ať pozice zůstane
-  const needed = sy + window.innerHeight;
-  const docH = document.documentElement.scrollHeight;
-  if (dnes && docH < needed) dnes.style.minHeight = (dnes.offsetHeight + (needed - docH)) + 'px';
-  window.scrollTo(0, sy);
-  requestAnimationFrame(() => window.scrollTo(0, sy));
+  if (!hasContent){
+    if (dnes) dnes.style.minHeight = '';
+    state.habitDay = ds; renderNavyky();
+    window.scrollTo(0, 0);   // prázdný den → odshora (není co zobrazit)
+    return;
+  }
+  // ZAMKNI výšku Dnes obsahu PŘED překreslením na aktuální hodnotu → kratší den (míň návyků)
+  // stránku nesbalí, takže prohlížeč SÁM podrží pozici scrollu (žádné scrollTo → funguje i na iOS).
+  if (dnes) dnes.style.minHeight = dnes.offsetHeight + 'px';
+  state.habitDay = ds; renderNavyky();
 }
 
 // ===== Statistiky (Týden / Měsíc / Rok) =====
