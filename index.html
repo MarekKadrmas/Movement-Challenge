@@ -1246,6 +1246,12 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
   border: none; padding: 12px; font-family: inherit; font-size: 14px;
   cursor: pointer; margin-top: 8px;
 }
+.btn-secondary {
+  width: 100%; background: var(--bg-card); color: var(--text);
+  border: 1.5px solid var(--border); padding: 12px; border-radius: 12px;
+  font-family: inherit; font-size: 14px; font-weight: 700;
+  cursor: pointer; margin-top: 8px;
+}
 
 /* Toast */
 .toast {
@@ -1692,6 +1698,7 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 
     <div class="modal-footer">
       <button class="btn-submit" id="habit-submit-btn" onclick="submitHabit()" style="display:none;">Vytvořit návyk</button>
+      <button class="btn-secondary" id="habit-dup-btn" style="display:none;" onclick="duplicateHabit(state.habitEditId)">📋 Duplikovat návyk</button>
       <button class="btn-danger" id="habit-delete-btn" style="display:none;" onclick="deleteCurrentHabit()">Smazat návyk</button>
       <button class="btn-cancel" onclick="closeHabitModal()">Zrušit</button>
     </div>
@@ -4188,7 +4195,7 @@ function habitCardHtml(h, pid, sel, selDate, today, section){
   return `<div class="habit-card ${cardDone?'done':''}" style="--hc:${c};${dueT||cardDone?'':'opacity:.62'}">
     ${z !== 'check' ? `<div class="habit-fill" style="width:${progPct}%"></div>` : ''}
     <div class="habit-icon">${h.ikona || '🎯'}</div>
-    <div class="habit-main">
+    <div class="habit-main" onclick="openHabitModal('${h.id}')" style="cursor:pointer">
       <div class="habit-name">${habitEsc(h.nazev)}</div>
       ${subHtml}
     </div>
@@ -4342,6 +4349,7 @@ function openHabitModal(id){
   state.habitEditId = id || null;
   state.habitSearch = ''; const s = document.getElementById('habit-search'); if (s) s.value = '';
   document.getElementById('habit-delete-btn').style.display = id ? '' : 'none';
+  document.getElementById('habit-dup-btn').style.display = id ? '' : 'none';
   if (id){
     const h = state.habits.find(x => x.id === id);
     document.getElementById('habit-modal-title').textContent = 'Upravit návyk';
@@ -4362,6 +4370,19 @@ function closeHabitModal(){
   document.getElementById('habit-modal').classList.remove('active');
   unlockBodyScroll();
   state.habitEditId = null;
+}
+// duplikace návyku: otevře formulář jako NOVÝ návyk, předvyplněný nastavením existujícího → uložíš jako svůj
+function duplicateHabit(id){
+  const h = state.habits.find(x => x.id === id); if (!h) return;
+  state.habitEditId = null;                         // nový návyk (kopie), submit vytvoří
+  buildHabitIconPicker(); buildHabitColorPicker();
+  document.getElementById('habit-delete-btn').style.display = 'none';
+  document.getElementById('habit-dup-btn').style.display = 'none';
+  document.getElementById('habit-modal-title').textContent = 'Kopie návyku';
+  document.getElementById('habit-submit-btn').textContent = 'Vytvořit kopii';
+  prefillHabitForm(h, null);
+  document.getElementById('habit-nazev').value = (h.nazev || '') + ' (kopie)';
+  showHabitScreen('form');
 }
 function onHabitSearch(v){ state.habitSearch = v; renderHabitPresets(); }
 function setHabitCat(k){ state.habitCat = k; renderHabitCatTabs(); renderHabitPresets(); }
