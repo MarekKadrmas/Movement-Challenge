@@ -1522,8 +1522,15 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
       <button type="button" class="btn-secondary" onclick="backToLogin()" style="margin-top:6px;">Zpět na přihlášení</button>
     </div>
     <div id="auth-claim" style="display:none;">
-      <p class="login-subtitle">Který hráč jsi? Vyber svůj profil:</p>
+      <p class="login-subtitle" id="claim-intro">Který hráč jsi? Vyber svůj profil:</p>
       <div class="login-players" id="claim-players"></div>
+      <div id="claim-code-box" style="display:none;">
+        <p class="login-subtitle">Profil <b id="claim-sel-name" style="color:var(--text);"></b><br>Zadej svůj párovací kód (dostal jsi ho od Marka):</p>
+        <input type="text" id="claim-code" class="auth-input" placeholder="Párovací kód" autocomplete="off" autocapitalize="off">
+        <div class="auth-err" id="claim-err" style="display:none;"></div>
+        <button type="button" class="btn-submit" id="claim-confirm-btn" onclick="mcClaimConfirm()">Potvrdit a vstoupit</button>
+        <button type="button" class="auth-link" onclick="backToClaimList()" style="margin-top:10px;display:block;width:100%;">← Zpět na výběr</button>
+      </div>
     </div>
     <div id="auth-reset" style="display:none;">
       <p class="login-subtitle">Nastav si nové heslo:</p>
@@ -2480,24 +2487,44 @@ function showClaim(){
   document.getElementById('auth-title').textContent = 'Vyber profil';
   document.getElementById('auth-sub').textContent = '';
   document.getElementById('login-overlay').classList.add('active');
+  backToClaimList(); // ukaž seznam, schovej pole na kód
   const un = state.players.filter(p => p.aktivni && !p.auth_user_id);
   document.getElementById('claim-players').innerHTML = un.length ? un.map(p => `
-    <button type="button" class="login-player-btn" onclick="claimPlayer('${p.id}')">
+    <button type="button" class="login-player-btn" onclick="pickClaim('${p.id}')">
       <div class="login-avatar" style="background:${safeColor(p.barva)}">${habitEsc(initials(p.jmeno))}</div>
       <div class="login-name">${habitEsc(p.jmeno)}</div>
     </button>`).join('') : '<p class="login-subtitle">Všechny profily jsou už obsazené. Napiš Markovi.</p>';
 }
-async function claimPlayer(playerId){
+// H4: vybrat profil → zobrazit pole na párovací kód
+function pickClaim(playerId){
+  state._claimId = playerId;
+  const p = state.players.find(x => x.id === playerId);
+  document.getElementById('claim-sel-name').textContent = p ? p.jmeno : '';
+  document.getElementById('claim-intro').style.display = 'none';
+  document.getElementById('claim-players').style.display = 'none';
+  document.getElementById('claim-code-box').style.display = '';
+  const ce = document.getElementById('claim-code'); ce.value = '';
+  const er = document.getElementById('claim-err'); er.textContent = ''; er.style.display = 'none';
+  setTimeout(() => ce.focus(), 50);
+}
+function backToClaimList(){
+  document.getElementById('claim-intro').style.display = '';
+  document.getElementById('claim-players').style.display = '';
+  document.getElementById('claim-code-box').style.display = 'none';
+}
+// H4: claim přes serverovou funkci, která ověří párovací kód (přímý PATCH claim je v DB zakázaný)
+async function mcClaimConfirm(){
+  const code = (document.getElementById('claim-code').value || '').trim();
+  const er = document.getElementById('claim-err');
+  const se = m => { er.textContent = m || ''; er.style.display = m ? '' : 'none'; };
+  se('');
+  if (!code){ se('Zadej párovací kód.'); return; }
+  const btn = document.getElementById('claim-confirm-btn'); btn.disabled = true; btn.textContent = 'Ověřuji…';
   try {
-    const { data } = await db.auth.getSession();
-    const u = data && data.session && data.session.user; if (!u) return;
-    const { error } = await db.from('players').update({ auth_user_id: u.id, email: state._authEmail || u.email }).eq('id', playerId);
+    const { error } = await db.rpc('claim_profile', { p_player_id: state._claimId, p_code: code });
     if (error) throw error;
-    const p = state.players.find(x => x.id === playerId); if (p){ p.auth_user_id = u.id; p.email = state._authEmail || u.email; }
-    state.currentPlayerId = playerId;
-    // M3/RLS: nabootovat znovu už jako přihlášený s přiřazeným profilem → data autentizovaně
-    location.reload();
-  } catch(e){ setAuthErr('Chyba: ' + (e.message || e)); }
+    location.reload(); // přiřazeno → nabootovat jako přihlášený s profilem
+  } catch(e){ se((e && e.message) || 'Nepodařilo se přiřadit profil.'); btn.disabled = false; btn.textContent = 'Potvrdit a vstoupit'; }
 }
 function finishAuth(){
   document.getElementById('login-overlay').classList.remove('active');
