@@ -136,6 +136,9 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 }
 .login-overlay.active { display: flex; }
 .auth-input { width: 100%; box-sizing: border-box; height: 48px; padding: 0 14px; margin-bottom: 10px; font-size: 16px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-family: inherit; }
+.pw-wrap { position: relative; }
+.pw-wrap .auth-input { padding-right: 44px; }
+.pw-eye { position: absolute; right: 4px; top: 0; height: 48px; width: 38px; background: none; border: none; font-size: 17px; line-height: 48px; cursor: pointer; opacity: .65; padding: 0; }
 .auth-err { color: var(--red); font-size: 13px; margin-bottom: 8px; text-align: left; }
 .auth-switch { margin-top: 14px; font-size: 13px; color: var(--text-muted); }
 .auth-link { background: none; border: none; color: var(--accent); font-weight: 700; font-family: inherit; font-size: 13px; cursor: pointer; padding: 0; }
@@ -1492,7 +1495,14 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
     <p class="login-subtitle" id="auth-sub">Přihlas se e-mailem a heslem</p>
     <div id="auth-form">
       <input type="email" id="auth-email" class="auth-input" placeholder="E-mail" autocomplete="email" inputmode="email">
-      <input type="password" id="auth-pass" class="auth-input" placeholder="Heslo" autocomplete="current-password">
+      <div class="pw-wrap">
+        <input type="password" id="auth-pass" class="auth-input" placeholder="Heslo" autocomplete="current-password">
+        <button type="button" class="pw-eye" onclick="togglePw('auth-pass', this)" aria-label="Zobrazit heslo">👁</button>
+      </div>
+      <div class="pw-wrap" id="auth-pass2-wrap" style="display:none;">
+        <input type="password" id="auth-pass2" class="auth-input" placeholder="Heslo znovu" autocomplete="new-password">
+        <button type="button" class="pw-eye" onclick="togglePw('auth-pass2', this)" aria-label="Zobrazit heslo">👁</button>
+      </div>
       <div class="auth-err" id="auth-err" style="display:none;"></div>
       <button type="button" class="btn-submit" id="auth-submit" onclick="mcAuthSubmit()">Přihlásit se</button>
       <div class="auth-switch"><span id="auth-switch-txt">Nemáš účet?</span> <button type="button" class="auth-link" id="auth-switch-btn" onclick="toggleAuthMode()">Zaregistrovat se</button></div>
@@ -1504,7 +1514,10 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
     </div>
     <div id="auth-reset" style="display:none;">
       <p class="login-subtitle">Nastav si nové heslo:</p>
-      <input type="password" id="auth-newpass" class="auth-input" placeholder="Nové heslo" autocomplete="new-password">
+      <div class="pw-wrap">
+        <input type="password" id="auth-newpass" class="auth-input" placeholder="Nové heslo" autocomplete="new-password">
+        <button type="button" class="pw-eye" onclick="togglePw('auth-newpass', this)" aria-label="Zobrazit heslo">👁</button>
+      </div>
       <div class="auth-err" id="auth-reset-err" style="display:none;"></div>
       <button type="button" class="btn-submit" onclick="mcSetNewPassword()">Nastavit heslo</button>
     </div>
@@ -2383,6 +2396,7 @@ async function loadSessionPlayer(){
   } catch(_) { return null; }
 }
 function setAuthErr(m){ const e = document.getElementById('auth-err'); if (e){ e.textContent = m || ''; e.style.display = m ? '' : 'none'; } }
+function togglePw(id, btn){ const i = document.getElementById(id); if (!i) return; const show = i.type === 'password'; i.type = show ? 'text' : 'password'; btn.textContent = show ? '🙈' : '👁'; }
 function toggleAuthMode(){
   state.authMode = state.authMode === 'signup' ? 'signin' : 'signup';
   const su = state.authMode === 'signup';
@@ -2392,6 +2406,7 @@ function toggleAuthMode(){
   document.getElementById('auth-switch-txt').textContent = su ? 'Už máš účet?' : 'Nemáš účet?';
   document.getElementById('auth-switch-btn').textContent = su ? 'Přihlásit se' : 'Zaregistrovat se';
   document.getElementById('auth-forgot-btn').style.display = su ? 'none' : 'block';
+  document.getElementById('auth-pass2-wrap').style.display = su ? '' : 'none';
   setAuthErr('');
 }
 async function mcAuthSubmit(){
@@ -2399,7 +2414,10 @@ async function mcAuthSubmit(){
   const pass = document.getElementById('auth-pass').value || '';
   setAuthErr('');
   if (!email || !pass){ setAuthErr('Vyplň e-mail i heslo.'); return; }
-  if (state.authMode === 'signup' && pass.length < 6){ setAuthErr('Heslo musí mít aspoň 6 znaků.'); return; }
+  if (state.authMode === 'signup'){
+    if (pass.length < 6){ setAuthErr('Heslo musí mít aspoň 6 znaků.'); return; }
+    if (pass !== (document.getElementById('auth-pass2').value || '')){ setAuthErr('Hesla se neshodují.'); return; }
+  }
   const btn = document.getElementById('auth-submit'); btn.disabled = true;
   try {
     const res = state.authMode === 'signup'
