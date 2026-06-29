@@ -2483,8 +2483,8 @@ function showClaim(){
   const un = state.players.filter(p => p.aktivni && !p.auth_user_id);
   document.getElementById('claim-players').innerHTML = un.length ? un.map(p => `
     <button type="button" class="login-player-btn" onclick="claimPlayer('${p.id}')">
-      <div class="login-avatar" style="background:${p.barva}">${initials(p.jmeno)}</div>
-      <div class="login-name">${p.jmeno}</div>
+      <div class="login-avatar" style="background:${safeColor(p.barva)}">${habitEsc(initials(p.jmeno))}</div>
+      <div class="login-name">${habitEsc(p.jmeno)}</div>
     </button>`).join('') : '<p class="login-subtitle">Všechny profily jsou už obsazené. Napiš Markovi.</p>';
 }
 async function claimPlayer(playerId){
@@ -3121,12 +3121,12 @@ function renderLeaderboardTotal() {
     <div class="leader-row ${medalClass}" onclick="openPlayerEntriesModal('${p.id}')" style="cursor:pointer;">
       <div class="leader-rank">${i+1}</div>
       <div class="leader-av-wrap">
-        <div class="leader-avatar" style="background:${p.barva}">${initials(p.jmeno)}</div>
+        <div class="leader-avatar" style="background:${safeColor(p.barva)}">${habitEsc(initials(p.jmeno))}</div>
       </div>
-      <div class="leader-name">${p.jmeno}${p.streak > 0 ? `<span class="name-streak">🔥 ${p.streak} ${streakLabel(p.streak)}</span>` : ''}</div>
+      <div class="leader-name">${habitEsc(p.jmeno)}${p.streak > 0 ? `<span class="name-streak">🔥 ${p.streak} ${streakLabel(p.streak)}</span>` : ''}</div>
       <div class="leader-stats">
         <div class="leader-points">${Math.round(p.total)}</div>
-        ${p.total > 0 ? `<div class="leader-pct-bar" style="--player-color:${p.barva};width:${pct}%"></div>` : ''}
+        ${p.total > 0 ? `<div class="leader-pct-bar" style="--player-color:${safeColor(p.barva)};width:${pct}%"></div>` : ''}
       </div>
     </div>
   `}).join('');
@@ -3189,13 +3189,13 @@ function renderHeatmap() {
   }
   players.forEach(p => {
     const colorKey = playerColorKey(p.jmeno);
-    html += `<div class="heatmap-player-label" style="color:${p.barva}">${p.jmeno}</div>`;
+    html += `<div class="heatmap-player-label" style="color:${safeColor(p.barva)}">${habitEsc(p.jmeno)}</div>`;
     days.forEach(d => {
       const dStr = dateToStr(d);
       const pts = pointsForDay(p.id, dStr);
       const lvl = levelNum(pts);
       const cls = lvl === 0 ? '' : `${colorKey}-${lvl}`;
-      html += `<div class="heatmap-cell ${cls}" data-date="${dStr}" data-player="${p.id}" title="${p.jmeno} · ${d.toLocaleDateString('cs-CZ')} · ${Math.round(pts)} bodů"></div>`;
+      html += `<div class="heatmap-cell ${cls}" data-date="${dStr}" data-player="${p.id}" title="${habitEsc(p.jmeno)} · ${d.toLocaleDateString('cs-CZ')} · ${Math.round(pts)} bodů"></div>`;
     });
   });
   // F37: legenda s konkretnimi rozsahy bodů (kraje "0 b. / den" a "300+ b. / den")
@@ -3401,8 +3401,8 @@ function buildHistoryPlayerPills() {
   wrap.innerHTML = items.map(p => {
     const active = state.historyPlayerFilter === p.id;
     // F26: pokud je aktivni hrac, dat mu jeho barvu (vse zustane cerne)
-    const styleAttr = active && p.barva ? `style="background:${p.barva};color:#000;border-color:${p.barva};"` : '';
-    return `<button type="button" class="filter-pill ${active ? 'active' : ''}" ${styleAttr} onclick="setHistoryPlayerFilter('${p.id}')">${p.jmeno}</button>`;
+    const styleAttr = active && p.barva ? `style="background:${safeColor(p.barva)};color:#000;border-color:${safeColor(p.barva)};"` : '';
+    return `<button type="button" class="filter-pill ${active ? 'active' : ''}" ${styleAttr} onclick="setHistoryPlayerFilter('${p.id}')">${habitEsc(p.jmeno)}</button>`;
   }).join('');
 }
 
@@ -3459,8 +3459,8 @@ function renderLoginScreen() {
   const wrap = document.getElementById('login-players');
   wrap.innerHTML = aktivni.map(p => `
     <button type="button" class="login-player-btn" onclick="startLoginFlow('${p.id}')">
-      <div class="login-avatar" style="background:${p.barva}">${initials(p.jmeno)}</div>
-      <div class="login-name">${p.jmeno}</div>
+      <div class="login-avatar" style="background:${safeColor(p.barva)}">${habitEsc(initials(p.jmeno))}</div>
+      <div class="login-name">${habitEsc(p.jmeno)}</div>
       ${p.is_admin ? '<div class="login-badge">Admin</div>' : ''}
       <div class="login-lock">${p.password_hash ? '🔒' : ''}</div>
     </button>
@@ -3646,11 +3646,11 @@ function renderEntryCard(e, withActions) {
       <button class="entry-action-btn delete" data-id="${e.id}" data-type="${e._type}" data-action="delete">🗑️</button>
     </div>` : '';
   return `
-    <div class="entry-card" style="border-left-color:${player.barva}">
-      <div class="entry-avatar" style="background:${player.barva}">${initials(player.jmeno)}${typeBadge}</div>
+    <div class="entry-card" style="border-left-color:${safeColor(player.barva)}">
+      <div class="entry-avatar" style="background:${safeColor(player.barva)}">${habitEsc(initials(player.jmeno))}${typeBadge}</div>
       <div class="entry-main">
-        <div class="entry-title">${title}</div>
-        <div class="entry-meta">${meta}</div>
+        <div class="entry-title">${habitEsc(title)}</div>
+        <div class="entry-meta">${habitEsc(meta)}</div>
       </div>
       <div class="entry-points">+${Math.round(Number(e.body))}</div>
       ${actions}
@@ -3758,11 +3758,11 @@ function renderPlayers() {
         <div class="player-card-header">
           <div class="player-big-av-wrap">
             <div class="player-big-av-emoji">${avatarEmoji(p.jmeno)}</div>
-            <div class="player-big-av" style="background:${p.barva}">${initials(p.jmeno)}</div>
+            <div class="player-big-av" style="background:${safeColor(p.barva)}">${habitEsc(initials(p.jmeno))}</div>
             ${streak > 0 ? `<div class="player-big-av-streak">🔥 ${streak}</div>` : ''}
           </div>
           <div class="player-info">
-            <div class="player-name">${p.jmeno}</div>
+            <div class="player-name">${habitEsc(p.jmeno)}</div>
             <div class="player-meta">${p.pohlavi === 'M' ? 'Muž' : 'Žena'} · ${p.vaha} kg · ${p.vyska || '?'} cm</div>
           </div>
           <div class="player-total">${(bC + bA).toFixed(0)}</div>
@@ -3892,7 +3892,7 @@ function renderScoringExplanation() {
       const bV = Math.round(vypocitejBodyCvik(p, 'Shyby', velky, 0));
       const mine = p.id === state.currentPlayerId ? ' style="background:var(--bg-card-hover)"' : '';
       const cell = (n, b) => `<td class="pts"><span style="font-weight:400;color:var(--text-muted)">${n} shybů</span><span style="display:block;font-weight:700">${b} b</span></td>`;
-      return `<tr${mine}><td>${p.jmeno}${star}</td>${cell(bezne, bB)}${cell(velky, bV)}</tr>`;
+      return `<tr${mine}><td>${habitEsc(p.jmeno)}${star}</td>${cell(bezne, bB)}${cell(velky, bV)}</tr>`;
     }).join('');
     priklady = `
       <p style="margin-top:12px"><strong style="color:var(--text)">Kolik bodů za shyby</strong> <span style="color:var(--text-dim);font-size:12px">— podle toho, co kdo reálně dělá</span></p>
@@ -4002,6 +4002,9 @@ function renderAllViews() {
 //  F52: HABIT TRACKER
 // ============================================================
 function habitEsc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+// XSS ochrana: esc = escapování textu do HTML (alias habitEsc); safeColor = jen platná CSS barva, jinak default (proti CSS/atribut injection)
+function esc(s){ return habitEsc(s); }
+function safeColor(c){ return /^#[0-9a-fA-F]{3,8}$/.test(String(c == null ? '' : c).trim()) ? c : '#888'; }
 function currentHabitPlayer(){ return state.currentPlayerId; }
 function habitLogsFor(habitId, pid){ return state.habitLogs.filter(l => l.habit_id === habitId && l.player_id === pid); }
 function isHabitDone(habitId, pid, dateStr){ return state.habitLogs.some(l => l.habit_id === habitId && l.player_id === pid && l.datum === dateStr); }
@@ -4159,7 +4162,7 @@ function dayCompletion(pid, mine, d){
   return due.reduce((s, h) => s + habitFractionOn(h, pid, dateToStr(d)), 0) / due.length;
 }
 function statCellStyle(barva, fr){
-  if (fr >= 1) return `background:${barva}`;
+  if (fr >= 1) return `background:${safeColor(barva)}`;
   // částečně splněno = vybarvit ZDOLA proporčně (např. 6000/10000 = zdola 60 %)
   if (fr > 0){ const p = Math.round(fr * 100); return `background:linear-gradient(to top, ${barva} ${p}%, var(--border) ${p}%)`; }
   return '';
@@ -4212,7 +4215,7 @@ function statWeekHtml(pid, mine){
   h += `<div class="stat-grid"><div class="stat-cell stat-hd"></div>` + days.map(d => `<div class="stat-cell stat-hd${dateToStr(d) === todayStr() ? ' today' : ''}">${HABIT_DEN_NAMES[(d.getDay()+6)%7]}<span class="stat-hd-num">${d.getDate()}</span></div>`).join('');
   for (const hb of mine){
     const isWM = hb.frekvence_typ === 'weekly' || hb.frekvence_typ === 'monthly';
-    h += `<div class="stat-cell stat-name" title="${habitEsc(hb.nazev)}">${hb.ikona||'🎯'}</div>`;
+    h += `<div class="stat-cell stat-name" title="${habitEsc(hb.nazev)}">${habitEsc(hb.ikona||'🎯')}</div>`;
     for (const d of days){
       const ds = dateToStr(d);
       const existed = (hb.created_at||'').slice(0,10) <= ds && ds <= todayStr();
@@ -4247,7 +4250,7 @@ function statMonthHtml(pid, mine){
       cells += `<div class="mcell ${a?'clk':'na'} ${ds === todayStr() ? 'mtoday' : ''}" style="${statCellStyle('#22c55e', fr)}"${oc}><span class="mnum${(a && fr>=1)?' light':''}">${day}</span></div>`;
     }
     const stat = isWM ? `${done}×` : (appl ? Math.round(done/appl*100) + ' %' : '—');
-    h += `<div class="stat-habcard"><div class="stat-habhead"><span>${hb.ikona||'🎯'} ${habitEsc(hb.nazev)}</span><b>${stat}</b></div><div class="mcal">${cells}</div></div>`;
+    h += `<div class="stat-habcard"><div class="stat-habhead"><span>${habitEsc(hb.ikona||'🎯')} ${habitEsc(hb.nazev)}</span><b>${stat}</b></div><div class="mcal">${cells}</div></div>`;
   }
   return h;
 }
@@ -4281,7 +4284,7 @@ function statYearHtml(pid, mine){
       const curm = (m === tM && y === tY) ? ' curm' : '';
       wall += `<div class="yh-mini${curm}"><div class="yh-mini-lbl">${ML[m]}</div><div class="yh-mini-dow">${dow}</div><div class="yh-mini-grid">${cells}</div></div>`;
     }
-    h += `<div class="stat-habcard"><div class="stat-habhead"><span>${hb.ikona||'🎯'} ${habitEsc(hb.nazev)}</span><b>${done}×</b></div>
+    h += `<div class="stat-habcard"><div class="stat-habhead"><span>${habitEsc(hb.ikona||'🎯')} ${habitEsc(hb.nazev)}</span><b>${done}×</b></div>
       <div class="yh-scroll"><div class="yh-wall">${wall}</div></div></div>`;
   }
   return h;
@@ -4423,9 +4426,9 @@ function habitCardHtml(h, pid, sel, selDate, today, section){
   if (h.kotva) parts.push(`⛓ ${habitEsc(h.kotva)}`);
   const subHtml = parts.length ? `<div class="habit-sub">${parts.join(' · ')}</div>` : '';
   const dueT = section === 'daily' ? habitDueOn(h, selDate) : true;
-  return `<div class="habit-card ${cardDone?'done':''}" style="--hc:${c};${dueT||cardDone?'':'opacity:.62'}">
+  return `<div class="habit-card ${cardDone?'done':''}" style="--hc:${safeColor(c)};${dueT||cardDone?'':'opacity:.62'}">
     ${z !== 'check' ? `<div class="habit-fill" style="width:${progPct}%"></div>` : ''}
-    <div class="habit-icon">${h.ikona || '🎯'}</div>
+    <div class="habit-icon">${habitEsc(h.ikona || '🎯')}</div>
     <div class="habit-main" onclick="openHabitModal('${h.id}')" style="cursor:pointer">
       <div class="habit-name">${habitEsc(h.nazev)}</div>
       ${subHtml}
@@ -4637,7 +4640,7 @@ function renderHabitPresets(){
   let html = `<div class="habit-preset-tile custom" onclick="startCustomHabit()">➕ Vlastní návyk</div>`;
   html += list.map(p => {
     const idx = HABIT_PRESETS.indexOf(p); const c = HABIT_CAT_COLOR[p.kat] || 'var(--accent)'; const sub = presetSub(p);
-    return `<div class="habit-preset-tile" style="--hc:${c}" onclick="selectPreset(${idx})">
+    return `<div class="habit-preset-tile" style="--hc:${safeColor(c)}" onclick="selectPreset(${idx})">
       <div class="pt-ic">${p.ikona}</div>
       <div><div class="pt-name">${habitEsc(p.nazev)}</div>${sub ? `<div class="pt-sub">${sub}</div>` : ''}</div>
     </div>`;
@@ -5194,7 +5197,7 @@ function updateFormDisabled() {
 function buildPlayerPills() {
   const el = document.getElementById('player-pills');
   el.innerHTML = state.players.filter(p => p.aktivni).map(p => `
-    <div class="player-pill" data-player-id="${p.id}" style="--c:${p.barva}">${p.jmeno}</div>
+    <div class="player-pill" data-player-id="${p.id}" style="--c:${safeColor(p.barva)}">${habitEsc(p.jmeno)}</div>
   `).join('');
   el.querySelectorAll('.player-pill').forEach(pill => {
     pill.addEventListener('click', () => {
@@ -5582,7 +5585,7 @@ function fillLezeniMaxSelect(elId, disc, currentIdx) {
 function buildEditorPills() {
   const el = document.getElementById('editor-pills');
   el.innerHTML = state.players.filter(p => p.aktivni).map(p => `
-    <div class="player-pill" data-editor-id="${p.id}" style="--c:${p.barva}">${p.jmeno}</div>
+    <div class="player-pill" data-editor-id="${p.id}" style="--c:${safeColor(p.barva)}">${habitEsc(p.jmeno)}</div>
   `).join('');
   el.querySelectorAll('.player-pill').forEach(pill => {
     pill.addEventListener('click', () => {
@@ -5688,7 +5691,7 @@ function openPlayerHistory(playerId) {
       return `
         <div class="history-item">
           <div class="when">${formatDateTime(h.created_at)} · ${editorName}</div>
-          <div class="change"><strong>${label}:</strong> ${h.old_value || '—'} → ${h.new_value || '—'}</div>
+          <div class="change"><strong>${habitEsc(label)}:</strong> ${habitEsc(h.old_value || '—')} → ${habitEsc(h.new_value || '—')}</div>
         </div>
       `;
     }).join('');
