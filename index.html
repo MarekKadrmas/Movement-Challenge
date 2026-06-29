@@ -2408,7 +2408,12 @@ async function loadSessionPlayer(){
     const u = data && data.session && data.session.user;
     if (!u) return null;
     const p = state.players.find(x => x.auth_user_id === u.id);
-    if (p) state.currentPlayerId = p.id;
+    if (p) {
+      state.currentPlayerId = p.id;
+      // Admin se teď odvozuje z přihlášeného profilu (Supabase Auth + players.is_admin),
+      // ne ze starého soft-auth „admin zařízení". Synchronizuj flag podle přihlášeného hráče.
+      localStorage.setItem(ADMIN_DEVICE_KEY, p.is_admin ? 'true' : 'false');
+    }
     return p || null;
   } catch(_) { return null; }
 }

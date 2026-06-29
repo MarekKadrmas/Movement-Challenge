@@ -62,6 +62,19 @@ create policy players_upd on public.players for update to authenticated
 create policy players_ins on public.players for insert to authenticated with check (public.current_is_admin());
 create policy players_del on public.players for delete to authenticated using (public.current_is_admin());
 
+-- 4b) Zámek na is_admin: měnit ho smí jen ten, kdo už adminem JE (jinak by si ho uživatel nastavil sám na svém profilu).
+create or replace function public.guard_player_admin()
+returns trigger language plpgsql security definer set search_path = public, pg_temp as $$
+begin
+  if new.is_admin is distinct from old.is_admin and not public.current_is_admin() then
+    raise exception 'Only an admin can change is_admin';
+  end if;
+  return new;
+end $$;
+drop trigger if exists players_guard_admin on public.players;
+create trigger players_guard_admin before update on public.players
+  for each row execute function public.guard_player_admin();
+
 -- 5) KONTROLA (poslední SELECT se ukáže ve výsledku — pošli mi ho):
 select tablename, cmd, policyname, roles
 from pg_policies
