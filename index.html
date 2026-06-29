@@ -1496,10 +1496,17 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
       <div class="auth-err" id="auth-err" style="display:none;"></div>
       <button type="button" class="btn-submit" id="auth-submit" onclick="mcAuthSubmit()">Přihlásit se</button>
       <div class="auth-switch"><span id="auth-switch-txt">Nemáš účet?</span> <button type="button" class="auth-link" id="auth-switch-btn" onclick="toggleAuthMode()">Zaregistrovat se</button></div>
+      <button type="button" class="auth-link" id="auth-forgot-btn" onclick="mcForgotPassword()" style="margin-top:10px;display:block;width:100%;">Zapomněl(a) jsi heslo?</button>
     </div>
     <div id="auth-claim" style="display:none;">
       <p class="login-subtitle">Který hráč jsi? Vyber svůj profil:</p>
       <div class="login-players" id="claim-players"></div>
+    </div>
+    <div id="auth-reset" style="display:none;">
+      <p class="login-subtitle">Nastav si nové heslo:</p>
+      <input type="password" id="auth-newpass" class="auth-input" placeholder="Nové heslo" autocomplete="new-password">
+      <div class="auth-err" id="auth-reset-err" style="display:none;"></div>
+      <button type="button" class="btn-submit" onclick="mcSetNewPassword()">Nastavit heslo</button>
     </div>
   </div>
 </div>
@@ -2143,6 +2150,8 @@ if (!isTest) {
 }
 
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+// reset hesla: když uživatel přijde z odkazu v e-mailu, Supabase vyvolá PASSWORD_RECOVERY → ukaž formulář na nové heslo
+db.auth.onAuthStateChange((event) => { if (event === 'PASSWORD_RECOVERY' && typeof showResetForm === 'function') showResetForm(); });
 
 // Nove body (zvyseno o ~54%)
 const LEVEL_POINTS = { 1: 30, 2: 60, 3: 100, 4: 150, 5: 220 };
@@ -2382,6 +2391,7 @@ function toggleAuthMode(){
   document.getElementById('auth-submit').textContent = su ? 'Zaregistrovat se' : 'Přihlásit se';
   document.getElementById('auth-switch-txt').textContent = su ? 'Už máš účet?' : 'Nemáš účet?';
   document.getElementById('auth-switch-btn').textContent = su ? 'Přihlásit se' : 'Zaregistrovat se';
+  document.getElementById('auth-forgot-btn').style.display = su ? 'none' : 'block';
   setAuthErr('');
 }
 async function mcAuthSubmit(){
@@ -2441,6 +2451,43 @@ function finishAuth(){
   if (em) em.value = ''; if (pw) pw.value = '';
   updateHeaderMe();
   renderAllViews();
+}
+// zapomenuté heslo: pošle reset odkaz na e-mail
+async function mcForgotPassword(){
+  const email = (document.getElementById('auth-email').value || '').trim();
+  if (!email){ setAuthErr('Zadej e-mail nahoře — pošleme na něj odkaz.'); return; }
+  try {
+    const { error } = await db.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname });
+    if (error) throw error;
+    setAuthErr('');
+    toast('Poslali jsme ti odkaz na e-mail (mrkni i do spamu).', 'success');
+  } catch(e){ setAuthErr(translateAuthErr(e)); }
+}
+// formulář na nové heslo (po kliknutí na odkaz z e-mailu)
+function showResetForm(){
+  document.getElementById('auth-form').style.display = 'none';
+  document.getElementById('auth-claim').style.display = 'none';
+  document.getElementById('auth-reset').style.display = '';
+  document.getElementById('auth-title').textContent = 'Nové heslo';
+  document.getElementById('auth-sub').textContent = 'Zadej si nové heslo k účtu';
+  document.getElementById('login-overlay').classList.add('active');
+  document.getElementById('header-me').style.display = 'none';
+}
+async function mcSetNewPassword(){
+  const pw = document.getElementById('auth-newpass').value || '';
+  const errEl = document.getElementById('auth-reset-err');
+  const se = m => { errEl.textContent = m || ''; errEl.style.display = m ? '' : 'none'; };
+  se('');
+  if (pw.length < 6){ se('Heslo musí mít aspoň 6 znaků.'); return; }
+  try {
+    const { error } = await db.auth.updateUser({ password: pw });
+    if (error) throw error;
+    document.getElementById('auth-reset').style.display = 'none';
+    document.getElementById('auth-newpass').value = '';
+    const p = await loadSessionPlayer();
+    if (p) finishAuth(); else showClaim();
+    toast('Heslo změněno.', 'success');
+  } catch(e){ se(translateAuthErr(e)); }
 }
 
 function toggleAdminActive() {
