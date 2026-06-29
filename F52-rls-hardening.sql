@@ -18,8 +18,10 @@ $$;
 create or replace function public.guard_player_protected()
 returns trigger language plpgsql security definer set search_path = public, pg_temp as $$
 begin
-  if public.current_is_admin() then
-    return new;  -- admin smí vše
+  -- Důvěryhodný backend (SQL konzole / service_role = auth.uid() IS NULL) nebo admin smí vše.
+  -- Anonymní API uživatel se sem nedostane (RLS players_upd je jen to authenticated).
+  if auth.uid() is null or public.current_is_admin() then
+    return new;
   end if;
   if new.is_admin is distinct from old.is_admin then
     raise exception 'Změnu is_admin smí provést jen admin';
