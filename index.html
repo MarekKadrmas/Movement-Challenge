@@ -2176,8 +2176,12 @@ if (!isTest) {
 }
 
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-// reset hesla: když uživatel přijde z odkazu v e-mailu, Supabase vyvolá PASSWORD_RECOVERY → ukaž formulář na nové heslo
-db.auth.onAuthStateChange((event) => { if (event === 'PASSWORD_RECOVERY' && typeof showResetForm === 'function') showResetForm(); });
+// reset hesla: přišel uživatel z odkazu v e-mailu? Token je v URL hashi, dokud ho Supabase nezpracuje.
+// Zachytíme to SYNCHRONNĚ hned teď, aby nás boot nestihl přihlásit do appky dřív, než ukážeme formulář na nové heslo.
+let pwRecovery = /type=recovery/.test(location.hash);
+db.auth.onAuthStateChange((event) => {
+  if (event === 'PASSWORD_RECOVERY'){ pwRecovery = true; if (typeof showResetForm === 'function') showResetForm(); }
+});
 
 // Nove body (zvyseno o ~54%)
 const LEVEL_POINTS = { 1: 30, 2: 60, 3: 100, 4: 150, 5: 220 };
@@ -2447,6 +2451,7 @@ async function mcAuthSubmit(){
 function translateAuthErr(e){
   const m = ((e && e.message) || '').toLowerCase();
   if (m.includes('invalid login')) return 'Špatný e-mail nebo heslo.';
+  if (m.includes('auth session missing') || m.includes('session_not_found') || m.includes('token has expired') || m.includes('expired') || (m.includes('invalid') && m.includes('token'))) return 'Odkaz na obnovu vypršel nebo už byl použit. Nech si poslat nový.';
   if (m.includes('already registered') || m.includes('user already')) return 'Tenhle e-mail už je registrovaný — přihlas se.';
   if (m.includes('rate limit') || m.includes('too many') || m.includes('429')) return 'Moc pokusů po sobě. Zkus to prosím za pár minut.';
   if (m.includes('email') && m.includes('invalid')) return 'Neplatný e-mail.';
@@ -2549,6 +2554,7 @@ async function mcSetNewPassword(){
   try {
     const { error } = await db.auth.updateUser({ password: pw });
     if (error) throw error;
+    pwRecovery = false; // reset dokončen → boot už nesmí znovu nutit formulář na heslo
     document.getElementById('auth-reset').style.display = 'none';
     document.getElementById('auth-newpass').value = '';
     const p = await loadSessionPlayer();
@@ -5724,6 +5730,13 @@ async function loadData() {
       state.habits = habRes.error ? [] : (habRes.data || []);
       state.habitLogs = logRes.error ? [] : (logRes.data || []);
     } catch (_) { state.habits = []; state.habitLogs = []; }
+    // Reset hesla: uživatel přišel přes odkaz z e-mailu → drž formulář na nové heslo a nepouštěj ho do appky,
+    // dokud si heslo nenastaví (jinak by ho platná session z odkazu rovnou přihlásila a formulář by jen probliknul).
+    if (pwRecovery){
+      showResetForm();
+      document.getElementById('connection-status').textContent = isTest ? 'test' : 'online';
+      return;
+    }
     // M2: přihlášení přes Supabase Auth — najdi hráče napojeného na přihlášený účet
     const authPlayer = await loadSessionPlayer();
     if (!authPlayer && !state.isGuest){
