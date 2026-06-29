@@ -2443,8 +2443,8 @@ async function mcAuthSubmit(){
     if (res.error) throw res.error;
     if (!res.data.session){ setAuthErr('Účet vytvořen — potvrď e-mail a pak se přihlas.'); state.authMode = 'signin'; return; }
     state._authEmail = email;
-    const p = await loadSessionPlayer();
-    if (p) finishAuth(); else showClaim();
+    // M3/RLS: nabootovat znovu už jako přihlášený → data se načtou autentizovaně (boot pošle na appku, nebo na výběr profilu)
+    location.reload();
   } catch(e){ setAuthErr(translateAuthErr(e)); }
   finally { btn.disabled = false; }
 }
@@ -2490,7 +2490,8 @@ async function claimPlayer(playerId){
     if (error) throw error;
     const p = state.players.find(x => x.id === playerId); if (p){ p.auth_user_id = u.id; p.email = state._authEmail || u.email; }
     state.currentPlayerId = playerId;
-    finishAuth();
+    // M3/RLS: nabootovat znovu už jako přihlášený s přiřazeným profilem → data autentizovaně
+    location.reload();
   } catch(e){ setAuthErr('Chyba: ' + (e.message || e)); }
 }
 function finishAuth(){
@@ -2565,11 +2566,9 @@ async function mcSetNewPassword(){
     const { error } = await db.auth.updateUser({ password: pw });
     if (error) throw error;
     pwRecovery = false; // reset dokončen → boot už nesmí znovu nutit formulář na heslo
-    document.getElementById('auth-reset').style.display = 'none';
     document.getElementById('auth-newpass').value = '';
-    const p = await loadSessionPlayer();
-    if (p) finishAuth(); else showClaim();
-    toast('Heslo změněno.', 'success');
+    // M3/RLS: nabootovat znovu autentizovaně (najde profil / nebo výběr profilu)
+    location.reload();
   } catch(e){ se(translateAuthErr(e)); }
 }
 
@@ -5717,6 +5716,9 @@ document.querySelectorAll('.nav-btn').forEach(btn => {
 
 async function loadData() {
   try {
+    // M3/RLS: nejdřív počkat na načtení session, ať mají dotazy přihlašovací token.
+    // Bez tohoto by se první fetch mohl odeslat ještě jako anonymní → s RLS by vrátil prázdno.
+    await db.auth.getSession();
     const [pRes, cRes, aRes, hRes] = await Promise.all([
       db.from('players').select('*').order('created_at', { ascending: true }),  // F16: stari hraci prvni, novi posledni
       db.from('cviky').select('*').order('created_at', { ascending: false }),
@@ -5777,7 +5779,10 @@ db.channel('public:all-test-v12')
   .subscribe();
 
 // F45: detekce guest mode pres URL ?guest=true
+// M3/RLS: host mód VYPNUT — data vyžadují přihlášení (anon by stejně neviděl nic). Případně později jako samostatné demo.
 (function detectGuest() {
+  return;
+  // eslint-disable-next-line no-unreachable
   const params = new URLSearchParams(window.location.search);
   if (params.get('guest') === 'true') {
     state.isGuest = true;
