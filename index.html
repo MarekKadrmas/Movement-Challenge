@@ -135,6 +135,10 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
   padding: 20px;
 }
 .login-overlay.active { display: flex; }
+.auth-input { width: 100%; box-sizing: border-box; height: 48px; padding: 0 14px; margin-bottom: 10px; font-size: 16px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-family: inherit; }
+.auth-err { color: var(--red); font-size: 13px; margin-bottom: 8px; text-align: left; }
+.auth-switch { margin-top: 14px; font-size: 13px; color: var(--text-muted); }
+.auth-link { background: none; border: none; color: var(--accent); font-weight: 700; font-family: inherit; font-size: 13px; cursor: pointer; padding: 0; }
 .login-card {
   max-width: 400px; width: 100%;
   text-align: center;
@@ -1484,9 +1488,19 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
         <rect x="42" y="16" width="10" height="38" rx="2" fill="#4ADE80"/>
       </svg>
     </div>
-    <h2 class="login-title">Kdo jsi?</h2>
-    <p class="login-subtitle">Vyber sebe, ať appka ví kdo zapisuje</p>
-    <div class="login-players" id="login-players"></div>
+    <h2 class="login-title" id="auth-title">Přihlášení</h2>
+    <p class="login-subtitle" id="auth-sub">Přihlas se e-mailem a heslem</p>
+    <div id="auth-form">
+      <input type="email" id="auth-email" class="auth-input" placeholder="E-mail" autocomplete="email" inputmode="email">
+      <input type="password" id="auth-pass" class="auth-input" placeholder="Heslo" autocomplete="current-password">
+      <div class="auth-err" id="auth-err" style="display:none;"></div>
+      <button type="button" class="btn-submit" id="auth-submit" onclick="mcAuthSubmit()">Přihlásit se</button>
+      <div class="auth-switch"><span id="auth-switch-txt">Nemáš účet?</span> <button type="button" class="auth-link" id="auth-switch-btn" onclick="toggleAuthMode()">Zaregistrovat se</button></div>
+    </div>
+    <div id="auth-claim" style="display:none;">
+      <p class="login-subtitle">Který hráč jsi? Vyber svůj profil:</p>
+      <div class="login-players" id="claim-players"></div>
+    </div>
   </div>
 </div>
 
@@ -2339,12 +2353,94 @@ function isAdminActive() {
 }
 
 // F25: Odhlasit se - vrati appku do "Kdo jsi?" stavu
-function logoutPlayer() {
-  if (!confirm('Opravdu se odhlásit? Příště budeš muset zase zadat heslo.')) return;
+async function logoutPlayer() {
+  if (!confirm('Opravdu se odhlásit?')) return;
+  try { await db.auth.signOut(); } catch(_) {}
   localStorage.removeItem(CURRENT_PLAYER_KEY);
   localStorage.removeItem(ADMIN_DEVICE_KEY);  // pri odhlaseni i flag - admin se musi znovu pretvrdit
   localStorage.removeItem(ADMIN_ACTIVE_KEY);
   location.reload();
+}
+
+// ===== M2: přihlášení přes Supabase Auth (e-mail + heslo) + napojení na hráčský profil =====
+async function loadSessionPlayer(){
+  try {
+    const { data } = await db.auth.getSession();
+    const u = data && data.session && data.session.user;
+    if (!u) return null;
+    const p = state.players.find(x => x.auth_user_id === u.id);
+    if (p) state.currentPlayerId = p.id;
+    return p || null;
+  } catch(_) { return null; }
+}
+function setAuthErr(m){ const e = document.getElementById('auth-err'); if (e){ e.textContent = m || ''; e.style.display = m ? '' : 'none'; } }
+function toggleAuthMode(){
+  state.authMode = state.authMode === 'signup' ? 'signin' : 'signup';
+  const su = state.authMode === 'signup';
+  document.getElementById('auth-title').textContent = su ? 'Registrace' : 'Přihlášení';
+  document.getElementById('auth-sub').textContent = su ? 'Vytvoř si účet e-mailem a heslem' : 'Přihlas se e-mailem a heslem';
+  document.getElementById('auth-submit').textContent = su ? 'Zaregistrovat se' : 'Přihlásit se';
+  document.getElementById('auth-switch-txt').textContent = su ? 'Už máš účet?' : 'Nemáš účet?';
+  document.getElementById('auth-switch-btn').textContent = su ? 'Přihlásit se' : 'Zaregistrovat se';
+  setAuthErr('');
+}
+async function mcAuthSubmit(){
+  const email = (document.getElementById('auth-email').value || '').trim();
+  const pass = document.getElementById('auth-pass').value || '';
+  setAuthErr('');
+  if (!email || !pass){ setAuthErr('Vyplň e-mail i heslo.'); return; }
+  if (state.authMode === 'signup' && pass.length < 6){ setAuthErr('Heslo musí mít aspoň 6 znaků.'); return; }
+  const btn = document.getElementById('auth-submit'); btn.disabled = true;
+  try {
+    const res = state.authMode === 'signup'
+      ? await db.auth.signUp({ email, password: pass })
+      : await db.auth.signInWithPassword({ email, password: pass });
+    if (res.error) throw res.error;
+    if (!res.data.session){ setAuthErr('Účet vytvořen — potvrď e-mail a pak se přihlas.'); state.authMode = 'signin'; return; }
+    state._authEmail = email;
+    const p = await loadSessionPlayer();
+    if (p) finishAuth(); else showClaim();
+  } catch(e){ setAuthErr(translateAuthErr(e)); }
+  finally { btn.disabled = false; }
+}
+function translateAuthErr(e){
+  const m = ((e && e.message) || '').toLowerCase();
+  if (m.includes('invalid login')) return 'Špatný e-mail nebo heslo.';
+  if (m.includes('already registered') || m.includes('user already')) return 'Tenhle e-mail už je registrovaný — přihlas se.';
+  if (m.includes('email') && m.includes('invalid')) return 'Neplatný e-mail.';
+  if (m.includes('password')) return 'Heslo musí mít aspoň 6 znaků.';
+  return (e && e.message) || 'Chyba přihlášení.';
+}
+function showClaim(){
+  document.getElementById('auth-form').style.display = 'none';
+  document.getElementById('auth-claim').style.display = '';
+  document.getElementById('login-overlay').classList.add('active');
+  const un = state.players.filter(p => p.aktivni && !p.auth_user_id);
+  document.getElementById('claim-players').innerHTML = un.length ? un.map(p => `
+    <button type="button" class="login-player-btn" onclick="claimPlayer('${p.id}')">
+      <div class="login-avatar" style="background:${p.barva}">${initials(p.jmeno)}</div>
+      <div class="login-name">${p.jmeno}</div>
+    </button>`).join('') : '<p class="login-subtitle">Všechny profily jsou už obsazené. Napiš Markovi.</p>';
+}
+async function claimPlayer(playerId){
+  try {
+    const { data } = await db.auth.getSession();
+    const u = data && data.session && data.session.user; if (!u) return;
+    const { error } = await db.from('players').update({ auth_user_id: u.id, email: state._authEmail || u.email }).eq('id', playerId);
+    if (error) throw error;
+    const p = state.players.find(x => x.id === playerId); if (p){ p.auth_user_id = u.id; p.email = state._authEmail || u.email; }
+    state.currentPlayerId = playerId;
+    finishAuth();
+  } catch(e){ setAuthErr('Chyba: ' + (e.message || e)); }
+}
+function finishAuth(){
+  document.getElementById('login-overlay').classList.remove('active');
+  document.getElementById('auth-form').style.display = '';
+  document.getElementById('auth-claim').style.display = 'none';
+  const em = document.getElementById('auth-email'), pw = document.getElementById('auth-pass');
+  if (em) em.value = ''; if (pw) pw.value = '';
+  updateHeaderMe();
+  renderAllViews();
 }
 
 function toggleAdminActive() {
@@ -3292,7 +3388,8 @@ function showLoginIfNeeded() {
     return false;
   }
   if (!state.currentPlayerId) {
-    renderLoginScreen();
+    document.getElementById('auth-form').style.display = '';
+    document.getElementById('auth-claim').style.display = 'none';
     overlay.classList.add('active');
     document.getElementById('header-me').style.display = 'none';
     return true;
@@ -5513,13 +5610,17 @@ async function loadData() {
       state.habits = habRes.error ? [] : (habRes.data || []);
       state.habitLogs = logRes.error ? [] : (logRes.data || []);
     } catch (_) { state.habits = []; state.habitLogs = []; }
-    // F19: nacist current player z localStorage a overit ze existuje
-    const savedId = localStorage.getItem(CURRENT_PLAYER_KEY);
-    if (savedId && state.players.find(p => p.id === savedId)) {
-      state.currentPlayerId = savedId;
-    } else if (savedId) {
-      // ulozeny hrac uz neexistuje (smazany) - clean
-      localStorage.removeItem(CURRENT_PLAYER_KEY);
+    // M2: přihlášení přes Supabase Auth — najdi hráče napojeného na přihlášený účet
+    const authPlayer = await loadSessionPlayer();
+    if (!authPlayer && !state.isGuest){
+      const { data: ses } = await db.auth.getSession();
+      if (ses && ses.session){
+        // přihlášený účet, ale ještě bez profilu → výběr profilu (claim)
+        document.getElementById('header-me').style.display = 'none';
+        showClaim();
+        document.getElementById('connection-status').textContent = isTest ? 'test' : 'online';
+        return;
+      }
     }
     const needsLogin = showLoginIfNeeded();
     if (!needsLogin) renderAllViews();
