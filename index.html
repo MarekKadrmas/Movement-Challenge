@@ -1716,6 +1716,16 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
             <input type="number" id="habit-freq-cil" inputmode="numeric" min="1" max="7" value="3">
           </div>
         </div>
+        <div class="field">
+          <label>Platí od – do <span class="habit-sublabel">(plánování)</span></label>
+          <div class="field-row">
+            <div class="field"><label class="habit-sublabel">Od</label><input type="date" id="habit-zacatek"></div>
+            <div class="field"><label class="habit-sublabel">Do</label><input type="date" id="habit-konec"></div>
+          </div>
+          <label class="habit-sublabel" style="display:flex;align-items:center;gap:8px;margin-top:8px;cursor:pointer;">
+            <input type="checkbox" id="habit-no-end" checked onchange="onHabitNoEnd()" style="width:auto;margin:0;"> Bez konce (běží napořád)
+          </label>
+        </div>
         <div class="habit-intent" id="habit-intent"></div>
 
         <button type="button" class="habit-more-toggle" id="habit-more-toggle" onclick="toggleHabitMore()">▾ Více možností</button>
@@ -4037,9 +4047,11 @@ function habitLogsFor(habitId, pid){ return state.habitLogs.filter(l => l.habit_
 function isHabitDone(habitId, pid, dateStr){ return state.habitLogs.some(l => l.habit_id === habitId && l.player_id === pid && l.datum === dateStr); }
 function habitStrToDate(s){ const p = (s || todayStr()).split('-').map(Number); return new Date(p[0], p[1]-1, p[2]); }
 function habitDueOn(h, d){
-  // návyk se nepočítá ZPĚTNĚ před dnem, kdy byl založen (jinak by minulost zčervenala)
-  const start = (h.created_at || '').slice(0, 10);
-  if (start && dateToStr(d) < start) return false;
+  // návyk platí jen v naplánovaném rozsahu (zacatek … konec); mimo něj se nepočítá
+  const ds = dateToStr(d);
+  const start = h.zacatek || (h.created_at || '').slice(0, 10);
+  if (start && ds < start) return false;
+  if (h.konec && ds > h.konec) return false;
   if (h.frekvence_typ === 'specific_days') return ((h.frekvence_dny || 0) & (1 << ((d.getDay() + 6) % 7))) !== 0;
   if (h.frekvence_typ === 'weekly' || h.frekvence_typ === 'monthly') return false;  // flexibilní cíl, ne pevný den
   return true;
@@ -4389,8 +4401,13 @@ function renderNavyky(){
     wrap.innerHTML = '<div class="habit-empty"><div class="icon">🎯</div><div class="title">Zatím žádný návyk</div><div>Klepni na „+ Nový návyk" a vyber si z nabídky nebo vytvoř vlastní.</div></div>';
     return;
   }
-  // u zvoleného dne ukazuj jen návyky, které tehdy UŽ existovaly (vznikly v ten den nebo dřív)
-  const existed = mine.filter(h => (h.created_at || '').slice(0, 10) <= sel);
+  // u zvoleného dne ukazuj jen návyky platné v ten den (zacatek … konec)
+  const existed = mine.filter(h => {
+    const start = h.zacatek || (h.created_at || '').slice(0, 10);
+    if (start && sel < start) return false;
+    if (h.konec && sel > h.konec) return false;
+    return true;
+  });
   if (existed.length === 0){
     prog.textContent = '';
     wrap.innerHTML = `<div class="habit-empty"><div class="icon">🌱</div><div class="title">${dayLabel}</div><div>V tento den jsi ještě žádné návyky neměl.</div></div>`;
@@ -4643,6 +4660,7 @@ function duplicateHabit(id){
   document.getElementById('habit-submit-btn').textContent = 'Vytvořit kopii';
   prefillHabitForm(h, null);
   document.getElementById('habit-nazev').value = (h.nazev || '') + ' (kopie)';
+  setHabitDates(null); // kopie = čerstvý plán (od dnes, bez konce)
   showHabitScreen('form');
 }
 function onHabitSearch(v){ state.habitSearch = v; renderHabitPresets(); }
@@ -4679,6 +4697,19 @@ function selectPreset(idx){ prefillHabitForm(null, HABIT_PRESETS[idx]); showHabi
 function startCustomHabit(){ prefillHabitForm(null, null); state.habitIconAuto = true; showHabitScreen('form'); }
 function habitBackToCatalog(){ renderHabitCatTabs(); renderHabitPresets(); showHabitScreen('catalog'); }
 
+function onHabitNoEnd(){
+  const ne = document.getElementById('habit-no-end');
+  const k = document.getElementById('habit-konec');
+  k.disabled = ne.checked;
+  if (ne.checked) k.value = '';
+}
+function setHabitDates(h){
+  document.getElementById('habit-zacatek').value = (h && h.zacatek) ? h.zacatek : todayStr();
+  const ne = document.getElementById('habit-no-end');
+  const k = document.getElementById('habit-konec');
+  if (h && h.konec){ ne.checked = false; k.value = h.konec; } else { ne.checked = true; k.value = ''; }
+  onHabitNoEnd();
+}
 function prefillHabitForm(h, preset){
   document.getElementById('habit-nazev').value = h ? h.nazev : (preset ? preset.nazev : '');
   state.habitIcon = h ? (h.ikona || '🎯') : (preset ? preset.ikona : '🎯');
@@ -4697,6 +4728,7 @@ function prefillHabitForm(h, preset){
   document.getElementById('habit-kotva').value = h ? (h.kotva || '') : '';
   renderHabitKotvaChips();
   document.getElementById('habit-poznamka').value = h ? (h.poznamka || '') : '';
+  setHabitDates(h);
   syncHabitPickers();
   const hasAdv = zapis !== 'check' || state.habitCast || (h && (h.kotva || h.poznamka));
   document.getElementById('habit-more').style.display = hasAdv ? '' : 'none';
@@ -4817,13 +4849,17 @@ async function submitHabit(){
     cilJ = document.getElementById('habit-cil-jednotka').value.trim() || null;
     if (!cilH){ toast('Zadej cílovou hodnotu (číslo)', 'error'); document.getElementById('habit-submit-btn').disabled = false; return; }
   }
+  const zacatek = document.getElementById('habit-zacatek').value || todayStr();
+  const konec = document.getElementById('habit-no-end').checked ? null : (document.getElementById('habit-konec').value || null);
+  if (konec && konec < zacatek){ toast('Konec nesmí být před začátkem', 'error'); return; }
   const payload = {
     player_id: pid, nazev, ikona: state.habitIcon, barva: state.habitColor,
     frekvence_typ: freq, frekvence_cil: cil, frekvence_dny: dny,
     mira_typ: mira, zapis_typ: zapis, cil_hodnota: cilH, cil_jednotka: cilJ,
     cast_dne: state.habitCast || null,
     kotva: document.getElementById('habit-kotva').value.trim() || null,
-    poznamka: document.getElementById('habit-poznamka').value.trim() || null
+    poznamka: document.getElementById('habit-poznamka').value.trim() || null,
+    zacatek, konec
   };
   const btn = document.getElementById('habit-submit-btn'); btn.disabled = true;
   try {
