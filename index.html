@@ -5728,7 +5728,8 @@ async function loadData() {
     // Bez tohoto by se první fetch mohl odeslat ještě jako anonymní → s RLS by vrátil prázdno.
     await db.auth.getSession();
     const [pRes, cRes, aRes, hRes] = await Promise.all([
-      db.from('players').select('*').order('created_at', { ascending: true }),  // F16: stari hraci prvni, novi posledni
+      // H5: NEčíst citlivé sloupce (email, password_hash) — jen to, co appka potřebuje. F16: stari hraci prvni, novi posledni
+      db.from('players').select('id,jmeno,pohlavi,vaha,vyska,max_shyby,max_drep,max_kliky,max_dipy,max_boulder,max_lano,barva,aktivni,created_at,is_admin,auth_user_id').order('created_at', { ascending: true }),
       db.from('cviky').select('*').order('created_at', { ascending: false }),
       db.from('aktivity').select('*').order('created_at', { ascending: false }),
       db.from('player_history').select('*').order('created_at', { ascending: false })
