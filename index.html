@@ -2449,14 +2449,24 @@ async function mcAuthSubmit(){
   finally { btn.disabled = false; }
 }
 function translateAuthErr(e){
+  // Supabase klient nese strojový kód v e.code (= error_code) a text v e.message (= msg).
+  // Mapujeme PRIMÁRNĚ podle e.code (ověřeno proti reálnému Supabase), e.message je jen záloha.
+  // Zásada: když chybu neznáme, ukážeme skutečnou hlášku — radši pravdivou než vymyšlenou.
+  const code = ((e && e.code) || '').toLowerCase();
   const m = ((e && e.message) || '').toLowerCase();
-  if (m.includes('invalid login')) return 'Špatný e-mail nebo heslo.';
-  if (m.includes('auth session missing') || m.includes('session_not_found') || m.includes('token has expired') || m.includes('expired') || (m.includes('invalid') && m.includes('token'))) return 'Odkaz na obnovu vypršel nebo už byl použit. Nech si poslat nový.';
-  if (m.includes('already registered') || m.includes('user already')) return 'Tenhle e-mail už je registrovaný — přihlas se.';
-  if (m.includes('rate limit') || m.includes('too many') || m.includes('429')) return 'Moc pokusů po sobě. Zkus to prosím za pár minut.';
-  if (m.includes('email') && m.includes('invalid')) return 'Neplatný e-mail.';
-  if (m.includes('password')) return 'Heslo musí mít aspoň 6 znaků.';
-  if (m.includes('failed to fetch') || m.includes('network')) return 'Nejde se připojit. Zkontroluj internet a zkus to znovu.';
+  // přihlášení / registrace
+  if (code === 'invalid_credentials' || m.includes('invalid login credentials')) return 'Špatný e-mail nebo heslo.';
+  if (code === 'user_already_exists' || m.includes('already registered')) return 'Tenhle e-mail už je registrovaný — přihlas se.';
+  if (code === 'email_not_confirmed' || m.includes('email not confirmed')) return 'E-mail ještě není potvrzený — mrkni do schránky.';
+  // nastavení nového hesla (pořadí: nejdřív „stejné heslo", teprve pak délka)
+  if (code === 'same_password' || m.includes('should be different from the old')) return 'Nové heslo musí být jiné než to staré.';
+  if (code === 'weak_password' || m.includes('password should be at least') || m.includes('at least 6')) return 'Heslo musí mít aspoň 6 znaků.';
+  // odkaz na obnovu hesla
+  if (code === 'otp_expired' || code === 'bad_jwt' || code === 'session_not_found' || m.includes('auth session missing') || m.includes('link is invalid or has expired') || m.includes('token has expired')) return 'Odkaz na obnovu vypršel nebo už byl použit. Nech si poslat nový.';
+  // limity / e-mail / síť
+  if (code.includes('rate_limit') || m.includes('rate limit') || (m.includes('after') && m.includes('seconds'))) return 'Moc pokusů po sobě. Zkus to prosím za pár minut.';
+  if ((code === 'validation_failed' && m.includes('email')) || m.includes('unable to validate email')) return 'Neplatný e-mail.';
+  if (m.includes('failed to fetch') || m.includes('load failed') || m.includes('network')) return 'Nejde se připojit. Zkontroluj internet a zkus to znovu.';
   return (e && e.message) || 'Něco se nepovedlo. Zkus to prosím znovu.';
 }
 function showClaim(){
