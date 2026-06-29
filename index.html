@@ -1506,7 +1506,20 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
       <div class="auth-err" id="auth-err" style="display:none;"></div>
       <button type="button" class="btn-submit" id="auth-submit" onclick="mcAuthSubmit()">Přihlásit se</button>
       <div class="auth-switch"><span id="auth-switch-txt">Nemáš účet?</span> <button type="button" class="auth-link" id="auth-switch-btn" onclick="toggleAuthMode()">Zaregistrovat se</button></div>
-      <button type="button" class="auth-link" id="auth-forgot-btn" onclick="mcForgotPassword()" style="margin-top:10px;display:block;width:100%;">Zapomněl(a) jsi heslo?</button>
+      <button type="button" class="auth-link" id="auth-forgot-btn" onclick="showForgotForm()" style="margin-top:10px;display:block;width:100%;">Zapomněl(a) jsi heslo?</button>
+    </div>
+    <div id="auth-forgot" style="display:none;">
+      <p class="login-subtitle">Zadej e-mail účtu — pošleme ti na něj odkaz na obnovu hesla.</p>
+      <input type="email" id="auth-forgot-email" class="auth-input" placeholder="E-mail" autocomplete="email" inputmode="email">
+      <div class="auth-err" id="auth-forgot-err" style="display:none;"></div>
+      <button type="button" class="btn-submit" id="auth-forgot-submit" onclick="mcSendReset()">Poslat odkaz</button>
+      <button type="button" class="auth-link" onclick="backToLogin()" style="margin-top:10px;display:block;width:100%;">← Zpět na přihlášení</button>
+    </div>
+    <div id="auth-sent" style="display:none;">
+      <div style="font-size:46px;line-height:1;margin-bottom:10px;">📧</div>
+      <p class="login-subtitle">Odkaz na obnovu hesla jsme poslali na:<br><b id="auth-sent-email" style="color:var(--text);"></b></p>
+      <p class="login-subtitle">Otevři e-mail a klikni na odkaz. Mrkni i do spamu.</p>
+      <button type="button" class="btn-secondary" onclick="backToLogin()" style="margin-top:6px;">Zpět na přihlášení</button>
     </div>
     <div id="auth-claim" style="display:none;">
       <p class="login-subtitle">Který hráč jsi? Vyber svůj profil:</p>
@@ -2435,13 +2448,17 @@ function translateAuthErr(e){
   const m = ((e && e.message) || '').toLowerCase();
   if (m.includes('invalid login')) return 'Špatný e-mail nebo heslo.';
   if (m.includes('already registered') || m.includes('user already')) return 'Tenhle e-mail už je registrovaný — přihlas se.';
+  if (m.includes('rate limit') || m.includes('too many') || m.includes('429')) return 'Moc pokusů po sobě. Zkus to prosím za pár minut.';
   if (m.includes('email') && m.includes('invalid')) return 'Neplatný e-mail.';
   if (m.includes('password')) return 'Heslo musí mít aspoň 6 znaků.';
-  return (e && e.message) || 'Chyba přihlášení.';
+  if (m.includes('failed to fetch') || m.includes('network')) return 'Nejde se připojit. Zkontroluj internet a zkus to znovu.';
+  return (e && e.message) || 'Něco se nepovedlo. Zkus to prosím znovu.';
 }
 function showClaim(){
-  document.getElementById('auth-form').style.display = 'none';
+  hideAllAuth();
   document.getElementById('auth-claim').style.display = '';
+  document.getElementById('auth-title').textContent = 'Vyber profil';
+  document.getElementById('auth-sub').textContent = '';
   document.getElementById('login-overlay').classList.add('active');
   const un = state.players.filter(p => p.aktivni && !p.auth_user_id);
   document.getElementById('claim-players').innerHTML = un.length ? un.map(p => `
@@ -2463,28 +2480,60 @@ async function claimPlayer(playerId){
 }
 function finishAuth(){
   document.getElementById('login-overlay').classList.remove('active');
+  hideAllAuth();
   document.getElementById('auth-form').style.display = '';
-  document.getElementById('auth-claim').style.display = 'none';
   const em = document.getElementById('auth-email'), pw = document.getElementById('auth-pass');
   if (em) em.value = ''; if (pw) pw.value = '';
   updateHeaderMe();
   renderAllViews();
 }
-// zapomenuté heslo: pošle reset odkaz na e-mail
-async function mcForgotPassword(){
-  const email = (document.getElementById('auth-email').value || '').trim();
-  if (!email){ setAuthErr('Zadej e-mail nahoře — pošleme na něj odkaz.'); return; }
+// schová všechny pod-obrazovky přihlášení (form/forgot/sent/claim/reset)
+function hideAllAuth(){ ['auth-form','auth-forgot','auth-sent','auth-claim','auth-reset'].forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; }); }
+// zapomenuté heslo — krok 1: formulář s e-mailem
+function showForgotForm(){
+  hideAllAuth();
+  document.getElementById('auth-forgot').style.display = '';
+  document.getElementById('auth-title').textContent = 'Obnova hesla';
+  document.getElementById('auth-sub').textContent = 'Pošleme ti odkaz na e-mail';
+  const e = (document.getElementById('auth-email').value || '').trim();
+  if (e) document.getElementById('auth-forgot-email').value = e;
+  const f = document.getElementById('auth-forgot-err'); if (f){ f.textContent = ''; f.style.display = 'none'; }
+}
+// zapomenuté heslo — krok 2: odeslat odkaz + jasné potvrzení
+async function mcSendReset(){
+  const email = (document.getElementById('auth-forgot-email').value || '').trim();
+  const se = m => { const el = document.getElementById('auth-forgot-err'); el.textContent = m || ''; el.style.display = m ? '' : 'none'; };
+  se('');
+  if (!email){ se('Zadej e-mail.'); return; }
+  const btn = document.getElementById('auth-forgot-submit'); btn.disabled = true; btn.textContent = 'Posílám…';
   try {
     const { error } = await db.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname });
     if (error) throw error;
-    setAuthErr('');
-    toast('Poslali jsme ti odkaz na e-mail (mrkni i do spamu).', 'success');
-  } catch(e){ setAuthErr(translateAuthErr(e)); }
+    document.getElementById('auth-sent-email').textContent = email;
+    hideAllAuth();
+    document.getElementById('auth-sent').style.display = '';
+    document.getElementById('auth-title').textContent = 'E-mail odeslán ✅';
+    document.getElementById('auth-sub').textContent = '';
+  } catch(e){ se(translateAuthErr(e)); }
+  finally { btn.disabled = false; btn.textContent = 'Poslat odkaz'; }
+}
+// zpět na přihlášení (z forgot/sent)
+function backToLogin(){
+  hideAllAuth();
+  state.authMode = 'signin';
+  document.getElementById('auth-form').style.display = '';
+  document.getElementById('auth-title').textContent = 'Přihlášení';
+  document.getElementById('auth-sub').textContent = 'Přihlas se e-mailem a heslem';
+  document.getElementById('auth-submit').textContent = 'Přihlásit se';
+  document.getElementById('auth-switch-txt').textContent = 'Nemáš účet?';
+  document.getElementById('auth-switch-btn').textContent = 'Zaregistrovat se';
+  document.getElementById('auth-forgot-btn').style.display = 'block';
+  document.getElementById('auth-pass2-wrap').style.display = 'none';
+  setAuthErr('');
 }
 // formulář na nové heslo (po kliknutí na odkaz z e-mailu)
 function showResetForm(){
-  document.getElementById('auth-form').style.display = 'none';
-  document.getElementById('auth-claim').style.display = 'none';
+  hideAllAuth();
   document.getElementById('auth-reset').style.display = '';
   document.getElementById('auth-title').textContent = 'Nové heslo';
   document.getElementById('auth-sub').textContent = 'Zadej si nové heslo k účtu';
@@ -3453,8 +3502,8 @@ function showLoginIfNeeded() {
     return false;
   }
   if (!state.currentPlayerId) {
+    hideAllAuth();
     document.getElementById('auth-form').style.display = '';
-    document.getElementById('auth-claim').style.display = 'none';
     overlay.classList.add('active');
     document.getElementById('header-me').style.display = 'none';
     return true;
