@@ -1902,6 +1902,9 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 
 #view-prehled > :not(#dnesek-mm){display:none!important;}
 .mm{max-width:480px;margin:0 auto;min-height:100dvh;}
+
+body.mm-full .main{padding:0!important;max-width:none!important;}
+body.mm-full{background:#EDF0EC;}
 </style>
 </head>
 <body>
@@ -2181,6 +2184,9 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
   .swat .hex{font-size:10px;color:var(--sec);font-weight:600;}
   .swat .use{font-size:9.5px;color:var(--ter);}
   .typerow{display:flex;gap:28px;flex-wrap:wrap;justify-content:center;align-items:center;max-width:900px;margin:0 auto;}
+
+body.mm-full .main{padding:0!important;max-width:none;}
+body.mm-full{background:#EDF0EC;}
 </style></template>
 
 
@@ -4766,7 +4772,7 @@ function czDayName(d){ return ['Neděle','Pondělí','Úterý','Středa','Čtvrt
 function mmGreet(){ const h=new Date().getHours(); return h<11?'Dobré ráno':(h<18?'Dobrý den':'Dobrý večer'); }
 function mmWeek(){ const a=new Date(); a.setHours(0,0,0,0); const day=a.getDay()||7; const s=new Date(a); s.setDate(a.getDate()-day+1); const e=new Date(s); e.setDate(s.getDate()+6); return {from:dateToStr(s),to:dateToStr(e),start:s,end:e}; }
 function mmGo(v){ const b=document.querySelector('.tb-btn[data-view="'+v+'"]'); if(b) b.click(); }
-function mmChrome(){ const dnesek=state.view==='prehled'; const h=document.querySelector('.header'); if(h) h.style.display=dnesek?'none':''; const f=document.querySelector('.fab-group'); if(f) f.style.display=(dnesek||state.view==='navyky')?'none':''; }
+function mmChrome(){ const dnesek=state.view==='prehled'; document.body.classList.toggle('mm-full', dnesek); const h=document.querySelector('.header'); if(h) h.style.display=dnesek?'none':''; const f=document.querySelector('.fab-group'); if(f) f.style.display=(dnesek||state.view==='navyky')?'none':''; }
 function mmFirst(n){ return String(n||'').split(' ')[0]; }
 
 function renderDnesek(){
