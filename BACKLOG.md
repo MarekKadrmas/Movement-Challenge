@@ -30,6 +30,8 @@
 ## 📌 Menší / průběžné nápady
 - [ ] Sdílené návyky (Phase 2 F52) — návyky napříč hráči.
 - [ ] **Kopírovat návyk na jiné datum / rozsah** (2026-06-26): u existujícího návyku možnost „zkopírovat" — otevře se kalendář a nastavím OD–DO. Varianty: od data v minulosti, bez konce (do nekonečna), nebo ohraničený začátek+konec. Umožní rychle naklonovat návyk na jiné období.
+- [ ] **Calorie tracker / kalorické tabulky** (2026-06-30): sledování kalorií a maker (bílkoviny/sacharidy/tuky), databáze potravin/jídel. KLÍČ = **mega snadné a přívětivé používání** — rychlé přidání jídla (oblíbené nahoře, vyhledávání, nedávná jídla, chytré porce), minimum tapů, čistý denní přehled (snědeno / zbývá / cíl). Vymazlit tak, ať je to radost používat, ne otrava jako u běžných kaloričkových appek. Napojit na pohyb (spálené vs. přijaté). Zvážit vlastní tab nebo sekci v Já.
+- [ ] **In-app návod „jak appku používat" + praktické ukázky** (2026-06-29): průvodce s reálnými use-casy, aby z appky byl skutečně skvělý nástroj a pomocníček, ne jen žebříček. Ukázky: jak si založit a naplánovat návyk, jak rychle zapsat trénink, jak appku využít na vlastní cíl/plán (rehabilitace zranění, nácvik stojky/jednoručky…), jak číst statistiky/rekordy, tipy na udržení konzistence. Forma: onboarding při prvním spuštění + sekce „Návod / Tipy" (v Já) + krátké kontextové nápovědy přímo u funkcí. Cíl: každý hned ví, jak z toho vytěžit maximum.
 - [ ] (sem přibývají další drobnosti)
 
 ## ✅ Hotové milníky (kontext)

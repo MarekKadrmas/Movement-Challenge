@@ -1,12 +1,12 @@
 {
-  "name": "Movement Challenge",
-  "short_name": "Movement",
+  "name": "Momentum",
+  "short_name": "Momentum",
   "description": "Sportovní bodovací výzva pro skupinu kamarádů",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#fafafa",
-  "theme_color": "#fafafa",
+  "background_color": "#F5F6F4",
+  "theme_color": "#F5F6F4",
   "lang": "cs",
   "icons": [
     {
