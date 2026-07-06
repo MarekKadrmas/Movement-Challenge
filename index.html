@@ -2195,16 +2195,6 @@ body.mm-full{background:#EDF0EC;}
 
 
 <div class="test-banner" aria-label="Testovací verze"></div>
-<div id="mm-debug" style="position:fixed;top:0;left:0;z-index:2147483647;background:rgba(220,0,0,.9);color:#fff;font:10px/1.35 monospace;padding:3px 5px;pointer-events:none;white-space:pre;max-width:60vw;"></div>
-<script>
-(function(){function upd(){var d=document.getElementById('mm-debug');if(!d)return;
-var pr=document.createElement('div');pr.style.cssText='position:fixed;top:0;left:0;height:env(safe-area-inset-top);width:1px;';document.body.appendChild(pr);var envTop=Math.round(pr.getBoundingClientRect().height);pr.remove();
-var m=document.querySelector('.main');var mt=m?Math.round(m.getBoundingClientRect().top):'?';var mp=m?getComputedStyle(m).paddingTop:'?';var mm=m?getComputedStyle(m).marginTop:'?';
-var h=document.getElementById('dnesek-mm');var ht=h?Math.round(h.getBoundingClientRect().top):'?';
-var gt='?';if(h&&h.shadowRoot){var g=h.shadowRoot.querySelector('.nav .ttl');if(g)gt=Math.round(g.getBoundingClientRect().top);}
-d.textContent='env-top='+envTop+'  iw='+innerWidth+'  ih='+innerHeight+'\nmain.top='+mt+'  pad='+mp+'  mar='+mm+'\nhost.top='+ht+'  greet.top='+gt;}
-setTimeout(upd,1500);setInterval(upd,1500);})();
-</script>
 
 <header class="header">
   <div class="header-brand">
@@ -4852,7 +4842,7 @@ function renderDnesek(){
   if(sprite) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr"><div class="body">${tpl}</div>${mmBar(0)}</div>`;
   sh.appendChild(w);
-  const scrEl=w.querySelector('.scr'); const z=(Math.max(1,window.innerWidth)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px';
+  const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),430)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px';
   if(!window._mmRz){ window._mmRz=true; window.addEventListener('resize',()=>{ if(state.view==='prehled') renderDnesek(); else if(state.view==='hraci') renderParta(); }); }
 }
 
@@ -5019,7 +5009,7 @@ function renderParta(){
   if(sprite) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr"><div class="body">${tpl}</div>${mmBar(1)}</div>`;
   sh.appendChild(w);
-  const scrEl=w.querySelector('.scr'); const z=(Math.max(1,window.innerWidth)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px';
+  const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),430)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px';
 }
 
 function renderAllViews() {
