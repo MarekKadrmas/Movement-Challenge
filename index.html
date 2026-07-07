@@ -1908,7 +1908,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm{max-width:480px;margin:0 auto;min-height:100dvh;}
 
 body.mm-full .main{padding:0!important;max-width:none!important;}
-html.pwa-standalone body.mm-full .main{margin-top:-42px!important;}
+html.pwa-standalone body.mm-full .main{margin-top:-33px!important;}
 body.mm-full{background:#EDF0EC;}
 </style>
 </head>
@@ -2196,7 +2196,7 @@ body.mm-full{background:#EDF0EC;}
 
 
 <div class="test-banner" aria-label="Testovací verze"></div>
-<div id="mm-ver" style="position:fixed;top:calc(6px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);z-index:2147483647;background:#111;color:#39ff88;font:800 12px/1 monospace;padding:3px 10px;border-radius:9px;pointer-events:none;letter-spacing:1px;">VER 0707·4</div>
+<div id="mm-ver" style="position:fixed;top:calc(6px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);z-index:2147483647;background:#111;color:#39ff88;font:800 12px/1 monospace;padding:3px 10px;border-radius:9px;pointer-events:none;letter-spacing:1px;">VER 0707·5</div>
 <div id="mm-debug" style="position:fixed;top:calc(30px + env(safe-area-inset-top));left:6px;z-index:2147483646;background:rgba(220,0,0,.92);color:#fff;font:10px/1.35 monospace;padding:3px 5px;pointer-events:none;white-space:pre;max-width:72vw;"></div>
 <script>
 (function(){try{if(window.navigator.standalone===true||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches))document.documentElement.classList.add('pwa-standalone');}catch(e){}function upd(){var d=document.getElementById('mm-debug');if(!d)return;
@@ -4850,7 +4850,7 @@ function renderDnesek(){
   sh.innerHTML='';
   if(tplEl) sh.appendChild(tplEl.content.cloneNode(true));
   const ov=document.createElement('style');
-  ov.textContent=':host{display:block;font-family:var(--font-ui);font-size:16px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:92px;}.tb{position:fixed;}';
+  ov.textContent=':host{display:block;font-family:var(--font-ui);font-size:16px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:92px;}.tb{position:fixed;}'+(document.documentElement.classList.contains('pwa-standalone')?'.nav .date{line-height:1.05;}.nav:has(.date) .ttl{margin-top:-3px;}':'');
   sh.appendChild(ov);
   if(sprite) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr"><div class="body">${tpl}</div>${mmBar(0)}</div>`;
@@ -5017,7 +5017,7 @@ function renderParta(){
   sh.innerHTML='';
   if(tplEl) sh.appendChild(tplEl.content.cloneNode(true));
   const ov=document.createElement('style');
-  ov.textContent=':host{display:block;font-family:var(--font-ui);font-size:16px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:92px;}.tb{position:fixed;}';
+  ov.textContent=':host{display:block;font-family:var(--font-ui);font-size:16px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:92px;}.tb{position:fixed;}'+(document.documentElement.classList.contains('pwa-standalone')?'.nav .date{line-height:1.05;}.nav:has(.date) .ttl{margin-top:-3px;}':'');
   sh.appendChild(ov);
   if(sprite) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr"><div class="body">${tpl}</div>${mmBar(1)}</div>`;
