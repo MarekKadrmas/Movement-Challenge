@@ -2196,17 +2196,9 @@ body.mm-full{background:#EDF0EC;}
 
 
 <div class="test-banner" aria-label="Testovací verze"></div>
-<div id="mm-ver" style="position:fixed;top:calc(6px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);z-index:2147483647;background:#111;color:#39ff88;font:800 12px/1 monospace;padding:3px 10px;border-radius:9px;pointer-events:none;letter-spacing:1px;">VER 0707·6</div>
-<div id="mm-debug" style="position:fixed;top:calc(30px + env(safe-area-inset-top));left:6px;z-index:2147483646;background:rgba(220,0,0,.92);color:#fff;font:10px/1.35 monospace;padding:3px 5px;pointer-events:none;white-space:pre;max-width:72vw;"></div>
+<div id="mm-ver" style="position:fixed;bottom:2px;right:5px;z-index:2147483647;color:rgba(0,0,0,.22);font:600 8px monospace;pointer-events:none;">v0707·7</div>
 <script>
-(function(){try{if(window.navigator.standalone===true||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches))document.documentElement.classList.add('pwa-standalone');}catch(e){}function upd(){var d=document.getElementById('mm-debug');if(!d)return;
-var pr=document.createElement('div');pr.style.cssText='position:fixed;top:0;left:0;height:env(safe-area-inset-top);width:1px;';document.body.appendChild(pr);var envTop=Math.round(pr.getBoundingClientRect().height);pr.remove();
-var sa=(window.navigator.standalone===true)||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches);
-var m=document.querySelector('.main');var mt=m?Math.round(m.getBoundingClientRect().top):'?';var mp=m?getComputedStyle(m).paddingTop:'?';
-var h=document.getElementById('dnesek-mm');var ht=h?Math.round(h.getBoundingClientRect().top):'?';
-var gt='?';if(h&&h.shadowRoot){var g=h.shadowRoot.querySelector('.nav .ttl');if(g)gt=Math.round(g.getBoundingClientRect().top);}
-d.textContent='env='+envTop+'  standalone='+sa+'\niw='+innerWidth+' ih='+innerHeight+' sY='+Math.round(window.scrollY)+'\nmain.top='+mt+'  pad='+mp+'\nhost.top='+ht+'  greet.top='+gt;}
-setTimeout(upd,1200);setInterval(upd,1200);})();
+(function(){try{if(window.navigator.standalone===true||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches))document.documentElement.classList.add('pwa-standalone');}catch(e){}})();
 </script>
 
 <header class="header">
