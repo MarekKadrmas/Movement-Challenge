@@ -662,9 +662,9 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
 .modal {
-  background: var(--bg-card); width: 100%; max-width: 480px;
-  border-radius: 20px 20px 0 0;
-  border: 1px solid var(--border); border-bottom: none;
+  background: var(--card); width: 100%; max-width: 480px;
+  border-radius: 22px 22px 0 0;
+  border: none;
   padding: 22px 20px 0;
   height: 90vh;  /* F42: fixed vyska — header + footer staticke, body scrolluje */
   display: flex; flex-direction: column;
@@ -709,47 +709,105 @@ body.guest-mode .fab-group { display: none; }
 body.guest-mode .entry-actions { display: none !important; }
 body.guest-mode .player-card-actions { display: none !important; }
 body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
-.modal-handle { width: 40px; height: 4px; background: var(--border); border-radius: 2px; margin: -10px auto 14px; }
-.modal-title { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 4px; color: var(--text); }
-.modal-subtitle { font-size: 12px; color: var(--text-muted); margin-bottom: 18px; }
+.modal-handle { width: 36px; height: 5px; background: var(--ter); border-radius: 3px; margin: -10px auto 12px; }
+.modal-head-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.modal-close-x { font-size: 24px; line-height: 1; color: var(--ter); cursor: pointer; padding: 2px 4px; flex-shrink: 0; }
+.modal-title { font-size: 19px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 3px; color: var(--label); }
+.modal-subtitle { font-size: 12px; color: var(--sec); margin-bottom: 18px; }
+
+/* F19b: admin banner — momentum .admbar 1:1 */
+.admin-banner {
+  background: #8B6FE018; color: #6a52c0;
+  font-size: 11.5px; font-weight: 700;
+  border-radius: 12px; padding: 8px 13px; margin-bottom: 10px;
+  display: flex; align-items: center; gap: 7px;
+}
+.admin-banner svg { flex-shrink: 0; }
+/* Momentum sprite ikony pouzite v modalu zapisu (mimo .mm shadow scope) */
+#modal svg.i {
+  width: 1em; height: 1em; fill: none; stroke: currentColor; stroke-width: 2.3;
+  stroke-linecap: round; stroke-linejoin: round; vertical-align: -0.14em; flex: 0 0 auto;
+}
 
 .field-group.disabled { opacity: 0.35; pointer-events: none; }
 .field-group { transition: opacity 0.2s; }
 
-.type-selector { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 18px; }
+/* Momentum: 2x2 dlaždice jako mockup "addsheet" (.adds/.addt/.aic/.al) */
+.type-selector { display: grid; grid-template-columns: repeat(2, 1fr); gap: 9px; margin-bottom: 18px; }
 .type-btn {
-  background: var(--bg-card); border: 1px solid var(--border); color: var(--text);
-  padding: 12px 8px; border-radius: 12px; cursor: pointer;
-  font-family: inherit; font-size: 13px; font-weight: 600;
-  transition: all 0.15s; text-align: center;
+  background: var(--card); border: none; color: var(--label);
+  padding: 14px 8px; border-radius: 15px; cursor: pointer;
+  font-family: inherit; text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 7px;
+  box-shadow: var(--shadow);
+  transition: all 0.15s;
 }
-.type-btn .icon { font-size: 18px; display: block; margin-bottom: 4px; }
-.type-btn.active { background: #000; color: #fff; border-color: #000; }
+.type-btn:active { transform: scale(0.97); }
+.type-btn .aic { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-size: 20px; }
+.type-btn .al { font-size: 13px; font-weight: 800; color: var(--label); }
+.type-btn.active { outline: 2px solid var(--green); outline-offset: -2px; }
+
+/* Momentum: dvoukrokovy zapis — KROK 1 (dlazdice, mockup "addsheet") vs KROK 2 (formular, mockup "formcvik"/"formadmin") */
+.modal-title-wrap { display: flex; align-items: center; gap: 6px; }
+.modal-back-x { display: none; font-size: 22px; line-height: 1; color: var(--label); cursor: pointer; padding: 2px 6px 2px 0; }
+#modal.step-2 .modal-back-x { display: inline-flex; }
+
+#modal.step-1 #player-select-field,
+#modal.step-1 #form-cvik,
+#modal.step-1 #form-aktivita,
+#modal.step-1 #form-stretching,
+#modal.step-1 #form-lezeni,
+#modal.step-1 .custom-date-field,
+#modal.step-1 #reward-slot,
+#modal.step-1 .modal-footer,
+#modal.step-1 .modal-subtitle { display: none !important; }
+/* KROK 1 (addsheet): kompaktni sheet u spodu (fit obsah), ne fixnich 90vh */
+#modal.step-1 .modal { height: auto; padding-bottom: calc(22px + env(safe-area-inset-bottom)); }
+
+/* KROK 2: kompaktni segmentovany prepinac typu (mockup .tsel) — tytez .type-btn prvky/handlery, jen jiny vizual */
+#modal.step-2 .type-selector { display: flex; gap: 6px; margin-bottom: 16px; }
+#modal.step-2 .type-btn { flex: 1; flex-direction: row; padding: 9px 4px; border-radius: 999px; gap: 5px; }
+#modal.step-2 .type-btn .aic { width: auto; height: auto; background: none !important; color: inherit !important; font-size: 15px; }
+#modal.step-2 .type-btn .al { font-size: 10px; }
+#modal.step-2 .type-btn.active { background: var(--green); outline: none; box-shadow: 0 6px 14px -4px rgba(15,169,104,.5); }
+#modal.step-2 .type-btn.active .al,
+#modal.step-2 .type-btn.active svg { color: #fff; }
+
+.reward-slot:empty { display: none; }
 
 .field { margin-bottom: 14px; }
-.field label { display: block; font-size: 11px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.06em; }
+.field label { display: block; font-size: 11px; font-weight: 700; color: var(--sec); margin-bottom: 5px; }
 .field input, .field select {
-  width: 100%; background: var(--bg-card); border: 1px solid var(--border); color: var(--text);
-  padding: 13px 14px; border-radius: 10px; font-family: inherit; font-size: 15px;
+  width: 100%; background: var(--card); border: none; color: var(--label);
+  padding: 12px 16px; border-radius: 999px; font-family: inherit; font-size: 14px; font-weight: 600;
+  box-shadow: var(--shadow);
   -webkit-appearance: none; appearance: none;
 }
-.field input:focus, .field select:focus { outline: none; border-color: var(--text); }
+.field input::placeholder { color: var(--ter); font-weight: 500; }
+.field input:focus, .field select:focus { outline: none; box-shadow: 0 0 0 2px var(--green), var(--shadow); }
 .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+/* Momentum: cisla jako ciste pilulky bez OS spinneru (mockup .inpc nema sipky) */
+.field input[type=number]::-webkit-outer-spin-button,
+.field input[type=number]::-webkit-inner-spin-button,
+.serie-row input[type=number]::-webkit-outer-spin-button,
+.serie-row input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.field input[type=number], .serie-row input[type=number] { -moz-appearance: textfield; }
 
-/* Zadavani data — klikatelny trigger + vlastni picker */
-.custom-date-field { margin-top: 8px; padding-top: 12px; border-top: 1px dashed var(--border); }
+/* Zadavani data — klikatelny trigger + vlastni picker (momentum .drange) */
+.custom-date-field { margin-top: 4px; padding-top: 0; border-top: none; }
 .date-trigger {
   display: flex; align-items: center; gap: 10px;
-  padding: 12px 14px; background: var(--bg-card);
-  border: 1px solid var(--border); border-radius: 10px;
+  padding: 10px 16px; background: var(--card);
+  border: none; border-radius: 999px;
+  box-shadow: var(--shadow);
   cursor: pointer; transition: all 0.15s;
-  font-size: 14px; font-weight: 500; color: var(--text);
+  font-size: 12.5px; font-weight: 700; color: var(--label);
   user-select: none;
 }
-.date-trigger:active { transform: scale(0.98); background: var(--bg); }
-.date-trigger .date-icon { font-size: 16px; line-height: 1; }
+.date-trigger:active { transform: scale(0.98); }
+.date-trigger .date-icon { font-size: 14px; line-height: 1; color: var(--sec); }
 .date-trigger .date-text { flex: 1; }
-.date-trigger .date-chevron { font-size: 14px; color: var(--text-muted); }
+.date-trigger .date-chevron { font-size: 14px; color: var(--ter); }
 
 .date-picker-overlay {
   position: fixed; inset: 0; background: rgba(0,0,0,0.5);
@@ -761,7 +819,7 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 }
 .date-picker-overlay.active { opacity: 1; pointer-events: auto; }
 .date-picker {
-  background: var(--bg-card); border-radius: 16px; padding: 14px;
+  background: var(--card); border-radius: 20px; padding: 14px;
   max-width: 340px; width: 100%;
   box-shadow: 0 20px 50px rgba(0,0,0,0.25);
   transform: scale(0.95); transition: transform 0.2s;
@@ -772,17 +830,17 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
   padding-bottom: 10px; margin-bottom: 6px;
 }
 .date-picker-month {
-  font-weight: 700; font-size: 15px; color: var(--text);
+  font-weight: 800; font-size: 15px; color: var(--label);
   text-transform: capitalize;
 }
 .date-picker-nav {
-  width: 34px; height: 34px; border-radius: 8px;
-  background: var(--bg); border: 1px solid var(--border);
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--card); box-shadow: var(--shadow); border: none;
   display: flex; align-items: center; justify-content: center;
-  cursor: pointer; font-size: 18px; color: var(--text);
+  cursor: pointer; font-size: 17px; color: var(--label);
   font-family: inherit; padding: 0;
 }
-.date-picker-nav:active { transform: scale(0.95); background: var(--border); }
+.date-picker-nav:active { transform: scale(0.95); }
 .date-picker-weekdays {
   display: grid; grid-template-columns: repeat(7, 1fr);
   gap: 2px; margin-bottom: 4px;
@@ -798,31 +856,31 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 }
 .date-cell {
   aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
-  font-size: 14px; font-weight: 500;
+  font-size: 13px; font-weight: 600;
   background: transparent; border: 1px solid transparent;
-  border-radius: 8px; cursor: pointer;
-  color: var(--text); transition: all 0.1s;
+  border-radius: 50%; cursor: pointer;
+  color: var(--label); transition: all 0.1s;
   font-family: inherit;
 }
-.date-cell:active { transform: scale(0.92); background: var(--bg); }
-.date-cell.other-month { color: var(--text-dim); opacity: 0.4; }
-.date-cell.today { border-color: var(--text); font-weight: 700; }
-.date-cell.selected { background: var(--accent); color: #fff; border-color: var(--accent); }
-.date-cell.selected.today { border-color: var(--accent); }
-.date-cell.future { opacity: 0.25; cursor: not-allowed; pointer-events: none; }
+.date-cell:active { transform: scale(0.92); }
+.date-cell.other-month { color: var(--ter); opacity: 0.5; }
+.date-cell.today { border-color: var(--green); font-weight: 800; }
+.date-cell.selected { background: var(--green); color: #fff; border-color: var(--green); font-weight: 700; }
+.date-cell.selected.today { border-color: var(--green); }
+.date-cell.future { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
 .date-picker-actions {
   display: flex; gap: 8px; margin-top: 12px;
-  padding-top: 12px; border-top: 1px solid var(--border);
+  padding-top: 12px; border-top: 1px solid var(--sep);
 }
 .date-picker-btn {
-  flex: 1; padding: 10px; border-radius: 10px;
-  background: var(--bg); border: 1px solid var(--border);
-  font-family: inherit; font-size: 13px; font-weight: 600;
-  color: var(--text); cursor: pointer;
+  flex: 1; padding: 10px; border-radius: 999px;
+  background: var(--card); box-shadow: var(--shadow); border: none;
+  font-family: inherit; font-size: 12.5px; font-weight: 700;
+  color: var(--sec); cursor: pointer;
 }
 .date-picker-btn:active { transform: scale(0.98); }
 .date-picker-btn.primary {
-  background: var(--accent); color: #fff; border-color: var(--accent);
+  background: var(--green); color: #fff;
 }
 
 /* F6: Player entries modal */
@@ -904,40 +962,47 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 
 .player-pills { display: flex; gap: 6px; flex-wrap: wrap; }
 .player-pill {
-  padding: 9px 14px; border-radius: 100px; cursor: pointer;
-  font-size: 13px; font-weight: 600;
-  background: var(--bg-card); border: 1px solid var(--border); color: var(--text-muted);
+  padding: 9px 14px; border-radius: 999px; cursor: pointer;
+  font-size: 13px; font-weight: 700;
+  background: var(--card); border: none; color: var(--sec);
+  box-shadow: var(--shadow);
+  display: inline-flex; align-items: center; gap: 6px;
   transition: all 0.15s;
 }
-.player-pill.active { color: #fff; border-color: transparent; }
+.player-pill:active { transform: scale(0.96); }
+.player-pill.active { color: #fff; }
 
 .level-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
 .level-btn {
-  background: var(--bg-card); border: 1px solid var(--border); color: var(--text);
-  padding: 12px 0; border-radius: 10px; cursor: pointer;
-  font-family: inherit; font-weight: 700; font-size: 16px;
+  background: var(--card); border: none; color: var(--sec);
+  padding: 12px 0; border-radius: 999px; cursor: pointer;
+  font-family: inherit; font-weight: 800; font-size: 15px;
+  box-shadow: var(--shadow);
   transition: all 0.15s;
 }
 .level-btn.active { color: #fff; }
-.level-btn.l1.active { background: #22c55e; border-color: #22c55e; }              /* zelena */
-.level-btn.l2.active { background: #84cc16; border-color: #84cc16; }              /* limetkova */
-.level-btn.l3.active { background: #f97316; border-color: #f97316; }              /* oranzova */
-.level-btn.l4.active { background: #ea580c; border-color: #ea580c; }              /* tmava oranzova */
-.level-btn.l5.active { background: #ef4444; border-color: #ef4444; }              /* cervena */
+/* Momentum: jednotny zeleny "on" stav (mockup .pk.on), misto puvodni barevne skaly */
+.level-btn.l1.active { background: var(--green); border-color: var(--green); }
+.level-btn.l2.active { background: var(--green); border-color: var(--green); }
+.level-btn.l3.active { background: var(--green); border-color: var(--green); }
+.level-btn.l4.active { background: var(--green); border-color: var(--green); }
+.level-btn.l5.active { background: var(--green); border-color: var(--green); }
 
-.level-hint { font-size: 11px; color: var(--text-dim); margin-top: 4px; text-align: center; min-height: 14px; }
+.level-hint { font-size: 11px; color: var(--ter); margin-top: 4px; text-align: center; min-height: 14px; }
+/* Momentum: reward bar (mockup .rwbar) — ::before drzi staticky label, JS textContent = body vpravo */
 .level-points-display {
-  margin-top: 8px; padding: 10px;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  text-align: center;
-  font-weight: 700; font-size: 17px;
-  color: var(--text);
+  margin-top: 10px; padding: 9px 18px;
+  border-radius: 999px; border: 1.5px solid transparent;
+  background-image: linear-gradient(var(--card),var(--card)), linear-gradient(115deg,#D6A23A,#0FA968,#3FAEC2,#8A7BCB);
+  background-origin: border-box; background-clip: padding-box, border-box;
+  text-align: right;
+  font-weight: 900; font-size: 17px;
+  color: var(--green);
   display: none;
   font-variant-numeric: tabular-nums;
 }
-.level-points-display.show { display: block; }
+.level-points-display.show { display: flex; align-items: center; justify-content: space-between; }
+.level-points-display::before { content: "Získáš za zápis"; font-size: 12px; font-weight: 700; color: var(--sec); }
 
 .info-box {
   background: #fef3c7;
@@ -952,27 +1017,28 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 }
 .info-box strong { font-weight: 700; }
 
-/* Serie mode */
-.serie-mode-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
+/* Serie mode — momentum .mgrid/.mbtn */
+.serie-mode-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; margin-bottom: 14px; }
 .serie-mode-btn {
-  background: var(--bg-card); border: 1px solid var(--border); color: var(--text);
+  background: var(--card); border: none; color: var(--label);
   padding: 14px 6px; border-radius: 12px; cursor: pointer;
   font-family: inherit; text-align: center;
-  min-height: 120px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 2px;
+  min-height: 108px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 2px;
+  box-shadow: var(--shadow);
   transition: all 0.15s;
 }
-.serie-mode-btn.active { background: #000; color: #fff; border-color: #000; }
-.serie-mode-btn .label { font-size: 12px; font-weight: 700; margin-top: 6px; }
-.serie-mode-btn .label-sub { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
-.serie-mode-btn.active .label-sub { color: rgba(255,255,255,0.7); }
+.serie-mode-btn.active { background: var(--green); color: #fff; box-shadow: 0 6px 14px -4px rgba(15,169,104,.5); }
+.serie-mode-btn .label { font-size: 11px; font-weight: 800; margin-top: 6px; }
+.serie-mode-btn .label-sub { font-size: 8.5px; color: var(--sec); margin-top: 2px; opacity: .85; }
+.serie-mode-btn.active .label-sub { color: rgba(255,255,255,0.75); }
 /* F41: serie-mode ikona velký zaobl. ctverec s cislem/symbolem */
 .serie-mode-icon {
-  width: 40px; height: 40px; border-radius: 10px;
-  background: #dbeafe; color: #1d4ed8;
+  width: 38px; height: 38px; border-radius: 10px;
+  background: var(--track); color: var(--sec);
   display: flex; align-items: center; justify-content: center;
-  font-size: 20px; font-weight: 900;
+  font-size: 19px; font-weight: 900;
 }
-.serie-mode-btn.active .serie-mode-icon { background: rgba(255,255,255,0.18); color: #fff; }
+.serie-mode-btn.active .serie-mode-icon { background: rgba(255,255,255,0.2); color: #fff; }
 .bubble-stack { display: flex; flex-direction: column; gap: 5px; align-items: center; flex: 1; justify-content: center; padding: 4px 0; }
 .bubble-row { display: flex; gap: 4px; align-items: center; }
 .bubble {
@@ -991,61 +1057,63 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 }
 .serie-mode-btn.active .bubble-num { background: #fff; color: #000; }
 
-/* Ruzne serie - radky */
+/* Ruzne serie - radky — momentum .serieh/.serieno/.inpc */
 .serie-row-header {
   display: grid; grid-template-columns: 1fr 1fr 1fr 32px;
-  gap: 10px; margin-bottom: 6px;
+  gap: 10px; margin-bottom: 6px; padding: 0 4px;
 }
 .serie-row-header div {
-  font-size: 11px; font-weight: 600; color: var(--text-muted);
-  text-transform: uppercase; letter-spacing: 0.06em;
+  font-size: 9px; font-weight: 700; color: var(--ter);
+  text-transform: uppercase; letter-spacing: 0.05em;
 }
 .serie-row {
   display: grid; grid-template-columns: 1fr 1fr 1fr 32px;
   gap: 10px; align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 .serie-row .serie-num {
-  height: 48px;
-  background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: 10px;
+  height: 40px;
+  background: var(--card); border: none; box-shadow: var(--shadow);
+  border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  color: var(--text); font-weight: 700; font-size: 17px;
+  color: var(--label); font-weight: 700; font-size: 14px;
   font-variant-numeric: tabular-nums;
 }
 .serie-row input {
-  padding: 14px; font-size: 15px;
-  background: var(--bg-card); border: 1px solid var(--border); color: var(--text);
-  border-radius: 10px; font-family: inherit;
-  width: 100%; height: 48px;
+  padding: 0 14px; font-size: 13px; font-weight: 600;
+  background: var(--card); border: none; color: var(--label);
+  border-radius: 999px; font-family: inherit;
+  width: 100%; height: 40px;
+  box-shadow: var(--shadow);
   -webkit-appearance: none; appearance: none;
   box-sizing: border-box;
 }
-.serie-row input:focus { outline: none; border-color: var(--text); }
+.serie-row input:focus { outline: none; box-shadow: 0 0 0 2px var(--green), var(--shadow); }
 .serie-row .remove-btn {
-  width: 32px; height: 48px; border-radius: 8px;
-  background: transparent; border: 1px solid var(--border);
-  color: var(--text-muted); cursor: pointer;
+  width: 32px; height: 40px; border-radius: 8px;
+  background: transparent; border: none;
+  color: var(--ter); cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  font-size: 16px;
+  font-size: 18px;
 }
 .add-serie-btn {
-  width: 100%; padding: 12px; border-radius: 10px;
-  background: transparent; border: 1px dashed var(--border);
-  color: var(--text-muted); font-family: inherit; font-size: 13px; font-weight: 600;
+  width: 100%; padding: 10px; border-radius: 999px;
+  background: none; border: 1.5px dashed var(--ter);
+  color: var(--green); font-family: inherit; font-size: 13px; font-weight: 700;
   cursor: pointer; margin-top: 4px;
 }
 /* F51: lezení — selecty v řádku cesty + převodní hint */
 .serie-row select {
-  padding: 12px; font-size: 15px;
-  background: var(--bg-card); border: 1px solid var(--border); color: var(--text);
-  border-radius: 10px; font-family: inherit;
-  width: 100%; height: 48px; box-sizing: border-box;
+  padding: 0 12px; font-size: 13px; font-weight: 600;
+  background: var(--card); border: none; color: var(--label);
+  border-radius: 999px; font-family: inherit;
+  width: 100%; height: 40px; box-sizing: border-box;
+  box-shadow: var(--shadow);
   -webkit-appearance: none; appearance: none;
 }
-.serie-row select:focus { outline: none; border-color: var(--text); }
+.serie-row select:focus { outline: none; box-shadow: 0 0 0 2px var(--green), var(--shadow); }
 .lezeni-conv {
-  font-size: 12px; color: var(--text-muted);
+  font-size: 11px; color: var(--sec);
   margin: -2px 0 8px 40px; font-weight: 600;
 }
 #pe-boulder, #pe-lano {
@@ -1262,28 +1330,30 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
   border-radius: 10px; font-family: inherit; font-size: 15px;
 }
 
-/* Tlacitka */
+/* Tlacitka — momentum .submit (velke zelene CTA) */
 .btn-submit {
-  width: 100%; background: #000; color: #fff;
-  border: none; padding: 14px; border-radius: 12px;
-  font-family: inherit; font-size: 15px; font-weight: 700;
-  cursor: pointer; margin-top: 12px;
+  width: 100%; background: var(--green); color: #fff;
+  border: none; padding: 15px; border-radius: 999px;
+  font-family: inherit; font-size: 15px; font-weight: 800;
+  cursor: pointer; margin-top: 2px;
+  box-shadow: 0 10px 24px -8px rgba(15,169,104,.45);
   transition: transform 0.1s;
 }
 .btn-submit:active { transform: scale(0.98); }
-.btn-submit:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .btn-danger {
   width: 100%; background: var(--red); color: #fff;
-  border: none; padding: 13px; border-radius: 12px;
+  border: none; padding: 13px; border-radius: 999px;
   font-family: inherit; font-size: 14px; font-weight: 700;
   cursor: pointer; margin-top: 8px;
+  box-shadow: 0 8px 20px -8px rgba(224,88,75,.45);
 }
 
 .btn-cancel {
-  width: 100%; background: transparent; color: var(--text-muted);
-  border: none; padding: 12px; font-family: inherit; font-size: 14px;
-  cursor: pointer; margin-top: 8px;
+  width: 100%; background: transparent; color: var(--sec);
+  border: none; padding: 12px; font-family: inherit; font-size: 13px; font-weight: 700;
+  cursor: pointer; margin-top: 2px;
 }
 .btn-secondary {
   width: 100%; background: var(--bg-card); color: var(--text);
@@ -2198,7 +2268,7 @@ body.mm-full{background:#EDF0EC;}
 
 
 <div class="test-banner" aria-label="Testovací verze"></div>
-<div id="mm-ver" style="position:fixed;bottom:2px;right:5px;z-index:2147483647;color:rgba(0,0,0,.22);font:600 8px monospace;pointer-events:none;">v0707·9</div>
+<div id="mm-ver" style="position:fixed;bottom:2px;right:5px;z-index:2147483647;color:rgba(0,0,0,.22);font:600 8px monospace;pointer-events:none;">v0707·10</div>
 <script>
 (function(){try{if(window.navigator.standalone===true||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches))document.documentElement.classList.add('pwa-standalone');}catch(e){}})();
 </script>
@@ -2564,30 +2634,43 @@ body.mm-full{background:#EDF0EC;}
 <div class="modal-overlay" id="modal">
   <div class="modal">
     <div class="modal-handle"></div>
-    <div class="modal-title" id="modal-title">Nový záznam</div>
-    <div class="modal-subtitle" id="modal-subtitle">Nejdřív vyber kdo zadává</div>
+    <div class="modal-head-row">
+      <div class="modal-title-wrap">
+        <span class="modal-back-x" id="modal-back-btn" onclick="goToAddStep(1)">‹</span>
+        <div>
+          <div class="modal-title" id="modal-title">Nový záznam</div>
+          <div class="modal-subtitle" id="modal-subtitle">Nejdřív vyber kdo zadává</div>
+        </div>
+      </div>
+      <span class="modal-close-x" onclick="closeModal()">×</span>
+    </div>
 
     <div class="modal-body">
 
     <!-- F19: vyber hrace - skryto pro bezne hrace (predvyplneno), zobrazeno pro admina -->
     <div class="field" id="player-select-field">
-      <label>Kdo zadává <span style="color: var(--accent)">*</span></label>
+      <div class="admin-banner"><svg class="i"><use href="#i-shield"/></svg> Admin — zapisuješ za jiného hráče</div>
+      <label>Za koho <span style="color: var(--accent)">*</span></label>
       <div class="player-pills" id="player-pills"></div>
     </div>
 
     <div class="field-group disabled" id="entry-form">
       <div class="type-selector">
         <button class="type-btn active" data-type="cvik">
-          <span class="icon">💪</span>Cvik
+          <span class="aic" style="background:#34C75920;color:#1f8a52"><svg class="i"><use href="#i-pushup"/></svg></span>
+          <span class="al">Cvik</span>
         </button>
         <button class="type-btn" data-type="aktivita">
-          <span class="icon">🏃</span>Aktivita
+          <span class="aic" style="background:#0A84FF20;color:#0a6cc4"><svg class="i"><use href="#i-run"/></svg></span>
+          <span class="al">Aktivita</span>
         </button>
         <button class="type-btn" data-type="stretching">
-          <span class="icon">🧘</span>Stretching
+          <span class="aic" style="background:#FF9F0A20;color:#c47f1a"><svg class="i"><use href="#i-stretch"/></svg></span>
+          <span class="al">Strečink</span>
         </button>
         <button class="type-btn" data-type="lezeni">
-          <span class="icon">🧗</span>Lezení
+          <span class="aic" style="background:#8B6FE020;color:#6a52c0"><svg class="i"><use href="#i-climb"/></svg></span>
+          <span class="al">Lezení</span>
         </button>
       </div>
 
@@ -2595,10 +2678,10 @@ body.mm-full{background:#EDF0EC;}
         <div class="field">
           <label>Cvik</label>
           <div class="player-pills" id="cvik-pills">
-            <div class="player-pill" data-cvik="Shyby">Shyby</div>
-            <div class="player-pill" data-cvik="Dřep">Dřep</div>
-            <div class="player-pill" data-cvik="Kliky">Kliky</div>
-            <div class="player-pill" data-cvik="Dipy">Dipy</div>
+            <div class="player-pill" data-cvik="Shyby"><svg class="i"><use href="#i-pullup"/></svg> Shyby</div>
+            <div class="player-pill" data-cvik="Dřep"><svg class="i"><use href="#i-squat"/></svg> Dřep</div>
+            <div class="player-pill" data-cvik="Kliky"><svg class="i"><use href="#i-pushup"/></svg> Kliky</div>
+            <div class="player-pill" data-cvik="Dipy"><svg class="i"><use href="#i-dips"/></svg> Dipy</div>
           </div>
         </div>
 
@@ -2631,7 +2714,7 @@ body.mm-full{background:#EDF0EC;}
               <input type="number" id="cvik-single-op" inputmode="numeric" min="1" placeholder="20">
             </div>
             <div class="field">
-              <label>Přidaná váha (kg)</label>
+              <label>Váha navíc (kg)</label>
               <input type="number" id="cvik-single-vaha" inputmode="decimal" min="0" step="0.5" placeholder="0" value="0">
             </div>
           </div>
@@ -2770,6 +2853,7 @@ body.mm-full{background:#EDF0EC;}
           <span class="date-chevron">▾</span>
         </div>
       </div>
+      <div class="reward-slot" id="reward-slot"></div>
     </div>
 
     </div><!-- /modal-body -->
@@ -3115,6 +3199,7 @@ let state = {
   selectedPlayer: null, selectedCvik: null, selectedLevel: null, selectedStretch: null,
   serieMode: 'single', variedSeries: [],
   entryType: 'cvik', view: 'prehled', tab: 'vse',
+  modalStep: 1,  // Momentum dvoukrok: 1 = "Co jsi dělal?" dlaždice, 2 = formulář
   editMode: false, editId: null, editTable: null,
   editorPlayer: null, playerBeingEdited: null,
   selectedDate: null,           // YYYY-MM-DD pro zapis/edit datum
@@ -6211,7 +6296,8 @@ function openModal() {
   } else {
     selField.style.display = '';
   }
-  updateFormDisabled();
+  // Momentum dvoukrok: novy zaznam vzdy zacina na KROKU 1 (dlaždice "Co jsi dělal?")
+  goToAddStep(1);
   document.getElementById('modal').classList.add('active');
   lockBodyScroll();  // F44
 }
@@ -6223,6 +6309,21 @@ function closeModal() {
   state.entryType = 'cvik'; state.editMode = false; state.editId = null; state.editTable = null;
   state.serieMode = 'single'; state.variedSeries = [];
   state.lezeniDisc = 'boulder'; state.lezeniRoutes = [];
+  state.modalStep = 1;
+}
+
+// Momentum dvoukrok: prepnuti mezi KROKEM 1 (vyber typu, dlaždice) a KROKEM 2 (formulář)
+function goToAddStep(step) {
+  state.modalStep = step;
+  const modal = document.getElementById('modal');
+  modal.classList.toggle('step-1', step === 1);
+  modal.classList.toggle('step-2', step === 2);
+  if (step === 1) {
+    document.getElementById('modal-title').textContent = 'Co jsi dělal?';
+  } else {
+    document.getElementById('modal-title').textContent = state.editMode ? 'Upravit záznam' : 'Nový záznam';
+  }
+  updateFormDisabled();
 }
 
 function resetFormFields() {
@@ -6377,6 +6478,26 @@ function getEntryDate() {
   return state.selectedDate || todayStr();
 }
 
+// F20/Momentum: mapa typ -> id "odmenoveho" prvku (level-points-display), ktery se
+// pri prepnuti typu presouva do sdileneho #reward-slot (dole, za datem — jako mockup .rwbar)
+const POINTS_DISPLAY_BY_TYPE = { cvik: 'cvik-points-display', aktivita: 'level-points-display', stretching: 'stretch-points-display', lezeni: 'lezeni-points-display' };
+const POINTS_DISPLAY_HOME = {};  // puvodni (HTML) rodic kazdeho prvku — kam se vrati, kdyz neni aktivni
+
+// Presune odmenovy prvek aktualniho typu do #reward-slot; ostatni vrati domu (do puvodniho
+// form-xxx bloku, kde zustanou skryte spolu s cele skrytym blokem). Reseno presunem elementu
+// (ne jen CSS), aby nezustaval "stale" .show stav napric typy videt ve sdilenem slotu.
+function placePointsDisplay(activeType) {
+  const slot = document.getElementById('reward-slot');
+  if (!slot) return;
+  Object.entries(POINTS_DISPLAY_BY_TYPE).forEach(([type, id]) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (!POINTS_DISPLAY_HOME[id]) POINTS_DISPLAY_HOME[id] = el.parentNode;
+    if (type === activeType) slot.appendChild(el);
+    else if (POINTS_DISPLAY_HOME[id]) POINTS_DISPLAY_HOME[id].appendChild(el);
+  });
+}
+
 function setEntryType(type) {
   state.entryType = type;
   document.querySelectorAll('.type-btn').forEach(b => b.classList.toggle('active', b.dataset.type === type));
@@ -6384,6 +6505,7 @@ function setEntryType(type) {
   document.getElementById('form-aktivita').style.display = type === 'aktivita' ? '' : 'none';
   document.getElementById('form-stretching').style.display = type === 'stretching' ? '' : 'none';
   document.getElementById('form-lezeni').style.display = type === 'lezeni' ? '' : 'none';
+  placePointsDisplay(type);
   if (type === 'cvik') updateCvikPointsPreview();
   if (type === 'lezeni') { if (!state.lezeniRoutes.length) state.lezeniRoutes = [{ grade:'', sys: defaultLezeniSys(), idx:null }]; renderLezeniRoutes(); }
 }
@@ -6555,6 +6677,12 @@ function addVariedSerie() {
 
 function updateFormDisabled() {
   const fg = document.getElementById('entry-form');
+  // KROK 1 (dlaždice typu) musí být vždy klikatelný, i pro admina bez vybraného hráče —
+  // výběr hráče se teď řeší až na KROKU 2 (formadmin banner).
+  if (state.modalStep === 1) {
+    fg.classList.remove('disabled');
+    return;
+  }
   if (state.selectedPlayer) {
     fg.classList.remove('disabled');
     document.getElementById('modal-subtitle').textContent = state.editMode ? 'Změň hodnoty a ulož' : 'Vyber typ a vyplň údaje';
@@ -6586,8 +6714,12 @@ function buildPlayerPills() {
 
 document.querySelectorAll('.type-btn').forEach(btn => {
   btn.addEventListener('click', () => {
-    if (!state.selectedPlayer) return;
+    // Momentum dvoukrok: na KROKU 1 (dlaždice) ještě nemusí být vybraný hráč (admin ho
+    // vybírá až na KROKU 2), proto tu původní guard na state.selectedPlayer nesmí blokovat
+    // volbu typu. Gating "nejdřív hráč, pak pole" zůstává zachované přes #entry-form.disabled
+    // (viz updateFormDisabled) — jen teď platí na KROKU 2 místo před volbou typu.
     setEntryType(btn.dataset.type);
+    if (state.modalStep === 1) goToAddStep(2);
   });
 });
 
@@ -6905,6 +7037,8 @@ function openEditModal(id, type) {
   state.selectedDate = entry.datum || todayStr();
   updateDateTrigger();
   updateCvikPointsPreview();  // F20: zobrazi body v edit rezimu
+  // Momentum dvoukrok: úprava existujícího záznamu jde rovnou na KROK 2 (typ už je daný)
+  goToAddStep(2);
   document.getElementById('modal').classList.add('active');
 }
 
