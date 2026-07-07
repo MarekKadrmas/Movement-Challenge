@@ -1905,6 +1905,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 
 #view-prehled > :not(#dnesek-mm){display:none!important;}
 #view-hraci > :not(#parta-mm){display:none!important;}
+#view-navyky > :not(#navyky-mm){display:none!important;}
 .mm{max-width:480px;margin:0 auto;min-height:100dvh;}
 
 body.mm-full .main{padding:0!important;max-width:none!important;}
@@ -2196,7 +2197,7 @@ body.mm-full{background:#EDF0EC;}
 
 
 <div class="test-banner" aria-label="Testovací verze"></div>
-<div id="mm-ver" style="position:fixed;bottom:2px;right:5px;z-index:2147483647;color:rgba(0,0,0,.22);font:600 8px monospace;pointer-events:none;">v0707·7</div>
+<div id="mm-ver" style="position:fixed;bottom:2px;right:5px;z-index:2147483647;color:rgba(0,0,0,.22);font:600 8px monospace;pointer-events:none;">v0707·8</div>
 <script>
 (function(){try{if(window.navigator.standalone===true||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches))document.documentElement.classList.add('pwa-standalone');}catch(e){}})();
 </script>
@@ -2402,6 +2403,7 @@ body.mm-full{background:#EDF0EC;}
 
   <!-- F52: Návyky (habit tracker) -->
   <div id="view-navyky" style="display:none;">
+  <div class="mm" id="navyky-mm"></div>
     <div class="habit-header">
       <div class="habit-h-title" id="habit-hero-title">Moje návyky</div>
       <span class="habit-today-progress" id="habit-today-progress"></span>
@@ -4782,7 +4784,7 @@ function czDayName(d){ return ['Neděle','Pondělí','Úterý','Středa','Čtvrt
 function mmGreet(){ const h=new Date().getHours(); return h<11?'Dobré ráno':(h<18?'Dobrý den':'Dobrý večer'); }
 function mmWeek(){ const a=new Date(); a.setHours(0,0,0,0); const day=a.getDay()||7; const s=new Date(a); s.setDate(a.getDate()-day+1); const e=new Date(s); e.setDate(s.getDate()+6); return {from:dateToStr(s),to:dateToStr(e),start:s,end:e}; }
 function mmGo(v){ const b=document.querySelector('.tb-btn[data-view="'+v+'"]'); if(b) b.click(); }
-function mmChrome(){ const full=state.view==='prehled'||state.view==='hraci'; document.body.classList.toggle('mm-full', full); const tb=document.getElementById('mc-tabbar'); if(tb) tb.style.display=full?'none':''; const h=document.querySelector('.header'); if(h) h.style.display=full?'none':''; const f=document.querySelector('.fab-group'); if(f) f.style.display=(full||state.view==='navyky')?'none':''; }
+function mmChrome(){ const full=state.view==='prehled'||state.view==='hraci'||state.view==='navyky'; document.body.classList.toggle('mm-full', full); const tb=document.getElementById('mc-tabbar'); if(tb) tb.style.display=full?'none':''; const h=document.querySelector('.header'); if(h) h.style.display=full?'none':''; const f=document.querySelector('.fab-group'); if(f) f.style.display=full?'none':''; }
 function mmFirst(n){ return String(n||'').split(' ')[0]; }
 
 function mmBar(a){
@@ -4848,7 +4850,7 @@ function renderDnesek(){
   const w=document.createElement('div'); w.innerHTML=`<div class="scr"><div class="body">${tpl}</div>${mmBar(0)}</div>`;
   sh.appendChild(w);
   const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),430)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px';
-  if(!window._mmRz){ window._mmRz=true; window.addEventListener('resize',()=>{ if(state.view==='prehled') renderDnesek(); else if(state.view==='hraci') renderParta(); }); }
+  if(!window._mmRz){ window._mmRz=true; window.addEventListener('resize',()=>{ if(state.view==='prehled') renderDnesek(); else if(state.view==='hraci') renderParta(); else if(state.view==='navyky') renderNavykyMM(); }); }
 }
 
 // ============================================================
@@ -5017,9 +5019,186 @@ function renderParta(){
   const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),430)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px';
 }
 
+// ============================================================
+//  MOMENTUM: Návyky (Fáze 4) — reálná data v novém designu
+// ============================================================
+function mmHabitMine(pid){ return pid ? state.habits.filter(h=>h.player_id===pid).sort((a,b)=>(a.poradi-b.poradi)||(new Date(a.created_at)-new Date(b.created_at))) : []; }
+function mmHabitExisted(h, ds){
+  const start = h.zacatek || (h.created_at||'').slice(0,10);
+  if(start && ds<start) return false;
+  if(h.konec && ds>h.konec) return false;
+  return true;
+}
+function mmHabitFreqLabel(h){
+  if(h.frekvence_typ==='specific_days'){
+    const days=HABIT_DEN_NAMES.filter((d,i)=>(h.frekvence_dny||0)&(1<<i));
+    return days.length? days.join(' ') : 'vybrané dny';
+  }
+  if(h.frekvence_typ==='weekly') return `${h.frekvence_cil||1}× týdně`;
+  if(h.frekvence_typ==='monthly') return `${h.frekvence_cil||1}× měsíčně`;
+  return 'denně';
+}
+function mmHabitDoneToday(h, pid, ds){
+  if(h.frekvence_typ==='weekly') return habitWeekCount(h,pid,ds)>=(h.frekvence_cil||1);
+  if(h.frekvence_typ==='monthly') return habitMonthCount(h,pid,ds)>=(h.frekvence_cil||1);
+  return habitIsDoneOn(h,pid,ds);
+}
+function mmHabitSubHtml(h, pid, ds){
+  const freq=mmHabitFreqLabel(h);
+  const parts=[];
+  if(h.frekvence_typ==='weekly'){ parts.push(`${freq} · splněno ${habitWeekCount(h,pid,ds)}/${h.frekvence_cil||1}`); }
+  else if(h.frekvence_typ==='monthly'){ parts.push(`${freq} · splněno ${habitMonthCount(h,pid,ds)}/${h.frekvence_cil||1}`); }
+  else { const st=habitDayStreak(h,pid,ds); parts.push(st>=2?`${freq} · <svg class="i"><use href="#i-flame"/></svg> ${st}`:freq); }
+  const z=habitEffZapis(h);
+  if(z!=='check'){
+    const log=habitLogObj(h.id,pid,ds); const cil=Number(h.cil_hodnota)||0;
+    const val=log?(log.hodnota!=null?Number(log.hodnota):cil):0;
+    parts.push(`${habitFmtNum(val)}/${habitFmtNum(cil)} ${esc(h.cil_jednotka||'')}`.trim());
+  }
+  if(h.kotva) parts.push(`⛓ ${esc(h.kotva)}`);
+  return parts.join(' · ');
+}
+function mmHabitRowHtml(h, pid, ds){
+  const col=safeColor(h.barva); const done=mmHabitDoneToday(h,pid,ds);
+  return `<div class="hbm"><div class="hi" style="background:${col}22">${esc(h.ikona||'🎯')}</div><div class="ht" onclick="openHabitModal('${h.id}')" style="cursor:pointer">${esc(h.nazev)}<small>${mmHabitSubHtml(h,pid,ds)}</small></div><div class="hc ${done?'on':''}" onclick="event.stopPropagation();mmHabitToggle('${h.id}')">${done?'✓':''}</div></div>`;
+}
+function mmHabitWeekStripHtml(pid, mine){
+  const now=new Date(); now.setHours(0,0,0,0);
+  const start=new Date(now); start.setDate(now.getDate()-((now.getDay()+6)%7));
+  const todayS=todayStr();
+  let html='';
+  for(let i=0;i<7;i++){
+    const d=new Date(start); d.setDate(start.getDate()+i);
+    const ds=dateToStr(d);
+    let cls='';
+    if(ds===todayS) cls='on';
+    else if(ds<todayS){ const fr=dayCompletion(pid, mine, d); if(fr!=null && fr>=1) cls='done'; }
+    html+=`<span class="${cls}">${HABIT_DEN_NAMES[i]}</span>`;
+  }
+  return html;
+}
+function mmHabitTabsHtml(tab){
+  return `<div class="tabs"><b class="${tab==='dnes'?'on':''}" onclick="mmHabitSetTab('dnes')">Dnes</b><b class="${tab==='stats'?'on':''}" onclick="mmHabitSetTab('stats')">Statistiky</b></div>`;
+}
+function mmHabitSetTab(t){ state.habitTab=t; renderNavykyMM(); }
+function mmHabitSetStatRange(r){ state.statRange=r; renderNavykyMM(); }
+async function mmHabitToggle(id){ await toggleHabitToday(id); renderNavykyMM(); }
+
+// ----- Statistiky (3.1) — jednoduchá reálná verze uvnitř root Návyků -----
+function mmHabitPeriodDays(range){
+  const now=new Date(); now.setHours(0,0,0,0);
+  if(range==='tyden'){ const s=new Date(now); s.setDate(now.getDate()-((now.getDay()+6)%7)); return {from:s,to:now}; }
+  if(range==='mesic'){ return {from:new Date(now.getFullYear(),now.getMonth(),1), to:now}; }
+  return {from:new Date(now.getFullYear(),0,1), to:now};
+}
+function mmHabitSuccessRate(pid, mine, range){
+  const {from,to}=mmHabitPeriodDays(range);
+  let sum=0,cnt=0; const d=new Date(from);
+  while(d<=to){ const fr=dayCompletion(pid,mine,d); if(fr!=null){ sum+=fr; cnt++; } d.setDate(d.getDate()+1); }
+  return cnt? Math.round(sum/cnt*100) : 0;
+}
+function mmHabitCompletedCount(pid, mine, range){
+  const {from,to}=mmHabitPeriodDays(range);
+  let n=0;
+  mine.forEach(h=>{
+    const d=new Date(from);
+    while(d<=to){ const ds=dateToStr(d); if(mmHabitExisted(h,ds) && habitIsDoneOn(h,pid,ds)) n++; d.setDate(d.getDate()+1); }
+  });
+  return n;
+}
+function mmHabitWeekFrac(h, pid, weekStart){
+  const now=new Date(); now.setHours(0,0,0,0);
+  let sum=0,cnt=0;
+  for(let i=0;i<7;i++){
+    const d=new Date(weekStart); d.setDate(weekStart.getDate()+i);
+    if(d>now) continue;
+    const ds=dateToStr(d);
+    if(!mmHabitExisted(h,ds)) continue;
+    const isWM=h.frekvence_typ==='weekly'||h.frekvence_typ==='monthly';
+    if(!isWM && !habitDueOn(h,d)) continue;
+    cnt++; sum+=habitFractionOn(h,pid,ds);
+  }
+  return cnt? sum/cnt : null;
+}
+function mmHabitYearGridHtml(pid, mine, year){
+  if(!mine.length) return '';
+  const jan1=new Date(year,0,1);
+  const firstMon=new Date(jan1); firstMon.setDate(jan1.getDate()-((jan1.getDay()+6)%7));
+  const now=new Date(); now.setHours(0,0,0,0);
+  let html='';
+  mine.forEach(h=>{
+    const col=safeColor(h.barva);
+    let cells='';
+    for(let w=0; w<52; w++){
+      const ws=new Date(firstMon); ws.setDate(firstMon.getDate()+w*7);
+      const frac = ws>now ? null : mmHabitWeekFrac(h,pid,ws);
+      let bg='var(--track)';
+      if(frac!=null && frac>0){ const op=frac>=0.85?1:(frac>=0.5?.7:(frac>=0.15?.4:.2)); bg=col+Math.round(op*255).toString(16).padStart(2,'0'); }
+      cells+=`<i style="background:${bg}"></i>`;
+    }
+    const doneCount=mmHabitCompletedCount(pid,[h],'rok');
+    html+=`<div class="gr"><div style="display:flex;align-items:center;gap:5px"><span>${esc(h.ikona||'🎯')}</span><span class="nm2">${esc(h.nazev)}</span></div><div class="yg">${cells}</div><div class="ct2">${doneCount}×</div></div>`;
+  });
+  return html;
+}
+function mmHabitStatsHtml(pid, mine){
+  const range=state.statRange||'tyden';
+  const year=new Date().getFullYear();
+  const rate=mmHabitSuccessRate(pid, mine, range);
+  const streak=mine.length?Math.max(0, ...mine.map(h=>habitLongestStreak(h,pid))):0;
+  const done=mmHabitCompletedCount(pid, mine, range);
+  const grid=mmHabitYearGridHtml(pid, mine, year);
+  return `${mmHabitTabsHtml('stats')}
+  <div class="tabs"><b class="${range==='tyden'?'on':''}" onclick="mmHabitSetStatRange('tyden')">Týden</b><b class="${range==='mesic'?'on':''}" onclick="mmHabitSetStatRange('mesic')">Měsíc</b><b class="${range==='rok'?'on':''}" onclick="mmHabitSetStatRange('rok')">Rok</b></div>
+  <div class="stat2"><div class="st"><div class="v">${rate} %</div><div class="k">úspěšnost</div></div><div class="st"><div class="v"><svg class="i"><use href="#i-flame"/></svg> ${streak}</div><div class="k">nejdelší série</div></div><div class="st"><div class="v">${done}</div><div class="k">splněno</div></div></div>
+  <div class="sl"><span>Po návycích · ${year}</span></div>
+  <div class="statg">${grid||'<div style="padding:14px;text-align:center;color:var(--ter);font-size:12px">Zatím žádná data</div>'}</div>
+  <div class="ccap" style="margin-top:8px">1 čtvereček = 1 týden · tmavší = víc splnění</div>`;
+}
+
+function renderNavykyMM(){
+  const host=document.getElementById('navyky-mm'); if(!host) return;
+  const me=state.players.find(p=>p.id===state.currentPlayerId);
+  const meCol=me?safeColor(me.barva):'#2FB170';
+  const pid=state.currentPlayerId;
+  const mine=mmHabitMine(pid);
+  const todayS=todayStr();
+  const existed=mine.filter(h=>mmHabitExisted(h, todayS));
+  const nav=`<div class="nav"><div><div class="ttl">Návyky</div></div><div class="right"><div class="av" style="background:${meCol}22;color:${meCol}">${me?esc(initials(me.jmeno)):'?'}</div><div class="add" onclick="openModal()">＋</div></div></div>`;
+  let body;
+  if(!mine.length){
+    body=`<div class="tabs"><b class="on">Dnes</b><b>Statistiky</b></div><div style="text-align:center;padding:64px 24px;color:var(--sec)"><div style="font-size:38px;margin-bottom:12px;opacity:.85"><svg class="i"><use href="#i-sprout"/></svg></div><div style="font-size:15px;font-weight:700;color:var(--label);margin-bottom:5px">Zatím žádný návyk</div><div style="font-size:12.5px;line-height:1.5;margin-bottom:18px">Založ si první a začni budovat sérii.</div><button class="newbtn" style="max-width:210px;margin:0 auto" onclick="openHabitModal()">＋ Nový návyk</button></div>`;
+  } else if(state.habitTab==='stats'){
+    body=mmHabitStatsHtml(pid, mine);
+  } else {
+    const doneToday=existed.filter(h=>mmHabitDoneToday(h,pid,todayS)).length;
+    const bestStreak=mine.length?Math.max(0, ...mine.map(h=>habitDayStreak(h,pid,todayS))):0;
+    const rows=existed.map(h=>mmHabitRowHtml(h,pid,todayS)).join('');
+    body=`${mmHabitTabsHtml('dnes')}
+    <div class="wks">${mmHabitWeekStripHtml(pid, mine)}</div>
+    <div class="stat2"><div class="st"><div class="v">${doneToday}/${existed.length}</div><div class="k">dnes</div></div><div class="st"><div class="v"><svg class="i"><use href="#i-flame"/></svg> ${bestStreak}</div><div class="k">série</div></div><div class="st"><div class="v">${mine.length}</div><div class="k">návyky</div></div></div>
+    <div class="sl"><span>Dnešní návyky</span></div>
+    ${rows||'<div style="padding:20px;text-align:center;color:var(--ter)">Na dnešek nic naplánováno</div>'}
+    <button class="newbtn" onclick="openHabitModal()">＋ Nový návyk</button>`;
+  }
+  const tpl=nav+body;
+  const sh=host.shadowRoot||host.attachShadow({mode:'open'});
+  const tplEl=document.getElementById('mm-tpl'); const sprite=document.getElementById('momentum-sprite');
+  sh.innerHTML='';
+  if(tplEl) sh.appendChild(tplEl.content.cloneNode(true));
+  const ov=document.createElement('style');
+  ov.textContent=':host{display:block;font-family:var(--font-ui);font-size:16px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:92px;}.tb{position:fixed;}'+(document.documentElement.classList.contains('pwa-standalone')?'.nav .date{line-height:1.05;}.nav:has(.date) .ttl{margin-top:-3px;}.nav:not(:has(.date)){padding-top:15px;}':'');
+  sh.appendChild(ov);
+  if(sprite) sh.appendChild(sprite.cloneNode(true));
+  const w=document.createElement('div'); w.innerHTML=`<div class="scr"><div class="body">${tpl}</div>${mmBar(2)}</div>`;
+  sh.appendChild(w);
+  const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),430)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px';
+}
+
 function renderAllViews() {
   renderDnesek();
   renderParta();
+  renderNavykyMM();
   mmChrome();
   renderWeekLabel();
   updatePeriodUI();
