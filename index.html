@@ -1907,7 +1907,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 #view-hraci > :not(#parta-mm){display:none!important;}
 .mm{max-width:480px;margin:0 auto;min-height:100dvh;}
 
-body.mm-full .main{padding:0!important;padding-top:0!important;max-width:none!important;}
+body.mm-full .main{padding:0!important;padding-top:max(0px,calc(env(safe-area-inset-top) - 30px))!important;max-width:none!important;}
 body.mm-full{background:#EDF0EC;}
 </style>
 </head>
