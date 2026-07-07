@@ -1978,6 +1978,9 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 #view-navyky > :not(#navyky-mm){display:none!important;}
 #view-historie > :not(#ja-mm){display:none!important;}
 .mm{max-width:480px;margin:0 auto;min-height:100dvh;}
+/* F53: podobrazovky (drill-down z hubu Já) — fullscreen overlay, skryte defaultne, otevira mmOpenSub() */
+.mm-sub{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:150;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.mm-sub.open{display:block;}
 
 body.mm-full .main{padding:0!important;max-width:none!important;}
 html.pwa-standalone body.mm-full .main{margin-top:-33px!important;}
@@ -2268,7 +2271,7 @@ body.mm-full{background:#EDF0EC;}
 
 
 <div class="test-banner" aria-label="Testovací verze"></div>
-<div id="mm-ver" style="position:fixed;bottom:2px;right:5px;z-index:2147483647;color:rgba(0,0,0,.22);font:600 8px monospace;pointer-events:none;">v0707·10</div>
+<div id="mm-ver" style="position:fixed;bottom:2px;right:5px;z-index:2147483647;color:rgba(0,0,0,.22);font:600 8px monospace;pointer-events:none;">v0707·11</div>
 <script>
 (function(){try{if(window.navigator.standalone===true||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches))document.documentElement.classList.add('pwa-standalone');}catch(e){}})();
 </script>
@@ -2497,6 +2500,10 @@ body.mm-full{background:#EDF0EC;}
   </div>
 
 </main>
+
+<!-- F53: podobrazovky (drill-down z hubu Já) — reuzitelny pattern, viz mmOpenSub()/mmCloseSub() -->
+<div class="mm mm-sub" id="sub-historie"></div>
+<div class="mm mm-sub" id="sub-rekordy"></div>
 
 <!-- F52: HABIT modal (nový/úprava návyku) -->
 <div class="modal-overlay" id="habit-modal">
@@ -3697,8 +3704,8 @@ function sumRoundedBody(items) {
 // F44: Helper pro lock/unlock body scroll pri jakemkoli otevrenem modalu
 function lockBodyScroll() { document.body.classList.add('modal-open'); }
 function unlockBodyScroll() {
-  // pouze pokud zadny aktivni modal
-  const anyActive = document.querySelector('.modal-overlay.active') || document.querySelector('.date-picker-overlay.active');
+  // pouze pokud zadny aktivni modal (F53: pocita i otevrenou mm-sub podobrazovku)
+  const anyActive = document.querySelector('.modal-overlay.active') || document.querySelector('.date-picker-overlay.active') || document.querySelector('.mm-sub.open');
   if (!anyActive) document.body.classList.remove('modal-open');
 }
 
@@ -4870,7 +4877,7 @@ function renderScoringExplanation() {
 function czDayName(d){ return ['Neděle','Pondělí','Úterý','Středa','Čtvrtek','Pátek','Sobota'][d.getDay()]; }
 function mmGreet(){ const h=new Date().getHours(); return h<11?'Dobré ráno':(h<18?'Dobrý den':'Dobrý večer'); }
 function mmWeek(){ const a=new Date(); a.setHours(0,0,0,0); const day=a.getDay()||7; const s=new Date(a); s.setDate(a.getDate()-day+1); const e=new Date(s); e.setDate(s.getDate()+6); return {from:dateToStr(s),to:dateToStr(e),start:s,end:e}; }
-function mmGo(v){ const b=document.querySelector('.tb-btn[data-view="'+v+'"]'); if(b) b.click(); }
+function mmGo(v){ mmCloseSub(); const b=document.querySelector('.tb-btn[data-view="'+v+'"]'); if(b) b.click(); }
 function mmChrome(){ const full=state.view==='prehled'||state.view==='hraci'||state.view==='navyky'||state.view==='historie'; document.body.classList.toggle('mm-full', full); const tb=document.getElementById('mc-tabbar'); if(tb) tb.style.display=full?'none':''; const h=document.querySelector('.header'); if(h) h.style.display=full?'none':''; const f=document.querySelector('.fab-group'); if(f) f.style.display=full?'none':''; }
 function mmFirst(n){ return String(n||'').split(' ')[0]; }
 
@@ -4937,7 +4944,7 @@ function renderDnesek(){
   const w=document.createElement('div'); w.innerHTML=`<div class="scr"><div class="body">${tpl}</div>${mmBar(0)}</div>`;
   sh.appendChild(w);
   const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),430)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px';
-  if(!window._mmRz){ window._mmRz=true; window.addEventListener('resize',()=>{ if(state.view==='prehled') renderDnesek(); else if(state.view==='hraci') renderParta(); else if(state.view==='navyky') renderNavykyMM(); else if(state.view==='historie') renderJaMM(); }); }
+  if(!window._mmRz){ window._mmRz=true; window.addEventListener('resize',()=>{ if(state.view==='prehled') renderDnesek(); else if(state.view==='hraci') renderParta(); else if(state.view==='navyky') renderNavykyMM(); else if(state.view==='historie') renderJaMM(); if(mmSubOpen==='historie') renderSubHistorie(); else if(mmSubOpen==='rekordy') renderSubRekordy(); }); }
 }
 
 // ============================================================
@@ -5376,10 +5383,9 @@ function renderJaMM(){
   const streak=me?computeStreak(me.id):0;
   const weekWins=me?mmJaWeekWins(me.id):0;
   const prs=me?computePersonalRecords(me.id).slice(0,4):[];
-  const badgeIcon={ most_shyby_day:'i-pullup', 'most_dřep_day':'i-squat', most_kliky_day:'i-pushup', most_dipy_day:'i-dips', most_points_day:'i-trophy', longest_run:'i-run', longest_streak:'i-flame' };
   const badgesHtml=prs.map(r=>{
     const short=r.valueFmt.replace(/ v řadě$/,'').replace(/ bodů$/,' b');
-    return `<div class="bdg"><div class="be"><svg class="i"><use href="#${badgeIcon[r.id]||'i-medal'}"/></svg></div><div class="bl">${esc(short)}</div></div>`;
+    return `<div class="bdg"><div class="be"><svg class="i"><use href="#${mmBadgeIcon(r.id)}"/></svg></div><div class="bl">${esc(short)}</div></div>`;
   }).join('');
   const heatHtml=me?mmJaHeatHtml(me.id):'';
   const feed=mmJaFeedHtml(me?me.id:null, mmJaExtraDays);
@@ -5387,11 +5393,11 @@ function renderJaMM(){
   const nav=`<div class="nav"><div><div class="ttl">Já</div></div><div class="right"><div class="av" style="background:${meCol}22;color:${meCol}">${meIn}</div><div class="add" onclick="openModal()">＋</div></div></div>`;
   const tpl=`${nav}
   <div class="pcard"><div class="pav" style="background:${meCol}22;color:${meCol}">${meIn}</div><div><div class="pn">${me?esc(me.jmeno):'—'}</div><div class="ps">${totalBody} b · <svg class="i"><use href="#i-flame"/></svg> ${streak} ${streakLabel(streak)} · <svg class="i"><use href="#i-trophy"/></svg> ${weekWins}× vítěz týdne</div></div></div>
-  <div class="sl"><span>Rekordy & odznaky</span><a>Vše →</a></div>
+  <div class="sl"><span>Rekordy & odznaky</span><a onclick="mmOpenSub('rekordy')">Vše →</a></div>
   ${prs.length?`<div class="badges">${badgesHtml}</div>`:'<div style="padding:14px;text-align:center;color:var(--ter);font-size:12px">Zatím žádné rekordy</div>'}
   <div class="sl"><span>Moje aktivita · posledních 45 dní</span></div>
   <div class="heatcard"><div class="mh">${heatHtml}</div></div>
-  <div class="sl"><span>Moje záznamy · tento týden</span><a>Celá historie →</a></div>
+  <div class="sl"><span>Moje záznamy · tento týden</span><a onclick="mmOpenSub('historie')">Celá historie →</a></div>
   ${feed.html}
   ${feed.hasMore?'<button class="loadmore" onclick="mmJaLoadMoreFeed()">Načíst starší ↓</button>':''}
   <div class="sl"><span>Nastavení</span></div>
@@ -5409,11 +5415,133 @@ function renderJaMM(){
   const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),430)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px';
 }
 
+// ============================================================
+//  MOMENTUM: podobrazovky (F53) — znovupoužitelný pattern pro drill-down z hubu Já
+//  mmOpenSub(name) / mmCloseSub() ovladaji fullscreen overlay (#sub-<name>, viz .mm-sub CSS).
+//  render funkce pouzivaji STEJNY Shadow DOM vzor jako Dnesek/Parta/Navyky/Ja (mmMountSub()).
+// ============================================================
+let mmSubOpen = null; // null | 'historie' | 'rekordy'
+
+function mmOpenSub(name){
+  const el = document.getElementById('sub-'+name); if(!el) return;
+  mmSubOpen = name;
+  el.classList.add('open');
+  lockBodyScroll();
+  if(name==='historie') renderSubHistorie();
+  else if(name==='rekordy') renderSubRekordy();
+}
+function mmCloseSub(){
+  if(!mmSubOpen) return;
+  const el = document.getElementById('sub-'+mmSubOpen);
+  if(el) el.classList.remove('open');
+  mmSubOpen = null;
+  unlockBodyScroll();
+}
+// Hlavicka podobrazovky — 1:1 backhdr() z mockupu (sipka zpet + centrovany nazev + spacer pro symetrii)
+function mmBackHdr(title){
+  return `<div class="fhd" style="margin-bottom:14px"><span class="fx" style="font-size:27px;cursor:pointer" onclick="mmCloseSub()">‹</span><div class="fttl" style="flex:1;text-align:center">${esc(title)}</div><span style="width:22px"></span></div>`;
+}
+// Sdilena ikona pro typ osobniho rekordu (renderJaMM badges + renderSubRekordy)
+function mmBadgeIcon(id){
+  return ({ most_shyby_day:'i-pullup', 'most_dřep_day':'i-squat', most_kliky_day:'i-pushup', most_dipy_day:'i-dips', most_points_day:'i-trophy', longest_run:'i-run', longest_streak:'i-flame' })[id] || 'i-medal';
+}
+// Datum zaznamu/rekordu -> "dnes" / "včera" / "27. 6." / "27. 6. 2025" (rok jen kdyz ne letos)
+function mmFmtWhen(ds){
+  if(!ds) return '';
+  const today=todayStr();
+  const yd=new Date(today+'T00:00:00'); yd.setDate(yd.getDate()-1);
+  if(ds===today) return 'dnes';
+  if(ds===dateToStr(yd)) return 'včera';
+  const d=new Date(ds+'T00:00:00');
+  return `${d.getDate()}. ${d.getMonth()+1}.${d.getFullYear()===new Date().getFullYear()?'':' '+d.getFullYear()}`;
+}
+function mmRecordCountLabel(n){ if(n===1) return 'záznam'; if(n>=2&&n<=4) return 'záznamy'; return 'záznamů'; }
+// Spolecny mount pro podobrazovky: host.attachShadow + klon mm-tpl/sprite + overlay <style> + zoom — stejny vzor jako u ostatnich 4 render* funkci.
+function mmMountSub(host, tpl, barIdx){
+  const sh=host.shadowRoot||host.attachShadow({mode:'open'});
+  const tplEl=document.getElementById('mm-tpl'); const sprite=document.getElementById('momentum-sprite');
+  sh.innerHTML='';
+  if(tplEl) sh.appendChild(tplEl.content.cloneNode(true));
+  const ov=document.createElement('style');
+  ov.textContent=':host{display:block;font-family:var(--font-ui);font-size:16px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:92px;}.tb{position:fixed;}'+(document.documentElement.classList.contains('pwa-standalone')?'.fhd{padding-top:15px;}':'');
+  sh.appendChild(ov);
+  if(sprite) sh.appendChild(sprite.cloneNode(true));
+  const w=document.createElement('div'); w.innerHTML=`<div class="scr"><div class="body">${tpl}</div>${mmBar(barIdx)}</div>`;
+  sh.appendChild(w);
+  const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),430)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px';
+}
+
+// ----- Celá historie (mockup S.historie „Moje záznamy") — VŠECHNY zaznamy hrace, ne jen tento tyden -----
+let mmSubHistGroups = 20; // kolik dnu (skupin zaznamu) je zobrazeno; "Nacist starsi" pricte dalsich 20
+let mmSubHistCat = 'all'; // vlastni filtr teto podobrazovky (nezavisly na filtru Party), all|cvik|aktivita|stretching
+function mmSubHistTypeLabel(){ return {all:'Vše',cvik:'Cviky',aktivita:'Aktivity',stretching:'Stretching'}[mmSubHistCat]||'Vše'; }
+function mmSubHistCycleType(){ const o=['all','cvik','aktivita','stretching']; mmSubHistCat=o[(o.indexOf(mmSubHistCat)+1)%o.length]; mmSubHistGroups=20; renderSubHistorie(); }
+function mmSubHistMatches(e){
+  if(mmSubHistCat==='all') return true;
+  if(mmSubHistCat==='cvik') return !!e.cvik;
+  if(mmSubHistCat==='stretching') return !e.cvik && isStretchActivity(e);
+  if(mmSubHistCat==='aktivita') return !e.cvik && !isStretchActivity(e);
+  return true;
+}
+function mmSubHistLoadMore(){ mmSubHistGroups+=20; renderSubHistorie(); }
+
+function renderSubHistorie(){
+  const host=document.getElementById('sub-historie'); if(!host) return;
+  const me=state.players.find(p=>p.id===state.currentPlayerId);
+  const pid=me?me.id:null;
+  const all=pid?[...state.cviky.filter(c=>c.player_id===pid).map(c=>({...c,_type:'cvik'})),
+                 ...state.aktivity.filter(a=>a.player_id===pid).map(a=>({...a,_type:'aktivita'}))].filter(e=>e.datum && mmSubHistMatches(e)) : [];
+  const byDay={}; const days=[];
+  all.forEach(e=>{ if(!byDay[e.datum]){ byDay[e.datum]=[]; days.push(e.datum); } byDay[e.datum].push(e); });
+  days.sort((a,b)=>b.localeCompare(a));
+  days.forEach(ds=>byDay[ds].sort((a,b)=>String(b.created_at||'').localeCompare(String(a.created_at||''))));
+  const shown=days.slice(0, mmSubHistGroups);
+  const today=todayStr();
+  let body;
+  if(!days.length){
+    body=`<div style="text-align:center;padding:74px 24px;color:var(--sec)"><div style="font-size:38px;margin-bottom:12px;opacity:.85"><svg class="i"><use href="#i-note"/></svg></div><div style="font-size:15px;font-weight:700;color:var(--label);margin-bottom:5px">Zatím žádné záznamy</div><div style="font-size:12.5px;line-height:1.5">Klepni na ＋ a zapiš první aktivitu.</div></div>`;
+  } else {
+    const totalCount=all.length, totalPts=sumRoundedBody(all);
+    let list='';
+    shown.forEach(ds=>{
+      const d=new Date(ds+'T00:00:00');
+      const lbl = ds===today ? `Dnes · ${czDayName(d).slice(0,2).toLowerCase()} ${d.getDate()}. ${d.getMonth()+1}.` : `${czDayName(d)} ${d.getDate()}. ${d.getMonth()+1}.`;
+      list+=`<div class="recday">${lbl}</div><div class="rec">`;
+      byDay[ds].forEach(e=>{
+        const [bg,fg]=mmJaEntryColors(e);
+        list+=`<div class="frow"><div class="fav" style="background:${bg}22;color:${fg}"><svg class="i"><use href="#${mmEntryIcon(e)}"/></svg></div><div class="fmain">${esc(mmJaCap(mmEntryLabel(e)))}<small>${mmEntryType(e)}</small></div><div class="fpts">+${Math.round(Number(e.body)||0)}</div><div class="edit" onclick="openEditModal('${e.id}','${e._type}')"><svg class="i"><use href="#i-edit"/></svg></div></div>`;
+      });
+      list+='</div>';
+    });
+    body=`<div class="sl"><span>${totalCount} ${mmRecordCountLabel(totalCount)} · ${totalPts} b</span></div>${list}${days.length>shown.length?'<button class="loadmore" onclick="mmSubHistLoadMore()">Načíst starší ↓</button>':''}`;
+  }
+  const tpl = mmBackHdr('Moje záznamy') + `<div class="filterbar"><div class="fpill" onclick="mmSubHistCycleType()"><span class="k">Typ:</span> ${mmSubHistTypeLabel()} <span class="cx">▾</span></div></div>` + body;
+  mmMountSub(host, tpl, 3);
+}
+
+// ----- Rekordy („Vše →" u REKORDY & ODZNAKY v Já) — VŠECHNY osobni rekordy prihlaseneho hrace -----
+function renderSubRekordy(){
+  const host=document.getElementById('sub-rekordy'); if(!host) return;
+  const me=state.players.find(p=>p.id===state.currentPlayerId);
+  const records = me? computePersonalRecords(me.id) : [];
+  let body;
+  if(!records.length){
+    body=`<div style="text-align:center;padding:74px 24px;color:var(--sec)"><div style="font-size:38px;margin-bottom:12px;opacity:.85"><svg class="i"><use href="#i-trophy"/></svg></div><div style="font-size:15px;font-weight:700;color:var(--label);margin-bottom:5px">Zatím žádné rekordy</div><div style="font-size:12.5px;line-height:1.5">Zapiš první trénink a rekordy se objeví tady.</div></div>`;
+  } else {
+    const rows=records.map(r=>`<div class="hlr"><span class="ic" style="background:#E0A23A22;color:#b9701f"><svg class="i"><use href="#${mmBadgeIcon(r.id)}"/></svg></span><div>${esc(r.label)}<small style="display:block;font-size:10.5px;color:var(--sec);font-weight:600">${mmFmtWhen(r.when)}</small></div><b style="margin-left:auto;font-size:12.5px;white-space:nowrap">${esc(r.valueFmt)}</b></div>`).join('');
+    body=`<div class="sl"><span>Všechny tvoje osobní rekordy</span></div><div class="hl">${rows}</div>`;
+  }
+  const tpl = mmBackHdr('Rekordy') + body;
+  mmMountSub(host, tpl, 3);
+}
+
 function renderAllViews() {
   renderDnesek();
   renderParta();
   renderNavykyMM();
   renderJaMM();
+  if(mmSubOpen==='historie') renderSubHistorie();
+  else if(mmSubOpen==='rekordy') renderSubRekordy();
   mmChrome();
   renderWeekLabel();
   updatePeriodUI();
