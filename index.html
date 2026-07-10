@@ -2402,7 +2402,7 @@ body.mm-full{background:#EDF0EC;}
 
 
 <div class="test-banner" aria-label="Testovací verze"></div>
-<div id="mm-ver" style="position:fixed;bottom:2px;right:5px;z-index:2147483647;color:rgba(0,0,0,.22);font:600 8px monospace;pointer-events:none;">v0710·22</div>
+<div id="mm-ver" style="position:fixed;bottom:2px;right:5px;z-index:2147483647;color:rgba(0,0,0,.22);font:600 8px monospace;pointer-events:none;">v0710·23</div>
 <script>
 (function(){try{if(window.navigator.standalone===true||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches))document.documentElement.classList.add('pwa-standalone');}catch(e){}})();
 </script>
@@ -3946,7 +3946,22 @@ function vypocitejBodyLezeni(player, routes) {
   return Math.round(body * 10) / 10;
 }
 
-function initials(name) { return name.substring(0, 2).toUpperCase(); }
+// Ukol 3: kolize iniciál (napr. Martin/Matěj -> oba "MA"). Prvni hrac ve stabilnim poradi state.players
+// si necha default 2 pismena, dalsi kolidujici hrac dostane 1. + prvni dalsi pismeno ("MT") pro rozliseni.
+function initials(name) {
+  const nm = String(name || '').trim();
+  const base = nm.substring(0, 2).toUpperCase();
+  if (!nm || !state.players || state.players.length < 2) return base;
+  const group = state.players.filter(p => p.jmeno && p.jmeno.trim().substring(0, 2).toUpperCase() === base);
+  if (group.length < 2) return base;
+  const idx = group.findIndex(p => p.jmeno.trim() === nm);
+  if (idx <= 0) return base;
+  for (let i = 2; i < nm.length; i++) {
+    const ch = nm[i].toUpperCase();
+    if (/[A-ZÁČĎÉĚÍŇÓŘŠŤÚŮÝŽ]/.test(ch)) return nm[0].toUpperCase() + ch;
+  }
+  return base;
+}
 function startOfWeek() {
   const d = new Date();
   const day = d.getDay() || 7;
@@ -5235,8 +5250,14 @@ function renderDnesek(){
   const mi=board.findIndex(b=>me&&b.id===me.id);
   if(mi>=0&&board[mi+1]){ const c=board[mi+1], dd=myTotal-c.total; if(dd>=0&&dd<=25) feed+=`<div class="hlr"><span class="ic"><svg class="i"><use href="#i-bolt"/></svg></span><div>${esc(mmFirst(c.jmeno))} tě dohání — <b>jen ${dd} b</b> za tebou</div></div>`; }
   const allE=[...state.cviky,...state.aktivity].filter(e=>e.datum).sort((a,b)=>String(b.created_at||b.datum).localeCompare(String(a.created_at||a.datum))).slice(0,4);
-  feed+=allE.map(e=>{ const pl=state.players.find(p=>p.id===e.player_id); const nm=pl?esc(mmFirst(pl.jmeno)):'—'; const col=pl?safeColor(pl.barva):'#888';
-    return `<div class="hlr"><span class="ic" style="background:${col}22;color:${col}"><svg class="i"><use href="#i-dot"/></svg></span><div>${nm} <small>· +${Math.round(Number(e.body)||0)} b</small></div></div>`; }).join('');
+  // Reakcni pilulky (💪🔥👏) — VIZUALNI PLACEHOLDER 1:1 s mockupem, bez akce (reakce = backend, Faze 6).
+  const mmRx='<span class="rx"><svg class="i"><use href="#i-pushup"/></svg><svg class="i"><use href="#i-flame"/></svg><svg class="i"><use href="#i-clap"/></svg></span>';
+  feed+=allE.map(e=>{
+    const pl=state.players.find(p=>p.id===e.player_id); const nm=pl?esc(mmFirst(pl.jmeno)):'—';
+    const rec=mmHighlightRecord(e,pl);
+    const icon=rec?'i-medal':mmEntryIcon(e);
+    const text=rec ? `${nm} ${rec}` : `${nm} · ${esc(mmEntryLabel(e))}<small>· +${Math.round(Number(e.body)||0)} b</small>`;
+    return `<div class="hlr"><span class="ic"><svg class="i"><use href="#${icon}"/></svg></span><div>${text}</div>${mmRx}</div>`; }).join('');
   const dl=czDayName(new Date())+' '+new Date().getDate()+'. '+(new Date().getMonth()+1)+'.';
   const tpl=`<div class="nav"><div><div class="date">${dl}</div><div class="ttl" style="font-size:18px">${mmGreet()}${me?', '+esc(mmFirst(me.jmeno)):''}</div></div><div class="right"><div class="sck"><svg class="i"><use href="#i-flame"/></svg> ${streak}</div><div class="add" onclick="openModal()">＋</div></div></div>
   <div class="hero"><div class="ring" style="background:${conic}"><div class="h"><div><div class="n">${fmtNum(myTotal)}</div><div class="rpct ${trend>=0?'up':''}">${trend>=0?'▲':'▼'} ${Math.abs(trend)} %</div><div class="avg">ø ${fmtNum(avg4)}</div></div></div></div><div class="hs"><div class="hst">Tento týden</div><div class="r"><span class="e"><svg class="i"><use href="#i-calendar"/></svg></span><b>${fmtNum(myTotal)} b</b><small>&nbsp;body ${trend>=0?(`<span class="up">▲${trend} %</span>`):(`<span style="color:var(--red)">▼${Math.abs(trend)} %</span>`)}</small></div><div class="r"><span class="e"><svg class="i"><use href="#i-pullup"/></svg></span><b>${trainings}</b><small>&nbsp;tréninky</small></div><div class="r"><span class="e"><svg class="i"><use href="#i-trophy"/></svg></span><b>${fmtNum(recordDay)} b</b><small>&nbsp;rekord/den</small></div></div></div>
@@ -5276,14 +5297,46 @@ function mmEntryIcon(e){
   if(/plav|swim/.test(n)) return 'i-swim';
   return 'i-shoe';
 }
+// Km na 1 desetinne misto, cesky format (5 / 5,2) — pouze pro zobrazeny label, DB/body se nemeni.
+function mmFmtKm(km){
+  const r=Math.round((Number(km)||0)*10)/10;
+  return Number.isInteger(r) ? String(r) : String(r).replace('.',',');
+}
 function mmEntryLabel(e){
   if(e.cvik) return `${e.cvik.toLowerCase()} ${Math.round(Number(e.opakovani)||0)}×`;
   const lez=mmEntryLez(e);
   if(lez){ const disc=lez.discipline; const primSys=disc==='boulder'?'font':'french'; const grades=(lez.routes||[]).map(r=>{ const row=(r.idx!=null)?lezeniRowAt(disc,r.idx):null; return row?row[primSys]:r.grade; }).filter(Boolean); return `${disc==='boulder'?'boulder':'lano'}${grades[0]?' '+grades[0]:''}`; }
   if(isStretchActivity(e)) return e.nazev||'strečink';
-  return e.nazev||'aktivita';
+  const km=Number(e.km)||0;
+  const base=(e.nazev||'aktivita').toLowerCase();
+  return km>0 ? `${base} ${mmFmtKm(km)} km` : base;
 }
 function mmEntryType(e){ if(e.cvik) return 'cvik'; if(mmEntryLez(e)) return 'lezení'; return 'aktivita'; }
+// Aproximace „překonal rekord" pro Dnesek highlight (S.dnesek „Dění v partě"): stejna logika jako computePersonalRecords
+// (nejvic opakovani/den u cviku, nejdelsi 1 beh u aktivity), ale pocitana ad-hoc jen pro highlight — nic neuklada, DB/body nemeni.
+// FLAG: neresi remizy napric vice zaznamy stejneho dne ani slozitejsi typy (lezeni/strecink) — u tech se pouzije bezny narativ.
+function mmHighlightRecord(e,pl){
+  if(!pl) return null;
+  const verb=pl.pohlavi==='Z'?'překonala':'překonal';
+  if(e.cvik){
+    const perDay={};
+    state.cviky.filter(c=>c.player_id===pl.id&&c.cvik===e.cvik).forEach(c=>{ perDay[c.datum]=(perDay[c.datum]||0)+(Number(c.opakovani)||0); });
+    const vals=Object.values(perDay); const max=vals.length?Math.max(...vals):0;
+    if(max>0 && perDay[e.datum]===max && vals.filter(v=>v===max).length===1){
+      return `${verb} rekord <b>${max}× ${esc(e.cvik.toLowerCase())}</b>`;
+    }
+    return null;
+  }
+  if(!mmEntryLez(e) && !isStretchActivity(e) && mmEntryIcon(e)==='i-run'){
+    const km=Number(e.km)||0;
+    const all=state.aktivity.filter(a=>a.player_id===pl.id&&a.km).map(a=>Number(a.km)||0);
+    const max=all.length?Math.max(...all):0;
+    if(km>0 && km===max && all.filter(v=>v===max).length===1){
+      return `${verb} rekord <b>${mmFmtKm(km)} km</b>`;
+    }
+  }
+  return null;
+}
 
 // F35 filtrovani (stejna logika jako renderLeaderboardTotal): totalPeriod week/month/all + totalCategory
 function mmPartaBoard(){
