@@ -2319,7 +2319,7 @@ body.mm-full{background:#EDF0EC;}
 
 
 <div class="test-banner" aria-label="Testovací verze"></div>
-<div id="mm-ver" style="position:fixed;bottom:2px;right:5px;z-index:2147483647;color:rgba(0,0,0,.22);font:600 8px monospace;pointer-events:none;">v0710·14</div>
+<div id="mm-ver" style="position:fixed;bottom:2px;right:5px;z-index:2147483647;color:rgba(0,0,0,.22);font:600 8px monospace;pointer-events:none;">v0710·15</div>
 <script>
 (function(){try{if(window.navigator.standalone===true||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches))document.documentElement.classList.add('pwa-standalone');}catch(e){}})();
 </script>
@@ -2556,6 +2556,11 @@ body.mm-full{background:#EDF0EC;}
 <!-- F54: podobrazovky drill-down z Parta -->
 <div class="mm mm-sub" id="sub-profil"></div>
 <div class="mm mm-sub" id="sub-rekordyparty"></div>
+<div class="mm mm-sub" id="sub-feed"></div>
+<!-- F55: podobrazovky drill-down z Já — Nastavení (vizuálně kompletní, funkčně neaktivní placeholder) -->
+<div class="mm mm-sub" id="sub-pozvat"></div>
+<div class="mm mm-sub" id="sub-cile"></div>
+<div class="mm mm-sub" id="sub-notifikace"></div>
 
 <!-- F52: HABIT modal (nový/úprava návyku) -->
 <div class="modal-overlay" id="habit-modal">
@@ -5027,7 +5032,7 @@ function renderDnesek(){
   const w=document.createElement('div'); w.innerHTML=`<div class="scr"><div class="body">${tpl}</div>${mmBar(0)}</div>`;
   sh.appendChild(w);
   const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),430)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px';
-  if(!window._mmRz){ window._mmRz=true; window.addEventListener('resize',()=>{ if(state.view==='prehled') renderDnesek(); else if(state.view==='hraci') renderParta(); else if(state.view==='navyky') renderNavykyMM(); else if(state.view==='historie') renderJaMM(); if(mmSubOpen==='historie') renderSubHistorie(); else if(mmSubOpen==='rekordy') renderSubRekordy(); else if(mmSubOpen==='bodovani') renderSubBodovani(); else if(mmSubOpen==='profil') renderSubProfil(state.mmSubProfilId); else if(mmSubOpen==='rekordyparty') renderSubRekordyParty(); }); }
+  if(!window._mmRz){ window._mmRz=true; window.addEventListener('resize',()=>{ if(state.view==='prehled') renderDnesek(); else if(state.view==='hraci') renderParta(); else if(state.view==='navyky') renderNavykyMM(); else if(state.view==='historie') renderJaMM(); if(mmSubOpen==='historie') renderSubHistorie(); else if(mmSubOpen==='rekordy') renderSubRekordy(); else if(mmSubOpen==='bodovani') renderSubBodovani(); else if(mmSubOpen==='profil') renderSubProfil(state.mmSubProfilId); else if(mmSubOpen==='rekordyparty') renderSubRekordyParty(); else if(mmSubOpen==='feed') renderSubFeed(); else if(mmSubOpen==='pozvat') renderSubPozvat(); else if(mmSubOpen==='cile') renderSubCile(); else if(mmSubOpen==='notifikace') renderSubNotifikace(); }); }
 }
 
 // ============================================================
@@ -5179,6 +5184,7 @@ function renderParta(){
   <div class="sl"><span>Aktivita party</span><a>celý rok →</a></div>
   <div class="heatcard"><div class="hbnav"><span class="hbarr" onclick="mmPartaHeatMove(1)">‹</span><span class="hbrange">${heatLabel}</span><span class="hbarr" onclick="mmPartaHeatMove(-1)">›</span><span class="hbtoday" onclick="mmPartaHeatToday()">⟳ Dnes</span></div>${heatHtml}</div>
   <div class="hbm" style="margin-top:13px;padding:6px 12px;cursor:pointer" onclick="mmOpenSub('rekordyparty')"><div class="hi" style="background:#E0A23A22;width:27px;height:27px;font-size:14px"><svg class="i"><use href="#i-medal"/></svg></div><div class="ht">Rekordy & maximálky všech<small>všichni hráči na jednom místě</small></div><span class="rx" style="color:var(--ter);font-size:16px">›</span></div>
+  <div class="hbm" style="margin-top:8px;padding:6px 12px;cursor:pointer" onclick="mmOpenSub('feed')"><div class="hi" style="background:#2C97D622;width:27px;height:27px;font-size:14px"><svg class="i"><use href="#i-comment"/></svg></div><div class="ht">Dění v partě<small>reakce a komentáře k zápisům</small></div><span class="rx" style="color:var(--ter);font-size:16px">›</span></div>
   <div class="sl"><span>Naposledy · dnes</span><a>celá historie →</a></div>
   ${feed.html}
   ${feed.hasMore?'<button class="loadmore" onclick="mmPartaLoadMoreFeed()">Načíst starší ↓</button>':''}`;
@@ -5484,7 +5490,7 @@ function renderJaMM(){
   ${feed.html}
   ${feed.hasMore?'<button class="loadmore" onclick="mmJaLoadMoreFeed()">Načíst starší ↓</button>':''}
   <div class="sl"><span>Nastavení</span></div>
-  <div class="hl"><div class="hlr"><span class="ic"><svg class="i"><use href="#i-shield"/></svg></span><div>Admin režim<small style="display:block;font-size:10.5px;color:var(--sec);font-weight:600">zapisovat a upravovat za druhé</small></div><div class="sw ${adminOn?'on':''}" onclick="toggleAdminActive()"><i></i></div></div><div class="hlr"><span class="ic"><svg class="i"><use href="#i-users"/></svg></span><div>Pozvat kamaráda<small style="display:block;font-size:10.5px;color:var(--sec);font-weight:600">vytvoř profil + párovací kód</small></div><span class="rx" style="color:var(--ter);font-size:16px">›</span></div><div class="hlr"><span class="ic"><svg class="i"><use href="#i-target"/></svg></span><div>Cíle & ochrana série</div><span class="rx" style="color:var(--ter);font-size:16px">›</span></div><div class="hlr" onclick="openPlayerEdit('${me?me.id:''}')"><span class="ic"><svg class="i"><use href="#i-edit"/></svg></span><div>Upravit profil</div><span class="rx" style="color:var(--ter);font-size:16px">›</span></div><div class="hlr" onclick="mmOpenSub('bodovani')"><span class="ic"><svg class="i"><use href="#i-calc"/></svg></span><div>Jak se boduje</div><span class="rx" style="color:var(--ter);font-size:16px">›</span></div><div class="hlr"><span class="ic"><svg class="i"><use href="#i-bell"/></svg></span><div>Notifikace</div><span class="rx" style="color:var(--ter);font-size:16px">›</span></div><div class="hlr" onclick="logoutPlayer()"><span class="ic"><svg class="i"><use href="#i-logout"/></svg></span><div>Odhlásit se</div><span class="rx" style="color:var(--ter);font-size:16px">›</span></div></div>`;
+  <div class="hl"><div class="hlr"><span class="ic"><svg class="i"><use href="#i-shield"/></svg></span><div>Admin režim<small style="display:block;font-size:10.5px;color:var(--sec);font-weight:600">zapisovat a upravovat za druhé</small></div><div class="sw ${adminOn?'on':''}" onclick="toggleAdminActive()"><i></i></div></div><div class="hlr" onclick="mmOpenSub('pozvat')"><span class="ic"><svg class="i"><use href="#i-users"/></svg></span><div>Pozvat kamaráda<small style="display:block;font-size:10.5px;color:var(--sec);font-weight:600">vytvoř profil + párovací kód</small></div><span class="rx" style="color:var(--ter);font-size:16px">›</span></div><div class="hlr" onclick="mmOpenSub('cile')"><span class="ic"><svg class="i"><use href="#i-target"/></svg></span><div>Cíle & ochrana série</div><span class="rx" style="color:var(--ter);font-size:16px">›</span></div><div class="hlr" onclick="openPlayerEdit('${me?me.id:''}')"><span class="ic"><svg class="i"><use href="#i-edit"/></svg></span><div>Upravit profil</div><span class="rx" style="color:var(--ter);font-size:16px">›</span></div><div class="hlr" onclick="mmOpenSub('bodovani')"><span class="ic"><svg class="i"><use href="#i-calc"/></svg></span><div>Jak se boduje</div><span class="rx" style="color:var(--ter);font-size:16px">›</span></div><div class="hlr" onclick="mmOpenSub('notifikace')"><span class="ic"><svg class="i"><use href="#i-bell"/></svg></span><div>Notifikace</div><span class="rx" style="color:var(--ter);font-size:16px">›</span></div><div class="hlr" onclick="logoutPlayer()"><span class="ic"><svg class="i"><use href="#i-logout"/></svg></span><div>Odhlásit se</div><span class="rx" style="color:var(--ter);font-size:16px">›</span></div></div>`;
   const sh=host.shadowRoot||host.attachShadow({mode:'open'});
   const tplEl=document.getElementById('mm-tpl'); const sprite=document.getElementById('momentum-sprite');
   sh.innerHTML='';
@@ -5503,7 +5509,7 @@ function renderJaMM(){
 //  mmOpenSub(name) / mmCloseSub() ovladaji fullscreen overlay (#sub-<name>, viz .mm-sub CSS).
 //  render funkce pouzivaji STEJNY Shadow DOM vzor jako Dnesek/Parta/Navyky/Ja (mmMountSub()).
 // ============================================================
-let mmSubOpen = null; // null | 'historie' | 'rekordy' | 'bodovani' | 'profil' | 'rekordyparty' — nejvrchnejsi otevrena podobrazovka
+let mmSubOpen = null; // null | 'historie' | 'rekordy' | 'bodovani' | 'profil' | 'rekordyparty' | 'feed' | 'pozvat' | 'cile' | 'notifikace' — nejvrchnejsi otevrena podobrazovka
 let mmSubStack = []; // F54: podpora vnoreni (napr. profil -> rekordyparty, viz S.profil odkaz "Rekordy & maximálky všech"), polozky {name, arg}
 
 function mmRenderSub(name, arg){
@@ -5512,6 +5518,10 @@ function mmRenderSub(name, arg){
   else if(name==='bodovani') renderSubBodovani();
   else if(name==='profil') renderSubProfil(arg);
   else if(name==='rekordyparty') renderSubRekordyParty();
+  else if(name==='feed') renderSubFeed();
+  else if(name==='pozvat') renderSubPozvat();
+  else if(name==='cile') renderSubCile();
+  else if(name==='notifikace') renderSubNotifikace();
 }
 function mmOpenSub(name, arg){
   const el = document.getElementById('sub-'+name); if(!el) return;
@@ -5773,6 +5783,42 @@ function renderSubRekordyParty(){
   mmMountSub(host, tpl, 1);
 }
 
+// ----- Dění v partě / Feed s reakcemi (mockup S.feed, 2.6) — VIZUÁLNÍ PLACEHOLDER 1:1, funkce zatím neexistuje (reakce/komentáře = net-new backend, Fáze 6) -----
+// Vstup: hbm řádek v renderParta(). Reakce/přidání/rozbalení komentářů jsou čistě vizuální ukázková data z mockupu, bez onclick (no-op).
+function renderSubFeed(){
+  const host=document.getElementById('sub-feed'); if(!host) return;
+  const body = `<div class="fdc"><div class="fdh"><span class="lav" style="width:30px;height:30px;background:#E05B4B22;color:#c0392b;font-size:10px">MA</span><div style="flex:1"><b>Martin</b> · běh 6 km<div style="font-size:11px;color:var(--sec)">dnes 7:20</div></div><b style="color:var(--green);font-size:15px">+48</b></div><div class="fdbar"><span class="rem on"><svg class="i"><use href="#i-pushup"/></svg> 3</span><span class="rem"><svg class="i"><use href="#i-flame"/></svg> 2</span><span class="rem"><svg class="i"><use href="#i-clap"/></svg></span><span class="radd">＋</span><span class="ctog"><svg class="i"><use href="#i-comment"/></svg> 2<span class="newdot"></span></span></div></div><div class="fdc"><div class="fdh"><span class="lav" style="width:30px;height:30px;background:#8B6FE022;color:#6a52c0;font-size:10px">PÉ</span><div style="flex:1"><b>Péťa</b> · boulder V6<div style="font-size:11px;color:var(--sec)">dnes 6:10</div></div><b style="color:var(--green);font-size:15px">+95</b></div><div class="fdbar"><span class="rem on"><svg class="i"><use href="#i-pushup"/></svg> 4</span><span class="rem on"><svg class="i"><use href="#i-flame"/></svg> 1</span><span class="rem"><svg class="i"><use href="#i-clap"/></svg></span><span class="radd">＋</span><span class="ctog"><svg class="i"><use href="#i-comment"/></svg> 2 ▴</span></div><div class="fdcoms"><div class="fdcom"><b>Mára:</b> Frajer! <svg class="i"><use href="#i-flame"/></svg></div><div class="fdcom"><b>Janča:</b> Ukaž fotku <svg class="i"><use href="#i-camera"/></svg></div><div class="fdadd">Napiš komentář…</div></div></div><div class="fdc"><div class="fdh"><span class="lav" style="width:30px;height:30px;background:#2FB17022;color:#1f8a52;font-size:10px">MÁ</span><div style="flex:1"><b>Mára</b> · kliky 50×<div style="font-size:11px;color:var(--sec)">včera 21:10</div></div><b style="color:var(--green);font-size:15px">+35</b></div><div class="fdbar"><span class="rem"><svg class="i"><use href="#i-pushup"/></svg></span><span class="rem"><svg class="i"><use href="#i-flame"/></svg></span><span class="rem"><svg class="i"><use href="#i-clap"/></svg></span><span class="radd">＋</span><span class="ctog"><svg class="i"><use href="#i-comment"/></svg></span></div></div>`;
+  const tpl = mmBackHdr('Dění v partě') + body;
+  mmMountSub(host, tpl, 1);
+}
+
+// ----- Pozvat kamaráda (mockup S.pozvat, 4.6) — VIZUÁLNÍ PLACEHOLDER 1:1, párovací kód generátor zatím neexistuje (net-new backend, Fáze 6) -----
+// Vstup: Já → Nastavení → Pozvat kamaráda. Jméno/kód jsou ukázková data z mockupu, "Sdílet kód" bez akce (no-op).
+function renderSubPozvat(){
+  const host=document.getElementById('sub-pozvat'); if(!host) return;
+  const body = `<div class="info" style="margin-top:2px">Vytvoř profil pro nového hráče. Pošli mu párovací kód — zadá ho při prvním přihlášení a profil bude jeho.</div><div class="fld" style="margin-top:12px"><label>Jméno hráče</label><div class="inp">Kuba</div></div><div class="sl" style="margin-top:6px"><span>Párovací kód</span></div><div style="background:var(--card);box-shadow:var(--shadow);border-radius:16px;padding:18px;text-align:center"><div style="font-size:30px;font-weight:900;letter-spacing:.12em;color:var(--green)">X7-K2P9</div><div class="pbcap" style="text-align:center;margin-top:6px">Platí 24 h · pošli ho Kubovi</div></div><div class="submit"><svg class="i"><use href="#i-share"/></svg> Sdílet kód</div>`;
+  const tpl = mmBackHdr('Pozvat kamaráda') + body;
+  mmMountSub(host, tpl, 3);
+}
+
+// ----- Cíle & ochrana série (mockup S.cile, 4.5) — VIZUÁLNÍ PLACEHOLDER 1:1, týdenní cíle/streak-freeze zatím neexistují (net-new backend, Fáze 6) -----
+// Vstup: Já → Nastavení → Cíle & ochrana série. Progress/toggle jsou ukázková data; přepínač "Ochrana série" je čistě vizuální (lokální toggle, nic se neukládá).
+function renderSubCile(){
+  const host=document.getElementById('sub-cile'); if(!host) return;
+  const body = `<div class="sl"><span>Týdenní cíl</span></div><div style="background:var(--card);box-shadow:var(--shadow);border-radius:16px;padding:14px"><div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700"><span>Tento týden</span><span>380 / 500 b</span></div><div class="pbtrack" style="margin-top:9px"><div class="pbfill" style="width:76%"></div></div><div class="pbcap">Ještě 120 b do splnění cíle <svg class="i"><use href="#i-target"/></svg></div></div><div class="hbm" style="margin-top:10px"><div class="hi" style="background:#2FB17022;width:27px;height:27px;font-size:14px"><svg class="i"><use href="#i-target"/></svg></div><div class="ht">Změnit týdenní cíl<small>teď 500 b / týden</small></div><span class="rx" style="color:var(--ter);font-size:16px">›</span></div><div class="sl" style="margin-top:14px"><span>Ochrana série</span></div><div class="hl"><div class="hlr"><span class="ic"><svg class="i"><use href="#i-snow"/></svg></span><div>Zapnuto<small style="display:block;font-size:10.5px;color:var(--sec);font-weight:600">když vynecháš den, série se nezlomí</small></div><div class="sw on" onclick="this.classList.toggle('on')"><i></i></div></div></div><div class="info" style="margin-top:8px">Máš <b>1 ochranu</b> na tento týden — použije se automaticky. Doplní se každé pondělí.</div>`;
+  const tpl = mmBackHdr('Cíle & ochrana série') + body;
+  mmMountSub(host, tpl, 3);
+}
+
+// ----- Notifikace (mockup S.notifikace, 4.4) — VIZUÁLNÍ PLACEHOLDER 1:1, push notifikace / service worker zatím neexistují (Fáze 7) -----
+// Vstup: Já → Nastavení → Notifikace. Přepínače jsou čistě vizuální (lokální toggle, nic se neukládá, žádný skutečný push).
+function renderSubNotifikace(){
+  const host=document.getElementById('sub-notifikace'); if(!host) return;
+  const body = `<div class="sl"><span>Co ti má appka hlásit</span></div><div class="hl"><div class="hlr"><span class="ic"><svg class="i"><use href="#i-trophy"/></svg></span><div>Liga týdne končí<small style="display:block;font-size:10.5px;color:var(--sec);font-weight:600">den před uzávěrkou</small></div><div class="sw on" onclick="this.classList.toggle('on')"><i></i></div></div><div class="hlr"><span class="ic"><svg class="i"><use href="#i-bolt"/></svg></span><div>Parťák tě dohnal<small style="display:block;font-size:10.5px;color:var(--sec);font-weight:600">někdo tě v žebříčku předběhl</small></div><div class="sw on" onclick="this.classList.toggle('on')"><i></i></div></div><div class="hlr"><span class="ic"><svg class="i"><use href="#i-comment"/></svg></span><div>Reakce a komentáře<small style="display:block;font-size:10.5px;color:var(--sec);font-weight:600">na tvoje záznamy</small></div><div class="sw on" onclick="this.classList.toggle('on')"><i></i></div></div><div class="hlr"><span class="ic"><svg class="i"><use href="#i-crown"/></svg></span><div>Vítěz týdne<small style="display:block;font-size:10.5px;color:var(--sec);font-weight:600">kdo vyhrál ligu</small></div><div class="sw on" onclick="this.classList.toggle('on')"><i></i></div></div><div class="hlr"><span class="ic"><svg class="i"><use href="#i-bell"/></svg></span><div>Připomínka návyků<small style="display:block;font-size:10.5px;color:var(--sec);font-weight:600">každý den ve 20:00</small></div><div class="sw" onclick="this.classList.toggle('on')"><i></i></div></div></div>`;
+  const tpl = mmBackHdr('Notifikace') + body;
+  mmMountSub(host, tpl, 3);
+}
+
 function renderAllViews() {
   renderDnesek();
   renderParta();
@@ -5783,6 +5829,10 @@ function renderAllViews() {
   else if(mmSubOpen==='bodovani') renderSubBodovani();
   else if(mmSubOpen==='profil') renderSubProfil(state.mmSubProfilId);
   else if(mmSubOpen==='rekordyparty') renderSubRekordyParty();
+  else if(mmSubOpen==='feed') renderSubFeed();
+  else if(mmSubOpen==='pozvat') renderSubPozvat();
+  else if(mmSubOpen==='cile') renderSubCile();
+  else if(mmSubOpen==='notifikace') renderSubNotifikace();
   mmChrome();
   renderWeekLabel();
   updatePeriodUI();
