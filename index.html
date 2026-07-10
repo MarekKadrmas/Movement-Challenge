@@ -2335,7 +2335,7 @@ body.mm-full{background:#EDF0EC;}
 
 
 <div class="test-banner" aria-label="Testovací verze"></div>
-<div id="mm-ver" style="position:fixed;bottom:2px;right:5px;z-index:2147483647;color:rgba(0,0,0,.22);font:600 8px monospace;pointer-events:none;">v0710·16</div>
+<div id="mm-ver" style="position:fixed;bottom:2px;right:5px;z-index:2147483647;color:rgba(0,0,0,.22);font:600 8px monospace;pointer-events:none;">v0710·17</div>
 <script>
 (function(){try{if(window.navigator.standalone===true||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches))document.documentElement.classList.add('pwa-standalone');}catch(e){}})();
 </script>
@@ -2577,6 +2577,9 @@ body.mm-full{background:#EDF0EC;}
 <div class="mm mm-sub" id="sub-pozvat"></div>
 <div class="mm mm-sub" id="sub-cile"></div>
 <div class="mm mm-sub" id="sub-notifikace"></div>
+<!-- F56: Detail dne (z Celá historie / Moje záznamy / Naposledy v partě) + Rok party (z Parta "celý rok →") -->
+<div class="mm mm-sub" id="sub-den"></div>
+<div class="mm mm-sub" id="sub-rokparty"></div>
 
 <!-- F52: HABIT modal (nový/úprava návyku) -->
 <div class="modal-overlay" id="habit-modal">
@@ -5058,7 +5061,7 @@ function renderDnesek(){
   const w=document.createElement('div'); w.innerHTML=`<div class="scr"><div class="body">${tpl}</div>${mmBar(0)}</div>`;
   sh.appendChild(w);
   const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),430)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px';
-  if(!window._mmRz){ window._mmRz=true; window.addEventListener('resize',()=>{ if(state.view==='prehled') renderDnesek(); else if(state.view==='hraci') renderParta(); else if(state.view==='navyky') renderNavykyMM(); else if(state.view==='historie') renderJaMM(); if(mmSubOpen==='historie') renderSubHistorie(); else if(mmSubOpen==='rekordy') renderSubRekordy(); else if(mmSubOpen==='bodovani') renderSubBodovani(); else if(mmSubOpen==='profil') renderSubProfil(state.mmSubProfilId); else if(mmSubOpen==='rekordyparty') renderSubRekordyParty(); else if(mmSubOpen==='feed') renderSubFeed(); else if(mmSubOpen==='pozvat') renderSubPozvat(); else if(mmSubOpen==='cile') renderSubCile(); else if(mmSubOpen==='notifikace') renderSubNotifikace(); }); }
+  if(!window._mmRz){ window._mmRz=true; window.addEventListener('resize',()=>{ if(state.view==='prehled') renderDnesek(); else if(state.view==='hraci') renderParta(); else if(state.view==='navyky') renderNavykyMM(); else if(state.view==='historie') renderJaMM(); if(mmSubOpen==='historie') renderSubHistorie(); else if(mmSubOpen==='rekordy') renderSubRekordy(); else if(mmSubOpen==='bodovani') renderSubBodovani(); else if(mmSubOpen==='profil') renderSubProfil(state.mmSubProfilId); else if(mmSubOpen==='rekordyparty') renderSubRekordyParty(); else if(mmSubOpen==='feed') renderSubFeed(); else if(mmSubOpen==='pozvat') renderSubPozvat(); else if(mmSubOpen==='cile') renderSubCile(); else if(mmSubOpen==='notifikace') renderSubNotifikace(); else if(mmSubOpen==='den') renderSubDen(state.mmSubDenArg); else if(mmSubOpen==='rokparty') renderSubRokParty(); }); }
 }
 
 // ============================================================
@@ -5152,7 +5155,7 @@ function mmPartaFeedHtml(maxDays){
     byDay[ds].forEach(e=>{
       const pl=state.players.find(p=>p.id===e.player_id); if(!pl) return;
       const col=safeColor(pl.barva);
-      html+=`<div class="frow"><div class="fav" style="background:${col}22;color:${col}"><svg class="i"><use href="#${mmEntryIcon(e)}"/></svg></div><div class="fmain">${esc(mmFirst(pl.jmeno))} · ${esc(mmEntryLabel(e))}<small>${mmEntryType(e)}</small></div><div class="fpts">+${Math.round(Number(e.body)||0)}</div></div>`;
+      html+=`<div class="frow" style="cursor:pointer" onclick="mmOpenSub('den','${e.player_id}|${ds}')"><div class="fav" style="background:${col}22;color:${col}"><svg class="i"><use href="#${mmEntryIcon(e)}"/></svg></div><div class="fmain">${esc(mmFirst(pl.jmeno))} · ${esc(mmEntryLabel(e))}<small>${mmEntryType(e)}</small></div><div class="fpts">+${Math.round(Number(e.body)||0)}</div></div>`;
     });
     html+='</div>';
   });
@@ -5207,7 +5210,7 @@ function renderParta(){
   <div class="wkl"><div class="wklh"><div class="wklt"><svg class="i"><use href="#i-trophy"/></svg> Liga týdne</div><div class="wkls">${wklLabel} ›</div></div><div class="wkbars">${wkRows}</div></div>
   <div class="pcbar"><div class="pcb" onclick="mmPartaCyclePeriod()"><span class="k">Období:</span> ${mmPartaPeriodLabel()} <span class="cx">▾</span></div><div class="pcb" onclick="mmPartaCycleCategory()"><span class="k">Kategorie:</span> ${mmPartaCategoryLabel()} <span class="cx">▾</span></div></div>
   <div class="lc">${rows||'<div style="padding:20px;text-align:center;color:var(--ter)">Zatím žádné body</div>'}</div>
-  <div class="sl"><span>Aktivita party</span><a>celý rok →</a></div>
+  <div class="sl"><span>Aktivita party</span><a onclick="mmOpenSub('rokparty')">celý rok →</a></div>
   <div class="heatcard"><div class="hbnav"><span class="hbarr" onclick="mmPartaHeatMove(1)">‹</span><span class="hbrange">${heatLabel}</span><span class="hbarr" onclick="mmPartaHeatMove(-1)">›</span><span class="hbtoday" onclick="mmPartaHeatToday()">⟳ Dnes</span></div>${heatHtml}</div>
   <div class="hbm" style="margin-top:13px;padding:6px 12px;cursor:pointer" onclick="mmOpenSub('rekordyparty')"><div class="hi" style="background:#E0A23A22;width:27px;height:27px;font-size:14px"><svg class="i"><use href="#i-medal"/></svg></div><div class="ht">Rekordy & maximálky všech<small>všichni hráči na jednom místě</small></div><span class="rx" style="color:var(--ter);font-size:16px">›</span></div>
   <div class="hbm" style="margin-top:8px;padding:6px 12px;cursor:pointer" onclick="mmOpenSub('feed')"><div class="hi" style="background:#2C97D622;width:27px;height:27px;font-size:14px"><svg class="i"><use href="#i-comment"/></svg></div><div class="ht">Dění v partě<small>reakce a komentáře k zápisům</small></div><span class="rx" style="color:var(--ter);font-size:16px">›</span></div>
@@ -5476,7 +5479,7 @@ function mmJaFeedHtml(playerId, extraDays){
   days.forEach(ds=>{
     const d=new Date(ds+'T00:00:00');
     const lbl = ds===today ? `Dnes · ${czDayName(d).slice(0,2).toLowerCase()} ${d.getDate()}. ${d.getMonth()+1}.` : `${czDayName(d)} ${d.getDate()}. ${d.getMonth()+1}.`;
-    html+=`<div class="recday">${lbl}</div><div class="rec">`;
+    html+=`<div class="recday" style="cursor:pointer" onclick="mmOpenSub('den','${playerId}|${ds}')">${lbl}</div><div class="rec">`;
     byDay[ds].forEach(e=>{
       const [bg,fg]=mmJaEntryColors(e);
       html+=`<div class="frow"><div class="fav" style="background:${bg}22;color:${fg}"><svg class="i"><use href="#${mmEntryIcon(e)}"/></svg></div><div class="fmain">${esc(mmJaCap(mmEntryLabel(e)))}<small>${mmEntryType(e)}</small></div><div class="fpts">+${Math.round(Number(e.body)||0)}</div><div class="edit" onclick="openEditModal('${e.id}','${e._type}')"><svg class="i"><use href="#i-edit"/></svg></div></div>`;
@@ -5535,7 +5538,7 @@ function renderJaMM(){
 //  mmOpenSub(name) / mmCloseSub() ovladaji fullscreen overlay (#sub-<name>, viz .mm-sub CSS).
 //  render funkce pouzivaji STEJNY Shadow DOM vzor jako Dnesek/Parta/Navyky/Ja (mmMountSub()).
 // ============================================================
-let mmSubOpen = null; // null | 'historie' | 'rekordy' | 'bodovani' | 'profil' | 'rekordyparty' | 'feed' | 'pozvat' | 'cile' | 'notifikace' — nejvrchnejsi otevrena podobrazovka
+let mmSubOpen = null; // null | 'historie' | 'rekordy' | 'bodovani' | 'profil' | 'rekordyparty' | 'feed' | 'pozvat' | 'cile' | 'notifikace' | 'den' | 'rokparty' — nejvrchnejsi otevrena podobrazovka
 let mmSubStack = []; // F54: podpora vnoreni (napr. profil -> rekordyparty, viz S.profil odkaz "Rekordy & maximálky všech"), polozky {name, arg}
 
 function mmRenderSub(name, arg){
@@ -5548,10 +5551,13 @@ function mmRenderSub(name, arg){
   else if(name==='pozvat') renderSubPozvat();
   else if(name==='cile') renderSubCile();
   else if(name==='notifikace') renderSubNotifikace();
+  else if(name==='den') renderSubDen(arg);
+  else if(name==='rokparty') renderSubRokParty();
 }
 function mmOpenSub(name, arg){
   const el = document.getElementById('sub-'+name); if(!el) return;
   if(name==='profil') state.mmSubProfilId = arg;
+  if(name==='den') state.mmSubDenArg = arg;
   mmSubStack.push({name, arg});
   mmSubOpen = name;
   el.classList.add('open');
@@ -5637,7 +5643,7 @@ function renderSubHistorie(){
     shown.forEach(ds=>{
       const d=new Date(ds+'T00:00:00');
       const lbl = ds===today ? `Dnes · ${czDayName(d).slice(0,2).toLowerCase()} ${d.getDate()}. ${d.getMonth()+1}.` : `${czDayName(d)} ${d.getDate()}. ${d.getMonth()+1}.`;
-      list+=`<div class="recday">${lbl}</div><div class="rec">`;
+      list+=`<div class="recday" style="cursor:pointer" onclick="mmOpenSub('den','${pid}|${ds}')">${lbl}</div><div class="rec">`;
       byDay[ds].forEach(e=>{
         const [bg,fg]=mmJaEntryColors(e);
         list+=`<div class="frow"><div class="fav" style="background:${bg}22;color:${fg}"><svg class="i"><use href="#${mmEntryIcon(e)}"/></svg></div><div class="fmain">${esc(mmJaCap(mmEntryLabel(e)))}<small>${mmEntryType(e)}</small></div><div class="fpts">+${Math.round(Number(e.body)||0)}</div><div class="edit" onclick="openEditModal('${e.id}','${e._type}')"><svg class="i"><use href="#i-edit"/></svg></div></div>`;
@@ -5845,6 +5851,148 @@ function renderSubNotifikace(){
   mmMountSub(host, tpl, 3);
 }
 
+// ----- Detail dne (mockup S.den, 2.5) — vsechny zaznamy JEDNOHO hrace za JEDEN den + soucet bodu -----
+// Vstup: Celá historie (recday hlavicka), Moje záznamy v Já (recday hlavicka), Naposledy v partě (radek zaznamu). arg = "playerId|YYYY-MM-DD".
+function mmDenLabel(ds){
+  const d=new Date(ds+'T00:00:00');
+  return `${czDayName(d).slice(0,2).toLowerCase()} ${d.getDate()}. ${d.getMonth()+1}.`;
+}
+function renderSubDen(arg){
+  const host=document.getElementById('sub-den'); if(!host) return;
+  const parts=String(arg||'').split('|'); const pid=parts[0]; const ds=parts[1];
+  const p = state.players.find(x=>x.id===pid);
+  if(!p || !ds){ mmCloseSub(); return; }
+  const all=[...state.cviky.filter(c=>c.player_id===pid&&c.datum===ds).map(c=>({...c,_type:'cvik'})),
+             ...state.aktivity.filter(a=>a.player_id===pid&&a.datum===ds).map(a=>({...a,_type:'aktivita'}))];
+  all.sort((a,b)=>String(a.created_at||'').localeCompare(String(b.created_at||'')));
+  const title = `${esc(mmFirst(p.jmeno))} · ${mmDenLabel(ds)}`;
+  let body;
+  if(!all.length){
+    body=`<div style="text-align:center;padding:70px 24px;color:var(--sec)"><div style="font-size:38px;margin-bottom:12px;opacity:.85"><svg class="i"><use href="#i-note"/></svg></div><div style="font-size:15px;font-weight:700;color:var(--label);margin-bottom:5px">Žádné záznamy</div><div style="font-size:12.5px;line-height:1.5">Tenhle den ${esc(mmFirst(p.jmeno))} nic ${p.pohlavi==='Z'?'nezapsala':'nezapsal'}.</div></div>`;
+  } else {
+    const total=sumRoundedBody(all);
+    const rows=all.map(e=>{
+      const [bg,fg]=mmJaEntryColors(e);
+      return `<div class="frow"><div class="fav" style="background:${bg}22;color:${fg}"><svg class="i"><use href="#${mmEntryIcon(e)}"/></svg></div><div class="fmain">${esc(mmJaCap(mmEntryLabel(e)))}<small>${mmEntryType(e)}</small></div><div class="fpts">+${Math.round(Number(e.body)||0)}</div></div>`;
+    }).join('');
+    body=`<div style="text-align:center;font-size:13px;font-weight:600;color:var(--sec);margin-bottom:13px">Celkem <b style="color:var(--green);font-size:16px">+${total} b</b> za den</div><div class="rec">${rows}</div>`;
+  }
+  const hdr = `<div class="fhd"><span class="fx" style="font-size:27px;cursor:pointer" onclick="mmCloseSub()">‹</span><div class="fttl" style="flex:1;text-align:center;font-size:16px">${title}</div><span class="fx" style="opacity:0">×</span></div>`;
+  const tpl = `<div style="padding-top:3px">${hdr}${body}</div>`;
+  const me = state.players.find(x=>x.id===state.currentPlayerId);
+  const barIdx = (me && pid===me.id) ? 3 : 1;
+  mmMountSub(host, tpl, barIdx);
+}
+
+// ----- Rok party (mockup S.rokparty, 2.3) — rocni prehled party: streak, nejaktivnejsi den, aktivni dny, aktivita po hracich, body v case -----
+// Vstup: Parta -> "Aktivita party" -> "celý rok →". Tabs Týden/Měsíc/Rok jsou v mockupu čistě vizuální (jen "Rok" je funkční obsah), 1:1 zkopírováno.
+function mmRokPartyStreak(){
+  const activeIds=state.players.filter(p=>p.aktivni).map(p=>p.id);
+  if(!activeIds.length) return 0;
+  const hasAny=ds=>state.cviky.some(c=>activeIds.includes(c.player_id)&&c.datum===ds) || state.aktivity.some(a=>activeIds.includes(a.player_id)&&a.datum===ds);
+  const today=new Date(); today.setHours(0,0,0,0);
+  let d=new Date(today);
+  if(!hasAny(dateToStr(d))) d.setDate(d.getDate()-1); // grace day - dnesek se jeste nemusi pocitat
+  let n=0;
+  while(hasAny(dateToStr(d))){ n++; d.setDate(d.getDate()-1); }
+  return n;
+}
+function mmRokPartyBestWeekday(year){
+  const sums=[0,0,0,0,0,0,0]; // Po..Ne, viz HABIT_DEN_NAMES
+  const add=e=>{ if(!e.datum || !e.datum.startsWith(String(year))) return; const dow=(new Date(e.datum+'T00:00:00').getDay()+6)%7; sums[dow]+=Number(e.body)||0; };
+  state.cviky.forEach(add); state.aktivity.forEach(add);
+  const max=Math.max(...sums);
+  if(max<=0) return '—';
+  return HABIT_DEN_NAMES[sums.indexOf(max)];
+}
+function mmRokPartyActiveDays(year){
+  const days=new Set();
+  state.cviky.forEach(c=>{ if(c.datum && c.datum.startsWith(String(year))) days.add(c.datum); });
+  state.aktivity.forEach(a=>{ if(a.datum && a.datum.startsWith(String(year))) days.add(a.datum); });
+  return days.size;
+}
+function mmRokPartyWeekTotal(pid, weekStart){
+  const ws=dateToStr(weekStart); const we=new Date(weekStart); we.setDate(we.getDate()+6); const weStr=dateToStr(we);
+  return sumRoundedBody(state.cviky.filter(c=>c.player_id===pid&&c.datum>=ws&&c.datum<=weStr)) + sumRoundedBody(state.aktivity.filter(a=>a.player_id===pid&&a.datum>=ws&&a.datum<=weStr));
+}
+function mmRokPartyYearGridHtml(players, year){
+  if(!players.length) return '';
+  const jan1=new Date(year,0,1); const firstMon=new Date(jan1); firstMon.setDate(jan1.getDate()-((jan1.getDay()+6)%7));
+  const now=new Date(); now.setHours(0,0,0,0);
+  const withStats=players.map(p=>{
+    const yearE=[...state.cviky.filter(c=>c.player_id===p.id),...state.aktivity.filter(a=>a.player_id===p.id)].filter(e=>e.datum&&e.datum.startsWith(String(year)));
+    return {p, total:sumRoundedBody(yearE), days:new Set(yearE.map(e=>e.datum)).size};
+  }).sort((a,b)=>b.total-a.total);
+  let html='';
+  withStats.forEach(({p,days})=>{
+    const col=safeColor(p.barva);
+    const weekTotals=[];
+    for(let w=0; w<53; w++){
+      const ws=new Date(firstMon); ws.setDate(firstMon.getDate()+w*7);
+      weekTotals.push(ws>now?null:mmRokPartyWeekTotal(p.id, ws));
+    }
+    const max=Math.max(1,...weekTotals.filter(v=>v!=null));
+    let cells='';
+    weekTotals.forEach(v=>{
+      if(v==null){ cells+=`<i style="background:var(--track)"></i>`; return; }
+      let lv=0; if(v>0){ const r=v/max; lv=r>=0.66?3:(r>=0.33?2:1); }
+      const op=[0,.3,.6,.95][lv];
+      cells+=`<i style="background:${lv?col+Math.round(op*255).toString(16).padStart(2,'0'):'var(--track)'}"></i>`;
+    });
+    html+=`<div class="gr" style="grid-template-columns:78px 1fr auto"><div style="display:flex;align-items:center;gap:6px"><span class="lav" style="width:22px;height:22px;background:${col}22;color:${col};font-size:8px">${esc(initials(p.jmeno))}</span><span class="nm2">${esc(mmFirst(p.jmeno))}</span></div><div class="yg">${cells}</div><div class="ct2" style="color:${col}">${days} dní</div></div>`;
+  });
+  return html;
+}
+function mmRokPartyCumAt(pid, year, toStr){
+  const from=year+'-01-01';
+  return sumRoundedBody(state.cviky.filter(c=>c.player_id===pid&&c.datum>=from&&c.datum<=toStr)) + sumRoundedBody(state.aktivity.filter(a=>a.player_id===pid&&a.datum>=from&&a.datum<=toStr));
+}
+function mmRokPartyChartSvg(players, year){
+  if(!players.length) return '';
+  const xs=[2,22,42,62,82,102,118];
+  const jan1=new Date(year,0,1); const endOfYear=new Date(year,11,31);
+  const now=new Date(); now.setHours(0,0,0,0);
+  const checkpoints=xs.map((_,i)=>{
+    const t=jan1.getTime() + (endOfYear.getTime()-jan1.getTime())*(i/(xs.length-1));
+    let cd=new Date(t); cd.setHours(0,0,0,0);
+    if(cd>now) cd=new Date(now);
+    return dateToStr(cd);
+  });
+  const me=state.players.find(x=>x.id===state.currentPlayerId);
+  let allVals=[];
+  const lines=players.map(p=>{
+    const vals=checkpoints.map(ds=>mmRokPartyCumAt(p.id, year, ds));
+    allVals=allVals.concat(vals);
+    return {p, vals, isMe: !!(me&&p.id===me.id)};
+  });
+  const maxV=Math.max(1, ...allVals);
+  const toY=v=>42-(v/maxV)*36;
+  const polys=lines.map(({p,vals,isMe})=>{
+    const pts=vals.map((v,i)=>`${xs[i]},${toY(v).toFixed(1)}`).join(' ');
+    const strokeStyle = isMe ? 'stroke:var(--green);stroke-width:2.6' : `stroke:${safeColor(p.barva)};stroke-width:1.2`;
+    return `<polyline points="${pts}" fill="none" style="${strokeStyle}" stroke-linecap="round" stroke-linejoin="round"/>`;
+  }).join('');
+  return `<svg viewBox="0 0 120 46" width="100%" height="42" preserveAspectRatio="none">${polys}</svg>`;
+}
+function renderSubRokParty(){
+  const host=document.getElementById('sub-rokparty'); if(!host) return;
+  const year=new Date().getFullYear();
+  const players=state.players.filter(p=>p.aktivni);
+  const streak=mmRokPartyStreak();
+  const bestDay=mmRokPartyBestWeekday(year);
+  const activeDays=mmRokPartyActiveDays(year);
+  const grid=mmRokPartyYearGridHtml(players, year);
+  const chart=mmRokPartyChartSvg(players, year);
+  const body = `<div class="tabs"><b>Týden</b><b>Měsíc</b><b class="on">Rok</b></div>
+  <div class="stat2"><div class="st"><div class="v"><svg class="i"><use href="#i-flame"/></svg> ${streak}</div><div class="k">série party</div></div><div class="st"><div class="v">${bestDay}</div><div class="k">nejakt. den</div></div><div class="st"><div class="v">${activeDays}</div><div class="k">aktivních dní</div></div></div>
+  <div class="sl"><span>Aktivita po hráčích · ${year}</span></div>
+  <div class="statg">${grid||'<div style="padding:14px;text-align:center;color:var(--ter);font-size:12px">Zatím žádná data</div>'}</div>
+  <div class="ccap" style="margin-top:4px">1 čtvereček = 1 týden · tmavší = víc dní</div>
+  <div class="sl"><span>Body v čase · celý rok</span></div><div class="chart">${chart}<div class="ccap">Body party v čase · silná zelená = ty</div></div>`;
+  const tpl = mmBackHdr('Rok party') + body;
+  mmMountSub(host, tpl, 1);
+}
+
 function renderAllViews() {
   renderDnesek();
   renderParta();
@@ -5859,6 +6007,8 @@ function renderAllViews() {
   else if(mmSubOpen==='pozvat') renderSubPozvat();
   else if(mmSubOpen==='cile') renderSubCile();
   else if(mmSubOpen==='notifikace') renderSubNotifikace();
+  else if(mmSubOpen==='den') renderSubDen(state.mmSubDenArg);
+  else if(mmSubOpen==='rokparty') renderSubRokParty();
   mmChrome();
   renderWeekLabel();
   updatePeriodUI();
