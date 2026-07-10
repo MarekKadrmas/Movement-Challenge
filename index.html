@@ -1023,6 +1023,9 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 }
 .player-pill:active { transform: scale(0.96); }
 .player-pill.active { color: #fff; }
+/* Ukol 3 (formadmin): vybrany hrac v pilulce "Za koho" ma ✓ za jmenem (mockup "Martin ✓") */
+#player-pills .player-pill .pill-check { display: none; margin-left: 2px; }
+#player-pills .player-pill.active .pill-check { display: inline; }
 
 .level-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
 .level-btn {
@@ -1054,7 +1057,20 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
   font-variant-numeric: tabular-nums;
 }
 .level-points-display.show { display: flex; align-items: center; justify-content: space-between; }
-.level-points-display::before { content: "Získáš za zápis"; font-size: 12px; font-weight: 700; color: var(--sec); }
+/* Ukol 2: trofej pred labelem (mockup .rwbar <svg use #i-trophy/>) — pridano jako background-image
+   na ::before, aby se nemusely menit vsechny JS textContent zapisy hodnoty (+X b). */
+.level-points-display::before {
+  content: "Získáš za zápis";
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='%2369736D' stroke-width='2.3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 4h10v4.5a5 5 0 0 1-10 0Z' fill='%2369736D' fill-opacity='.2'/%3E%3Cpath d='M7 5.2H4.2v1.6A3 3 0 0 0 7.2 9.8M17 5.2h2.8v1.6a3 3 0 0 1-3 3M12 13.5V16M9 20h6M10 20a2 2 0 0 1 4 0'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: left center; background-size: 12px 12px;
+  padding-left: 16px;
+  font-size: 12px; font-weight: 700; color: var(--sec);
+}
+[data-theme="dark"] .level-points-display::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='%238C968F' stroke-width='2.3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 4h10v4.5a5 5 0 0 1-10 0Z' fill='%238C968F' fill-opacity='.2'/%3E%3Cpath d='M7 5.2H4.2v1.6A3 3 0 0 0 7.2 9.8M17 5.2h2.8v1.6a3 3 0 0 1-3 3M12 13.5V16M9 20h6M10 20a2 2 0 0 1 4 0'/%3E%3C/svg%3E");
+}
+/* Ukol 3 (formadmin): admin zapisuje za JINEHO hrace -> 3. osoba "Získá za zápis" (mockup) */
+#reward-slot.admin-other .level-points-display::before { content: "Získá za zápis"; }
 
 .info-box {
   background: #fef3c7;
@@ -2386,7 +2402,7 @@ body.mm-full{background:#EDF0EC;}
 
 
 <div class="test-banner" aria-label="Testovací verze"></div>
-<div id="mm-ver" style="position:fixed;bottom:2px;right:5px;z-index:2147483647;color:rgba(0,0,0,.22);font:600 8px monospace;pointer-events:none;">v0710·21</div>
+<div id="mm-ver" style="position:fixed;bottom:2px;right:5px;z-index:2147483647;color:rgba(0,0,0,.22);font:600 8px monospace;pointer-events:none;">v0710·22</div>
 <script>
 (function(){try{if(window.navigator.standalone===true||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches))document.documentElement.classList.add('pwa-standalone');}catch(e){}})();
 </script>
@@ -2920,11 +2936,14 @@ body.mm-full{background:#EDF0EC;}
       </div>
 
       <div id="form-aktivita" style="display:none;">
-        <div class="field">
-          <label>Co jsi dělal/a</label>
+        <!-- Ukol 4 (formakt): mockup dava input rovnou pod sub-pilulky Aktivita, bez vlastniho labelu
+             ("Aktivita" label uz je nad #activity-subpicker vyse). -->
+        <div class="field" id="aktivita-nazev-field">
           <input type="text" id="aktivita-nazev" placeholder="Například cvíčo 30 min…">
         </div>
-        <div class="field">
+        <!-- Ukol 1 (formbeh): Nazev+Narocnost jen pro Kolo/Plavani/genericou aktivitu — pro Beh
+             schovane (viz updateActivitySubpicker), misto nich Kilometry+Tempo+Prevyseni nize. -->
+        <div class="field" id="aktivita-narocnost-field">
           <label>Náročnost</label>
           <div class="pickrow">
             <div class="pk" data-level="1">1</div>
@@ -2941,6 +2960,18 @@ body.mm-full{background:#EDF0EC;}
         <div class="field" id="aktivita-km-field" style="display:none;">
           <label>Kilometry *</label>
           <input type="number" id="aktivita-km" placeholder="0 km" step="0.1" min="0" inputmode="decimal">
+        </div>
+        <!-- Ukol 1 (formbeh): Tempo/Prevyseni — appka nema DB sloupce, uklada se do poznamka JSON
+             (mode:'beh') v submitEntry, km zustava ve sloupci km. Body pocitane z km (viz behLevelFromKm). -->
+        <div class="field-row" id="aktivita-beh-extra-field" style="display:none;">
+          <div class="field">
+            <label>Tempo · nepovinné</label>
+            <input type="text" id="aktivita-tempo" placeholder="5:30 min/km">
+          </div>
+          <div class="field">
+            <label>Převýšení · nepovinné</label>
+            <input type="number" id="aktivita-prevyseni" placeholder="0 m" min="0" step="1" inputmode="numeric">
+          </div>
         </div>
       </div>
 
@@ -3261,6 +3292,16 @@ const LEVEL_HINTS = {
 // F30: jen 2 varianty stretchingu (krat 10min, dlou 20+min)
 const STRETCH_POINTS = { krat: 20, dlou: 40 };
 const STRETCH_LABELS = { krat: 'Krátký', dlou: 'Delší' };
+
+// Ukol 1 (formbeh): mockup nema u Behu Narocnost pilulky, takze uroven uz nejde vybrat rucne —
+// odvozuje se automaticky z kilometru (stejna LEVEL_POINTS skala jako u genericke aktivity).
+function behLevelFromKm(km) {
+  if (km >= 12) return 5;
+  if (km >= 9) return 4;
+  if (km >= 6) return 3;
+  if (km >= 3) return 2;
+  return 1;
+}
 
 // Bodování cviků - kalibrováno tak, aby 120 shybů ≈ 150 b. (na úrovni aktivit).
 // CVIK_EXPONENT ladí "úsilí vs objem": nižší = víc se cení vymáčknout max, míň hrubý objem.
@@ -7149,6 +7190,8 @@ function openModal() {
   document.getElementById('modal-subtitle').textContent = 'Vyplň údaje';
   document.getElementById('submit-btn').textContent = 'Zapsat';
   document.getElementById('delete-btn').style.display = 'none';
+  // Ukol 5: reward bar je skryty jen v edit rezimu (viz openEditModal) — pro novy zaznam vzdy zpet.
+  document.getElementById('reward-slot').style.display = '';
   buildPlayerPills();
   resetFormFields();
   // F19: pokud není admin, skryt výběr hráče + předvyplnit sebe
@@ -7159,6 +7202,7 @@ function openModal() {
   } else {
     selField.style.display = '';
   }
+  updateSubmitLabel();  // Ukol 3 (formadmin): "Zapsat" vs "Zapsat za X"
   // Momentum dvoukrok: novy zaznam vzdy zacina na KROKU 1 (dlaždice "Co jsi dělal?")
   goToAddStep(1);
   document.getElementById('modal').classList.add('active');
@@ -7208,6 +7252,8 @@ function resetFormFields() {
   document.getElementById('cvik-same-vaha').value = '';
   document.getElementById('aktivita-nazev').value = '';
   const kmInp = document.getElementById('aktivita-km'); if (kmInp) kmInp.value = '';  // F27 reset
+  const tempoInp = document.getElementById('aktivita-tempo'); if (tempoInp) tempoInp.value = '';  // Ukol 1
+  const prevInp = document.getElementById('aktivita-prevyseni'); if (prevInp) prevInp.value = '';  // Ukol 1
   document.getElementById('stretch-nazev').value = '';
   document.getElementById('level-hint').textContent = 'vyber úroveň 1-5';
   document.getElementById('level-points-display').classList.remove('show');
@@ -7420,8 +7466,30 @@ function updateActivitySubpicker() {
   if (lezeni) lezeni.classList.toggle('lezon', state.entryType === 'lezeni');
   // IA (formakt/formbeh): Kilometry pole je v mockupu jen u podtypu Beh — genericka aktivita
   // (a Kolo/Plavani) ho nema. Cistě vizualni show/hide, submitEntry cte #aktivita-km beze zmeny.
+  const isBeh = state.entryType === 'aktivita' && state.actSub === 'beh';
   const kmField = document.getElementById('aktivita-km-field');
-  if (kmField) kmField.style.display = (state.entryType === 'aktivita' && state.actSub === 'beh') ? '' : 'none';
+  if (kmField) kmField.style.display = isBeh ? '' : 'none';
+  // Ukol 1 (formbeh): pro Beh mockup schovava nazev+Narocnost a misto toho uz zobrazuje Tempo/Prevyseni.
+  const nazevField = document.getElementById('aktivita-nazev-field');
+  if (nazevField) nazevField.style.display = isBeh ? 'none' : '';
+  const narocnostField = document.getElementById('aktivita-narocnost-field');
+  if (narocnostField) narocnostField.style.display = isBeh ? 'none' : '';
+  const behExtraField = document.getElementById('aktivita-beh-extra-field');
+  if (behExtraField) behExtraField.style.display = isBeh ? '' : 'none';
+  if (isBeh) updateBehPointsPreview();
+}
+
+// Ukol 1 (formbeh): zive zobrazeni bodu z kilometru (Narocnost pilulky uz nejsou k dispozici pro Beh).
+function updateBehPointsPreview() {
+  const disp = document.getElementById('level-points-display');
+  if (!disp) return;
+  const km = parseFloat(document.getElementById('aktivita-km').value);
+  if (km > 0) {
+    disp.textContent = `+${LEVEL_POINTS[behLevelFromKm(km)]} b`;
+    disp.classList.add('show');
+  } else {
+    disp.classList.remove('show');
+  }
 }
 
 // Klik na sub-pilulku pod "Aktivita". Kolo/Plavani/Beh -> entryType 'aktivita' (Beh si jen
@@ -7664,10 +7732,27 @@ function updateFormDisabled() {
   }
 }
 
+// Ukol 3 (formadmin): submit-btn text ("Zapsat" vs "Zapsat za X") + reward-slot label
+// ("Získáš" vs "Získá") kdyz admin zapisuje ZA JINEHO hrace. Edit rezim ma vzdy "Uložit
+// změny" beze zmeny (a reward-slot je tam stejne skryty, viz openEditModal — Ukol 5).
+function updateSubmitLabel() {
+  const btn = document.getElementById('submit-btn');
+  const slot = document.getElementById('reward-slot');
+  if (state.editMode) return;
+  const forOther = isAdmin() && state.selectedPlayer && state.selectedPlayer !== state.currentPlayerId;
+  if (forOther) {
+    const p = state.players.find(pl => pl.id === state.selectedPlayer);
+    btn.textContent = p ? `Zapsat za ${p.jmeno}` : 'Zapsat';
+  } else {
+    btn.textContent = 'Zapsat';
+  }
+  if (slot) slot.classList.toggle('admin-other', !!forOther);
+}
+
 function buildPlayerPills() {
   const el = document.getElementById('player-pills');
   el.innerHTML = state.players.filter(p => p.aktivni).map(p => `
-    <div class="player-pill" data-player-id="${p.id}" style="--c:${safeColor(p.barva)}">${habitEsc(p.jmeno)}</div>
+    <div class="player-pill" data-player-id="${p.id}" style="--c:${safeColor(p.barva)}">${habitEsc(p.jmeno)}<span class="pill-check"> ✓</span></div>
   `).join('');
   el.querySelectorAll('.player-pill').forEach(pill => {
     pill.addEventListener('click', () => {
@@ -7679,6 +7764,7 @@ function buildPlayerPills() {
       pill.style.background = color; pill.style.borderColor = color;
       state.selectedPlayer = pill.dataset.playerId;
       updateFormDisabled();
+      updateSubmitLabel();  // Ukol 3
       if (state.entryType === 'lezeni') renderLezeniRoutes();
     });
   });
@@ -7739,11 +7825,18 @@ document.querySelectorAll('#form-aktivita [data-level]').forEach(btn => {
     document.querySelectorAll('#form-aktivita [data-level]').forEach(b => b.classList.remove('on'));
     btn.classList.add('on');
     state.selectedLevel = parseInt(btn.dataset.level);
-    document.getElementById('level-hint').textContent = LEVEL_HINTS[state.selectedLevel];
+    // Ukol 4 (formakt): hint prefix "Úroveň N · …" (mockup "Úroveň 3 · svižný běh, …")
+    document.getElementById('level-hint').textContent = `Úroveň ${state.selectedLevel} · ${LEVEL_HINTS[state.selectedLevel]}`;
     const disp = document.getElementById('level-points-display');
     disp.textContent = `+${LEVEL_POINTS[state.selectedLevel]} b`;
     disp.classList.add('show');
   });
+});
+
+// Ukol 1 (formbeh): zive prepocitani bodu z kilometru behem psani (Narocnost pilulky pro Beh nejsou).
+const behKmInput = document.getElementById('aktivita-km');
+if (behKmInput) behKmInput.addEventListener('input', () => {
+  if (state.entryType === 'aktivita' && state.actSub === 'beh') updateBehPointsPreview();
 });
 
 document.querySelectorAll('.stretch-btn').forEach(btn => {
@@ -7761,7 +7854,9 @@ document.querySelectorAll('.stretch-btn').forEach(btn => {
 async function submitEntry() {
   if (!state.selectedPlayer) { toast('Vyber hráče', 'error'); return; }
   const btn = document.getElementById('submit-btn');
-  const origText = state.editMode ? 'Uložit změny' : 'Zapsat';
+  // Ukol 3 (formadmin): puvodni text muze byt "Zapsat za X" (ne jen "Zapsat") — vzit aktualni
+  // textContent tlacitka pred prepsanim na "Ukládám...", aby se po chybe/uspechu vratil spravny label.
+  const origText = btn.textContent;
   btn.disabled = true;
   btn.textContent = 'Ukládám...';
   // F34: zachyt PR PRED ulozenim aby pak diff
@@ -7829,21 +7924,44 @@ async function submitEntry() {
         toast(`+${Math.round(totalBody)} bodů!`, 'success');
       }
     } else if (state.entryType === 'aktivita') {
-      const nazev = document.getElementById('aktivita-nazev').value.trim();
-      if (!nazev) { toast('Zadej co jsi dělal/a', 'error'); btn.disabled = false; btn.textContent = origText; return; }
-      if (!state.selectedLevel) { toast('Vyber úroveň', 'error'); btn.disabled = false; btn.textContent = origText; return; }
-      const body = LEVEL_POINTS[state.selectedLevel];
-      // F27: volitelne km (pro beh)
+      const isBeh = state.actSub === 'beh';
+      // F27: volitelne km (pro beh) — pro Beh je Kilometry * povinne pole
       const kmRaw = document.getElementById('aktivita-km').value;
       const km = kmRaw ? parseFloat(kmRaw) : null;
+      let nazev, level;
+      if (isBeh) {
+        if (!km || km <= 0) { toast('Zadej kilometry', 'error'); btn.disabled = false; btn.textContent = origText; return; }
+        // Ukol 1 (formbeh): mockup nema u Behu nazev ani Narocnost — nazev je pevny (pouzit i pro
+        // ikonu/label ve feedu, viz mmEntryIcon/mmEntryLabel), uroven se odvodi z km (behLevelFromKm).
+        nazev = 'Běh';
+        level = behLevelFromKm(km);
+      } else {
+        nazev = document.getElementById('aktivita-nazev').value.trim();
+        if (!nazev) { toast('Zadej co jsi dělal/a', 'error'); btn.disabled = false; btn.textContent = origText; return; }
+        if (!state.selectedLevel) { toast('Vyber úroveň', 'error'); btn.disabled = false; btn.textContent = origText; return; }
+        level = state.selectedLevel;
+      }
+      const body = LEVEL_POINTS[level];
+      // Ukol 1 (formbeh): Tempo/Prevyseni nemaji DB sloupec -> poznamka JSON {mode:'beh',...}.
+      // Lezeni pouziva poznamka.mode==='lezeni' na te same tabulce — jiny mode string, nekoliduje.
+      let poznamka = null;
+      if (isBeh) {
+        const tempo = document.getElementById('aktivita-tempo').value.trim();
+        const prevRaw = document.getElementById('aktivita-prevyseni').value;
+        const prevyseni = prevRaw !== '' ? parseFloat(prevRaw) : null;
+        if (tempo || (prevyseni != null && !isNaN(prevyseni))) {
+          poznamka = JSON.stringify({ mode: 'beh', tempo: tempo || null, prevyseni: (prevyseni != null && !isNaN(prevyseni)) ? prevyseni : null });
+        }
+      }
       const payload = {
         player_id: state.selectedPlayer,
         nazev: nazev,
-        uroven: state.selectedLevel,
+        uroven: level,
         body: body,
         datum: getEntryDate(),
         km: (km && km > 0) ? km : null,
-        je_stretching: false   // F30
+        je_stretching: false,   // F30
+        poznamka: poznamka
       };
       if (state.editMode) {
         const { error } = await db.from('aktivity').update(payload).eq('id', state.editId);
@@ -7942,6 +8060,8 @@ function openEditModal(id, type) {
   document.getElementById('modal-subtitle').textContent = 'Změň hodnoty a ulož';
   document.getElementById('submit-btn').textContent = 'Uložit změny';
   document.getElementById('delete-btn').style.display = 'block';
+  // Ukol 5 (editzaznam): mockup editzaznam nema reward bar ("Získáš za zápis") — skryt v edit rezimu.
+  document.getElementById('reward-slot').style.display = 'none';
   buildPlayerPills();
   // Ukol 1: "Za koho"/admin banner jen pro admina (stejna logika jako openModal) — bez teto vetve
   // se pole ukazovalo vzdy, i bezneho hraci pri editaci vlastniho zaznamu (neshoda s mockupem editzaznam).
@@ -8016,6 +8136,14 @@ function openEditModal(id, type) {
     // F27: nacist km z editovaneho zaznamu
     const kmInp = document.getElementById('aktivita-km');
     if (kmInp) kmInp.value = entry.km != null ? entry.km : '';
+    // Ukol 1 (formbeh): tempo/prevyseni ulozene v poznamka JSON {mode:'beh'} — lezeni pouziva jiny
+    // mode ('lezeni') na te same tabulce, takze se nekoliduje.
+    let behData = null;
+    if (entry.poznamka) { try { const pp = JSON.parse(entry.poznamka); if (pp && pp.mode === 'beh') behData = pp; } catch(_) {} }
+    const tempoInp = document.getElementById('aktivita-tempo');
+    const prevInp = document.getElementById('aktivita-prevyseni');
+    if (tempoInp) tempoInp.value = (behData && behData.tempo != null) ? behData.tempo : '';
+    if (prevInp) prevInp.value = (behData && behData.prevyseni != null) ? behData.prevyseni : '';
     // IA: heuristika jen pro vizualni zvyrazneni sub-pilulky (Kolo/Plavani/Beh) v edit rezimu —
     // nema vliv na ulozena data. Odvozeno z km (Beh) / nazvu (stejna regexpy jako ikona v historii).
     const nLow = (entry.nazev || '').toLowerCase();
@@ -8029,7 +8157,8 @@ function openEditModal(id, type) {
       b.classList.remove('on');
       if (parseInt(b.dataset.level) === entry.uroven) b.classList.add('on');
     });
-    document.getElementById('level-hint').textContent = LEVEL_HINTS[entry.uroven];
+    // Ukol 4 (formakt): hint prefix "Úroveň N · …" (mockup "Úroveň 3 · svižný běh, …")
+    document.getElementById('level-hint').textContent = `Úroveň ${entry.uroven} · ${LEVEL_HINTS[entry.uroven]}`;
     const disp = document.getElementById('level-points-display');
     disp.textContent = `+${LEVEL_POINTS[entry.uroven]} b`;
     disp.classList.add('show');
