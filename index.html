@@ -2298,7 +2298,7 @@ body.mm-full{background:#EDF0EC;}
 
 
 <div class="test-banner" aria-label="Testovací verze"></div>
-<div id="mm-ver" style="position:fixed;bottom:2px;right:5px;z-index:2147483647;color:rgba(0,0,0,.22);font:600 8px monospace;pointer-events:none;">v0707·12</div>
+<div id="mm-ver" style="position:fixed;bottom:2px;right:5px;z-index:2147483647;color:rgba(0,0,0,.22);font:600 8px monospace;pointer-events:none;">v0710·13</div>
 <script>
 (function(){try{if(window.navigator.standalone===true||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches))document.documentElement.classList.add('pwa-standalone');}catch(e){}})();
 </script>
@@ -2532,6 +2532,9 @@ body.mm-full{background:#EDF0EC;}
 <div class="mm mm-sub" id="sub-historie"></div>
 <div class="mm mm-sub" id="sub-rekordy"></div>
 <div class="mm mm-sub" id="sub-bodovani"></div>
+<!-- F54: podobrazovky drill-down z Parta -->
+<div class="mm mm-sub" id="sub-profil"></div>
+<div class="mm mm-sub" id="sub-rekordyparty"></div>
 
 <!-- F52: HABIT modal (nový/úprava návyku) -->
 <div class="modal-overlay" id="habit-modal">
@@ -4987,7 +4990,7 @@ function renderDnesek(){
   const w=document.createElement('div'); w.innerHTML=`<div class="scr"><div class="body">${tpl}</div>${mmBar(0)}</div>`;
   sh.appendChild(w);
   const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),430)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px';
-  if(!window._mmRz){ window._mmRz=true; window.addEventListener('resize',()=>{ if(state.view==='prehled') renderDnesek(); else if(state.view==='hraci') renderParta(); else if(state.view==='navyky') renderNavykyMM(); else if(state.view==='historie') renderJaMM(); if(mmSubOpen==='historie') renderSubHistorie(); else if(mmSubOpen==='rekordy') renderSubRekordy(); else if(mmSubOpen==='bodovani') renderSubBodovani(); }); }
+  if(!window._mmRz){ window._mmRz=true; window.addEventListener('resize',()=>{ if(state.view==='prehled') renderDnesek(); else if(state.view==='hraci') renderParta(); else if(state.view==='navyky') renderNavykyMM(); else if(state.view==='historie') renderJaMM(); if(mmSubOpen==='historie') renderSubHistorie(); else if(mmSubOpen==='rekordy') renderSubRekordy(); else if(mmSubOpen==='bodovani') renderSubBodovani(); else if(mmSubOpen==='profil') renderSubProfil(state.mmSubProfilId); else if(mmSubOpen==='rekordyparty') renderSubRekordyParty(); }); }
 }
 
 // ============================================================
@@ -5121,7 +5124,7 @@ function renderParta(){
   const rows=board.map((p,i)=>{
     const isMe=me&&p.id===me.id; const col=safeColor(p.barva);
     const d=p.total-myTotal; const gap=isMe?'<small class="gap" style="color:var(--green)">ty</small>':`<small class="gap">${d>0?'+':(d<0?'−':'')}${Math.abs(d)}</small>`;
-    return `<div class="lr${i===0?' one':''}${isMe?' me':''}"><div class="lrk">${i+1}</div><div class="lav" style="background:${col}22;color:${col}">${esc(initials(p.jmeno))}</div><div class="lnm">${esc(p.jmeno)}${isMe?' (ty)':''}${i===0?' <svg class="i"><use href="#i-crown"/></svg>':''}</div><div class="lpt">${p.total} ${gap}</div></div>`;
+    return `<div class="lr${i===0?' one':''}${isMe?' me':''}" style="cursor:pointer" onclick="mmOpenSub('profil','${p.id}')"><div class="lrk">${i+1}</div><div class="lav" style="background:${col}22;color:${col}">${esc(initials(p.jmeno))}</div><div class="lnm">${esc(p.jmeno)}${isMe?' (ty)':''}${i===0?' <svg class="i"><use href="#i-crown"/></svg>':''}</div><div class="lpt">${p.total} ${gap}</div></div>`;
   }).join('');
 
   // Heatmapa party
@@ -5138,7 +5141,7 @@ function renderParta(){
   <div class="lc">${rows||'<div style="padding:20px;text-align:center;color:var(--ter)">Zatím žádné body</div>'}</div>
   <div class="sl"><span>Aktivita party</span><a>celý rok →</a></div>
   <div class="heatcard"><div class="hbnav"><span class="hbarr" onclick="mmPartaHeatMove(1)">‹</span><span class="hbrange">${heatLabel}</span><span class="hbarr" onclick="mmPartaHeatMove(-1)">›</span><span class="hbtoday" onclick="mmPartaHeatToday()">⟳ Dnes</span></div>${heatHtml}</div>
-  <div class="hbm" style="margin-top:13px;padding:6px 12px"><div class="hi" style="background:#E0A23A22;width:27px;height:27px;font-size:14px"><svg class="i"><use href="#i-medal"/></svg></div><div class="ht">Rekordy & maximálky všech<small>všichni hráči na jednom místě</small></div><span class="rx" style="color:var(--ter);font-size:16px">›</span></div>
+  <div class="hbm" style="margin-top:13px;padding:6px 12px;cursor:pointer" onclick="mmOpenSub('rekordyparty')"><div class="hi" style="background:#E0A23A22;width:27px;height:27px;font-size:14px"><svg class="i"><use href="#i-medal"/></svg></div><div class="ht">Rekordy & maximálky všech<small>všichni hráči na jednom místě</small></div><span class="rx" style="color:var(--ter);font-size:16px">›</span></div>
   <div class="sl"><span>Naposledy · dnes</span><a>celá historie →</a></div>
   ${feed.html}
   ${feed.hasMore?'<button class="loadmore" onclick="mmPartaLoadMoreFeed()">Načíst starší ↓</button>':''}`;
@@ -5463,23 +5466,34 @@ function renderJaMM(){
 //  mmOpenSub(name) / mmCloseSub() ovladaji fullscreen overlay (#sub-<name>, viz .mm-sub CSS).
 //  render funkce pouzivaji STEJNY Shadow DOM vzor jako Dnesek/Parta/Navyky/Ja (mmMountSub()).
 // ============================================================
-let mmSubOpen = null; // null | 'historie' | 'rekordy' | 'bodovani'
+let mmSubOpen = null; // null | 'historie' | 'rekordy' | 'bodovani' | 'profil' | 'rekordyparty' — nejvrchnejsi otevrena podobrazovka
+let mmSubStack = []; // F54: podpora vnoreni (napr. profil -> rekordyparty, viz S.profil odkaz "Rekordy & maximálky všech"), polozky {name, arg}
 
-function mmOpenSub(name){
-  const el = document.getElementById('sub-'+name); if(!el) return;
-  mmSubOpen = name;
-  el.classList.add('open');
-  lockBodyScroll();
+function mmRenderSub(name, arg){
   if(name==='historie') renderSubHistorie();
   else if(name==='rekordy') renderSubRekordy();
   else if(name==='bodovani') renderSubBodovani();
+  else if(name==='profil') renderSubProfil(arg);
+  else if(name==='rekordyparty') renderSubRekordyParty();
+}
+function mmOpenSub(name, arg){
+  const el = document.getElementById('sub-'+name); if(!el) return;
+  if(name==='profil') state.mmSubProfilId = arg;
+  mmSubStack.push({name, arg});
+  mmSubOpen = name;
+  el.classList.add('open');
+  lockBodyScroll();
+  mmRenderSub(name, arg);
 }
 function mmCloseSub(){
-  if(!mmSubOpen) return;
-  const el = document.getElementById('sub-'+mmSubOpen);
+  if(!mmSubStack.length) return;
+  const top = mmSubStack.pop();
+  const el = document.getElementById('sub-'+top.name);
   if(el) el.classList.remove('open');
-  mmSubOpen = null;
+  const next = mmSubStack[mmSubStack.length-1] || null;
+  mmSubOpen = next ? next.name : null;
   unlockBodyScroll();
+  if(next) mmRenderSub(next.name, next.arg);
 }
 // Hlavicka podobrazovky — 1:1 backhdr() z mockupu (sipka zpet + centrovany nazev + spacer pro symetrii)
 function mmBackHdr(title){
@@ -5620,6 +5634,108 @@ function renderSubBodovani(){
   mmMountSub(host, tpl, 3);
 }
 
+// ----- Profil hráče (mockup S.profil) — detail JINÉHO hráče z Parta žebříčku, read-only, žádné email/heslo -----
+// Vsechny hrace (aktivni), celkove body za celou dobu (nezavisle na filtru Parta) — pro pozici v zebricku
+function mmProfilBoard(){
+  return state.players.filter(p=>p.aktivni).map(p=>({...p,total:sumRoundedBody(state.cviky.filter(c=>c.player_id===p.id))+sumRoundedBody(state.aktivity.filter(a=>a.player_id===p.id))})).sort((a,b)=>b.total-a.total);
+}
+function mmProfilRecordLabel(id){
+  return ({most_shyby_day:'Nejvíc shybů za den','most_dřep_day':'Nejvíc dřepů za den',most_kliky_day:'Nejvíc kliků za den',most_dipy_day:'Nejvíc dipů za den',most_points_day:'Nejvíc bodů za den',longest_run:'Nejdelší běh',longest_streak:'Nejdelší série'})[id] || id;
+}
+function mmProfilRecordValue(r){
+  if(r.id==='longest_run') return `${r.value} km`;
+  if(r.id==='longest_streak') return `${r.value} ${streakLabel(r.value)}`;
+  return `${r.value}`;
+}
+function mmFmtTons(kg){
+  if(kg<1000) return `${Math.round(kg)} kg`;
+  return `${Math.round(kg/100)/10} t`;
+}
+function renderSubProfil(playerId){
+  const host=document.getElementById('sub-profil'); if(!host) return;
+  const p = state.players.find(x=>x.id===playerId);
+  if(!p){ mmCloseSub(); return; }
+  const col=safeColor(p.barva);
+  const totalAll = sumRoundedBody(state.cviky.filter(c=>c.player_id===p.id)) + sumRoundedBody(state.aktivity.filter(a=>a.player_id===p.id));
+  const board = mmProfilBoard();
+  const boardIdx = board.findIndex(b=>b.id===p.id);
+  const pos = boardIdx>=0 ? boardIdx+1 : null;
+  const streak = computeStreak(p.id);
+
+  const stats = calcPlayerStats(p.id);
+  const totalReps = Object.values(stats.cvikStats).reduce((s,c)=>s+c.pocet,0);
+  const totalVaha = Object.values(stats.cvikStats).reduce((s,c)=>s+c.vaha,0);
+
+  const records = computePersonalRecords(p.id);
+  const recRows = records.length ? records.map(r=>`<div class="hlr"><span class="ic"><svg class="i"><use href="#${mmBadgeIcon(r.id)}"/></svg></span><div>${mmProfilRecordLabel(r.id)} <b>${esc(mmProfilRecordValue(r))}</b></div>${r.id!=='longest_streak'&&r.when?`<small class="rx" style="color:var(--ter)">${mmFmtWhen(r.when)}</small>`:''}</div>`).join('')
+    : `<div class="hlr"><div style="color:var(--ter)">Zatím žádné rekordy</div></div>`;
+
+  const body = `<div class="pcard"><div class="pav" style="background:${col}22;color:${col}">${esc(initials(p.jmeno))}</div><div><div class="pn">${esc(p.jmeno)}</div><div class="ps">${totalAll} b · <svg class="i"><use href="#i-flame"/></svg> ${streak} ${streakLabel(streak)}${pos?` · ${pos}. místo`:''}</div></div></div>
+  <div class="sl"><span>Statistiky</span></div>
+  <div class="sgrid"><div class="sgc"><div class="v">${p.max_shyby || '—'}</div><div class="k">max shyby</div></div><div class="sgc"><div class="v">${p.max_drep ? p.max_drep+' kg' : '—'}</div><div class="k">max dřep</div></div><div class="sgc"><div class="v">${p.max_kliky || '—'}</div><div class="k">max kliky</div></div><div class="sgc"><div class="v">${p.max_boulder!=null?esc(lezeniRowAt('boulder',p.max_boulder).v):'—'}</div><div class="k">boulder</div></div></div>
+  <div class="sl"><span>Za celou dobu</span></div>
+  <div class="sgrid"><div class="sgc"><div class="v">${totalReps.toLocaleString('cs-CZ')}</div><div class="k">opakování</div></div><div class="sgc"><div class="v">${mmFmtTons(totalVaha)}</div><div class="k">nazvednuto</div></div><div class="sgc"><div class="v">${stats.totalKm} km</div><div class="k">naběháno</div></div><div class="sgc"><div class="v">${stats.aktivityCount+stats.stretchingCount}</div><div class="k">aktivit</div></div></div>
+  <div class="info" style="margin:7px 0">Shyby ${stats.cvikStats['Shyby'].pocet.toLocaleString('cs-CZ')} · Dřep ${stats.cvikStats['Dřep'].pocet.toLocaleString('cs-CZ')} · Kliky ${stats.cvikStats['Kliky'].pocet.toLocaleString('cs-CZ')} · Dipy ${stats.cvikStats['Dipy'].pocet.toLocaleString('cs-CZ')}</div>
+  <div class="sl"><span>Osobní rekordy</span></div>
+  <div class="hl">${recRows}</div>
+  <div class="hbm" style="margin-top:9px;cursor:pointer" onclick="mmOpenSub('rekordyparty')"><div class="hi" style="background:#E0A23A22"><svg class="i"><use href="#i-medal"/></svg></div><div class="ht">Rekordy & maximálky všech<small>porovnej všechny hráče</small></div><span class="rx" style="color:var(--ter);font-size:16px">›</span></div>`;
+
+  const tpl = mmBackHdr(p.jmeno) + body;
+  mmMountSub(host, tpl, 1);
+}
+
+// ----- Rekordy party (mockup S.rekordy) — cross-player maximálky + nej výkony, vstup z Parta -----
+function mmPartaBestRecord(players, recId){
+  let best=null;
+  players.forEach(p=>{
+    const r = computePersonalRecords(p.id).find(x=>x.id===recId);
+    if(r && (best===null || r.value>best.r.value)) best={p, r};
+  });
+  return best;
+}
+function renderSubRekordyParty(){
+  const host=document.getElementById('sub-rekordyparty'); if(!host) return;
+  const players = state.players.filter(p=>p.aktivni);
+  const me = state.players.find(p=>p.id===state.currentPlayerId);
+
+  const cols=[{key:'max_shyby',label:'Shyby'},{key:'max_drep',label:'Dřep'},{key:'max_kliky',label:'Kliky'},{key:'max_boulder',label:'Boulder',fmt:v=>lezeniRowAt('boulder',v).v}];
+  const best={};
+  cols.forEach(c=>{ let m=null; players.forEach(p=>{ const v=p[c.key]; if(v!=null&&v!==''){ const n=Number(v); if(m===null||n>m) m=n; } }); best[c.key]=m; });
+  const rows=players.map(p=>{
+    const isMe=me&&p.id===me.id;
+    const tds=cols.map(c=>{
+      const v=p[c.key];
+      if(v==null||v===''){ return `<td>—</td>`; }
+      const n=Number(v);
+      const disp=c.fmt?c.fmt(n):n;
+      return `<td${n===best[c.key]?' class="bst"':''}>${esc(String(disp))}</td>`;
+    }).join('');
+    return `<tr${isMe?' style="background:color-mix(in srgb, var(--green) 8%, transparent)"':''}><td class="nm">${esc(p.jmeno)}${isMe?' (ty)':''}</td>${tds}</tr>`;
+  }).join('');
+  const table = players.length ? `<table class="rk"><tr><th>Hráč</th>${cols.map(c=>`<th>${c.label}</th>`).join('')}</tr>${rows}</table>` : `<div style="padding:20px;text-align:center;color:var(--ter)">Zatím žádní hráči</div>`;
+
+  const bShyby=mmPartaBestRecord(players,'most_shyby_day');
+  const bKliky=mmPartaBestRecord(players,'most_kliky_day');
+  const bPoints=mmPartaBestRecord(players,'most_points_day');
+  const bRun=mmPartaBestRecord(players,'longest_run');
+  const bStreak=mmPartaBestRecord(players,'longest_streak');
+  let boulderBest=null;
+  players.forEach(p=>{ if(p.max_boulder!=null&&p.max_boulder!==''){ const n=Number(p.max_boulder); if(boulderBest===null||n>boulderBest.v){ boulderBest={p,v:n}; } } });
+
+  const hl=[];
+  if(bShyby) hl.push(`<div class="hlr"><span class="ic"><svg class="i"><use href="#i-pushup"/></svg></span><div>Nejvíc shybů za den <b>${esc(mmFirst(bShyby.p.jmeno))} · ${bShyby.r.value}</b></div></div>`);
+  if(bKliky) hl.push(`<div class="hlr"><span class="ic"><svg class="i"><use href="#i-pushup"/></svg></span><div>Nejvíc kliků za den <b>${esc(mmFirst(bKliky.p.jmeno))} · ${bKliky.r.value}</b></div></div>`);
+  if(bPoints) hl.push(`<div class="hlr"><span class="ic"><svg class="i"><use href="#i-bolt"/></svg></span><div>Nejvíc bodů za den <b>${esc(mmFirst(bPoints.p.jmeno))} · ${bPoints.r.value}</b></div></div>`);
+  if(bRun) hl.push(`<div class="hlr"><span class="ic"><svg class="i"><use href="#i-run"/></svg></span><div>Nejdelší běh <b>${esc(mmFirst(bRun.p.jmeno))} · ${bRun.r.value} km</b></div></div>`);
+  if(bStreak) hl.push(`<div class="hlr"><span class="ic"><svg class="i"><use href="#i-flame"/></svg></span><div>Nejdelší série <b>${esc(mmFirst(bStreak.p.jmeno))} · ${bStreak.r.value} ${streakLabel(bStreak.r.value)}</b></div></div>`);
+  if(boulderBest) hl.push(`<div class="hlr"><span class="ic"><svg class="i"><use href="#i-boulder"/></svg></span><div>Nejtěžší boulder <b>${esc(mmFirst(boulderBest.p.jmeno))} · ${lezeniRowAt('boulder',boulderBest.v).v}</b></div></div>`);
+  const hlHtml = hl.length ? hl.join('') : `<div class="hlr"><div style="color:var(--ter)">Zatím žádné rekordy</div></div>`;
+
+  const body = `<div class="sl"><span>Maximálky všech na jednom místě</span></div>${table}<div class="sl"><span>Rekordy party · nej výkony</span></div><div class="hl">${hlHtml}</div>`;
+  const tpl = mmBackHdr('Rekordy') + body;
+  mmMountSub(host, tpl, 1);
+}
+
 function renderAllViews() {
   renderDnesek();
   renderParta();
@@ -5628,6 +5744,8 @@ function renderAllViews() {
   if(mmSubOpen==='historie') renderSubHistorie();
   else if(mmSubOpen==='rekordy') renderSubRekordy();
   else if(mmSubOpen==='bodovani') renderSubBodovani();
+  else if(mmSubOpen==='profil') renderSubProfil(state.mmSubProfilId);
+  else if(mmSubOpen==='rekordyparty') renderSubRekordyParty();
   mmChrome();
   renderWeekLabel();
   updatePeriodUI();
