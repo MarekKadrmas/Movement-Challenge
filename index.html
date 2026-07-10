@@ -724,7 +724,7 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 }
 .admin-banner svg { flex-shrink: 0; }
 /* Momentum sprite ikony pouzite v modalu zapisu (mimo .mm shadow scope) */
-#modal svg.i, #player-modal svg.i {
+#modal svg.i, #player-modal svg.i, #history-modal svg.i {
   width: 1em; height: 1em; fill: none; stroke: currentColor; stroke-width: 2.3;
   stroke-linecap: round; stroke-linejoin: round; vertical-align: -0.14em; flex: 0 0 auto;
 }
@@ -809,54 +809,56 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 .date-trigger .date-text { flex: 1; }
 .date-trigger .date-chevron { font-size: 14px; color: var(--ter); }
 
+/* Ukol 3: kalendar jako bottom sheet — 1:1 mockup "datum" (.dim + .sheet/.handle/.sheetx/h3 + .dp + .btn2/.btng) */
 .date-picker-overlay {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+  position: fixed; inset: 0; background: rgba(0,0,0,0.35);
   z-index: 400; opacity: 0; pointer-events: none;
   transition: opacity 0.2s;
-  display: flex; align-items: center; justify-content: center;
-  padding: 16px;
-  -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+  display: flex; align-items: flex-end; justify-content: center;
 }
 .date-picker-overlay.active { opacity: 1; pointer-events: auto; }
 .date-picker {
-  background: var(--card); border-radius: 20px; padding: 14px;
-  max-width: 340px; width: 100%;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.25);
-  transform: scale(0.95); transition: transform 0.2s;
+  position: relative;
+  background: var(--card); width: 100%; max-width: 480px;
+  border-radius: 22px 22px 0 0; padding: 8px 15px calc(22px + env(safe-area-inset-bottom));
+  box-shadow: 0 -10px 30px rgba(0,0,0,0.14);
+  transform: translateY(100%); transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.date-picker-overlay.active .date-picker { transform: scale(1); }
+.date-picker-overlay.active .date-picker { transform: translateY(0); }
+.date-picker-handle { width: 36px; height: 5px; background: var(--ter); border-radius: 3px; margin: 6px auto 11px; }
+.date-picker-close { position: absolute; top: 12px; right: 16px; font-size: 22px; line-height: 1; color: var(--ter); cursor: pointer; padding: 2px 4px; }
+.date-picker-h3 { font-size: 17px; font-weight: 800; text-align: center; margin-bottom: 12px; color: var(--label); }
+.date-picker-card { background: var(--card); box-shadow: var(--shadow); border-radius: 14px; padding: 12px; }
 .date-picker-header {
   display: flex; align-items: center; justify-content: space-between;
-  padding-bottom: 10px; margin-bottom: 6px;
+  font-size: 13px; font-weight: 700; margin-bottom: 9px; color: var(--label);
 }
 .date-picker-month {
-  font-weight: 800; font-size: 15px; color: var(--label);
+  font-weight: 800; font-size: 13px; color: var(--label);
   text-transform: capitalize;
 }
 .date-picker-nav {
-  width: 32px; height: 32px; border-radius: 50%;
-  background: var(--card); box-shadow: var(--shadow); border: none;
+  background: none; box-shadow: none; border: none;
   display: flex; align-items: center; justify-content: center;
-  cursor: pointer; font-size: 17px; color: var(--label);
-  font-family: inherit; padding: 0;
+  cursor: pointer; font-size: 19px; color: var(--label);
+  font-family: inherit; padding: 0 4px;
 }
-.date-picker-nav:active { transform: scale(0.95); }
+.date-picker-nav:active { transform: scale(0.9); }
 .date-picker-weekdays {
   display: grid; grid-template-columns: repeat(7, 1fr);
-  gap: 2px; margin-bottom: 4px;
+  gap: 3px; margin-bottom: 2px;
 }
 .date-picker-weekday {
-  font-size: 10px; font-weight: 700; color: var(--text-dim);
-  text-transform: uppercase; letter-spacing: 0.05em;
-  text-align: center; padding: 6px 0;
+  font-size: 9px; font-weight: 700; color: var(--sec);
+  text-align: center; padding: 4px 0;
 }
 .date-picker-grid {
   display: grid; grid-template-columns: repeat(7, 1fr);
-  gap: 2px;
+  gap: 3px; text-align: center;
 }
 .date-cell {
   aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
-  font-size: 13px; font-weight: 600;
+  font-size: 11px; font-weight: 600;
   background: transparent; border: 1px solid transparent;
   border-radius: 50%; cursor: pointer;
   color: var(--label); transition: all 0.1s;
@@ -869,18 +871,18 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 .date-cell.selected.today { border-color: var(--green); }
 .date-cell.future { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
 .date-picker-actions {
-  display: flex; gap: 8px; margin-top: 12px;
-  padding-top: 12px; border-top: 1px solid var(--sep);
+  display: flex; gap: 8px; margin-top: 11px;
 }
 .date-picker-btn {
-  flex: 1; padding: 10px; border-radius: 999px;
+  flex: 1; padding: 14px 10px; border-radius: 999px;
   background: var(--card); box-shadow: var(--shadow); border: none;
-  font-family: inherit; font-size: 12.5px; font-weight: 700;
-  color: var(--sec); cursor: pointer;
+  font-family: inherit; font-size: 13.5px; font-weight: 700;
+  color: var(--label); cursor: pointer;
 }
 .date-picker-btn:active { transform: scale(0.98); }
 .date-picker-btn.primary {
   background: var(--green); color: #fff;
+  box-shadow: 0 10px 24px -8px rgba(15,169,104,.45);
 }
 
 /* F6: Player entries modal */
@@ -1397,6 +1399,10 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
   cursor: pointer; margin-top: 8px;
   box-shadow: 0 8px 20px -8px rgba(224,88,75,.45);
 }
+/* Ukol 1: editzaznam — Uložit změny (flex 2) + Smazat (flex 1) vedle sebe, 1:1 mockup .pickrow se submit+red tlacitkem */
+.modal-footer-row { display: flex; gap: 8px; }
+.modal-footer-row .btn-submit { width: auto; flex: 2; margin-top: 0; }
+.modal-footer-row .btn-danger { width: auto; flex: 1; margin-top: 0; padding: 13px 8px; }
 
 .btn-cancel {
   width: 100%; background: transparent; color: var(--sec);
@@ -1588,15 +1594,25 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
   color: var(--text); font-size: 12px;
 }
 
+/* Ukol 2: Historie uprav — 1:1 mockup .audr (bila karta, stin, zvyraznena nova hodnota) */
 .history-list { display: flex; flex-direction: column; gap: 6px; }
 .history-item {
-  background: var(--bg); border: 1px solid var(--border);
-  border-radius: 10px; padding: 10px 12px;
-  font-size: 12px;
+  background: var(--card); box-shadow: var(--shadow);
+  border-radius: 12px; padding: 10px 14px;
 }
-.history-item .when { color: var(--text-muted); font-size: 11px; margin-bottom: 4px; font-variant-numeric: tabular-nums; }
-.history-item .change { color: var(--text); }
-.history-item .change strong { color: var(--text); font-weight: 700; }
+.history-item .when { color: var(--sec); font-size: 11px; font-weight: 600; margin-bottom: 3px; font-variant-numeric: tabular-nums; }
+.history-item .when .i { color: var(--sec); }
+.history-item .change { color: var(--label); font-size: 13px; font-weight: 600; }
+.history-item .change b { color: var(--green); }
+/* Hlavicka podobrazovkoveho stylu (sipka zpet + centrovany nazev), stejna konvence jako mmBackHdr() */
+.hist-head { align-items: center; margin-bottom: 4px; }
+.hist-head .modal-back-x { display: inline-flex; }
+.hist-head .modal-title { flex: 1; text-align: center; margin-bottom: 0; }
+.hist-head .modal-head-spacer { width: 22px; flex-shrink: 0; }
+.history-empty { text-align: center; padding: 54px 20px 30px; color: var(--sec); }
+.history-empty .he-icon { font-size: 34px; margin-bottom: 12px; opacity: .85; color: var(--ter); }
+.history-empty .he-title { font-size: 15px; font-weight: 700; color: var(--label); margin-bottom: 5px; }
+.history-empty .he-sub { font-size: 12.5px; line-height: 1.5; }
 
 /* Momentum spodní lišta (Fáze 1c) */
 .tb{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(10px + env(safe-area-inset-bottom));width:calc(100% - 24px);max-width:460px;display:flex;justify-content:space-around;align-items:center;padding:8px;background:var(--bar);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border-radius:999px;box-shadow:0 8px 26px rgba(0,0,0,.16);border:1px solid var(--sep);z-index:50;}
@@ -2319,7 +2335,7 @@ body.mm-full{background:#EDF0EC;}
 
 
 <div class="test-banner" aria-label="Testovací verze"></div>
-<div id="mm-ver" style="position:fixed;bottom:2px;right:5px;z-index:2147483647;color:rgba(0,0,0,.22);font:600 8px monospace;pointer-events:none;">v0710·15</div>
+<div id="mm-ver" style="position:fixed;bottom:2px;right:5px;z-index:2147483647;color:rgba(0,0,0,.22);font:600 8px monospace;pointer-events:none;">v0710·16</div>
 <script>
 (function(){try{if(window.navigator.standalone===true||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches))document.documentElement.classList.add('pwa-standalone');}catch(e){}})();
 </script>
@@ -2931,8 +2947,11 @@ body.mm-full{background:#EDF0EC;}
     </div><!-- /modal-body -->
 
     <div class="modal-footer">
-      <button class="btn-submit" id="submit-btn" onclick="submitEntry()">Zapsat</button>
-      <button class="btn-danger" id="delete-btn" style="display:none;" onclick="deleteCurrentEntry()">Smazat záznam</button>
+      <!-- Ukol 1: Uložit změny + Smazat vedle sebe (mockup editzaznam) — delete-btn skryty mimo edit rezim, submit pak zabira cely radek -->
+      <div class="modal-footer-row">
+        <button class="btn-submit" id="submit-btn" onclick="submitEntry()">Zapsat</button>
+        <button class="btn-danger" id="delete-btn" style="display:none;" onclick="deleteCurrentEntry()">Smazat</button>
+      </div>
       <button class="btn-cancel" onclick="closeModal()">Zrušit</button>
     </div>
   </div>
@@ -3041,14 +3060,16 @@ body.mm-full{background:#EDF0EC;}
   </div>
 </div>
 
-<!-- PLAYER HISTORY MODAL -->
+<!-- PLAYER HISTORY MODAL — Ukol 2: hlavicka 1:1 mockup historieuprav (sipka zpet + centrovany nazev, zadny Zavrit — zavira se sipkou/klikem mimo) -->
 <div class="modal-overlay" id="history-modal">
   <div class="modal">
     <div class="modal-handle"></div>
-    <div class="modal-title" id="history-modal-title">Historie úprav</div>
-    <div class="modal-subtitle">Všechny změny parametrů</div>
+    <div class="modal-head-row hist-head">
+      <span class="modal-back-x" onclick="closeHistoryModal()">‹</span>
+      <div class="modal-title" id="history-modal-title">Historie úprav</div>
+      <span class="modal-head-spacer"></span>
+    </div>
     <div class="history-list" id="history-list"></div>
-    <button class="btn-cancel" onclick="closeHistoryModal()">Zavřít</button>
   </div>
 </div>
 
@@ -3078,24 +3099,29 @@ body.mm-full{background:#EDF0EC;}
   </div>
 </div>
 
-<!-- Vlastni kalendar popup -->
+<!-- Vlastni kalendar popup — Ukol 3: bottom sheet 1:1 mockup "datum" (handle/×/h3 nad .dp kartou, Dnes+Hotovo pod ni) -->
 <div class="date-picker-overlay" id="date-picker-overlay" onclick="onPickerOverlayClick(event)">
   <div class="date-picker" onclick="event.stopPropagation()">
-    <div class="date-picker-header">
-      <button type="button" class="date-picker-nav" onclick="changeMonth(-1)">‹</button>
-      <div class="date-picker-month" id="date-picker-month-label">měsíc 2026</div>
-      <button type="button" class="date-picker-nav" onclick="changeMonth(1)">›</button>
+    <div class="date-picker-handle"></div>
+    <span class="date-picker-close" onclick="closeDatePicker()">×</span>
+    <h3 class="date-picker-h3">Vyber datum</h3>
+    <div class="date-picker-card">
+      <div class="date-picker-header">
+        <button type="button" class="date-picker-nav" onclick="changeMonth(-1)">‹</button>
+        <div class="date-picker-month" id="date-picker-month-label">měsíc 2026</div>
+        <button type="button" class="date-picker-nav" onclick="changeMonth(1)">›</button>
+      </div>
+      <div class="date-picker-weekdays">
+        <div class="date-picker-weekday">Po</div>
+        <div class="date-picker-weekday">Út</div>
+        <div class="date-picker-weekday">St</div>
+        <div class="date-picker-weekday">Čt</div>
+        <div class="date-picker-weekday">Pá</div>
+        <div class="date-picker-weekday">So</div>
+        <div class="date-picker-weekday">Ne</div>
+      </div>
+      <div class="date-picker-grid" id="date-picker-grid"></div>
     </div>
-    <div class="date-picker-weekdays">
-      <div class="date-picker-weekday">Po</div>
-      <div class="date-picker-weekday">Út</div>
-      <div class="date-picker-weekday">St</div>
-      <div class="date-picker-weekday">Čt</div>
-      <div class="date-picker-weekday">Pá</div>
-      <div class="date-picker-weekday">So</div>
-      <div class="date-picker-weekday">Ne</div>
-    </div>
-    <div class="date-picker-grid" id="date-picker-grid"></div>
     <div class="date-picker-actions">
       <button type="button" class="date-picker-btn" onclick="jumpToToday()">Dnes</button>
       <button type="button" class="date-picker-btn primary" onclick="closeDatePicker()">Hotovo</button>
@@ -7383,6 +7409,9 @@ function openEditModal(id, type) {
   document.getElementById('submit-btn').textContent = 'Uložit změny';
   document.getElementById('delete-btn').style.display = 'block';
   buildPlayerPills();
+  // Ukol 1: "Za koho"/admin banner jen pro admina (stejna logika jako openModal) — bez teto vetve
+  // se pole ukazovalo vzdy, i bezneho hraci pri editaci vlastniho zaznamu (neshoda s mockupem editzaznam).
+  document.getElementById('player-select-field').style.display = isAdmin() ? '' : 'none';
   setTimeout(() => {
     const pill = document.querySelector(`#player-pills .player-pill[data-player-id="${entry.player_id}"]`);
     if (pill) pill.click();
@@ -7622,24 +7651,45 @@ async function submitPlayerEdit() {
 // ============================================================
 //  HISTORIE UPRAV HRACE
 // ============================================================
+// Ukol 2: "10. 7. 2026 07:58" (stary format) -> "dnes 14:20" / "včera 20:10" / "24. 6." (1:1 mockup .audr .w)
+function mmHistWhen(dateStr) {
+  const d = new Date(dateStr);
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const yesterday = new Date(today); yesterday.setDate(today.getDate() - 1);
+  const dd = new Date(d); dd.setHours(0, 0, 0, 0);
+  const time = d.toLocaleTimeString('cs-CZ', { hour: '2-digit', minute: '2-digit' });
+  if (dd.getTime() === today.getTime()) return `dnes ${time}`;
+  if (dd.getTime() === yesterday.getTime()) return `včera ${time}`;
+  return d.toLocaleDateString('cs-CZ', { day: 'numeric', month: 'numeric' });
+}
+
 function openPlayerHistory(playerId) {
   const player = state.players.find(p => p.id === playerId);
   if (!player) return;
-  document.getElementById('history-modal-title').textContent = `Historie úprav · ${player.jmeno}`;
   const items = state.history.filter(h => h.player_id === playerId)
     .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
   const el = document.getElementById('history-list');
   if (items.length === 0) {
-    el.innerHTML = '<div class="entry-empty">Žádné úpravy</div>';
+    // Prazdny stav — stejny vizualni vzor jako mockup histempty (ikona + tucny nadpis + podnadpis)
+    el.innerHTML = `<div class="history-empty">
+      <div class="he-icon"><svg class="i"><use href="#i-note"/></svg></div>
+      <div class="he-title">Zatím žádné úpravy</div>
+      <div class="he-sub">Změny parametrů profilu se zobrazí tady.</div>
+    </div>`;
   } else {
     el.innerHTML = items.map(h => {
       const editor = state.players.find(p => p.id === h.changed_by_player_id);
       const editorName = editor ? editor.jmeno : 'neznámý';
+      // Admin úprava cizího profilu -> odznak štítu + "(admin)" jako v mockupu ("🛡 Martin (admin) · včera 20:10")
+      const isAdminEdit = editor && editor.is_admin && editor.id !== playerId;
+      const who = isAdminEdit
+        ? `<svg class="i"><use href="#i-shield"/></svg> ${habitEsc(editorName)} (admin)`
+        : habitEsc(editorName);
       const label = FIELD_LABELS[h.field_name] || h.field_name;
       return `
         <div class="history-item">
-          <div class="when">${formatDateTime(h.created_at)} · ${editorName}</div>
-          <div class="change"><strong>${habitEsc(label)}:</strong> ${habitEsc(h.old_value || '—')} → ${habitEsc(h.new_value || '—')}</div>
+          <div class="when">${who} · ${mmHistWhen(h.created_at)}</div>
+          <div class="change">${habitEsc(label)}: ${habitEsc(h.old_value || '—')} → <b>${habitEsc(h.new_value || '—')}</b></div>
         </div>
       `;
     }).join('');
