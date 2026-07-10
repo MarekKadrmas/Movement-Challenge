@@ -798,6 +798,24 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 .pk.lezon { background: #8B6FE0; color: #fff; border-color: #8B6FE0; }
 .pk.lezon::after { opacity: .9; }
 
+/* Momentum: hint pod Nárocnosti (mockup .lvlhint) — Nárocnost pilulky 1-5 sdili .pk/.pickrow vyse */
+.lvlhint { text-align: center; font-size: 12px; color: var(--sec); margin-top: 9px; font-weight: 600; }
+
+/* Momentum: horni segmentovany prepinac uvnitr formulare (mockup .tsel) — pouzito u Lezeni/Disciplina.
+   Stejny princip jako .pk/.pickrow vyse (appka mela .tsel jen uvnitr .mm sablony, ted i v lightDOM modalu). */
+.tsel { display: flex; gap: 8px; margin-bottom: 12px; }
+.tsel b { flex: 1; text-align: center; font-size: 12.5px; font-weight: 800; font-style: normal; color: var(--sec); background: var(--card); box-shadow: var(--shadow); padding: 9px; border-radius: 999px; cursor: pointer; }
+.tsel b.active { background: var(--green); color: #fff; }
+
+/* Momentum: segmentovany prepinac na sedem tracku (mockup .seg) — pouzito u Systemu obtiznosti (lezeni) */
+.seg { display: flex; background: rgba(120,128,124,.12); border-radius: 999px; padding: 3px; margin: 5px 0 9px; }
+.seg b { flex: 1; text-align: center; font-size: 12px; font-weight: 700; font-style: normal; padding: 8px 0; border-radius: 999px; color: var(--label); cursor: pointer; }
+.seg b.active { background: var(--card); box-shadow: var(--shadow); }
+
+/* F51: cesty — radek "Cesta N" + grade select (system je ted globalni .seg vyse, ne uz per-radek) */
+.serie-row.lezeni-row { grid-template-columns: 1.3fr 1fr 32px; }
+.lezeni-route-name { height: 40px; display: flex; align-items: center; padding: 0 15px; background: var(--card); box-shadow: var(--shadow); border-radius: 999px; font-size: 13px; font-weight: 600; color: var(--label); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
 .reward-slot:empty { display: none; }
 
 .field { margin-bottom: 14px; }
@@ -1172,7 +1190,8 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 .serie-row select:focus { outline: none; box-shadow: 0 0 0 2px var(--green), var(--shadow); }
 .lezeni-conv {
   font-size: 11px; color: var(--sec);
-  margin: -2px 0 8px 40px; font-weight: 600;
+  margin: -2px 0 8px 4px; font-weight: 600;
+  text-align: right;
 }
 #pe-boulder, #pe-lano {
   padding: 14px; font-size: 15px; width: 100%; height: 48px; box-sizing: border-box;
@@ -2360,7 +2379,7 @@ body.mm-full{background:#EDF0EC;}
 
 
 <div class="test-banner" aria-label="Testovací verze"></div>
-<div id="mm-ver" style="position:fixed;bottom:2px;right:5px;z-index:2147483647;color:rgba(0,0,0,.22);font:600 8px monospace;pointer-events:none;">v0710·18</div>
+<div id="mm-ver" style="position:fixed;bottom:2px;right:5px;z-index:2147483647;color:rgba(0,0,0,.22);font:600 8px monospace;pointer-events:none;">v0710·19</div>
 <script>
 (function(){try{if(window.navigator.standalone===true||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches))document.documentElement.classList.add('pwa-standalone');}catch(e){}})();
 </script>
@@ -2883,23 +2902,24 @@ body.mm-full{background:#EDF0EC;}
       <div id="form-aktivita" style="display:none;">
         <div class="field">
           <label>Co jsi dělal/a</label>
-          <input type="text" id="aktivita-nazev" placeholder="Např. Běh 5 km, posilovna...">
+          <input type="text" id="aktivita-nazev" placeholder="Například cvíčo 30 min…">
         </div>
         <div class="field">
-          <label>Úroveň obtížnosti</label>
-          <div class="level-grid">
-            <button class="level-btn l1" data-level="1">1</button>
-            <button class="level-btn l2" data-level="2">2</button>
-            <button class="level-btn l3" data-level="3">3</button>
-            <button class="level-btn l4" data-level="4">4</button>
-            <button class="level-btn l5" data-level="5">5</button>
+          <label>Náročnost</label>
+          <div class="pickrow">
+            <div class="pk" data-level="1">1</div>
+            <div class="pk" data-level="2">2</div>
+            <div class="pk" data-level="3">3</div>
+            <div class="pk" data-level="4">4</div>
+            <div class="pk" data-level="5">5</div>
           </div>
-          <div class="level-hint" id="level-hint">vyber úroveň 1-5</div>
+          <div class="lvlhint" id="level-hint">vyber úroveň 1-5</div>
           <div class="level-points-display" id="level-points-display"></div>
         </div>
-        <!-- F27: Volitelne km u behu — kosmetika: info-boxy "navic" odebrany (mockup je nema), plain field jako ostatni -->
-        <div class="field">
-          <label>Kilometry</label>
+        <!-- F27/IA: Kilometry jen pro podtyp Beh (mockup formbeh) — schovane u genericke aktivity/Kolo/Plavani,
+             show/hide reseno v updateActivitySubpicker() podle state.actSub==='beh'. -->
+        <div class="field" id="aktivita-km-field" style="display:none;">
+          <label>Kilometry *</label>
           <input type="number" id="aktivita-km" placeholder="0 km" step="0.1" min="0" inputmode="decimal">
         </div>
       </div>
@@ -2929,18 +2949,14 @@ body.mm-full{background:#EDF0EC;}
       <div id="form-lezeni" style="display:none;">
         <div class="field">
           <label>Disciplína</label>
-          <div class="serie-mode-grid" style="grid-template-columns: repeat(2, 1fr);">
-            <button type="button" class="serie-mode-btn active" data-lezeni-disc="boulder">
-              <div class="serie-mode-icon">🪨</div>
-              <div class="label">Boulder</div>
-              <div class="label-sub">Font / V-scale</div>
-            </button>
-            <button type="button" class="serie-mode-btn" data-lezeni-disc="lano">
-              <div class="serie-mode-icon">🧗</div>
-              <div class="label">Lano</div>
-              <div class="label-sub">French / UIAA / YDS</div>
-            </button>
+          <div class="tsel" id="lezeni-disc-tsel">
+            <b class="active" data-lezeni-disc="boulder">Boulder</b>
+            <b data-lezeni-disc="lano">Lano</b>
           </div>
+        </div>
+        <div class="field">
+          <label>Systém obtížností</label>
+          <div class="seg" id="lezeni-sys-seg"></div>
         </div>
         <div class="field" id="lezeni-nomax-warn" style="display:none;">
           <div class="info-box" style="border-color:#f59e0b;">
@@ -2949,12 +2965,9 @@ body.mm-full{background:#EDF0EC;}
           </div>
         </div>
         <div class="field">
-          <label>Cesty</label>
-          <div class="serie-row-header" style="grid-template-columns: 32px 1fr 1.4fr 32px;">
-            <div>#</div><div>Grade</div><div>Systém</div><div></div>
-          </div>
+          <label>Cesty (obtížnosti)</label>
           <div id="lezeni-routes-list"></div>
-          <button type="button" class="add-serie-btn" onclick="addLezeniRoute()">+ Přidat cestu</button>
+          <button type="button" class="add-serie-btn" onclick="addLezeniRoute()">＋ Přidat cestu</button>
         </div>
         <div class="level-points-display" id="lezeni-points-display"></div>
       </div>
@@ -3368,7 +3381,9 @@ let state = {
   // F45: guest mode (URL ?guest=true) - read-only verze pro kamarády
   isGuest: false,
   // F51: lezení — disciplína + seznam cest [{grade, sys, idx}]
-  lezeniDisc: 'boulder', lezeniRoutes: [],
+  // lezeniSys (IA): globalni "Systém obtížností" (mockup .seg) sdileny vsemi cestami — nahrazuje
+  // puvodni per-radek systém select, viz setLezeniSys/renderLezeniSysSeg.
+  lezeniDisc: 'boulder', lezeniSys: 'font', lezeniRoutes: [],
   // F52: habit tracker
   habits: [], habitLogs: [],
   habitEditId: null, habitView: 'catalog', habitCat: 'dop', habitSearch: '',
@@ -3742,6 +3757,9 @@ const LANO_GRADES = [
 const LEZENI_COLS = { boulder: ['font','v'], lano: ['french','uiaa','yds'] };
 const LEZENI_SYS_LABEL = { font:'Font', v:'V-scale', french:'French', uiaa:'UIAA', yds:'YDS' };
 const LEZENI_SYS_EXAMPLE = { font:'6A', v:'V3', french:'6a', uiaa:'7-', yds:'5.10c' };  // ukázka v rozbalovátku
+// IA (formlez): poradi segmentu v "Systém obtížností" .seg — boulder ma mockupem dane V-scale/Font
+// (Font aktivni = defaultLezeniSys()), lano nema mockup referenci, drzi se poradi LEZENI_COLS.
+const LEZENI_SYS_ORDER = { boulder: ['v','font'], lano: ['french','uiaa','yds'] };
 function lezeniTable(disc) { return disc === 'boulder' ? BOULDER_GRADES : LANO_GRADES; }
 function lezeniNorm(s) { return String(s||'').trim().toLowerCase().replace(/\s+/g,''); }
 // najdi řádek podle gradu v jakémkoli systému disciplíny → {idx,...} nebo null
@@ -3758,6 +3776,12 @@ function lezeniRowAt(disc, idx) {
 function lezeniConvStr(disc, idx) {
   const row = lezeniRowAt(disc, idx);
   return LEZENI_COLS[disc].map(c => (c==='font'||c==='french') ? row[c] : LEZENI_SYS_LABEL[c]+' '+row[c]).join(' · ');
+}
+// IA (formlez): jen ALTERNATIVNI systemy (bez prave aktivniho sys) — pro parentetickou "= (V5)" hint
+// u kazde cesty, kdyz je "Systém obtížností" globalne prepnuty na jeden konkretni sloupec.
+function lezeniConvOther(disc, idx, sys) {
+  const row = lezeniRowAt(disc, idx);
+  return LEZENI_COLS[disc].filter(c => c !== sys).map(c => row[c]).join(' / ');
 }
 // Bodování: relativně k osobáku. Lehká cesta (pod maxem) = málo; cesta na maxu = MULT.
 const LEZENI_REL_POW = 2;      // strmost poklesu pod maxem
@@ -6957,7 +6981,7 @@ function resetFormFields() {
   document.querySelectorAll('#cvik-pills .player-pill').forEach(p => {
     p.classList.remove('active'); p.style.background=''; p.style.borderColor=''; p.style.color='';
   });
-  document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#form-aktivita [data-level]').forEach(b => b.classList.remove('on'));
   document.querySelectorAll('.stretch-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('cvik-single-op').value = '';
   document.getElementById('cvik-single-vaha').value = '';
@@ -6973,8 +6997,9 @@ function resetFormFields() {
   const cvikDisp = document.getElementById('cvik-points-display');
   if (cvikDisp) cvikDisp.classList.remove('show');  // F20
   // F51: reset lezení
-  state.lezeniDisc = 'boulder'; state.lezeniRoutes = [{ grade:'', sys:'font', idx:null }];
+  state.lezeniDisc = 'boulder'; state.lezeniSys = defaultLezeniSys(); state.lezeniRoutes = [{ grade:'', sys: state.lezeniSys, idx:null }];
   document.querySelectorAll('[data-lezeni-disc]').forEach(b => b.classList.toggle('active', b.dataset.lezeniDisc === 'boulder'));
+  renderLezeniSysSeg();
   const lezDisp = document.getElementById('lezeni-points-display'); if (lezDisp) lezDisp.classList.remove('show');
   renderLezeniRoutes();
   // Reset datum na dnes
@@ -7175,6 +7200,10 @@ function updateActivitySubpicker() {
   if (strecink) strecink.classList.toggle('on', state.entryType === 'stretching');
   if (beh) beh.classList.toggle('lezon', state.entryType === 'aktivita' && state.actSub === 'beh');
   if (lezeni) lezeni.classList.toggle('lezon', state.entryType === 'lezeni');
+  // IA (formakt/formbeh): Kilometry pole je v mockupu jen u podtypu Beh — genericka aktivita
+  // (a Kolo/Plavani) ho nema. Cistě vizualni show/hide, submitEntry cte #aktivita-km beze zmeny.
+  const kmField = document.getElementById('aktivita-km-field');
+  if (kmField) kmField.style.display = (state.entryType === 'aktivita' && state.actSub === 'beh') ? '' : 'none';
 }
 
 // Klik na sub-pilulku pod "Aktivita". Kolo/Plavani/Beh -> entryType 'aktivita' (Beh si jen
@@ -7197,11 +7226,43 @@ function pickActivitySub(kind) {
 // ===== F51: Lezení — UI logika =====
 function defaultLezeniSys() { return state.lezeniDisc === 'boulder' ? 'font' : 'french'; }
 
-function setLezeniDisc(disc) {
+// IA (formlez): Disciplína = .tsel (Boulder/Lano). Prepnuti disciplíny meni i nabidku dostupnych
+// "Systemu obtiznosti" (viz renderLezeniSysSeg), stare cesty jsou v jinem gradovem systemu nez ta
+// nova disciplina, takze se (stejne jako drive) vynuluji — vyjimka je nacteni edit-rezimu, kde
+// { resetRoutes:false } necha existujici state.lezeniRoutes beze zmeny (viz openEntryEdit nize).
+function setLezeniDisc(disc, opts) {
+  opts = opts || {};
   state.lezeniDisc = disc;
   document.querySelectorAll('[data-lezeni-disc]').forEach(b => b.classList.toggle('active', b.dataset.lezeniDisc === disc));
-  // přepočítej idx u existujících cest podle nové disciplíny (grade necháme, znova najdeme)
-  state.lezeniRoutes.forEach(r => { if (!LEZENI_COLS[disc].includes(r.sys)) r.sys = defaultLezeniSys(); const row = r.grade ? lezeniFind(disc, r.grade) : null; r.idx = row ? row.idx : null; });
+  if (opts.resetRoutes !== false) {
+    state.lezeniSys = defaultLezeniSys();
+    state.lezeniRoutes.forEach(r => { r.sys = state.lezeniSys; r.grade = ''; r.idx = null; });
+  }
+  renderLezeniSysSeg();
+  renderLezeniRoutes();
+}
+
+// IA (formlez): "Systém obtížností" .seg — globalni volba gradoveho systemu pro VSECHNY cesty
+// najednou (mockup nema per-radek systém select). Zmena prepocita grade text vsech cest z
+// kanonickeho idx do noveho systemu — vypocet bodu (idx-based) zustava beze zmeny.
+function renderLezeniSysSeg() {
+  const el = document.getElementById('lezeni-sys-seg');
+  if (!el) return;
+  const order = LEZENI_SYS_ORDER[state.lezeniDisc];
+  el.innerHTML = order.map(s => `<b data-lezeni-sys="${s}" class="${s === state.lezeniSys ? 'active' : ''}">${LEZENI_SYS_LABEL[s]}</b>`).join('');
+  el.querySelectorAll('[data-lezeni-sys]').forEach(b => b.addEventListener('click', () => {
+    if (!state.selectedPlayer) return;
+    setLezeniSys(b.dataset.lezeniSys);
+  }));
+}
+
+function setLezeniSys(sys) {
+  state.lezeniSys = sys;
+  document.querySelectorAll('#lezeni-sys-seg [data-lezeni-sys]').forEach(b => b.classList.toggle('active', b.dataset.lezeniSys === sys));
+  state.lezeniRoutes.forEach(r => {
+    r.sys = sys;
+    if (r.idx != null) r.grade = lezeniRowAt(state.lezeniDisc, r.idx)[sys];
+  });
   renderLezeniRoutes();
 }
 
@@ -7211,41 +7272,42 @@ function lezeniDiscMax() {
   return state.lezeniDisc === 'boulder' ? p.max_boulder : p.max_lano;
 }
 
+// F51/IA: kazdy radek = "Cesta N" (staticky popisek, mockup formlez) + JEDEN grade <select> v
+// aktualne zvolenem globalnim systemu (state.lezeniSys) + × na smazani. Ulozena data (grade/sys/idx
+// per cesta, vypocet bodu z idx) se nemeni — jen UI uz nema samostatny sloupec "Systém" na radek.
 function renderLezeniRoutes() {
   const el = document.getElementById('lezeni-routes-list');
   if (!el) return;
   const disc = state.lezeniDisc;
+  const sys = state.lezeniSys;
   const grades = lezeniTable(disc);
-  const sysList = LEZENI_COLS[disc];
   el.innerHTML = state.lezeniRoutes.map((r, i) => {
-    const sys = LEZENI_COLS[disc].includes(r.sys) ? r.sys : sysList[0];
     const opts = grades.map(g => `<option value="${g[sys]}" ${lezeniNorm(g[sys])===lezeniNorm(r.grade)?'selected':''}>${g[sys]}</option>`).join('');
-    const sysOpts = sysList.map(s => `<option value="${s}" ${s===sys?'selected':''}>${LEZENI_SYS_LABEL[s]} (${LEZENI_SYS_EXAMPLE[s]})</option>`).join('');
-    const conv = (r.idx!=null) ? `<div class="lezeni-conv">= ${lezeniConvStr(disc, r.idx)}</div>` : '';
-    return `<div class="serie-row" style="grid-template-columns: 32px 1fr 1.4fr 32px;">
-      <div class="serie-num">${i+1}</div>
+    const conv = (r.idx!=null) ? `<div class="lezeni-conv">= ${lezeniConvOther(disc, r.idx, sys)}</div>` : '';
+    return `<div class="serie-row lezeni-row">
+      <div class="lezeni-route-name">Cesta #${i+1}</div>
       <select data-idx="${i}" data-field="grade"><option value="">—</option>${opts}</select>
-      <select data-idx="${i}" data-field="sys">${sysOpts}</select>
       <button class="remove-btn" data-idx="${i}" type="button">×</button>
     </div>${conv}`;
   }).join('');
   el.querySelectorAll('select').forEach(sel => sel.addEventListener('change', e => {
-    const idx = parseInt(e.target.dataset.idx), field = e.target.dataset.field;
-    if (field === 'sys') { state.lezeniRoutes[idx].sys = e.target.value; }
-    else { state.lezeniRoutes[idx].grade = e.target.value; const row = lezeniFind(disc, e.target.value); state.lezeniRoutes[idx].idx = row ? row.idx : null; }
+    const idx = parseInt(e.target.dataset.idx);
+    state.lezeniRoutes[idx].sys = sys;
+    state.lezeniRoutes[idx].grade = e.target.value;
+    const row = lezeniFind(disc, e.target.value);
+    state.lezeniRoutes[idx].idx = row ? row.idx : null;
     renderLezeniRoutes();
   }));
   el.querySelectorAll('.remove-btn').forEach(btn => btn.addEventListener('click', e => {
     state.lezeniRoutes.splice(parseInt(e.target.dataset.idx), 1);
-    if (!state.lezeniRoutes.length) state.lezeniRoutes = [{ grade:'', sys: defaultLezeniSys(), idx:null }];
+    if (!state.lezeniRoutes.length) state.lezeniRoutes = [{ grade:'', sys, idx:null }];
     renderLezeniRoutes();
   }));
   updateLezeniPointsPreview();
 }
 
 function addLezeniRoute() {
-  const last = state.lezeniRoutes[state.lezeniRoutes.length-1];
-  state.lezeniRoutes.push({ grade:'', sys: last ? last.sys : defaultLezeniSys(), idx:null });
+  state.lezeniRoutes.push({ grade:'', sys: state.lezeniSys, idx:null });
   renderLezeniRoutes();
   // scroll na tlačítko "Přidat cestu" (jako F43 u cviků)
   requestAnimationFrame(() => {
@@ -7420,8 +7482,15 @@ document.querySelectorAll('.serie-mode-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     if (btn.dataset.habitFreq) { setHabitFreq(btn.dataset.habitFreq); return; }  // F52: habit modal, nezávisí na hráči
     if (!state.selectedPlayer) return;
-    if (btn.dataset.lezeniDisc) setLezeniDisc(btn.dataset.lezeniDisc);  // F51: přepínač disciplíny
-    else setSerieMode(btn.dataset.mode);
+    setSerieMode(btn.dataset.mode);
+  });
+});
+
+// IA (formlez): Disciplína uz neni .serie-mode-btn dlazdice, ale .tsel <b data-lezeni-disc> (mockup 1:1)
+document.querySelectorAll('[data-lezeni-disc]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (!state.selectedPlayer) return;
+    setLezeniDisc(btn.dataset.lezeniDisc);
   });
 });
 
@@ -7444,11 +7513,13 @@ document.querySelectorAll('#cvik-pills .player-pill').forEach(pill => {
   if (el) el.addEventListener('input', updateCvikPointsPreview);
 });
 
-document.querySelectorAll('.level-btn:not(.stretch-btn)').forEach(btn => {
+// Momentum: Náročnost 1-5 je teď .pk pilulky (mockup formakt), ne .level-btn kolečka —
+// selektujeme přes [data-level] (unikátní atribut jen na téhle pětici) a "on" (mockup .pk.on).
+document.querySelectorAll('#form-aktivita [data-level]').forEach(btn => {
   btn.addEventListener('click', () => {
     if (!state.selectedPlayer) return;
-    document.querySelectorAll('.level-btn:not(.stretch-btn)').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+    document.querySelectorAll('#form-aktivita [data-level]').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
     state.selectedLevel = parseInt(btn.dataset.level);
     document.getElementById('level-hint').textContent = LEVEL_HINTS[state.selectedLevel];
     const disp = document.getElementById('level-points-display');
@@ -7695,9 +7766,16 @@ function openEditModal(id, type) {
     setSerieMode(mode);
   } else if (lezeniData) {
     setEntryType('lezeni');
-    setLezeniDisc(lezeniData.discipline || 'boulder');
-    state.lezeniRoutes = (lezeniData.routes || []).map(r => ({ grade: r.grade, sys: r.sys || defaultLezeniSys(), idx: (r.idx != null ? r.idx : (lezeniFind(lezeniData.discipline, r.grade) || {}).idx) }));
+    const lezDisc = lezeniData.discipline || 'boulder';
+    setLezeniDisc(lezDisc, { resetRoutes: false });  // IA: disciplína se meni, ale ulozena data cest si nactem sami hned pod tim
+    state.lezeniRoutes = (lezeniData.routes || []).map(r => ({ grade: r.grade, sys: r.sys || defaultLezeniSys(), idx: (r.idx != null ? r.idx : (lezeniFind(lezDisc, r.grade) || {}).idx) }));
     if (!state.lezeniRoutes.length) state.lezeniRoutes = [{ grade:'', sys: defaultLezeniSys(), idx:null }];
+    // IA: "Systém obtížností" je ted globalni — odvod ho z prvni ulozene cesty (nebo default),
+    // a vsechny cesty preved (jen zobrazeni grade textu, idx/body zustavaji) do tohoto systemu.
+    const firstValid = state.lezeniRoutes.find(r => r.idx != null);
+    state.lezeniSys = firstValid ? firstValid.sys : defaultLezeniSys();
+    state.lezeniRoutes.forEach(r => { r.sys = state.lezeniSys; if (r.idx != null) r.grade = lezeniRowAt(lezDisc, r.idx)[state.lezeniSys]; });
+    renderLezeniSysSeg();
     renderLezeniRoutes();
   } else if (isStretching) {
     setEntryType('stretching');
@@ -7729,9 +7807,9 @@ function openEditModal(id, type) {
     else state.actSub = null;
     updateActivitySubpicker();
     state.selectedLevel = entry.uroven;
-    document.querySelectorAll('.level-btn:not(.stretch-btn)').forEach(b => {
-      b.classList.remove('active');
-      if (parseInt(b.dataset.level) === entry.uroven) b.classList.add('active');
+    document.querySelectorAll('#form-aktivita [data-level]').forEach(b => {
+      b.classList.remove('on');
+      if (parseInt(b.dataset.level) === entry.uroven) b.classList.add('on');
     });
     document.getElementById('level-hint').textContent = LEVEL_HINTS[entry.uroven];
     const disp = document.getElementById('level-points-display');
