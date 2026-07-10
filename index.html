@@ -1037,6 +1037,10 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 .pe-link-row .pe-link-tx small { display: block; color: var(--sec); font-weight: 500; font-size: 10.5px; margin-top: 1px; }
 .pe-link-row .pe-link-x { color: var(--ter); font-size: 16px; }
 .pe-maxg-label { font-size: 11px; font-weight: 700; color: var(--sec); display: block; margin-bottom: 5px; }
+/* Task 1: avatar barva swatche — 1:1 mockup S.uprava .colors/.col (kruh, vybrany = prstenec) */
+.pe-colors { display: flex; gap: 8px; margin-top: 2px; }
+.pe-color-opt { width: 26px; height: 26px; border-radius: 50%; cursor: pointer; flex: 0 0 auto; }
+.pe-color-opt.active { outline: 2px solid var(--label); outline-offset: 2px; }
 /* Momentum info karta (nahrazuje puvodni zluty info-box, jen v Upravit profil — jinde .info-box zustava beze zmeny) */
 #player-modal .info-box {
   background: var(--card); border: none; box-shadow: var(--shadow); color: var(--sec);
@@ -1259,15 +1263,17 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
   font-size: 13px; font-weight: 600; color: var(--text);
 }
 .habit-cat-chip.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+/* Ukol 2: ikona/barva navyku — 1:1 mockup S.tvorba .emojirow/.em a .colors/.col (jen realna paleta appky, ne mockup-illustrativni 4 polozky) */
+.habit-icon-picker { display: flex; gap: 6px; flex-wrap: wrap; }
 .habit-icon-opt {
-  width: 44px; height: 44px; border-radius: 10px; cursor: pointer;
-  background: var(--bg); border: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: center; font-size: 22px;
+  width: 34px; height: 34px; border-radius: 50%; cursor: pointer;
+  background: var(--card); box-shadow: var(--shadow); border: none;
+  display: flex; align-items: center; justify-content: center; font-size: 17px;
 }
-.habit-icon-opt.active { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--bg)); }
-.habit-color-picker { display: flex; gap: 10px; flex-wrap: wrap; }
-.habit-color-opt { width: 32px; height: 32px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
-.habit-color-opt.active { border-color: var(--text); }
+.habit-icon-opt.active { outline: 2px solid var(--green); }
+.habit-color-picker { display: flex; gap: 8px; flex-wrap: wrap; }
+.habit-color-opt { width: 26px; height: 26px; border-radius: 50%; cursor: pointer; border: none; }
+.habit-color-opt.active { outline: 2px solid var(--label); outline-offset: 2px; }
 /* F52 v2: soukromí, katalog, formulář */
 .habit-privacy {
   background: color-mix(in srgb, var(--accent) 8%, var(--bg-card));
@@ -1276,31 +1282,41 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
   font-size: 12.5px; color: var(--text-muted); line-height: 1.4;
 }
 .habit-privacy b { color: var(--text); }
+/* Ukol 3: Knihovna navyku — 1:1 mockup S.knihovna (.inp.ph hledani / .filt kategorie / .hbm radky s "+" / .newbtn vlastni navyk) */
 .habit-search {
-  width: 100%; box-sizing: border-box; height: 46px; padding: 0 14px;
-  background: var(--bg); border: 1px solid var(--border); color: var(--text);
-  border-radius: 12px; font-family: inherit; font-size: 15px; margin-bottom: 12px;
+  width: 100%; box-sizing: border-box; padding: 10px 15px;
+  background: var(--card); border: none; color: var(--label);
+  border-radius: 999px; font-family: inherit; font-size: 13px; margin-bottom: 10px;
+  box-shadow: var(--shadow);
 }
-.habit-cat-tabs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin: 0 -2px 12px; scrollbar-width: none; }
+.habit-search::placeholder { color: var(--ter); font-weight: 500; }
+.habit-cat-tabs { display: flex; gap: 6px; overflow-x: auto; margin: 0 0 11px; scrollbar-width: none; }
 .habit-cat-tabs::-webkit-scrollbar { display: none; }
 .habit-cat-tab {
-  flex-shrink: 0; padding: 8px 13px; border-radius: 999px; cursor: pointer;
-  background: var(--bg); border: 1px solid var(--border); color: var(--text);
-  font-size: 13px; font-weight: 600; white-space: nowrap;
+  flex-shrink: 0; padding: 5px 10px; border-radius: 999px; cursor: pointer;
+  background: rgba(120,120,128,.14); border: none; color: var(--sec);
+  font-size: 11px; font-weight: 700; white-space: nowrap;
 }
-.habit-cat-tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
-.habit-preset-grid { display: flex; flex-direction: column; gap: 8px; }
+.habit-cat-tab.active { background: var(--green); color: #fff; }
+.habit-preset-grid { display: flex; flex-direction: column; gap: 6px; }
 .habit-preset-tile {
-  display: flex; align-items: center; gap: 10px; cursor: pointer;
-  background: var(--bg-card); border: 1px solid var(--border);
-  border-left: 3px solid var(--hc, var(--accent)); border-radius: 12px; padding: 12px 12px;
-  min-height: 56px;
+  display: flex; align-items: center; gap: 10px; cursor: pointer; text-align: left;
+  background: var(--card); box-shadow: var(--shadow); border: none;
+  border-radius: 999px; padding: 8px 15px;
 }
-.habit-preset-tile .pt-ic { font-size: 22px; flex-shrink: 0; }
-.habit-preset-tile .pt-name { font-size: 13.5px; font-weight: 700; color: var(--text); line-height: 1.2; }
-.habit-preset-tile .pt-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-.habit-preset-tile.custom { border-left-color: var(--accent); border-style: dashed; justify-content: center; font-weight: 800; color: var(--accent); }
-.habit-preset-empty { text-align: center; color: var(--text-muted); padding: 20px; font-size: 13px; }
+.habit-preset-tile .pt-ic {
+  width: 30px; height: 30px; border-radius: 9px; flex: 0 0 auto;
+  display: flex; align-items: center; justify-content: center; font-size: 15px;
+}
+.habit-preset-tile .pt-name { flex: 1; font-size: 13px; font-weight: 600; color: var(--label); line-height: 1.2; }
+.habit-preset-tile .pt-sub { display: block; font-size: 10.5px; color: var(--sec); font-weight: 500; margin-top: 1px; }
+.habit-preset-tile .pt-add { margin-left: auto; font-size: 18px; color: var(--green); flex: 0 0 auto; }
+.habit-preset-tile.custom {
+  background: none; box-shadow: none; border: 1.5px dashed var(--ter);
+  color: var(--green); justify-content: center; font-weight: 700; font-size: 13px;
+  padding: 9px; border-radius: 999px; margin-top: 4px;
+}
+.habit-preset-empty { text-align: center; color: var(--sec); padding: 20px; font-size: 13px; }
 /* F52: týdenní proužek nahoře */
 .hws-nav { display: flex; align-items: flex-start; gap: 6px; margin-bottom: 8px; }   /* odstup šipek, ať vybrané kolečko nekoliduje se šedým boxem */
 .hws-nav .habit-week-strip { flex: 1; margin-bottom: 0; }
@@ -1334,28 +1350,33 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 .hws-num { position: relative; z-index: 1; font-size: 12.5px; font-weight: 700; color: var(--text); }
 .hws-day.sel .hws-num { font-weight: 800; }
 .hws-today-mark { position: absolute; top: 1px; left: 50%; transform: translateX(-50%); width: 11px; height: 2.5px; border-radius: 2px; background: var(--accent); }   /* čárka NAD dnem (daleko od prstence výběru → bez kolize); absolutně → seznam neskáče */
-.habit-back { background: transparent; border: none; color: var(--text-muted); font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; padding: 0 0 12px; }
-.habit-sublabel { color: var(--text-muted); font-weight: 500; font-size: 12px; }
-.habit-seg { display: flex; gap: 6px; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 4px; }
-.habit-seg-btn { flex: 1; padding: 10px 6px; border: none; background: transparent; color: var(--text-muted); font-family: inherit; font-size: 13px; font-weight: 700; border-radius: 9px; cursor: pointer; }
-.habit-seg-btn.active { background: var(--accent); color: #fff; }
-.habit-freq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.habit-freq-grid .habit-seg-btn { border: 1px solid var(--border); background: var(--bg); border-radius: 10px; padding: 11px 6px; }
-.habit-freq-grid .habit-seg-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
-.habit-days-row { display: flex; gap: 6px; margin-top: 10px; }
-.habit-day-btn { flex: 1; height: 42px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); color: var(--text-muted); font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
-.habit-day-btn.on { background: var(--accent); border-color: var(--accent); color: #fff; }
-.habit-intent { font-size: 12.5px; color: var(--text-muted); margin-top: 10px; min-height: 1px; line-height: 1.4; }
-.habit-intent b { color: var(--text); }
-.habit-more-toggle { width: 100%; text-align: left; background: transparent; border: none; border-top: 1px solid var(--border-soft); margin-top: 14px; padding: 14px 0 6px; color: var(--text); font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer; }
-.habit-chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
-.habit-chip { padding: 8px 12px; border-radius: 999px; cursor: pointer; background: var(--bg); border: 1px solid var(--border); font-size: 13px; font-weight: 600; color: var(--text); }
-.habit-chip.active { background: var(--accent); border-color: var(--accent); color: #fff; }
-#habit-cil-hodnota, #habit-cil-jednotka, #habit-kotva, #habit-poznamka, #habit-freq-cil, #habit-nazev {
-  width: 100%; box-sizing: border-box; height: 48px; padding: 0 14px;
-  background: var(--bg-card); border: 1px solid var(--border); color: var(--text);
-  border-radius: 10px; font-family: inherit; font-size: 15px;
+.habit-back { background: transparent; border: none; color: var(--sec); font-family: inherit; font-size: 12.5px; font-weight: 700; cursor: pointer; padding: 0 0 12px; }
+.habit-sublabel { color: var(--sec); font-weight: 500; font-size: 11px; }
+/* Ukol 2: Jak zapisovat (Splnit/Cislo/Posuvnik) — 1:1 mockup .seg (neutralni segmented control) */
+.habit-seg { display: flex; gap: 0; background: rgba(120,120,128,.12); border: none; border-radius: 999px; padding: 3px; }
+.habit-seg .habit-seg-btn { flex: 1; padding: 8px 6px; border: none; background: transparent; color: var(--label); font-family: inherit; font-size: 12px; font-weight: 700; border-radius: 999px; cursor: pointer; }
+.habit-seg .habit-seg-btn.active { background: var(--card); box-shadow: var(--shadow); color: var(--label); }
+/* Ukol 2: Jak často (Kazdy den/Vybrane dny/Tydne/Mesicne) — 1:1 mockup .pickrow/.pk (zelena = aktivni) */
+.habit-freq-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+.habit-freq-grid .habit-seg-btn { flex: none; border: none; background: var(--card); box-shadow: var(--shadow); border-radius: 999px; padding: 7px 13px; font-size: 12px; font-weight: 600; color: var(--label); }
+.habit-freq-grid .habit-seg-btn.active { background: var(--green); border-color: var(--green); color: #fff; box-shadow: none; }
+.habit-days-row { display: flex; gap: 4px; margin-top: 10px; justify-content: space-between; }
+.habit-day-btn { flex: none; width: 32px; height: 32px; border-radius: 50%; border: none; background: var(--card); box-shadow: var(--shadow); color: var(--sec); font-family: inherit; font-size: 11px; font-weight: 700; cursor: pointer; }
+.habit-day-btn.on { background: var(--green); box-shadow: none; color: #fff; }
+.habit-intent { font-size: 12.5px; color: var(--sec); margin-top: 10px; min-height: 1px; line-height: 1.4; }
+.habit-intent b { color: var(--label); }
+.habit-more-toggle { width: 100%; text-align: left; background: transparent; border: none; border-top: 1px solid var(--sep); margin-top: 14px; padding: 14px 0 6px; color: var(--label); font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer; }
+.habit-chip-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.habit-chip { padding: 7px 13px; border-radius: 999px; cursor: pointer; background: var(--card); box-shadow: var(--shadow); border: none; font-size: 12px; font-weight: 600; color: var(--label); }
+.habit-chip.active { background: var(--green); color: #fff; }
+/* habit-nazev/cil-hodnota/cil-jednotka/poznamka jsou uz zabalene v .field → dedi Momentum pilulkovy styl. #habit-freq-cil a #habit-kotva
+   ale NEJSOU v .field (jen habit-sublabel vedle), takze dostavaji stejny pilulkovy vzhled explicitne zde: */
+#habit-freq-cil, #habit-kotva {
+  width: 100%; box-sizing: border-box; background: var(--card); border: none; color: var(--label);
+  padding: 12px 16px; border-radius: 999px; font-family: inherit; font-size: 14px; font-weight: 600;
+  box-shadow: var(--shadow); -webkit-appearance: none; appearance: none;
 }
+#habit-freq-cil::placeholder, #habit-kotva::placeholder { color: var(--ter); font-weight: 500; }
 
 /* Tlacitka — momentum .submit (velke zelene CTA) */
 .btn-submit {
@@ -2298,7 +2319,7 @@ body.mm-full{background:#EDF0EC;}
 
 
 <div class="test-banner" aria-label="Testovací verze"></div>
-<div id="mm-ver" style="position:fixed;bottom:2px;right:5px;z-index:2147483647;color:rgba(0,0,0,.22);font:600 8px monospace;pointer-events:none;">v0710·13</div>
+<div id="mm-ver" style="position:fixed;bottom:2px;right:5px;z-index:2147483647;color:rgba(0,0,0,.22);font:600 8px monospace;pointer-events:none;">v0710·14</div>
 <script>
 (function(){try{if(window.navigator.standalone===true||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches))document.documentElement.classList.add('pwa-standalone');}catch(e){}})();
 </script>
@@ -2540,8 +2561,14 @@ body.mm-full{background:#EDF0EC;}
 <div class="modal-overlay" id="habit-modal">
   <div class="modal">
     <div class="modal-handle"></div>
-    <div class="modal-title" id="habit-modal-title">Nový návyk</div>
-    <div class="modal-subtitle" id="habit-modal-subtitle">Vyber z nabídky nebo si vytvoř vlastní</div>
+    <!-- Ukol 2/3: stejna hlavicka+X konvence jako #modal/#player-modal (mockup .fhd) — puvodne chybela -->
+    <div class="modal-head-row">
+      <div>
+        <div class="modal-title" id="habit-modal-title">Nový návyk</div>
+        <div class="modal-subtitle" id="habit-modal-subtitle">Vyber z nabídky nebo si vytvoř vlastní</div>
+      </div>
+      <span class="modal-close-x" onclick="closeHabitModal()">×</span>
+    </div>
 
     <div class="modal-body">
       <!-- OBRAZOVKA A: katalog -->
@@ -2565,6 +2592,21 @@ body.mm-full{background:#EDF0EC;}
         <div class="field">
           <label>Barva</label>
           <div class="habit-color-picker" id="habit-color-picker"></div>
+        </div>
+        <!-- Ukol 2: "Typ návyku"/"Denní cíl" presunuto sem z "Vice moznosti" — v mockup S.tvorba je toto VZDY viditelne pole
+             (hned po Barve, pred Jak často), ne skryte pod pokrocilymi volbami. Zadne ID/handlery se nemeni, jen poradi v DOM. -->
+        <div class="field">
+          <label>Typ návyku</label>
+          <div class="habit-seg" id="habit-zapis-seg">
+            <button type="button" class="habit-seg-btn active" onclick="setHabitZapis('check')">Splnit ✓</button>
+            <button type="button" class="habit-seg-btn" onclick="setHabitZapis('number')">Změřit #</button>
+            <button type="button" class="habit-seg-btn" onclick="setHabitZapis('slider')">Posuvník</button>
+          </div>
+          <div class="habit-sublabel" id="habit-zapis-hint" style="margin-top:8px;"></div>
+          <div class="field-row" id="habit-measurable-row" style="display:none;margin-top:10px;">
+            <div class="field"><label class="habit-sublabel">Cíl</label><input type="number" id="habit-cil-hodnota" inputmode="decimal" min="1" placeholder="8"></div>
+            <div class="field"><label class="habit-sublabel">Jednotka</label><input type="text" id="habit-cil-jednotka" maxlength="12" placeholder="sklenic"></div>
+          </div>
         </div>
         <div class="field">
           <label>Jak často?</label>
@@ -2594,19 +2636,6 @@ body.mm-full{background:#EDF0EC;}
 
         <button type="button" class="habit-more-toggle" id="habit-more-toggle" onclick="toggleHabitMore()">▾ Více možností</button>
         <div id="habit-more" style="display:none;">
-          <div class="field">
-            <label>Jak zapisovat?</label>
-            <div class="habit-seg" id="habit-zapis-seg">
-              <button type="button" class="habit-seg-btn active" onclick="setHabitZapis('check')">Zaškrtnutí</button>
-              <button type="button" class="habit-seg-btn" onclick="setHabitZapis('number')">Číslo</button>
-              <button type="button" class="habit-seg-btn" onclick="setHabitZapis('slider')">Posuvník</button>
-            </div>
-            <div class="habit-sublabel" id="habit-zapis-hint" style="margin-top:8px;"></div>
-            <div class="field-row" id="habit-measurable-row" style="display:none;margin-top:10px;">
-              <div class="field"><label class="habit-sublabel">Cíl</label><input type="number" id="habit-cil-hodnota" inputmode="decimal" min="1" placeholder="8"></div>
-              <div class="field"><label class="habit-sublabel">Jednotka</label><input type="text" id="habit-cil-jednotka" maxlength="12" placeholder="sklenic"></div>
-            </div>
-          </div>
           <div class="field">
             <label>Část dne</label>
             <div class="habit-chip-row" id="habit-cast-chips"></div>
@@ -2933,9 +2962,14 @@ body.mm-full{background:#EDF0EC;}
     </div>
 
     <div class="field-group disabled" id="player-edit-form">
+      <!-- Ukol 1: editace jmena + barvy avataru, 1:1 dle mockup S.uprava (.fld Jméno / .colors) -->
       <div class="field">
-        <label>Hráč k úpravě</label>
-        <div class="pe-readonly" id="player-edit-name">—</div>
+        <label>Jméno <span style="color: var(--accent)">*</span></label>
+        <input type="text" id="pe-jmeno" maxlength="40" placeholder="Jméno hráče">
+      </div>
+      <div class="field">
+        <label>Barva avataru</label>
+        <div class="pe-colors" id="pe-barva-row"></div>
       </div>
       <div class="field-row">
         <div class="field">
@@ -3230,6 +3264,9 @@ const HABIT_PRESETS = [
 ];
 const HABIT_ICONS = ['💧','📖','🧘','🛌','🚫','🤸','🧊','💊','📵','🚶','🏃','🥗','✍️','🎯','🌅','🦷','🧹','💪','☀️','🙏','🏋️','🦵','🧱','🚴','🏊','⚽','🍎','🥦','☕','🌙','⏰','📓','💰','🐷','🐶','❤️','📞','🎧','🎓','🗣️'];
 const HABIT_COLORS = ['#4ADE80','#F472B6','#60A5FA','#FB923C','#A78BFA','#22D3EE','#F87171','#FACC15'];
+// Task 1: paleta barev avataru hráče (Upravit profil) — appka nemela zadnou existujici konstantu pro barvu HRACE
+// (jen HABIT_COLORS pro navyky), tak pouzita 1:1 paleta z mockup S.uprava swatchu (zelena/modra/cervena/fialova/zlata).
+const PLAYER_COLORS = ['#2FB170', '#0A84FF', '#E05B4B', '#8B6FE0', '#E0A23A'];
 // auto-návrh ikony z názvu vlastního návyku
 const HABIT_ICON_KW = [
   [/voda|pít|pit|napít/,'💧'],[/běh|behat|běhat|běž/,'🏃'],[/kolo|cykl/,'🚴'],[/plav/,'🏊'],[/krok|chůz|chuz|procház/,'🚶'],
@@ -6399,6 +6436,7 @@ function presetSub(p){
   if (p.jed) parts.push(`${p.mer} ${p.jed}`);
   return parts.join(' · ');
 }
+// Ukol 3: Knihovna navyku — 1:1 mockup S.knihovna radky (.hbm), realny katalog HABIT_PRESETS (dynamicky, ne staticky mockup vypis)
 function renderHabitPresets(){
   const el = document.getElementById('habit-preset-grid');
   const q = (state.habitSearch || '').trim().toLowerCase();
@@ -6406,15 +6444,16 @@ function renderHabitPresets(){
   if (q) list = HABIT_PRESETS.filter(p => p.nazev.toLowerCase().includes(q));
   else if (state.habitCat === 'dop') list = HABIT_PRESETS.filter(p => p.dop);
   else list = HABIT_PRESETS.filter(p => p.kat === state.habitCat);
-  let html = `<div class="habit-preset-tile custom" onclick="startCustomHabit()">➕ Vlastní návyk</div>`;
-  html += list.map(p => {
-    const idx = HABIT_PRESETS.indexOf(p); const c = HABIT_CAT_COLOR[p.kat] || 'var(--accent)'; const sub = presetSub(p);
-    return `<div class="habit-preset-tile" style="--hc:${safeColor(c)}" onclick="selectPreset(${idx})">
-      <div class="pt-ic">${p.ikona}</div>
-      <div><div class="pt-name">${habitEsc(p.nazev)}</div>${sub ? `<div class="pt-sub">${sub}</div>` : ''}</div>
+  let html = list.map(p => {
+    const idx = HABIT_PRESETS.indexOf(p); const c = safeColor(HABIT_CAT_COLOR[p.kat] || '#0FA968'); const sub = presetSub(p);
+    return `<div class="habit-preset-tile" onclick="selectPreset(${idx})">
+      <div class="pt-ic" style="background:${c}22">${p.ikona}</div>
+      <div class="pt-name">${habitEsc(p.nazev)}${sub ? `<small class="pt-sub">${habitEsc(sub)}</small>` : ''}</div>
+      <span class="pt-add">＋</span>
     </div>`;
   }).join('');
   if (!list.length && q) html += `<div class="habit-preset-empty">Nic nenalezeno — zkus „Vlastní návyk".</div>`;
+  html += `<div class="habit-preset-tile custom" onclick="startCustomHabit()">＋ Vytvořit vlastní návyk</div>`;
   el.innerHTML = html;
 }
 function selectPreset(idx){ prefillHabitForm(null, HABIT_PRESETS[idx]); showHabitScreen('form'); }
@@ -6454,7 +6493,8 @@ function prefillHabitForm(h, preset){
   document.getElementById('habit-poznamka').value = h ? (h.poznamka || '') : '';
   setHabitDates(h);
   syncHabitPickers();
-  const hasAdv = zapis !== 'check' || state.habitCast || (h && (h.kotva || h.poznamka));
+  // Ukol 2: "Jak zapisovat/Cil" uz neni v kolapsu (presunuto vedle Barvy, viz HTML) → hasAdv urcuje uz jen cast dne / kotva / poznamka
+  const hasAdv = !!state.habitCast || (h && (h.kotva || h.poznamka));
   document.getElementById('habit-more').style.display = hasAdv ? '' : 'none';
   document.getElementById('habit-more-toggle').textContent = hasAdv ? '▴ Méně možností' : '▾ Více možností';
   updateHabitIntent();
@@ -7385,7 +7425,8 @@ function openPlayerEdit(playerId) {
   const player = state.players.find(p => p.id === playerId);
   if (!player) return;
 
-  document.getElementById('player-edit-name').textContent = player.jmeno;
+  document.getElementById('pe-jmeno').value = player.jmeno || '';
+  renderPeColorPicker(player.barva);
   buildEditorPills();
   document.getElementById('player-edit-form').classList.add('disabled');
   document.getElementById('player-modal-subtitle').textContent = 'Vyber kdo provádí úpravu';
@@ -7416,6 +7457,20 @@ function fillLezeniMaxSelect(elId, disc, currentIdx) {
     return `<option value="${g.idx}" ${String(g.idx)===String(currentIdx)?'selected':''}>${label}</option>`;
   }).join('');
   sel.innerHTML = html;
+}
+
+// Task 1: swatch picker barvy avataru v Upravit profil (analogicky buildHabitColorPicker, ale pro PLAYER_COLORS + state.peBarva)
+function renderPeColorPicker(current) {
+  const el = document.getElementById('pe-barva-row');
+  if (!el) return;
+  const active = PLAYER_COLORS.includes(current) ? current : PLAYER_COLORS[0];
+  state.peBarva = active;
+  el.innerHTML = PLAYER_COLORS.map(c => `<div class="pe-color-opt${c === active ? ' active' : ''}" data-col="${c}" style="background:${c}"></div>`).join('');
+  el.querySelectorAll('.pe-color-opt').forEach(o => o.addEventListener('click', () => {
+    state.peBarva = o.dataset.col;
+    el.querySelectorAll('.pe-color-opt').forEach(x => x.classList.remove('active'));
+    o.classList.add('active');
+  }));
 }
 
 function buildEditorPills() {
@@ -7452,7 +7507,13 @@ async function submitPlayerEdit() {
   const player = state.players.find(p => p.id === state.playerBeingEdited);
   if (!player) return;
 
+  // Task 1: jmeno + barva avataru (validace: jmeno neprazdne)
+  const jmenoVal = document.getElementById('pe-jmeno').value.trim();
+  if (!jmenoVal) { toast('Jméno nesmí být prázdné', 'error'); return; }
+
   const newValues = {
+    jmeno: jmenoVal,
+    barva: state.peBarva || player.barva,
     vaha: parseFloat(document.getElementById('pe-vaha').value) || null,
     vyska: parseInt(document.getElementById('pe-vyska').value) || null,
     max_shyby: parseInt(document.getElementById('pe-shyby').value) || null,
@@ -7499,6 +7560,7 @@ async function submitPlayerEdit() {
     toast(`Upraveno (${changes.length} změn)`, 'success');
     closePlayerModal();
     await loadData();
+    updateHeaderMe(); // Task 1: refresh hlavickoveho avataru (jmeno/barva) hned, nejen az pres realtime
   } catch (e) {
     toast('Chyba: ' + e.message, 'error');
   } finally {
