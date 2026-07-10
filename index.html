@@ -2386,7 +2386,7 @@ body.mm-full{background:#EDF0EC;}
 
 
 <div class="test-banner" aria-label="Testovací verze"></div>
-<div id="mm-ver" style="position:fixed;bottom:2px;right:5px;z-index:2147483647;color:rgba(0,0,0,.22);font:600 8px monospace;pointer-events:none;">v0710·20</div>
+<div id="mm-ver" style="position:fixed;bottom:2px;right:5px;z-index:2147483647;color:rgba(0,0,0,.22);font:600 8px monospace;pointer-events:none;">v0710·21</div>
 <script>
 (function(){try{if(window.navigator.standalone===true||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches))document.documentElement.classList.add('pwa-standalone');}catch(e){}})();
 </script>
@@ -3965,6 +3965,13 @@ function sumRoundedBody(items) {
   return items.reduce((s, e) => s + Math.round(Number(e.body) || 0), 0);
 }
 
+// Momentum redesign: tisicovy oddelovac dle mockupu (skupiny po 3 cislice, jen pro cela cisla >=1000).
+// Cistě prezentacni - NEPOUZIVAT na vypocty/ulozeni, jen na zobrazeny string. Znak = obycejna mezera (U+0020), 1:1 s mockupem.
+function fmtNum(n){
+  const v = Math.round(Number(n) || 0);
+  return String(v).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+}
+
 // F44: Helper pro lock/unlock body scroll pri jakemkoli otevrenem modalu
 function lockBodyScroll() { document.body.classList.add('modal-open'); }
 function unlockBodyScroll() {
@@ -5181,7 +5188,7 @@ function renderDnesek(){
   const habDone=new Set(state.habitLogs.filter(l=>l.datum===today).map(l=>l.habit_id)).size;
   const rows=board.slice(0,7).map((p,i)=>{ const isMe=me&&p.id===me.id; const col=safeColor(p.barva);
     const d=p.total-myTotal; const gap=isMe?'<small class="gap" style="color:var(--green)">ty</small>':`<small class="gap">${d>0?'+':(d<0?'−':'')}${Math.abs(d)}</small>`;
-    return `<div class="lr${i===0?' one':''}${isMe?' me':''}"><div class="lrk">${i+1}</div><div class="lav" style="background:${col}22;color:${col}">${esc(initials(p.jmeno))}</div><div class="lnm">${esc(p.jmeno)}${isMe?' (ty)':''}${i===0?' <svg class="i"><use href="#i-crown"/></svg>':''}</div><div class="lpt">${p.total} ${gap}</div></div>`;
+    return `<div class="lr${i===0?' one':''}${isMe?' me':''}"><div class="lrk">${i+1}</div><div class="lav" style="background:${col}22;color:${col}">${esc(initials(p.jmeno))}</div><div class="lnm">${esc(p.jmeno)}${isMe?' (ty)':''}${i===0?' <svg class="i"><use href="#i-crown"/></svg>':''}</div><div class="lpt">${fmtNum(p.total)} ${gap}</div></div>`;
   }).join('');
   let feed='';
   const mi=board.findIndex(b=>me&&b.id===me.id);
@@ -5191,7 +5198,7 @@ function renderDnesek(){
     return `<div class="hlr"><span class="ic" style="background:${col}22;color:${col}"><svg class="i"><use href="#i-dot"/></svg></span><div>${nm} <small>· +${Math.round(Number(e.body)||0)} b</small></div></div>`; }).join('');
   const dl=czDayName(new Date())+' '+new Date().getDate()+'. '+(new Date().getMonth()+1)+'.';
   const tpl=`<div class="nav"><div><div class="date">${dl}</div><div class="ttl" style="font-size:18px">${mmGreet()}${me?', '+esc(mmFirst(me.jmeno)):''}</div></div><div class="right"><div class="sck"><svg class="i"><use href="#i-flame"/></svg> ${streak}</div><div class="add" onclick="openModal()">＋</div></div></div>
-  <div class="hero"><div class="ring" style="background:${conic}"><div class="h"><div><div class="n">${myTotal}</div><div class="rpct ${trend>=0?'up':''}">${trend>=0?'▲':'▼'} ${Math.abs(trend)} %</div><div class="avg">ø ${avg4}</div></div></div></div><div class="hs"><div class="hst">Tento týden</div><div class="r"><span class="e"><svg class="i"><use href="#i-calendar"/></svg></span><b>${myTotal} b</b><small>&nbsp;body ${trend>=0?(`<span class="up">▲${trend} %</span>`):(`<span style="color:var(--red)">▼${Math.abs(trend)} %</span>`)}</small></div><div class="r"><span class="e"><svg class="i"><use href="#i-pullup"/></svg></span><b>${trainings}</b><small>&nbsp;tréninky</small></div><div class="r"><span class="e"><svg class="i"><use href="#i-trophy"/></svg></span><b>${recordDay} b</b><small>&nbsp;rekord/den</small></div></div></div>
+  <div class="hero"><div class="ring" style="background:${conic}"><div class="h"><div><div class="n">${fmtNum(myTotal)}</div><div class="rpct ${trend>=0?'up':''}">${trend>=0?'▲':'▼'} ${Math.abs(trend)} %</div><div class="avg">ø ${fmtNum(avg4)}</div></div></div></div><div class="hs"><div class="hst">Tento týden</div><div class="r"><span class="e"><svg class="i"><use href="#i-calendar"/></svg></span><b>${fmtNum(myTotal)} b</b><small>&nbsp;body ${trend>=0?(`<span class="up">▲${trend} %</span>`):(`<span style="color:var(--red)">▼${Math.abs(trend)} %</span>`)}</small></div><div class="r"><span class="e"><svg class="i"><use href="#i-pullup"/></svg></span><b>${trainings}</b><small>&nbsp;tréninky</small></div><div class="r"><span class="e"><svg class="i"><use href="#i-trophy"/></svg></span><b>${fmtNum(recordDay)} b</b><small>&nbsp;rekord/den</small></div></div></div>
   <div class="hbm" style="margin-top:11px;cursor:pointer" onclick="mmGo('navyky')"><div class="hi" style="background:#34C75922"><svg class="i"><use href="#i-list"/></svg></div><div class="ht">Návyky dnes<small>${habDone} splněné · ${Math.max(0,habTotal-habDone)} zbývají</small></div><div class="pct" style="display:flex;align-items:center;gap:5px">${habDone}/${habTotal}<span style="color:var(--ter);font-weight:400">›</span></div></div>
   <div class="sl"><span>Žebříček · tento týden</span><a onclick="mmGo('hraci')">Parta →</a></div>
   <div class="lc">${rows||'<div style="padding:20px;text-align:center;color:var(--ter)">Zatím žádné body tento týden</div>'}</div>
@@ -5235,7 +5242,7 @@ function mmEntryLabel(e){
   if(isStretchActivity(e)) return e.nazev||'strečink';
   return e.nazev||'aktivita';
 }
-function mmEntryType(e){ if(e.cvik) return 'cvik'; if(mmEntryLez(e)) return 'lezení'; if(isStretchActivity(e)) return 'stretching'; return 'aktivita'; }
+function mmEntryType(e){ if(e.cvik) return 'cvik'; if(mmEntryLez(e)) return 'lezení'; return 'aktivita'; }
 
 // F35 filtrovani (stejna logika jako renderLeaderboardTotal): totalPeriod week/month/all + totalCategory
 function mmPartaBoard(){
@@ -5302,7 +5309,7 @@ function mmPartaFeedHtml(maxDays){
     byDay[ds].forEach(e=>{
       const pl=state.players.find(p=>p.id===e.player_id); if(!pl) return;
       const col=safeColor(pl.barva);
-      html+=`<div class="frow" style="cursor:pointer" onclick="mmOpenSub('den','${e.player_id}|${ds}')"><div class="fav" style="background:${col}22;color:${col}"><svg class="i"><use href="#${mmEntryIcon(e)}"/></svg></div><div class="fmain">${esc(mmFirst(pl.jmeno))} · ${esc(mmEntryLabel(e))}<small>${mmEntryType(e)}</small></div><div class="fpts">+${Math.round(Number(e.body)||0)}</div></div>`;
+      html+=`<div class="frow" style="cursor:pointer" onclick="mmOpenSub('feed')"><div class="fav" style="background:${col}22;color:${col}"><svg class="i"><use href="#${mmEntryIcon(e)}"/></svg></div><div class="fmain">${esc(mmFirst(pl.jmeno))} · ${esc(mmEntryLabel(e))}<small>${mmEntryType(e)}</small></div><div class="fpts">+${Math.round(Number(e.body)||0)}</div></div>`;
     });
     html+='</div>';
   });
@@ -5328,12 +5335,12 @@ function renderParta(){
   let wkRows=top3.map((p,i)=>{
     const isMe=me&&p.id===me.id;
     const pct=topWk>0?Math.max(4,Math.round(p.total/topWk*100)):0;
-    return `<div class="wkbar${isMe?' me':''}"><span class="wkm"><svg class="i"><use href="#i-medal"/></svg></span><span class="wknm">${isMe?'Ty':esc(mmFirst(p.jmeno))}</span><span class="wktr"><i style="width:${pct}%;background:${rankColors[i]}"></i></span><span class="wkpt">${p.total}</span></div>`;
+    return `<div class="wkbar${isMe?' me':''}"><span class="wkm"><svg class="i"><use href="#i-medal"/></svg></span><span class="wknm">${isMe?'Ty':esc(mmFirst(p.jmeno))}</span><span class="wktr"><i style="width:${pct}%;background:${rankColors[i]}"></i></span><span class="wkpt">${fmtNum(p.total)}</span></div>`;
   }).join('');
   if(me && (meWkIdx<0 || meWkIdx>=3)){
     const p=meWkIdx>=0?weekBoard[meWkIdx]:{total:0};
     const pct=topWk>0?Math.max(4,Math.round(p.total/topWk*100)):0;
-    wkRows+=`<div class="wkbar me"><span class="wkm">${meWkIdx>=0?(meWkIdx+1)+'.':'—'}</span><span class="wknm">Ty</span><span class="wktr"><i style="width:${pct}%;background:var(--green)"></i></span><span class="wkpt">${p.total}</span></div>`;
+    wkRows+=`<div class="wkbar me"><span class="wkm">${meWkIdx>=0?(meWkIdx+1)+'.':'—'}</span><span class="wknm">Ty</span><span class="wktr"><i style="width:${pct}%;background:var(--green)"></i></span><span class="wkpt">${fmtNum(p.total)}</span></div>`;
   }
 
   // Hlavni zebricek — respektuje totalPeriod/totalCategory (F35 logika prevzata z renderLeaderboardTotal)
@@ -5342,7 +5349,7 @@ function renderParta(){
   const rows=board.map((p,i)=>{
     const isMe=me&&p.id===me.id; const col=safeColor(p.barva);
     const d=p.total-myTotal; const gap=isMe?'<small class="gap" style="color:var(--green)">ty</small>':`<small class="gap">${d>0?'+':(d<0?'−':'')}${Math.abs(d)}</small>`;
-    return `<div class="lr${i===0?' one':''}${isMe?' me':''}" style="cursor:pointer" onclick="mmOpenSub('profil','${p.id}')"><div class="lrk">${i+1}</div><div class="lav" style="background:${col}22;color:${col}">${esc(initials(p.jmeno))}</div><div class="lnm">${esc(p.jmeno)}${isMe?' (ty)':''}${i===0?' <svg class="i"><use href="#i-crown"/></svg>':''}</div><div class="lpt">${p.total} ${gap}</div></div>`;
+    return `<div class="lr${i===0?' one':''}${isMe?' me':''}" style="cursor:pointer" onclick="mmOpenSub('profil','${p.id}')"><div class="lrk">${i+1}</div><div class="lav" style="background:${col}22;color:${col}">${esc(initials(p.jmeno))}</div><div class="lnm">${esc(p.jmeno)}${isMe?' (ty)':''}${i===0?' <svg class="i"><use href="#i-crown"/></svg>':''}</div><div class="lpt">${fmtNum(p.total)} ${gap}</div></div>`;
   }).join('');
 
   // Heatmapa party
@@ -5360,7 +5367,6 @@ function renderParta(){
   <div class="sl"><span>Aktivita party</span><a onclick="mmOpenSub('rokparty')">celý rok →</a></div>
   <div class="heatcard"><div class="hbnav"><span class="hbarr" onclick="mmPartaHeatMove(1)">‹</span><span class="hbrange">${heatLabel}</span><span class="hbarr" onclick="mmPartaHeatMove(-1)">›</span><span class="hbtoday" onclick="mmPartaHeatToday()">⟳ Dnes</span></div>${heatHtml}</div>
   <div class="hbm" style="margin-top:13px;padding:6px 12px;cursor:pointer" onclick="mmOpenSub('rekordyparty')"><div class="hi" style="background:#E0A23A22;width:27px;height:27px;font-size:14px"><svg class="i"><use href="#i-medal"/></svg></div><div class="ht">Rekordy & maximálky všech<small>všichni hráči na jednom místě</small></div><span class="rx" style="color:var(--ter);font-size:16px">›</span></div>
-  <div class="hbm" style="margin-top:8px;padding:6px 12px;cursor:pointer" onclick="mmOpenSub('feed')"><div class="hi" style="background:#2C97D622;width:27px;height:27px;font-size:14px"><svg class="i"><use href="#i-comment"/></svg></div><div class="ht">Dění v partě<small>reakce a komentáře k zápisům</small></div><span class="rx" style="color:var(--ter);font-size:16px">›</span></div>
   <div class="sl"><span>Naposledy · dnes</span><a>celá historie →</a></div>
   ${feed.html}
   ${feed.hasMore?'<button class="loadmore" onclick="mmPartaLoadMoreFeed()">Načíst starší ↓</button>':''}`;
@@ -5660,7 +5666,7 @@ function renderJaMM(){
   const adminOn=isAdmin();
   const nav=`<div class="nav"><div><div class="ttl">Já</div></div><div class="right"><div class="av" style="background:${meCol}22;color:${meCol}">${meIn}</div><div class="add" onclick="openModal()">＋</div></div></div>`;
   const tpl=`${nav}
-  <div class="pcard"><div class="pav" style="background:${meCol}22;color:${meCol}">${meIn}</div><div><div class="pn">${me?esc(me.jmeno):'—'}</div><div class="ps">${totalBody} b · <svg class="i"><use href="#i-flame"/></svg> ${streak} ${streakLabel(streak)} · <svg class="i"><use href="#i-trophy"/></svg> ${weekWins}× vítěz týdne</div></div></div>
+  <div class="pcard"><div class="pav" style="background:${meCol}22;color:${meCol}">${meIn}</div><div><div class="pn">${me?esc(me.jmeno):'—'}</div><div class="ps">${fmtNum(totalBody)} b · <svg class="i"><use href="#i-flame"/></svg> ${streak} ${streakLabel(streak)} · <svg class="i"><use href="#i-trophy"/></svg> ${weekWins}× vítěz týdne</div></div></div>
   <div class="sl"><span>Rekordy & odznaky</span><a onclick="mmOpenSub('rekordy')">Vše →</a></div>
   ${prs.length?`<div class="badges">${badgesHtml}</div>`:'<div style="padding:14px;text-align:center;color:var(--ter);font-size:12px">Zatím žádné rekordy</div>'}
   <div class="sl"><span>Moje aktivita · posledních 45 dní</span></div>
@@ -5800,7 +5806,7 @@ function renderSubHistorie(){
       });
       list+='</div>';
     });
-    body=`<div class="sl"><span>${totalCount} ${mmRecordCountLabel(totalCount)} · ${totalPts} b</span></div>${list}${days.length>shown.length?'<button class="loadmore" onclick="mmSubHistLoadMore()">Načíst starší ↓</button>':''}`;
+    body=`<div class="sl"><span>${fmtNum(totalCount)} ${mmRecordCountLabel(totalCount)} · ${fmtNum(totalPts)} b</span></div>${list}${days.length>shown.length?'<button class="loadmore" onclick="mmSubHistLoadMore()">Načíst starší ↓</button>':''}`;
   }
   const tpl = mmBackHdr('Moje záznamy') + `<div class="filterbar"><div class="fpill" onclick="mmSubHistCycleType()"><span class="k">Typ:</span> ${mmSubHistTypeLabel()} <span class="cx">▾</span></div></div>` + body;
   mmMountSub(host, tpl, 3);
@@ -5899,12 +5905,12 @@ function renderSubProfil(playerId){
   const recRows = records.length ? records.map(r=>`<div class="hlr"><span class="ic"><svg class="i"><use href="#${mmBadgeIcon(r.id)}"/></svg></span><div>${mmProfilRecordLabel(r.id)} <b>${esc(mmProfilRecordValue(r))}</b></div>${r.id!=='longest_streak'&&r.when?`<small class="rx" style="color:var(--ter)">${mmFmtWhen(r.when)}</small>`:''}</div>`).join('')
     : `<div class="hlr"><div style="color:var(--ter)">Zatím žádné rekordy</div></div>`;
 
-  const body = `<div class="pcard"><div class="pav" style="background:${col}22;color:${col}">${esc(initials(p.jmeno))}</div><div><div class="pn">${esc(p.jmeno)}</div><div class="ps">${totalAll} b · <svg class="i"><use href="#i-flame"/></svg> ${streak} ${streakLabel(streak)}${pos?` · ${pos}. místo`:''}</div></div></div>
+  const body = `<div class="pcard"><div class="pav" style="background:${col}22;color:${col}">${esc(initials(p.jmeno))}</div><div><div class="pn">${esc(p.jmeno)}</div><div class="ps">${fmtNum(totalAll)} b · <svg class="i"><use href="#i-flame"/></svg> ${streak} ${streakLabel(streak)}${pos?` · ${pos}. místo`:''}</div></div></div>
   <div class="sl"><span>Statistiky</span></div>
   <div class="sgrid"><div class="sgc"><div class="v">${p.max_shyby || '—'}</div><div class="k">max shyby</div></div><div class="sgc"><div class="v">${p.max_drep ? p.max_drep+' kg' : '—'}</div><div class="k">max dřep</div></div><div class="sgc"><div class="v">${p.max_kliky || '—'}</div><div class="k">max kliky</div></div><div class="sgc"><div class="v">${p.max_boulder!=null?esc(lezeniRowAt('boulder',p.max_boulder).v):'—'}</div><div class="k">boulder</div></div></div>
   <div class="sl"><span>Za celou dobu</span></div>
-  <div class="sgrid"><div class="sgc"><div class="v">${totalReps.toLocaleString('cs-CZ')}</div><div class="k">opakování</div></div><div class="sgc"><div class="v">${mmFmtTons(totalVaha)}</div><div class="k">nazvednuto</div></div><div class="sgc"><div class="v">${stats.totalKm} km</div><div class="k">naběháno</div></div><div class="sgc"><div class="v">${stats.aktivityCount+stats.stretchingCount}</div><div class="k">aktivit</div></div></div>
-  <div class="info" style="margin:7px 0">Shyby ${stats.cvikStats['Shyby'].pocet.toLocaleString('cs-CZ')} · Dřep ${stats.cvikStats['Dřep'].pocet.toLocaleString('cs-CZ')} · Kliky ${stats.cvikStats['Kliky'].pocet.toLocaleString('cs-CZ')} · Dipy ${stats.cvikStats['Dipy'].pocet.toLocaleString('cs-CZ')}</div>
+  <div class="sgrid"><div class="sgc"><div class="v">${fmtNum(totalReps)}</div><div class="k">opakování</div></div><div class="sgc"><div class="v">${mmFmtTons(totalVaha)}</div><div class="k">nazvednuto</div></div><div class="sgc"><div class="v">${fmtNum(stats.totalKm)} km</div><div class="k">naběháno</div></div><div class="sgc"><div class="v">${fmtNum(stats.aktivityCount+stats.stretchingCount)}</div><div class="k">aktivit</div></div></div>
+  <div class="info" style="margin:7px 0">Shyby ${fmtNum(stats.cvikStats['Shyby'].pocet)} · Dřep ${fmtNum(stats.cvikStats['Dřep'].pocet)} · Kliky ${fmtNum(stats.cvikStats['Kliky'].pocet)} · Dipy ${fmtNum(stats.cvikStats['Dipy'].pocet)}</div>
   <div class="sl"><span>Osobní rekordy</span></div>
   <div class="hl">${recRows}</div>
   <div class="hbm" style="margin-top:9px;cursor:pointer" onclick="mmOpenSub('rekordyparty')"><div class="hi" style="background:#E0A23A22"><svg class="i"><use href="#i-medal"/></svg></div><div class="ht">Rekordy & maximálky všech<small>porovnej všechny hráče</small></div><span class="rx" style="color:var(--ter);font-size:16px">›</span></div>`;
@@ -6025,7 +6031,7 @@ function renderSubDen(arg){
       const [bg,fg]=mmJaEntryColors(e);
       return `<div class="frow"><div class="fav" style="background:${bg}22;color:${fg}"><svg class="i"><use href="#${mmEntryIcon(e)}"/></svg></div><div class="fmain">${esc(mmJaCap(mmEntryLabel(e)))}<small>${mmEntryType(e)}</small></div><div class="fpts">+${Math.round(Number(e.body)||0)}</div></div>`;
     }).join('');
-    body=`<div style="text-align:center;font-size:13px;font-weight:600;color:var(--sec);margin-bottom:13px">Celkem <b style="color:var(--green);font-size:16px">+${total} b</b> za den</div><div class="rec">${rows}</div>`;
+    body=`<div style="text-align:center;font-size:13px;font-weight:600;color:var(--sec);margin-bottom:13px">Celkem <b style="color:var(--green);font-size:16px">+${fmtNum(total)} b</b> za den</div><div class="rec">${rows}</div>`;
   }
   const hdr = `<div class="fhd"><span class="fx" style="font-size:27px;cursor:pointer" onclick="mmCloseSub()">‹</span><div class="fttl" style="flex:1;text-align:center;font-size:16px">${title}</div><span class="fx" style="opacity:0">×</span></div>`;
   const tpl = `<div style="padding-top:3px">${hdr}${body}</div>`;
