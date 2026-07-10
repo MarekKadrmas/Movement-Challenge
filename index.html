@@ -2402,7 +2402,7 @@ body.mm-full{background:#EDF0EC;}
 
 
 <div class="test-banner" aria-label="Testovací verze"></div>
-<div id="mm-ver" style="position:fixed;bottom:2px;right:5px;z-index:2147483647;color:rgba(0,0,0,.22);font:600 8px monospace;pointer-events:none;">v0710·23</div>
+<div id="mm-ver" style="position:fixed;bottom:2px;right:5px;z-index:2147483647;color:rgba(0,0,0,.22);font:600 8px monospace;pointer-events:none;">v0710·24</div>
 <script>
 (function(){try{if(window.navigator.standalone===true||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches))document.documentElement.classList.add('pwa-standalone');}catch(e){}})();
 </script>
@@ -2941,8 +2941,8 @@ body.mm-full{background:#EDF0EC;}
         <div class="field" id="aktivita-nazev-field">
           <input type="text" id="aktivita-nazev" placeholder="Například cvíčo 30 min…">
         </div>
-        <!-- Ukol 1 (formbeh): Nazev+Narocnost jen pro Kolo/Plavani/genericou aktivitu — pro Beh
-             schovane (viz updateActivitySubpicker), misto nich Kilometry+Tempo+Prevyseni nize. -->
+        <!-- Narocnost (1-5) je viditelna pro VSECHNY aktivity vcetne Behu — body se pocitaji z ni
+             (LEVEL_POINTS), viz submitEntry. Beh navic skryva jen pole nazev a pridava Km/Tempo/Prevyseni. -->
         <div class="field" id="aktivita-narocnost-field">
           <label>Náročnost</label>
           <div class="pickrow">
@@ -2961,8 +2961,9 @@ body.mm-full{background:#EDF0EC;}
           <label>Kilometry *</label>
           <input type="number" id="aktivita-km" placeholder="0 km" step="0.1" min="0" inputmode="decimal">
         </div>
-        <!-- Ukol 1 (formbeh): Tempo/Prevyseni — appka nema DB sloupce, uklada se do poznamka JSON
-             (mode:'beh') v submitEntry, km zustava ve sloupci km. Body pocitane z km (viz behLevelFromKm). -->
+        <!-- Ukol 1 (formbeh): Tempo/Prevyseni — DOPLNKOVE udaje, appka nema DB sloupce, uklada se do
+             poznamka JSON (mode:'beh') v submitEntry, km zustava ve sloupci km. Body se z nich NEpocitaji
+             (pocitaji se z Narocnosti vyse). -->
         <div class="field-row" id="aktivita-beh-extra-field" style="display:none;">
           <div class="field">
             <label>Tempo · nepovinné</label>
@@ -3292,16 +3293,6 @@ const LEVEL_HINTS = {
 // F30: jen 2 varianty stretchingu (krat 10min, dlou 20+min)
 const STRETCH_POINTS = { krat: 20, dlou: 40 };
 const STRETCH_LABELS = { krat: 'Krátký', dlou: 'Delší' };
-
-// Ukol 1 (formbeh): mockup nema u Behu Narocnost pilulky, takze uroven uz nejde vybrat rucne —
-// odvozuje se automaticky z kilometru (stejna LEVEL_POINTS skala jako u genericke aktivity).
-function behLevelFromKm(km) {
-  if (km >= 12) return 5;
-  if (km >= 9) return 4;
-  if (km >= 6) return 3;
-  if (km >= 3) return 2;
-  return 1;
-}
 
 // Bodování cviků - kalibrováno tak, aby 120 shybů ≈ 150 b. (na úrovni aktivit).
 // CVIK_EXPONENT ladí "úsilí vs objem": nižší = víc se cení vymáčknout max, míň hrubý objem.
@@ -7517,32 +7508,18 @@ function updateActivitySubpicker() {
   if (strecink) strecink.classList.toggle('on', state.entryType === 'stretching');
   if (beh) beh.classList.toggle('lezon', state.entryType === 'aktivita' && state.actSub === 'beh');
   if (lezeni) lezeni.classList.toggle('lezon', state.entryType === 'lezeni');
-  // IA (formakt/formbeh): Kilometry pole je v mockupu jen u podtypu Beh — genericka aktivita
-  // (a Kolo/Plavani) ho nema. Cistě vizualni show/hide, submitEntry cte #aktivita-km beze zmeny.
+  // IA (formakt/formbeh): Kilometry/Tempo/Prevyseni jsou jen u podtypu Beh — genericka aktivita
+  // (a Kolo/Plavani) je nema. Cistě vizualni show/hide, submitEntry cte #aktivita-km beze zmeny.
+  // OPRAVA (Marek): Narocnost (1-5) zustava viditelna i pro Beh — body se pocitaji z nej (LEVEL_POINTS),
+  // NE z km. Km/Tempo/Prevyseni jsou jen DOPLNKOVE udaje do statistik (naběháno km atd.), ne do bodu.
+  // Jedine skryte pole u Behu je "Co jsi dělal/a" (nazev), ktery mockup u behu nema.
   const isBeh = state.entryType === 'aktivita' && state.actSub === 'beh';
   const kmField = document.getElementById('aktivita-km-field');
   if (kmField) kmField.style.display = isBeh ? '' : 'none';
-  // Ukol 1 (formbeh): pro Beh mockup schovava nazev+Narocnost a misto toho uz zobrazuje Tempo/Prevyseni.
   const nazevField = document.getElementById('aktivita-nazev-field');
   if (nazevField) nazevField.style.display = isBeh ? 'none' : '';
-  const narocnostField = document.getElementById('aktivita-narocnost-field');
-  if (narocnostField) narocnostField.style.display = isBeh ? 'none' : '';
   const behExtraField = document.getElementById('aktivita-beh-extra-field');
   if (behExtraField) behExtraField.style.display = isBeh ? '' : 'none';
-  if (isBeh) updateBehPointsPreview();
-}
-
-// Ukol 1 (formbeh): zive zobrazeni bodu z kilometru (Narocnost pilulky uz nejsou k dispozici pro Beh).
-function updateBehPointsPreview() {
-  const disp = document.getElementById('level-points-display');
-  if (!disp) return;
-  const km = parseFloat(document.getElementById('aktivita-km').value);
-  if (km > 0) {
-    disp.textContent = `+${LEVEL_POINTS[behLevelFromKm(km)]} b`;
-    disp.classList.add('show');
-  } else {
-    disp.classList.remove('show');
-  }
 }
 
 // Klik na sub-pilulku pod "Aktivita". Kolo/Plavani/Beh -> entryType 'aktivita' (Beh si jen
@@ -7886,12 +7863,6 @@ document.querySelectorAll('#form-aktivita [data-level]').forEach(btn => {
   });
 });
 
-// Ukol 1 (formbeh): zive prepocitani bodu z kilometru behem psani (Narocnost pilulky pro Beh nejsou).
-const behKmInput = document.getElementById('aktivita-km');
-if (behKmInput) behKmInput.addEventListener('input', () => {
-  if (state.entryType === 'aktivita' && state.actSub === 'beh') updateBehPointsPreview();
-});
-
 document.querySelectorAll('.stretch-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     if (!state.selectedPlayer) return;
@@ -7978,25 +7949,27 @@ async function submitEntry() {
       }
     } else if (state.entryType === 'aktivita') {
       const isBeh = state.actSub === 'beh';
-      // F27: volitelne km (pro beh) — pro Beh je Kilometry * povinne pole
+      // OPRAVA (Marek): body za Beh se pocitaji z NAROCNOSTI (LEVEL_POINTS[uroven]), stejne jako u
+      // ostatnich aktivit — NE z km. Km/Tempo/Prevyseni jsou jen DOPLNKOVE udaje do statistik.
+      // Narocnost je tedy povinna i pro Beh.
+      if (!state.selectedLevel) { toast('Vyber úroveň', 'error'); btn.disabled = false; btn.textContent = origText; return; }
+      // F27: km — pro Beh je Kilometry * povinne pole (feeduje soucet "naběháno km"), jinde se necte.
       const kmRaw = document.getElementById('aktivita-km').value;
       const km = kmRaw ? parseFloat(kmRaw) : null;
-      let nazev, level;
+      let nazev;
       if (isBeh) {
         if (!km || km <= 0) { toast('Zadej kilometry', 'error'); btn.disabled = false; btn.textContent = origText; return; }
-        // Ukol 1 (formbeh): mockup nema u Behu nazev ani Narocnost — nazev je pevny (pouzit i pro
-        // ikonu/label ve feedu, viz mmEntryIcon/mmEntryLabel), uroven se odvodi z km (behLevelFromKm).
+        // Beh nema v mockupu pole nazev ("Co jsi dělal/a") — nazev je pevny (pouzit pro ikonu/label
+        // ve feedu, viz mmEntryIcon/mmEntryLabel).
         nazev = 'Běh';
-        level = behLevelFromKm(km);
       } else {
         nazev = document.getElementById('aktivita-nazev').value.trim();
         if (!nazev) { toast('Zadej co jsi dělal/a', 'error'); btn.disabled = false; btn.textContent = origText; return; }
-        if (!state.selectedLevel) { toast('Vyber úroveň', 'error'); btn.disabled = false; btn.textContent = origText; return; }
-        level = state.selectedLevel;
       }
-      const body = LEVEL_POINTS[level];
-      // Ukol 1 (formbeh): Tempo/Prevyseni nemaji DB sloupec -> poznamka JSON {mode:'beh',...}.
-      // Lezeni pouziva poznamka.mode==='lezeni' na te same tabulce — jiny mode string, nekoliduje.
+      const body = LEVEL_POINTS[state.selectedLevel];
+      // Tempo/Prevyseni (jen Beh) nemaji DB sloupec -> DOPLNKOVE do poznamka JSON {mode:'beh',...}.
+      // Do bodu se NEpocitaji. Lezeni pouziva poznamka.mode==='lezeni' na te same tabulce — jiny
+      // mode string, nekoliduje.
       let poznamka = null;
       if (isBeh) {
         const tempo = document.getElementById('aktivita-tempo').value.trim();
@@ -8009,7 +7982,7 @@ async function submitEntry() {
       const payload = {
         player_id: state.selectedPlayer,
         nazev: nazev,
-        uroven: level,
+        uroven: state.selectedLevel,
         body: body,
         datum: getEntryDate(),
         km: (km && km > 0) ? km : null,
