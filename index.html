@@ -672,7 +672,7 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
   background: var(--card); width: 100%; max-width: 480px;
   border-radius: 22px 22px 0 0;
   border: none;
-  padding: 22px 20px 0;
+  padding: 22px 18px 0;  /* F-size-fix: horiz. padding = mockup .body 14px x1.284 (306->393), ne odhadovanych 20px */
   height: auto; max-height: 90vh;  /* fit obsah = kompaktni sheet jako mockup; dlouhe formulare scrolluji (max 90vh) */
   display: flex; flex-direction: column;
   overflow: hidden;
@@ -686,7 +686,7 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 }
 .modal-footer {
   flex-shrink: 0; display: flex; flex-direction: column; gap: 8px;
-  margin: 0 -20px; padding: 14px 20px;
+  margin: 0 -18px; padding: 14px 18px;
   padding-bottom: calc(14px + env(safe-area-inset-bottom));
   background: var(--bg-card);
   border-top: 1px solid var(--border-soft);
@@ -739,19 +739,22 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 .field-group.disabled { opacity: 0.35; pointer-events: none; }
 .field-group { transition: opacity 0.2s; }
 
-/* Momentum: 2x2 dlaždice jako mockup "addsheet" (.adds/.addt/.aic/.al) */
-.type-selector { display: grid; grid-template-columns: repeat(2, 1fr); gap: 9px; margin-bottom: 18px; }
+/* Momentum: 2x2 dlaždice jako mockup "addsheet" (.adds/.addt/.aic/.al)
+   F-size-fix: mockup je 306-design, appka renderuje nativne na 393 -> vsechny rozmery x1.284 (393/306),
+   jinak jsou prvky ~22 % mensi nez mockup (puvodni bug: literalni kopie 306-design hodnot bez prepoctu). */
+.type-selector { display: grid; grid-template-columns: repeat(2, 1fr); gap: 11.5px; margin-bottom: 23px; }
 .type-btn {
   background: var(--card); border: none; color: var(--label);
-  padding: 14px 8px; border-radius: 15px; cursor: pointer;
+  padding: 18px 10px; border-radius: 19px; cursor: pointer;
   font-family: inherit; text-align: center;
-  display: flex; flex-direction: column; align-items: center; gap: 7px;
+  display: flex; flex-direction: column; align-items: center; gap: 9px;
   box-shadow: var(--shadow);
   transition: all 0.15s;
 }
 .type-btn:active { transform: scale(0.97); }
-.type-btn .aic { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-size: 20px; }
-.type-btn .al { font-size: 13px; font-weight: 800; color: var(--label); }
+.type-btn .aic { width: 51px; height: 51px; border-radius: 50%; display: grid; place-items: center; font-size: 26px; }
+/* line-height:1.5 = mockup body{line-height:1.5} (globalne dedene do .addt .al, appka nema globalni 1.5 -> dodano lokalne) */
+.type-btn .al { font-size: 16.7px; font-weight: 800; color: var(--label); line-height: 1.5; }
 .type-btn.active { outline: 2px solid var(--green); outline-offset: -2px; }
 /* Kosmetika: mockup "addsheet" nema zadnou predvybranou dlazdici v KROKU 1 (jen vizual — data-type="cvik"
    a state.entryType='cvik' zustavaji beze zmeny, potreba jako vychozi pro KROK 2) */
@@ -782,11 +785,13 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 /* KROK 1 (addsheet): kompaktni sheet u spodu (fit obsah), ne fixnich 90vh */
 #modal.step-1 .modal { height: auto; padding-bottom: calc(22px + env(safe-area-inset-bottom)); }
 
-/* KROK 2: kompaktni segmentovany prepinac typu (mockup .tsel) — tytez .type-btn prvky/handlery, jen jiny vizual */
-#modal.step-2 .type-selector { display: flex; gap: 6px; margin-bottom: 16px; }
-#modal.step-2 .type-btn { flex: 1; flex-direction: row; padding: 9px 4px; border-radius: 999px; gap: 5px; }
-#modal.step-2 .type-btn .aic { width: auto; height: auto; background: none !important; color: inherit !important; font-size: 15px; }
-#modal.step-2 .type-btn .al { font-size: 10px; }
+/* KROK 2: kompaktni segmentovany prepinac typu (mockup .tsel) — tytez .type-btn prvky/handlery, jen jiny vizual
+   F-size-fix: mockup .tsel/.tsel b hodnoty (gap 8, margin-bottom 12, padding 9 uniform, font-size 12.5) x1.284 */
+#modal.step-2 .type-selector { display: flex; gap: 10px; margin-bottom: 15px; }
+#modal.step-2 .type-btn { flex: 1; flex-direction: row; padding: 11.5px; border-radius: 999px; gap: 6px; }
+#modal.step-2 .type-btn .aic { width: auto; height: auto; background: none !important; color: inherit !important; font-size: 16px; }
+/* line-height:1.5 = mockup body{line-height:1.5} (globalne dedene do .tsel b, appka nema globalni 1.5 -> dodano lokalne) */
+#modal.step-2 .type-btn .al { font-size: 16px; line-height: 1.5; }
 #modal.step-2 .type-btn.active { background: var(--green); outline: none; box-shadow: 0 6px 14px -4px rgba(15,169,104,.5); }
 #modal.step-2 .type-btn.active .al,
 #modal.step-2 .type-btn.active svg { color: #fff; }
@@ -797,11 +802,13 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 
 /* IA: sub-picker "Aktivita" pod hornim .tsel (mockup .pickrow/.pk) — Kolo/Plavani/Strecink/Beh/Lezeni.
    Prevzato z mockup CSS (ktere appka ma jen uvnitr .mm shadow-dom sablony, ne v lightDOM #modal). */
-.pickrow { display: flex; gap: 6px; flex-wrap: wrap; }
-.pk { background: var(--card); box-shadow: var(--shadow); border-radius: 999px; padding: 7px 13px; font-size: 12px; font-weight: 600; cursor: pointer; color: var(--label); }
+/* F-size-fix: mockup .pickrow/.pk hodnoty (gap 6, padding 7/13, font-size 12) x1.284 */
+.pickrow { display: flex; gap: 7.7px; flex-wrap: wrap; }
+/* line-height:1.5 = mockup body{line-height:1.5} (globalne dedene do .pk, appka nema globalni 1.5 -> dodano lokalne) */
+.pk { background: var(--card); box-shadow: var(--shadow); border-radius: 999px; padding: 9px 16.7px; font-size: 15.4px; font-weight: 600; line-height: 1.5; cursor: pointer; color: var(--label); }
 .pk.on { background: var(--green); color: #fff; }
-.pk.lez, .pk.lezon { position: relative; padding-right: 26px; font-weight: 700; border: 1.5px solid #8B6FE0; box-shadow: none; background: #8B6FE012; color: #6a52c0; }
-.pk.lez::after, .pk.lezon::after { content: ""; position: absolute; right: 11px; top: 50%; width: 5.5px; height: 5.5px; border-right: 2px solid currentColor; border-top: 2px solid currentColor; transform: translateY(-62%) rotate(45deg); opacity: .5; }
+.pk.lez, .pk.lezon { position: relative; padding-right: 33.4px; font-weight: 700; border: 1.9px solid #8B6FE0; box-shadow: none; background: #8B6FE012; color: #6a52c0; }
+.pk.lez::after, .pk.lezon::after { content: ""; position: absolute; right: 14.1px; top: 50%; width: 7.1px; height: 7.1px; border-right: 2px solid currentColor; border-top: 2px solid currentColor; transform: translateY(-62%) rotate(45deg); opacity: .5; }
 .pk.lezon { background: #8B6FE0; color: #fff; border-color: #8B6FE0; }
 .pk.lezon::after { opacity: .9; }
 
@@ -810,13 +817,15 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 
 /* Momentum: horni segmentovany prepinac uvnitr formulare (mockup .tsel) — pouzito u Lezeni/Disciplina.
    Stejny princip jako .pk/.pickrow vyse (appka mela .tsel jen uvnitr .mm sablony, ted i v lightDOM modalu). */
-.tsel { display: flex; gap: 8px; margin-bottom: 12px; }
-.tsel b { flex: 1; text-align: center; font-size: 12.5px; font-weight: 800; font-style: normal; color: var(--sec); background: var(--card); box-shadow: var(--shadow); padding: 9px; border-radius: 999px; cursor: pointer; }
+/* F-size-fix: mockup .tsel/.tsel b hodnoty (gap 8, margin-bottom 12, padding 9, font-size 12.5) x1.284 */
+.tsel { display: flex; gap: 10px; margin-bottom: 15px; }
+.tsel b { flex: 1; text-align: center; font-size: 16px; font-weight: 800; font-style: normal; line-height: 1.5; color: var(--sec); background: var(--card); box-shadow: var(--shadow); padding: 11.5px; border-radius: 999px; cursor: pointer; }
 .tsel b.active { background: var(--green); color: #fff; }
 
-/* Momentum: segmentovany prepinac na sedem tracku (mockup .seg) — pouzito u Systemu obtiznosti (lezeni) */
-.seg { display: flex; background: rgba(120,128,124,.12); border-radius: 999px; padding: 3px; margin: 5px 0 9px; }
-.seg b { flex: 1; text-align: center; font-size: 12px; font-weight: 700; font-style: normal; padding: 8px 0; border-radius: 999px; color: var(--label); cursor: pointer; }
+/* Momentum: segmentovany prepinac na sedem tracku (mockup .seg) — pouzito u Systemu obtiznosti (lezeni)
+   F-size-fix: mockup .seg/.seg b hodnoty (padding 3, margin 5/9, font-size 12, padding 8) x1.284 */
+.seg { display: flex; background: rgba(120,128,124,.12); border-radius: 999px; padding: 3.9px; margin: 6.4px 0 11.5px; }
+.seg b { flex: 1; text-align: center; font-size: 15.4px; font-weight: 700; font-style: normal; line-height: 1.5; padding: 10.3px 0; border-radius: 999px; color: var(--label); cursor: pointer; }
 .seg b.active { background: var(--card); box-shadow: var(--shadow); }
 
 /* F51: cesty — radek "Cesta N" + grade select (system je ted globalni .seg vyse, ne uz per-radek) */
@@ -1012,10 +1021,12 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 .load-more-btn:hover { border-color: var(--text); }
 .load-more-hint { font-size: 11px; font-weight: 500; color: var(--text-muted); }
 
-.player-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+/* F-size-fix: mockup pouziva pro tyto pilulky (Cvik #cvik-pills i "Za koho" #player-pills) stejnou
+   tridu .pk — sladit s .pk scale (padding 7/13, font-size 12 x1.284), misto puvodnich odhadnutych hodnot. */
+.player-pills { display: flex; gap: 7.7px; flex-wrap: wrap; }
 .player-pill {
-  padding: 9px 14px; border-radius: 999px; cursor: pointer;
-  font-size: 13px; font-weight: 700;
+  padding: 9px 16.7px; border-radius: 999px; cursor: pointer;
+  font-size: 15.4px; font-weight: 600; line-height: 1.5;
   background: var(--card); border: none; color: var(--sec);
   box-shadow: var(--shadow);
   display: inline-flex; align-items: center; gap: 6px;
@@ -1116,19 +1127,22 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 #player-modal .info-box strong { color: var(--label); }
 #player-modal .info-icon { display: none; }
 
-/* Serie mode — momentum .mgrid/.mbtn */
-.serie-mode-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; margin-bottom: 14px; }
+/* Serie mode — momentum .mgrid/.mbtn
+   F-size-fix: mockup .mgrid/.mbtn hodnoty (gap 7, padding 6/4, border-radius 12, b font-size 11, small 8.5, margin-top 2) x1.284 */
+.serie-mode-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; margin-bottom: 18px; }
 .serie-mode-btn {
   background: var(--card); border: none; color: var(--label);
-  padding: 6px 4px; border-radius: 12px; cursor: pointer;
+  padding: 7.7px 5.1px; border-radius: 15.4px; cursor: pointer;
   font-family: inherit; text-align: center;
-  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  display: flex; flex-direction: column; align-items: center; gap: 2.6px;
   box-shadow: var(--shadow);
   transition: all 0.15s;
 }
 .serie-mode-btn.active { background: var(--green); color: #fff; box-shadow: 0 6px 14px -4px rgba(15,169,104,.5); }
-.serie-mode-btn .label { font-size: 11px; font-weight: 800; margin-top: 0; line-height: 1; }
-.serie-mode-btn .label-sub { font-size: 8.5px; color: var(--sec); margin-top: 2px; opacity: .6; line-height: 1; }
+.serie-mode-btn .label { font-size: 14.1px; font-weight: 800; margin-top: 0; line-height: 1; }
+/* margin-top:0 (ne 2.6px): flex gap:2.6px na .serie-mode-btn uz mezeru label/label-sub davkuje;
+   pridany margin-top by ji zdvojil (bug: 45.6px misto cilovych 43px) */
+.serie-mode-btn .label-sub { font-size: 10.9px; color: var(--sec); margin-top: 0; opacity: .6; line-height: 1; }
 .serie-mode-btn.active .label-sub { color: rgba(255,255,255,0.75); }
 /* F41: serie-mode ikona velký zaobl. ctverec s cislem/symbolem */
 .serie-mode-icon {
