@@ -695,6 +695,18 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 body.modal-open { overflow: hidden; touch-action: none; }
 body.modal-open .modal { touch-action: auto; }
 
+/* KROK2 = CELOOBRAZOVKOVY formular (jako mockup) — ne bottom sheet.
+   KROK1 (addsheet "Co jsi delal?") zustava kompaktni sheet dole. */
+#modal.step-2 .modal-overlay { align-items: stretch; background: var(--card); backdrop-filter: none; }
+#modal.step-2 .modal {
+  width: 100%; max-width: none;
+  height: 100dvh; max-height: none;
+  border-radius: 0;
+  padding-top: calc(env(safe-area-inset-top) + 16px);
+  animation: fadeIn 0.2s;
+}
+#modal.step-2 .modal-handle { display: none; }
+
 /* F45: Guest mode banner + skryt editacni prvky */
 .guest-banner {
   display: flex; align-items: center; gap: 10px;
