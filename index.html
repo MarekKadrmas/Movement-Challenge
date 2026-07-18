@@ -672,18 +672,24 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
   background: var(--card); width: 100%; max-width: 480px;
   border-radius: 22px 22px 0 0;
   border: none;
-  padding: 22px 18px 0;  /* F-size-fix: horiz. padding = mockup .body 14px x1.284 (306->393), ne odhadovanych 20px */
+  padding: 22px 18px 0;
   height: auto; max-height: 90vh;  /* fit obsah = kompaktni sheet jako mockup; dlouhe formulare scrolluji (max 90vh) */
   display: flex; flex-direction: column;
   overflow: hidden;
   overscroll-behavior: contain;
   animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
+/* Momentum KROK2 rebuild: zadna vlastni horiz. padding na .modal — sirku/odsazeni ted drzi
+   #step2-zoom-top/#step2-zoom-bottom (306px-design + zoom), presne stejna konvence jako .mm host
+   (max-width) + .scr (width:306px;zoom) u root obrazovek. Safe-area dole reseno na .modal samotnem
+   (mimo zoom), aby nezkreslovalo zoom-faktor. */
+#modal.step-2 .modal { padding-left: 0; padding-right: 0; padding-bottom: env(safe-area-inset-bottom); }
 /* F42: modal body (scrollable middle) + footer (sticky bottom) */
 .modal-body {
   flex: 1 1 auto; overflow-y: auto; overscroll-behavior: contain;
   margin-right: -4px; padding-right: 4px;  /* misto pro scrollbar */
 }
+#modal.step-2 .modal-body { margin-right: 0; padding-right: 0; }
 .modal-footer {
   flex-shrink: 0; display: flex; flex-direction: column; gap: 8px;
   margin: 0 -18px; padding: 14px 18px;
@@ -691,12 +697,33 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
   background: var(--bg-card);
   border-top: 1px solid var(--border-soft);
 }
-/* Momentum KROK2: mockup .ff nema zadny vizualni oddelovac (Datum/odmena/Zapsat plavou primo na
-   podkladu formulare, ne v oddelene "kartě") — zrusit pozadi/linku, dorovnat mezeru pred Zapsat
-   (mockup .submit{margin-top:11px} x1.284 ~= 14px) na mistě .modal-footer{gap:8px}. */
-#modal.step-2 .modal-footer { background: transparent; border-top: none; padding-top: 0; gap: 30px; padding-bottom: calc(72px + env(safe-area-inset-bottom)); }
-#modal.step-2 .custom-date-field { margin-bottom: 26px; }
-#modal.step-2 .custom-date-field label { margin-bottom: 14px; }
+/* Momentum KROK2 rebuild: mockup .ff nema zadny vizualni oddelovac (Datum/odmena/Zapsat plavou
+   primo na podkladu formulare) — cele odsazeni (14px stran/12px dole) i mezery mezi Datum/odmena/
+   Zapsat (mockup .rwbar{margin-top:11px}, .submit{margin-top:11px}) ted drzi #step2-zoom-bottom +
+   .bottom-group flex-gap nize, verbatim (bez rucniho prepoctu x1.284). */
+#modal.step-2 .modal-footer { background: transparent; border-top: none; margin: 0; padding: 0; gap: 11px; }
+#modal.step-2 .bottom-group { display: flex; flex-direction: column; gap: 11px; }
+#modal.step-2 .bottom-group .custom-date-field { margin-bottom: 0; }
+#modal.step-2 .custom-date-field label { margin-bottom: 5px; }
+#modal.step-2 .level-points-display { margin-top: 0; }
+
+/* ============================================================
+   Momentum KROK2 rebuild — zoom wrapper (stejna metoda jako renderDnesek):
+   306px-design sirka zvetsena pres `zoom` na skutecnou sirku displeje.
+   V KROKU 1 (step-1) width/zoom nastavuje JS na '' (no-op, normalni 100% blok) — viz applyStep2Zoom().
+   ============================================================ */
+/* Mockup body{line-height:1.5;letter-spacing:-.01em} je globalni — appka to ma jen lokalne na par
+   prvcich (tsel/type-btn uz to meli explicitne). Chybelo to jako blanket default => vsechny ostatni
+   texty (titulek, .field label, .lvlhint...) mely prohlizecovy "normal" line-height (~1.2), coz davalo
+   mensi vysku radku a kumulativni drift ve svislych pozicich. Root obrazovky uz maji stejny fix na
+   :host (viz renderDnesek ov.textContent). */
+#modal.step-2 #step2-zoom-top, #modal.step-2 #step2-zoom-bottom { line-height: 1.5; letter-spacing: -0.01em; }
+#step2-zoom-top, #step2-zoom-bottom { box-sizing: border-box; }
+/* step2-zoom-top musi byt samo flex sloupec a flex:1 vuci .modal, aby #modal-body uvnitr nej
+   (flex:1 1 auto z F42 vyse) spravne vyplnilo zbyvajici vysku a #step2-zoom-bottom (footer)
+   zustal pribity dole displeje — jinak by vlozeny wrapper prerusil puvodni flex retezec .modal. */
+#modal.step-2 #step2-zoom-top { padding: 16px 14px 0; flex: 1 1 auto; display: flex; flex-direction: column; overflow: hidden; }
+#modal.step-2 #step2-zoom-bottom { padding: 0 14px 12px; flex-shrink: 0; }
 /* F40: lock background scroll kdyz je modal otevreny (predevsim pro iOS) */
 body.modal-open { overflow: hidden; touch-action: none; }
 body.modal-open .modal { touch-action: auto; }
@@ -739,15 +766,16 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 .modal-close-x { font-size: 24px; line-height: 1; color: var(--ter); cursor: pointer; padding: 2px 4px; flex-shrink: 0; }
 .modal-title { font-size: 19px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 3px; color: var(--label); }
 .modal-subtitle { font-size: 12px; color: var(--sec); margin-bottom: 18px; }
-/* Momentum: mockup .fhd{margin-bottom:12px} pod titulkem pred prvnim polem formulare — bez
-   podtitulku (skryty pro Novy zaznam, viz updateFormDisabled) chybela appce tahle mezera. */
-#modal.step-2 .modal-head-row { margin-bottom: 21px; }
+/* Momentum KROK2 rebuild: hlavicka je uvnitr #step2-zoom-top (306-design+zoom) — verbatim mockup
+   .fhd hodnoty (margin-bottom:12, .fttl font-size:18), misto puvodnich rucne dopoctenych (21/19px). */
+#modal.step-2 .modal-head-row { margin-bottom: 12px; }
+#modal.step-2 .modal-title { font-size: 18px; }
 
-/* F19b: admin banner — momentum .admbar 1:1 */
+/* F19b: admin banner — momentum .admbar 1:1 (verbatim) */
 .admin-banner {
   background: #8B6FE018; color: #6a52c0;
   font-size: 11.5px; font-weight: 700;
-  border-radius: 12px; padding: 8px 13px; margin-bottom: 10px;
+  border-radius: 12px; padding: 8px 13px; margin-bottom: 12px;
   display: flex; align-items: center; gap: 7px;
 }
 .admin-banner svg { flex-shrink: 0; }
@@ -806,13 +834,14 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 /* KROK 1 (addsheet): kompaktni sheet u spodu (fit obsah), ne fixnich 90vh */
 #modal.step-1 .modal { height: auto; padding-bottom: calc(22px + env(safe-area-inset-bottom)); }
 
-/* KROK 2: kompaktni segmentovany prepinac typu (mockup .tsel) — tytez .type-btn prvky/handlery, jen jiny vizual
-   F-size-fix: mockup .tsel/.tsel b hodnoty (gap 8, margin-bottom 12, padding 9 uniform, font-size 12.5) x1.284 */
-#modal.step-2 .type-selector { display: flex; gap: 10px; margin-bottom: 15px; }
-#modal.step-2 .type-btn { flex: 1; flex-direction: row; padding: 11.5px; border-radius: 999px; gap: 6px; }
-#modal.step-2 .type-btn .aic { width: auto; height: auto; background: none !important; color: inherit !important; font-size: 16px; }
+/* KROK 2: kompaktni segmentovany prepinac typu (mockup .tsel) — tytez .type-btn prvky/handlery, jen jiny vizual.
+   Momentum KROK2 rebuild: uvnitr #step2-zoom-top (306-design+zoom) — verbatim mockup .tsel/.tsel b
+   hodnoty (gap 8, margin-bottom 12, padding 9 uniform, font-size 12.5), bez rucniho prepoctu x1.284. */
+#modal.step-2 .type-selector { display: flex; gap: 8px; margin-bottom: 12px; }
+#modal.step-2 .type-btn { flex: 1; flex-direction: row; padding: 9px; border-radius: 999px; gap: 4px; }
+#modal.step-2 .type-btn .aic { width: auto; height: auto; background: none !important; color: inherit !important; font-size: 1em; }
 /* line-height:1.5 = mockup body{line-height:1.5} (globalne dedene do .tsel b, appka nema globalni 1.5 -> dodano lokalne) */
-#modal.step-2 .type-btn .al { font-size: 16px; line-height: 1.5; }
+#modal.step-2 .type-btn .al { font-size: 12.5px; line-height: 1.5; }
 #modal.step-2 .type-btn.active { background: var(--green); outline: none; box-shadow: 0 6px 14px -4px rgba(15,169,104,.5); }
 #modal.step-2 .type-btn.active .al,
 #modal.step-2 .type-btn.active svg { color: #fff; }
@@ -822,31 +851,30 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 #modal.step-2 .type-btn[data-type="lezeni"] { display: none; }
 
 /* IA: sub-picker "Aktivita" pod hornim .tsel (mockup .pickrow/.pk) — Kolo/Plavani/Strecink/Beh/Lezeni.
-   Prevzato z mockup CSS (ktere appka ma jen uvnitr .mm shadow-dom sablony, ne v lightDOM #modal). */
-/* F-size-fix: mockup .pickrow/.pk hodnoty (gap 6, padding 7/13, font-size 12) x1.284 */
-.pickrow { display: flex; gap: 7.7px; flex-wrap: wrap; }
+   Momentum KROK2 rebuild: uvnitr #step2-zoom-top (306-design+zoom) — hodnoty verbatim mockup
+   .pickrow/.pk (gap 6, padding 7/13, font-size 12), bez rucniho prepoctu x1.284. */
+.pickrow { display: flex; gap: 6px; flex-wrap: wrap; }
 /* line-height:1.5 = mockup body{line-height:1.5} (globalne dedene do .pk, appka nema globalni 1.5 -> dodano lokalne) */
-.pk { background: var(--card); box-shadow: var(--shadow); border-radius: 999px; padding: 9px 16.7px; font-size: 15.4px; font-weight: 600; line-height: 1.5; cursor: pointer; color: var(--label); }
+.pk { background: var(--card); box-shadow: var(--shadow); border-radius: 999px; padding: 7px 13px; font-size: 12px; font-weight: 600; line-height: 1.5; cursor: pointer; color: var(--label); }
 .pk.on { background: var(--green); color: #fff; }
-.pk.lez, .pk.lezon { position: relative; padding-right: 33.4px; font-weight: 700; border: 1.9px solid #8B6FE0; box-shadow: none; background: #8B6FE012; color: #6a52c0; }
-.pk.lez::after, .pk.lezon::after { content: ""; position: absolute; right: 14.1px; top: 50%; width: 7.1px; height: 7.1px; border-right: 2px solid currentColor; border-top: 2px solid currentColor; transform: translateY(-62%) rotate(45deg); opacity: .5; }
+.pk.lez, .pk.lezon { position: relative; padding-right: 26px; font-weight: 700; border: 1.5px solid #8B6FE0; box-shadow: none; background: #8B6FE012; color: #6a52c0; }
+.pk.lez::after, .pk.lezon::after { content: ""; position: absolute; right: 11px; top: 50%; width: 5.5px; height: 5.5px; border-right: 2px solid currentColor; border-top: 2px solid currentColor; transform: translateY(-62%) rotate(45deg); opacity: .5; }
 .pk.lezon { background: #8B6FE0; color: #fff; border-color: #8B6FE0; }
 .pk.lezon::after { opacity: .9; }
 
-/* Momentum: hint pod Nárocnosti (mockup .lvlhint) — Nárocnost pilulky 1-5 sdili .pk/.pickrow vyse */
-.lvlhint { text-align: center; font-size: 12px; color: var(--sec); margin-top: 20px; font-weight: 600; }
+/* Momentum: hint pod Nárocnosti (mockup .lvlhint) — Nárocnost pilulky 1-5 sdili .pk/.pickrow vyse (verbatim) */
+.lvlhint { text-align: center; font-size: 12px; color: var(--sec); margin-top: 9px; font-weight: 600; }
 
 /* Momentum: horni segmentovany prepinac uvnitr formulare (mockup .tsel) — pouzito u Lezeni/Disciplina.
-   Stejny princip jako .pk/.pickrow vyse (appka mela .tsel jen uvnitr .mm sablony, ted i v lightDOM modalu). */
-/* F-size-fix: mockup .tsel/.tsel b hodnoty (gap 8, margin-bottom 12, padding 9, font-size 12.5) x1.284 */
-.tsel { display: flex; gap: 10px; margin-bottom: 15px; }
-.tsel b { flex: 1; text-align: center; font-size: 16px; font-weight: 800; font-style: normal; line-height: 1.5; color: var(--sec); background: var(--card); box-shadow: var(--shadow); padding: 11.5px; border-radius: 999px; cursor: pointer; }
+   Verbatim mockup .tsel/.tsel b hodnoty (gap 8, margin-bottom 12, padding 9, font-size 12.5). */
+.tsel { display: flex; gap: 8px; margin-bottom: 12px; }
+.tsel b { flex: 1; text-align: center; font-size: 12.5px; font-weight: 800; font-style: normal; line-height: 1.5; color: var(--sec); background: var(--card); box-shadow: var(--shadow); padding: 9px; border-radius: 999px; cursor: pointer; }
 .tsel b.active { background: var(--green); color: #fff; }
 
-/* Momentum: segmentovany prepinac na sedem tracku (mockup .seg) — pouzito u Systemu obtiznosti (lezeni)
-   F-size-fix: mockup .seg/.seg b hodnoty (padding 3, margin 5/9, font-size 12, padding 8) x1.284 */
-.seg { display: flex; background: rgba(120,128,124,.12); border-radius: 999px; padding: 3.9px; margin: 6.4px 0 11.5px; }
-.seg b { flex: 1; text-align: center; font-size: 15.4px; font-weight: 700; font-style: normal; line-height: 1.5; padding: 10.3px 0; border-radius: 999px; color: var(--label); cursor: pointer; }
+/* Momentum: segmentovany prepinac na sedem tracku (mockup .seg) — pouzito u Systemu obtiznosti (lezeni).
+   Verbatim mockup .seg/.seg b hodnoty (padding 3, margin 5/9, font-size 12, padding 8). */
+.seg { display: flex; background: rgba(120,128,124,.12); border-radius: 999px; padding: 3px; margin: 5px 0 9px; }
+.seg b { flex: 1; text-align: center; font-size: 12px; font-weight: 700; font-style: normal; line-height: 1.5; padding: 8px 0; border-radius: 999px; color: var(--label); cursor: pointer; }
 .seg b.active { background: var(--card); box-shadow: var(--shadow); }
 
 /* F51: cesty — radek "Cesta N" + grade select (system je ted globalni .seg vyse, ne uz per-radek) */
@@ -857,11 +885,6 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 
 .field { margin-bottom: 14px; }
 .field label { display: block; font-size: 11px; font-weight: 700; color: var(--sec); margin-bottom: 5px; }
-/* Momentum KROK2: dorovnani mezer proti mockup formcvik (overlay merena) — "Cvik" pole a pole s
-   .serie-mode-grid ("Co chceš zapsat?") maji v mockupu o trochu vetsi mezeru pod sebou nez ostatni. */
-#form-cvik .field:first-child { margin-bottom: 19px; }
-#form-cvik .field:has(.serie-mode-grid) { margin-bottom: 25px; }
-#activity-subpicker-field { margin-bottom: 18px; }
 .field input, .field select {
   width: 100%; background: var(--card); border: none; color: var(--label);
   padding: 12px 16px; border-radius: 999px; font-family: inherit; font-size: 14px; font-weight: 600;
@@ -871,6 +894,23 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 .field input::placeholder { color: var(--ter); font-weight: 500; }
 .field input:focus, .field select:focus { outline: none; box-shadow: 0 0 0 2px var(--green), var(--shadow); }
 .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+/* Momentum KROK2 rebuild: uvnitr #step2-zoom-top (306-design+zoom) — verbatim mockup .fld (margin-
+   bottom:9, uniform, zadne specialni vyjimky) + rozliseni dvou mockup vstupnich stylu:
+   .inpc (cislene pilulky v pickrow/field-row — vyska 32, padding 0/16, tucne) vs
+   .inp (volny text/hodnota — padding 10/15, normalni rez). Nahrazuje puvodni rucne dolazene
+   vyjimky (:first-child/:has()) odvozene z chybne (x1.284) skalovane verze. */
+#modal.step-2 .field { margin-bottom: 9px; }
+#modal.step-2 #activity-subpicker-field { margin-bottom: 8px; }
+#modal.step-2 .field input, #modal.step-2 .field select {
+  padding: 10px 15px; font-size: 13px; font-weight: 400; border-radius: 999px;
+}
+#modal.step-2 .field-row, #modal.step-2 .pickrow { gap: 6px; }
+#modal.step-2 .field-row input, #modal.step-2 #form-cvik-varied input, #modal.step-2 #form-lezeni input {
+  height: 32px; padding: 0 16px; font-size: 13px; font-weight: 600; border-radius: 999px;
+}
+/* "Například cvíčo 30 min…" — mockup .inp.ph inline override (border-radius:16, padding:8 15, margin-top:8) */
+#aktivita-nazev { border-radius: 16px; padding: 8px 15px; }
+#aktivita-nazev-field { margin-top: 8px; margin-bottom: 9px; }
 /* Momentum: cisla jako ciste pilulky bez OS spinneru (mockup .inpc nema sipky) */
 .field input[type=number]::-webkit-outer-spin-button,
 .field input[type=number]::-webkit-inner-spin-button,
@@ -895,6 +935,9 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 .date-trigger .date-icon { font-size: 14px; line-height: 1; color: var(--sec); }
 .date-trigger .date-text { flex: 1; }
 .date-trigger .date-chevron { font-size: 14px; color: var(--ter); }
+/* Momentum KROK2 rebuild: verbatim mockup .drange (gap:7, padding:9px 14px), uvnitr
+   #step2-zoom-bottom (306-design+zoom) — .date-trigger je sdileny s habit-modal, proto scoped. */
+#modal.step-2 .date-trigger { gap: 7px; padding: 9px 14px; }
 
 /* Ukol 3: kalendar jako bottom sheet — 1:1 mockup "datum" (.dim + .sheet/.handle/.sheetx/h3 + .dp + .btn2/.btng) */
 .date-picker-overlay {
@@ -1049,12 +1092,13 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 .load-more-btn:hover { border-color: var(--text); }
 .load-more-hint { font-size: 11px; font-weight: 500; color: var(--text-muted); }
 
-/* F-size-fix: mockup pouziva pro tyto pilulky (Cvik #cvik-pills i "Za koho" #player-pills) stejnou
-   tridu .pk — sladit s .pk scale (padding 7/13, font-size 12 x1.284), misto puvodnich odhadnutych hodnot. */
-.player-pills { display: flex; gap: 7.7px; flex-wrap: wrap; }
+/* Momentum KROK2 rebuild: mockup pouziva pro tyto pilulky (Cvik #cvik-pills i "Za koho" #player-pills)
+   stejnou tridu .pk — verbatim hodnoty (gap 6, padding 7/13, font-size 12), zvetseny pres zoom
+   uvnitr #step2-zoom-top, misto puvodnich rucne prepoctenych (x1.284). */
+.player-pills { display: flex; gap: 6px; flex-wrap: wrap; }
 .player-pill {
-  padding: 9px 16.7px; border-radius: 999px; cursor: pointer;
-  font-size: 15.4px; font-weight: 600; line-height: 1.5;
+  padding: 7px 13px; border-radius: 999px; cursor: pointer;
+  font-size: 12px; font-weight: 600; line-height: 1.5;
   background: var(--card); border: none; color: var(--sec);
   box-shadow: var(--shadow);
   display: inline-flex; align-items: center; gap: 6px;
@@ -1155,22 +1199,20 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 #player-modal .info-box strong { color: var(--label); }
 #player-modal .info-icon { display: none; }
 
-/* Serie mode — momentum .mgrid/.mbtn
-   F-size-fix: mockup .mgrid/.mbtn hodnoty (gap 7, padding 6/4, border-radius 12, b font-size 11, small 8.5, margin-top 2) x1.284 */
-.serie-mode-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; margin-bottom: 18px; }
+/* Serie mode — momentum .mgrid/.mbtn (verbatim mockup hodnoty, uvnitr #step2-zoom-top; zoom
+   resi prevod na displej misto rucniho x1.284). Margin-bottot uz drzi obalujici .field (9px). */
+.serie-mode-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; margin-bottom: 0; }
 .serie-mode-btn {
   background: var(--card); border: none; color: var(--label);
-  padding: 7.7px 5.1px; border-radius: 15.4px; cursor: pointer;
+  padding: 6px 4px; border-radius: 12px; cursor: pointer;
   font-family: inherit; text-align: center;
-  display: flex; flex-direction: column; align-items: center; gap: 2.6px;
+  display: flex; flex-direction: column; align-items: center; gap: 0;
   box-shadow: var(--shadow);
   transition: all 0.15s;
 }
 .serie-mode-btn.active { background: var(--green); color: #fff; box-shadow: 0 6px 14px -4px rgba(15,169,104,.5); }
-.serie-mode-btn .label { font-size: 14.1px; font-weight: 800; margin-top: 0; line-height: 1; }
-/* margin-top:0 (ne 2.6px): flex gap:2.6px na .serie-mode-btn uz mezeru label/label-sub davkuje;
-   pridany margin-top by ji zdvojil (bug: 45.6px misto cilovych 43px) */
-.serie-mode-btn .label-sub { font-size: 10.9px; color: var(--sec); margin-top: 0; opacity: .6; line-height: 1; }
+.serie-mode-btn .label { font-size: 11px; font-weight: 800; margin-top: 0; line-height: 1; }
+.serie-mode-btn .label-sub { font-size: 8.5px; color: var(--sec); margin-top: 2px; opacity: .6; line-height: 1; }
 .serie-mode-btn.active .label-sub { color: rgba(255,255,255,0.75); }
 /* F41: serie-mode ikona velký zaobl. ctverec s cislem/symbolem */
 .serie-mode-icon {
@@ -1198,57 +1240,58 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 }
 .serie-mode-btn.active .bubble-num { background: #fff; color: #000; }
 
-/* Ruzne serie - radky — momentum .serieh/.serieno/.inpc */
+/* Ruzne serie - radky — momentum .serieh/.serieno/.inpc (verbatim, uvnitr #step2-zoom-top).
+   Mockup nema per-radek "smazat" tlacitko — appka jedno pridava (UX potreba), proto sloupec navic. */
 .serie-row-header {
-  display: grid; grid-template-columns: 1fr 1fr 1fr 32px;
-  gap: 10px; margin-bottom: 6px; padding: 0 4px;
+  display: grid; grid-template-columns: 32px 1fr 1fr 32px;
+  gap: 6px; margin-bottom: 4px; padding: 0 6px;
 }
 .serie-row-header div {
-  font-size: 9px; font-weight: 700; color: var(--ter);
-  text-transform: uppercase; letter-spacing: 0.05em;
+  font-size: 8.5px; font-weight: 700; color: var(--ter);
+  text-transform: uppercase; letter-spacing: 0.04em;
 }
 .serie-row {
-  display: grid; grid-template-columns: 1fr 1fr 1fr 32px;
-  gap: 10px; align-items: center;
-  margin-bottom: 8px;
+  display: grid; grid-template-columns: 32px 1fr 1fr 32px;
+  gap: 6px; align-items: center;
+  margin-bottom: 6px;
 }
 .serie-row .serie-num {
-  height: 40px;
+  height: 32px;
   background: var(--card); border: none; box-shadow: var(--shadow);
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  color: var(--label); font-weight: 700; font-size: 14px;
+  color: var(--label); font-weight: 700; font-size: 13px;
   font-variant-numeric: tabular-nums;
 }
 .serie-row input {
-  padding: 0 14px; font-size: 13px; font-weight: 600;
+  padding: 0 16px; font-size: 13px; font-weight: 600;
   background: var(--card); border: none; color: var(--label);
   border-radius: 999px; font-family: inherit;
-  width: 100%; height: 40px;
+  width: 100%; height: 32px;
   box-shadow: var(--shadow);
   -webkit-appearance: none; appearance: none;
   box-sizing: border-box;
 }
 .serie-row input:focus { outline: none; box-shadow: 0 0 0 2px var(--green), var(--shadow); }
 .serie-row .remove-btn {
-  width: 32px; height: 40px; border-radius: 8px;
+  width: 32px; height: 32px; border-radius: 8px;
   background: transparent; border: none;
   color: var(--ter); cursor: pointer;
   display: flex; align-items: center; justify-content: center;
   font-size: 18px;
 }
 .add-serie-btn {
-  width: 100%; padding: 10px; border-radius: 999px;
+  width: 100%; padding: 9px; border-radius: 999px;
   background: none; border: 1.5px dashed var(--ter);
   color: var(--green); font-family: inherit; font-size: 13px; font-weight: 700;
-  cursor: pointer; margin-top: 4px;
+  cursor: pointer; margin-top: 9px;
 }
 /* F51: lezení — selecty v řádku cesty + převodní hint */
 .serie-row select {
   padding: 0 12px; font-size: 13px; font-weight: 600;
   background: var(--card); border: none; color: var(--label);
   border-radius: 999px; font-family: inherit;
-  width: 100%; height: 40px; box-sizing: border-box;
+  width: 100%; height: 32px; box-sizing: border-box;
   box-shadow: var(--shadow);
   -webkit-appearance: none; appearance: none;
 }
@@ -1500,6 +1543,12 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 }
 .btn-submit:active { transform: scale(0.98); }
 .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+/* Momentum KROK2 rebuild: verbatim mockup .submit padding:14px (bylo 15) — uvnitr #step2-zoom-bottom.
+   line-height:1.5 explicitne, protoze <button> v Chromiu nededi line-height z rodice (na rozdil od
+   div/span) — bez toho byl Zapsat o ~6px nizsi nez mockup .submit. */
+#modal.step-2 .btn-submit { padding: 14px; line-height: 1.5; }
+#modal.step-2 .btn-danger { line-height: 1.5; }
+#modal.step-2 .add-serie-btn, #modal.step-2 .date-trigger { line-height: 1.5; }
 
 .btn-danger {
   width: 100%; background: var(--red); color: #fff;
@@ -2847,6 +2896,11 @@ body.mm-full{background:#EDF0EC;}
 <div class="modal-overlay" id="modal">
   <div class="modal">
     <div class="modal-handle"></div>
+    <!-- Momentum KROK2 rebuild: #step2-zoom-top/#step2-zoom-bottom pouzivaji STEJNOU metodu jako
+         root obrazovky (renderDnesek) — verbatim mockup CSS hodnoty (bez rucniho x1.284 prepoctu)
+         vykreslene v 306px-design sirce, zvetsene pres `zoom` na skutecnou sirku displeje. V KROKU 1
+         (addsheet sheet, ktery uz sedi) je zoom/width no-op (viz applyStep2Zoom v JS) — beze zmeny. -->
+    <div id="step2-zoom-top">
     <div class="modal-head-row">
       <div class="modal-title-wrap">
         <span class="modal-back-x" id="modal-back-btn" onclick="goToAddStep(1)">‹</span>
@@ -3069,11 +3123,13 @@ body.mm-full{background:#EDF0EC;}
     </div>
 
     </div><!-- /modal-body -->
+    </div><!-- /step2-zoom-top -->
 
     <!-- Momentum: mockup .ff ukotvuje Datum+odmenu+Zapsat spolecne dole formulare (position:absolute;
          bottom:12px) — appka uz mela Zapsat ve sticky .modal-footer (mimo scroll, vzdy dole); Datum+
          odmena se sem presouvaji jako .bottom-group, aby cela trojice tvorila stejnou vizualni skupinu
          jako v mockupu, misto aby "plavaly" nahore v promenlive dlouhem seznamu poli. -->
+    <div id="step2-zoom-bottom">
     <div class="modal-footer">
       <div class="bottom-group">
         <!-- Datum zaznamu — klikatelny trigger pro vlastni kalendar. Label "Datum" = mockup .fld label
@@ -3094,6 +3150,7 @@ body.mm-full{background:#EDF0EC;}
         <button class="btn-danger" id="delete-btn" style="display:none;" onclick="deleteCurrentEntry()">Smazat</button>
       </div>
     </div>
+    </div><!-- /step2-zoom-bottom -->
   </div>
 </div>
 
@@ -7326,6 +7383,29 @@ function goToAddStep(step) {
     document.getElementById('modal-title').textContent = state.editMode ? 'Upravit záznam' : 'Nový záznam';
   }
   updateFormDisabled();
+  applyStep2Zoom();
+}
+
+// Momentum KROK2 rebuild: stejna metoda jako root obrazovky (renderDnesek) — #step2-zoom-top/
+// #step2-zoom-bottom drzi formularovy obsah v 306px-design sirce, zvetseny pres `zoom` na stejny
+// faktor jako .scr u root obrazovek. V KROKU 1 (sheet "Co jsi delal?", ktery uz sedi 1:1) je to
+// no-op (width/zoom se vrati na prazdny retezec = normalni 100% blok bez zvetseni).
+function applyStep2Zoom() {
+  const top = document.getElementById('step2-zoom-top');
+  const bot = document.getElementById('step2-zoom-bottom');
+  if (!top || !bot) return;
+  if (state.modalStep === 2) {
+    const z = (Math.min(Math.max(1, window.innerWidth), 430) - 8) / 306;
+    top.style.width = '306px'; top.style.zoom = z;
+    bot.style.width = '306px'; bot.style.zoom = z;
+  } else {
+    top.style.width = ''; top.style.zoom = '';
+    bot.style.width = ''; bot.style.zoom = '';
+  }
+}
+if (!window._mmStep2Rz) {
+  window._mmStep2Rz = true;
+  window.addEventListener('resize', () => { if (document.getElementById('modal')?.classList.contains('active')) applyStep2Zoom(); });
 }
 
 function resetFormFields() {
