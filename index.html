@@ -691,6 +691,12 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
   background: var(--bg-card);
   border-top: 1px solid var(--border-soft);
 }
+/* Momentum KROK2: mockup .ff nema zadny vizualni oddelovac (Datum/odmena/Zapsat plavou primo na
+   podkladu formulare, ne v oddelene "kartě") — zrusit pozadi/linku, dorovnat mezeru pred Zapsat
+   (mockup .submit{margin-top:11px} x1.284 ~= 14px) na mistě .modal-footer{gap:8px}. */
+#modal.step-2 .modal-footer { background: transparent; border-top: none; padding-top: 0; gap: 30px; padding-bottom: calc(72px + env(safe-area-inset-bottom)); }
+#modal.step-2 .custom-date-field { margin-bottom: 26px; }
+#modal.step-2 .custom-date-field label { margin-bottom: 14px; }
 /* F40: lock background scroll kdyz je modal otevreny (predevsim pro iOS) */
 body.modal-open { overflow: hidden; touch-action: none; }
 body.modal-open .modal { touch-action: auto; }
@@ -733,6 +739,9 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 .modal-close-x { font-size: 24px; line-height: 1; color: var(--ter); cursor: pointer; padding: 2px 4px; flex-shrink: 0; }
 .modal-title { font-size: 19px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 3px; color: var(--label); }
 .modal-subtitle { font-size: 12px; color: var(--sec); margin-bottom: 18px; }
+/* Momentum: mockup .fhd{margin-bottom:12px} pod titulkem pred prvnim polem formulare — bez
+   podtitulku (skryty pro Novy zaznam, viz updateFormDisabled) chybela appce tahle mezera. */
+#modal.step-2 .modal-head-row { margin-bottom: 21px; }
 
 /* F19b: admin banner — momentum .admbar 1:1 */
 .admin-banner {
@@ -825,7 +834,7 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 .pk.lezon::after { opacity: .9; }
 
 /* Momentum: hint pod Nárocnosti (mockup .lvlhint) — Nárocnost pilulky 1-5 sdili .pk/.pickrow vyse */
-.lvlhint { text-align: center; font-size: 12px; color: var(--sec); margin-top: 9px; font-weight: 600; }
+.lvlhint { text-align: center; font-size: 12px; color: var(--sec); margin-top: 20px; font-weight: 600; }
 
 /* Momentum: horni segmentovany prepinac uvnitr formulare (mockup .tsel) — pouzito u Lezeni/Disciplina.
    Stejny princip jako .pk/.pickrow vyse (appka mela .tsel jen uvnitr .mm sablony, ted i v lightDOM modalu). */
@@ -848,6 +857,11 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 
 .field { margin-bottom: 14px; }
 .field label { display: block; font-size: 11px; font-weight: 700; color: var(--sec); margin-bottom: 5px; }
+/* Momentum KROK2: dorovnani mezer proti mockup formcvik (overlay merena) — "Cvik" pole a pole s
+   .serie-mode-grid ("Co chceš zapsat?") maji v mockupu o trochu vetsi mezeru pod sebou nez ostatni. */
+#form-cvik .field:first-child { margin-bottom: 19px; }
+#form-cvik .field:has(.serie-mode-grid) { margin-bottom: 25px; }
+#activity-subpicker-field { margin-bottom: 18px; }
 .field input, .field select {
   width: 100%; background: var(--card); border: none; color: var(--label);
   padding: 12px 16px; border-radius: 999px; font-family: inherit; font-size: 14px; font-weight: 600;
@@ -865,7 +879,9 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 .field input[type=number], .serie-row input[type=number] { -moz-appearance: textfield; }
 
 /* Zadavani data — klikatelny trigger + vlastni picker (momentum .drange) */
-.custom-date-field { margin-top: 4px; padding-top: 0; border-top: none; }
+.custom-date-field { margin-top: 0; padding-top: 0; border-top: none; }
+/* Momentum: .bottom-group (Datum+odmena) ted zije uvnitr .modal-footer, viz HTML — mockup .ff
+   ekvivalent (svisle rozlozeni/mezery dolazene nize u #modal.step-2 .modal-footer). */
 .date-trigger {
   display: flex; align-items: center; gap: 10px;
   padding: 10px 16px; background: var(--card);
@@ -3048,20 +3064,28 @@ body.mm-full{background:#EDF0EC;}
         <div class="level-points-display" id="lezeni-points-display"></div>
       </div>
 
-      <!-- Datum zaznamu — klikatelny trigger pro vlastni kalendar -->
-      <div class="field custom-date-field">
-        <div class="date-trigger" id="date-trigger" onclick="openDatePicker()">
-          <span class="date-icon"><svg class="i"><use href="#i-calendar"/></svg></span>
-          <span class="date-text" id="date-trigger-text">Dnes</span>
-          <span class="date-chevron">▾</span>
-        </div>
-      </div>
-      <div class="reward-slot" id="reward-slot"></div>
     </div>
 
     </div><!-- /modal-body -->
 
+    <!-- Momentum: mockup .ff ukotvuje Datum+odmenu+Zapsat spolecne dole formulare (position:absolute;
+         bottom:12px) — appka uz mela Zapsat ve sticky .modal-footer (mimo scroll, vzdy dole); Datum+
+         odmena se sem presouvaji jako .bottom-group, aby cela trojice tvorila stejnou vizualni skupinu
+         jako v mockupu, misto aby "plavaly" nahore v promenlive dlouhem seznamu poli. -->
     <div class="modal-footer">
+      <div class="bottom-group">
+        <!-- Datum zaznamu — klikatelny trigger pro vlastni kalendar. Label "Datum" = mockup .fld label
+             (formcvik/formakt/formbeh/formlez/formadmin maji ho vsechny nad .drange). -->
+        <div class="field custom-date-field">
+          <label>Datum</label>
+          <div class="date-trigger" id="date-trigger" onclick="openDatePicker()">
+            <span class="date-icon"><svg class="i"><use href="#i-calendar"/></svg></span>
+            <span class="date-text" id="date-trigger-text">Dnes</span>
+            <span class="date-chevron">▾</span>
+          </div>
+        </div>
+        <div class="reward-slot" id="reward-slot"></div>
+      </div>
       <!-- Ukol 1: Uložit změny + Smazat vedle sebe (mockup editzaznam) — delete-btn skryty mimo edit rezim, submit pak zabira cely radek -->
       <div class="modal-footer-row">
         <button class="btn-submit" id="submit-btn" onclick="submitEntry()">Zapsat</button>
