@@ -46,7 +46,7 @@
   --accent: #0FA968;
   --env: var(--green);
   /* === aliasy: staré UI appky → Momentum paleta === */
-  --bg: #F5F6F4;
+  --bg: #EDF0EC;
   --bg-card: #FFFFFF;
   --bg-card-hover: #F1F4F0;
   --border: #E6EAE4;
@@ -71,7 +71,7 @@
   --track:#242A26; --line:#2A312C; --bar:rgba(36,42,39,.72);
   --shadow:0 1px 0 rgba(255,255,255,.03),0 12px 26px -16px rgba(0,0,0,.7);
   --accent:#34D399; --env:var(--green);
-  --bg:#0A0C0B; --bg-card:#161B18; --bg-card-hover:#1C221E;
+  --bg:#0C0F0D; --bg-card:#161B18; --bg-card-hover:#1C221E;
   --border:#242A26; --border-soft:#1E241F;
   --text:#ECF3EF; --text-muted:#8C968F; --text-dim:#5C655F;
 }
@@ -730,11 +730,12 @@ body.modal-open .modal { touch-action: auto; }
 
 /* KROK2 = CELOOBRAZOVKOVY formular (jako mockup) — ne bottom sheet.
    KROK1 (addsheet "Co jsi delal?") zustava kompaktni sheet dole. */
-#modal.step-2 .modal-overlay { align-items: stretch; background: var(--card); backdrop-filter: none; }
+#modal.step-2 .modal-overlay { align-items: stretch; background: var(--bg); backdrop-filter: none; }
 #modal.step-2 .modal {
   width: 100%; max-width: none;
   height: 100dvh; max-height: none;
   border-radius: 0;
+  background: var(--bg);   /* mockup: formular sedi na --bg (svetle sede), ne na --card (bila) */
   /* jen safe-area (notch) — horni 16px odsazeni uz dava #step2-zoom-top padding (mockup formb padding-top:16). */
   padding-top: env(safe-area-inset-top);
   animation: fadeIn 0.2s;
