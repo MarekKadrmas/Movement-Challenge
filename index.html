@@ -735,7 +735,8 @@ body.modal-open .modal { touch-action: auto; }
   width: 100%; max-width: none;
   height: 100dvh; max-height: none;
   border-radius: 0;
-  padding-top: calc(env(safe-area-inset-top) + 16px);
+  /* jen safe-area (notch) — horni 16px odsazeni uz dava #step2-zoom-top padding (mockup formb padding-top:16). */
+  padding-top: env(safe-area-inset-top);
   animation: fadeIn 0.2s;
 }
 #modal.step-2 .modal-handle { display: none; }
@@ -769,7 +770,12 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 /* Momentum KROK2 rebuild: hlavicka je uvnitr #step2-zoom-top (306-design+zoom) — verbatim mockup
    .fhd hodnoty (margin-bottom:12, .fttl font-size:18), misto puvodnich rucne dopoctenych (21/19px). */
 #modal.step-2 .modal-head-row { margin-bottom: 12px; }
-#modal.step-2 .modal-title { font-size: 18px; }
+#modal.step-2 .modal-title { font-size: 18px; margin-bottom: 0; }
+/* Mockup .fhd ma jen nazev + × (zadny podtitulek) — schovat i v KROKU 2 (jako step-1 @833). */
+#modal.step-2 .modal-subtitle { display: none !important; }
+/* Mockup .fhd{align-items:center}, .fx{line-height:1} — jinak × (fs24) natahne radek o ~4px. */
+#modal.step-2 .modal-head-row { align-items: center; }
+#modal.step-2 .modal-close-x { line-height: 1; }
 
 /* F19b: admin banner — momentum .admbar 1:1 (verbatim) */
 .admin-banner {
@@ -2958,11 +2964,11 @@ body.mm-full{background:#EDF0EC;}
       <div id="form-cvik">
         <div class="field">
           <label>Cvik</label>
-          <div class="player-pills" id="cvik-pills">
-            <div class="player-pill" data-cvik="Shyby"><svg class="i"><use href="#i-pullup"/></svg> Shyby</div>
-            <div class="player-pill" data-cvik="Kliky"><svg class="i"><use href="#i-pushup"/></svg> Kliky</div>
-            <div class="player-pill" data-cvik="Dřep"><svg class="i"><use href="#i-squat"/></svg> Dřep</div>
-            <div class="player-pill" data-cvik="Dipy"><svg class="i"><use href="#i-dips"/></svg> Dipy</div>
+          <div class="pickrow" id="cvik-pills">
+            <div class="pk" data-cvik="Shyby"><svg class="i"><use href="#i-pullup"/></svg> Shyby</div>
+            <div class="pk" data-cvik="Kliky"><svg class="i"><use href="#i-pushup"/></svg> Kliky</div>
+            <div class="pk" data-cvik="Dřep"><svg class="i"><use href="#i-squat"/></svg> Dřep</div>
+            <div class="pk" data-cvik="Dipy"><svg class="i"><use href="#i-dips"/></svg> Dipy</div>
           </div>
         </div>
 
@@ -7414,9 +7420,7 @@ function resetFormFields() {
   setSerieMode('single');
   state.variedSeries = [{op:'',vaha:0}];
   renderVariedSeries();
-  document.querySelectorAll('#cvik-pills .player-pill').forEach(p => {
-    p.classList.remove('active'); p.style.background=''; p.style.borderColor=''; p.style.color='';
-  });
+  document.querySelectorAll('#cvik-pills .pk').forEach(p => p.classList.remove('on'));
   document.querySelectorAll('#form-aktivita [data-level]').forEach(b => b.classList.remove('on'));
   document.querySelectorAll('.stretch-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('cvik-single-op').value = '';
@@ -7958,14 +7962,11 @@ document.querySelectorAll('[data-lezeni-disc]').forEach(btn => {
   });
 });
 
-document.querySelectorAll('#cvik-pills .player-pill').forEach(pill => {
+document.querySelectorAll('#cvik-pills .pk').forEach(pill => {
   pill.addEventListener('click', () => {
     if (!state.selectedPlayer) return;
-    document.querySelectorAll('#cvik-pills .player-pill').forEach(p => {
-      p.classList.remove('active'); p.style.background = ''; p.style.borderColor = ''; p.style.color = '';
-    });
-    pill.classList.add('active');
-    pill.style.background = 'var(--accent)'; pill.style.borderColor = 'var(--accent)'; pill.style.color = '#fff';
+    document.querySelectorAll('#cvik-pills .pk').forEach(p => p.classList.remove('on'));
+    pill.classList.add('on');
     state.selectedCvik = pill.dataset.cvik;
     updateCvikPointsPreview();
   });
@@ -8232,12 +8233,8 @@ function openEditModal(id, type) {
   if (type === 'cvik') {
     setEntryType('cvik');
     state.selectedCvik = entry.cvik;
-    document.querySelectorAll('#cvik-pills .player-pill').forEach(p => {
-      p.classList.remove('active'); p.style.background = ''; p.style.borderColor = ''; p.style.color = '';
-      if (p.dataset.cvik === entry.cvik) {
-        p.classList.add('active');
-        p.style.background = 'var(--accent)'; p.style.borderColor = 'var(--accent)'; p.style.color = '#fff';
-      }
+    document.querySelectorAll('#cvik-pills .pk').forEach(p => {
+      p.classList.toggle('on', p.dataset.cvik === entry.cvik);
     });
     // Detekce mode podle poznamky
     let mode = 'single';
