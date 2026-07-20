@@ -5394,18 +5394,26 @@ function renderDnesek(){
   const byDay={}; myWk.forEach(e=>{byDay[e.datum]=(byDay[e.datum]||0)+Math.round(Number(e.body)||0);});
   const trainings=Object.keys(byDay).length;
   const recordDay=Object.values(byDay).length?Math.max(...Object.values(byDay)):0;
+  const today=todayStr();
+  // Velky kruh = DNESEK (Marek 2026-07-20, volba "A"): cislo = dnesni body, segmenty = dnesni kategorie.
+  const todayPts=byDay[today]||0;
   let cCvik=0,cAkt=0,cStr=0;
-  if(me){ cCvik=sumRoundedBody(state.cviky.filter(c=>c.player_id===me.id&&inWk(c)));
-    const ak=state.aktivity.filter(a=>a.player_id===me.id&&inWk(a));
+  if(me){ cCvik=sumRoundedBody(state.cviky.filter(c=>c.player_id===me.id&&c.datum===today));
+    const ak=state.aktivity.filter(a=>a.player_id===me.id&&a.datum===today);
     cStr=sumRoundedBody(ak.filter(isStretchActivity)); cAkt=sumRoundedBody(ak.filter(a=>!isStretchActivity(a))); }
   const ct=cCvik+cAkt+cStr||1, q1=Math.round(cCvik/ct*100), q2=Math.round(cAkt/ct*100);
-  const conic=myTotal>0?`conic-gradient(var(--green) 0 ${q1}%,var(--blue) ${q1}% ${q1+q2}%,var(--orange) ${q1+q2}% 100%)`:'conic-gradient(var(--track) 0 100%)';
+  const conic=todayPts>0?`conic-gradient(var(--green) 0 ${q1}%,var(--blue) ${q1}% ${q1+q2}%,var(--orange) ${q1+q2}% 100%)`:'conic-gradient(var(--track) 0 100%)';
   const pf=dateToStr(new Date(wk.start.getTime()-7*864e5)), pt=dateToStr(new Date(wk.end.getTime()-7*864e5));
   const prev=me?sumRoundedBody(ent(me.id).filter(e=>e.datum>=pf&&e.datum<=pt)):0;
   const trend=prev>0?Math.round((myTotal-prev)/prev*100):0;
-  let s4=0; for(let i=0;i<4;i++){ const f=dateToStr(new Date(wk.start.getTime()-i*7*864e5)),t=dateToStr(new Date(wk.end.getTime()-i*7*864e5)); s4+=me?sumRoundedBody(ent(me.id).filter(e=>e.datum>=f&&e.datum<=t)):0; }
-  const avg4=Math.round(s4/4);
-  const today=todayStr();
+  // o (denni prumer) = soucet bodu za posledni 4 UKONCENE tydny / pocet aktivnich dni (dni se zaznamem)
+  // v tomto okne. Tento (rozjety) tyden se nepocita. ▲% na kruhu = dnesni body vs tento denni prumer.
+  let s4=0; const d4=new Set();
+  if(me){ const f4=dateToStr(new Date(wk.start.getTime()-4*7*864e5)), t4=dateToStr(new Date(wk.end.getTime()-7*864e5));
+    const es4=ent(me.id).filter(e=>e.datum>=f4&&e.datum<=t4);
+    s4=sumRoundedBody(es4); es4.forEach(e=>d4.add(e.datum)); }
+  const avgDen=d4.size?Math.round(s4/d4.size):0;
+  const dTrend=avgDen>0?Math.round((todayPts-avgDen)/avgDen*100):0;
   const habTotal=state.habits.length;
   const habDone=new Set(state.habitLogs.filter(l=>l.datum===today).map(l=>l.habit_id)).size;
   const rows=board.slice(0,7).map((p,i)=>{ const isMe=me&&p.id===me.id; const col=safeColor(p.barva);
@@ -5426,7 +5434,7 @@ function renderDnesek(){
     return `<div class="hlr"><span class="ic"><svg class="i"><use href="#${icon}"/></svg></span><div>${text}</div>${mmRx}</div>`; }).join('');
   const dl=czDayName(new Date())+' '+new Date().getDate()+'. '+(new Date().getMonth()+1)+'.';
   const tpl=`<div class="nav"><div><div class="date">${dl}</div><div class="ttl" style="font-size:18px">${mmGreet()}${me?', '+esc(mmFirst(me.jmeno)):''}</div></div><div class="right"><div class="sck"><svg class="i"><use href="#i-flame"/></svg> ${streak}</div><div class="add" onclick="openModal()">＋</div></div></div>
-  <div class="hero"><div class="ring" style="background:${conic}"><div class="h"><div><div class="n">${fmtNum(myTotal)}</div><div class="rpct ${trend>=0?'up':''}">${trend>=0?'▲':'▼'} ${Math.abs(trend)} %</div><div class="avg">ø ${fmtNum(avg4)}</div></div></div></div><div class="hs"><div class="hst">Tento týden</div><div class="r"><span class="e"><svg class="i"><use href="#i-calendar"/></svg></span><b>${fmtNum(myTotal)} b</b><small>&nbsp;body ${trend>=0?(`<span class="up">▲${trend} %</span>`):(`<span style="color:var(--red)">▼${Math.abs(trend)} %</span>`)}</small></div><div class="r"><span class="e"><svg class="i"><use href="#i-pullup"/></svg></span><b>${trainings}</b><small>&nbsp;tréninky</small></div><div class="r"><span class="e"><svg class="i"><use href="#i-trophy"/></svg></span><b>${fmtNum(recordDay)} b</b><small>&nbsp;rekord/den</small></div></div></div>
+  <div class="hero"><div class="ring" style="background:${conic}"><div class="h"><div><div class="n">${fmtNum(todayPts)}</div><div class="rpct ${dTrend>=0?'up':''}">${dTrend>=0?'▲':'▼'} ${Math.abs(dTrend)} %</div><div class="avg">ø ${fmtNum(avgDen)}</div></div></div></div><div class="hs"><div class="hst">Tento týden</div><div class="r"><span class="e"><svg class="i"><use href="#i-calendar"/></svg></span><b>${fmtNum(myTotal)} b</b><small>&nbsp;body ${trend>=0?(`<span class="up">▲${trend} %</span>`):(`<span style="color:var(--red)">▼${Math.abs(trend)} %</span>`)}</small></div><div class="r"><span class="e"><svg class="i"><use href="#i-pullup"/></svg></span><b>${trainings}</b><small>&nbsp;tréninky</small></div><div class="r"><span class="e"><svg class="i"><use href="#i-trophy"/></svg></span><b>${fmtNum(recordDay)} b</b><small>&nbsp;rekord/den</small></div></div></div>
   <div class="hbm" style="margin-top:11px;cursor:pointer" onclick="mmGo('navyky')"><div class="hi" style="background:#34C75922"><svg class="i"><use href="#i-list"/></svg></div><div class="ht">Návyky dnes<small>${habDone} splněné · ${Math.max(0,habTotal-habDone)} zbývají</small></div><div class="pct" style="display:flex;align-items:center;gap:5px">${habDone}/${habTotal}<span style="color:var(--ter);font-weight:400">›</span></div></div>
   <div class="sl"><span>Žebříček · tento týden</span><a onclick="mmGo('hraci')">Parta →</a></div>
   <div class="lc">${rows||'<div style="padding:20px;text-align:center;color:var(--ter)">Zatím žádné body tento týden</div>'}</div>
@@ -9435,7 +9443,7 @@ function applyDemoData(){
   const ME='demo-mara';
 
   // ---- Mára · tento týden: 505 b, 6 tréninkových dní, dnes 92, rekord/den 120 ----
-  // (kategorie v týdnu: cvik 242 / aktivita 202 / strečink 61 → prstenec ~48/40/12 %)
+  // (kruh = DNEŠEK: cvik 35 / aktivita 37 / strečink 20 → prstenec ~38/40/22 %)
   const wkDays=[]; for(let i=0;i<=e;i++) wkDays.push(i);
   // doplň BUDOUCÍ dny týdne do 6 tréninků; zítřek (e+1) přeskoč, aby budoucí dny neprodloužily
   // „nejdelší streak" (longestStreakEver počítá i budoucí data) nad 17
@@ -9464,15 +9472,17 @@ function applyDemoData(){
   emit(e,92,true);
   others.forEach((i,ix)=>emit(i,otherTotals[ix],false));
 
-  // ---- Mára · minulé 3 týdny 451/445/439 (trend ▲12 %) + streak 17 (den T-17 zůstává prázdný) ----
-  [[1,451],[2,445],[3,439]].forEach(pair=>{
+  // ---- Mára · minulé 3 týdny 451/460/449 (týdenní trend ▲12 % = 505 vs 451) + streak 17 (den T-17 zůstává prázdný) ----
+  // Kruh Dnešku: ø 80 = (451+460+449+560) / 24 aktivních dní za poslední 4 ukončené týdny
+  // (w1: 7 dní, w2+w3: 13 dní — jeden vypadne kvůli prázdnému T-17, w4: 4 dny) → dnešek 92 vs ø 80 = ▲15 %.
+  [[1,451],[2,460],[3,449]].forEach(pair=>{
     const w=pair[0], total=pair[1];
     const days=[0,1,2,3,4,5,6].filter(i=>off(w,i)!==17);
     const parts=split(total,days.length);
     days.forEach((i,ix)=>akt(ME,off(w,i),parts[ix],{nazev:['Posilovna','Kolo','Běh'][ix%3]}));
   });
   // ---- Mára · starší týdny: dorovnání na 3 765 b celkem, výhry v týdnech w4–w6 (3× vítěz týdne) ----
-  [400,390,380,151,151,151,151,151].forEach((total,ix)=>{
+  [560,390,380,114,114,114,114,114].forEach((total,ix)=>{
     const w=ix+4, parts=split(total,4);
     [0,2,4,6].forEach((i,dx)=>akt(ME,off(w,i),parts[dx],{nazev:'Posilovna'}));
   });
