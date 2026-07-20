@@ -6110,11 +6110,15 @@ function mmMountZapis(){
   scrEl.style.zoom = z;
   scrEl.style.margin = (window.innerWidth>393?'0 auto':'');   // sirsi telefon: vycentrovat obsah; <=393 nechat jako mockup (doleva)
   // .body.formb .ff je position:absolute;bottom -> scr musi byt na vysku displeje, aby Datum/odmena/Zapsat spadlo dolu.
-  scrEl.style.minHeight = (window.innerHeight/z)+'px';
-  // Kratsi displej / delsi formular (Lezeni): obsah tece nad absolutni .ff a narazil by do ni.
-  // Rezervuj vysku .ff jako padding-bottom v toku -> obsah nikdy nekoliduje; delsi formular scrolluje.
+  // UNIFORMNI SPODEK (Marek: "Lezeni posunute" — spodni blok sedel na kazdem formulari jinak):
+  // .scr ma PEVNOU vysku displeje (ne min-height, ktera rostla s obsahem) -> .ff (Datum/odmena/
+  // Zapsat) je VZDY pripnute na stejnem miste na vsech formularich. Delsi obsah (Lezeni s vice
+  // cestami) scrolluje UVNITR .body pod pripnutym spodkem (.ff kotvi na .scr, ne na body -> nescrolluje).
+  scrEl.style.height = (window.innerHeight/z)+'px';
+  scrEl.style.overflow = 'hidden';
   const bodyEl = scrEl.querySelector('.body.formb');
   const ffEl = scrEl.querySelector('.ff');
+  if (bodyEl) { bodyEl.style.height = '100%'; bodyEl.style.overflowY = 'auto'; bodyEl.style.webkitOverflowScrolling = 'touch'; }
   if (bodyEl && ffEl) bodyEl.style.paddingBottom = (ffEl.offsetHeight + 16) + 'px';
   // Delegace jednou na shadowRoot (preziva sh.innerHTML=''): klik-mosty + input/change mosty do light-DOM.
   if(!host._mmZapisBound){
