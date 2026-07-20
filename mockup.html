@@ -497,7 +497,7 @@ function iphone(bodyKey, opts={}){
   const inner = (bodyKey in S)? S[bodyKey]() : bodyKey;
   const body = inner.trim().startsWith('<div class="body"')? inner : `<div class="body">${inner}</div>`;
   const barHtml = (opts.active!=null) ? `<div class="ipx-bar">${bar(opts.active)}</div>` : '';
-  const SHIFT={dnesek:32,parta:24,navyky:24,ja:24,pozvat:43,cile:43,feed:43,notifikace:43,addsheet:32,vyb1:38,vyb2:38,vyb3:38,vyb4:38,vyb5:38,vyb6:38,vyb7:38,formcviks:21,formcvikv:21,formcvik:21,formlez:21,navykyempty:24,histempty:43,formadmin:21,historieuprav:43,editzaznam:21,formbeh:21,formakt:21,datum:38,rekordy:43,zaznamy:43,profil:43,den:39,statistiky:24,knihovna:38,tvorba2:21,tvorba3:21,tvorba4:21,tvorbad:21,tvorba:21,zapis:24,uprava:38,bodovani:38,historie:43,rokparty:43};
+  const SHIFT={dnesek:34,parta:26,navyky:26,ja:26,pozvat:43,cile:43,feed:43,notifikace:43,addsheet:34,vyb1:38,vyb2:38,vyb3:38,vyb4:38,vyb5:38,vyb6:38,vyb7:38,formcviks:21,formcvikv:21,formcvik:21,formlez:21,navykyempty:26,histempty:43,formadmin:21,historieuprav:43,editzaznam:21,formbeh:21,formakt:21,datum:38,rekordy:43,zaznamy:43,profil:43,den:39,statistiky:26,knihovna:38,tvorba2:21,tvorba3:21,tvorba4:21,tvorbad:21,tvorba:21,zapis:26,uprava:38,bodovani:38,historie:43,rokparty:43};
   const shift=SHIFT[bodyKey]||0;
   return `<div class="ipx"><div class="ipx-scr">
 <div class="ipx-content" style="padding-top:${shift}px"><div class="ipx-scale">${body}</div></div>
