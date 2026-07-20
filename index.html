@@ -738,6 +738,7 @@ body.modal-open .modal { touch-action: auto; }
   background: var(--bg);   /* mockup: formular sedi na --bg (svetle sede), ne na --card (bila) */
   /* jen safe-area (notch) — horni 16px odsazeni uz dava #step2-zoom-top padding (mockup formb padding-top:16). */
   padding-top: env(safe-area-inset-top);
+  overflow-y: auto;   /* delsi formular (Lezeni) na kratsim displeji scrolluje misto kolize s .ff */
   animation: fadeIn 0.2s;
 }
 #modal.step-2 .modal-handle { display: none; }
@@ -6035,6 +6036,11 @@ function mmMountZapis(){
   scrEl.style.zoom = z;
   // .body.formb .ff je position:absolute;bottom -> scr musi byt na vysku displeje, aby Datum/odmena/Zapsat spadlo dolu.
   scrEl.style.minHeight = (window.innerHeight/z)+'px';
+  // Kratsi displej / delsi formular (Lezeni): obsah tece nad absolutni .ff a narazil by do ni.
+  // Rezervuj vysku .ff jako padding-bottom v toku -> obsah nikdy nekoliduje; delsi formular scrolluje.
+  const bodyEl = scrEl.querySelector('.body.formb');
+  const ffEl = scrEl.querySelector('.ff');
+  if (bodyEl && ffEl) bodyEl.style.paddingBottom = (ffEl.offsetHeight + 16) + 'px';
   // Delegace klikani jednou na shadowRoot (preziva sh.innerHTML=''). Jen vizualni re-render/toggle, ZADNA data.
   if(!host._mmZapisBound){ host._mmZapisBound = true; sh.addEventListener('click', mmZapisClick); }
 }
