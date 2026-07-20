@@ -5391,7 +5391,9 @@ function renderDnesek(){
   sh.innerHTML='';
   if(tplEl) sh.appendChild(tplEl.content.cloneNode(true));
   const ov=document.createElement('style');
-  ov.textContent=':host{display:block;font-family:var(--font-ui);font-size:16px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:92px;}.tb{position:fixed;}'+(document.documentElement.classList.contains('pwa-standalone')?'.nav:not(:has(.date)){padding-top:15px;}':'');
+  /* .lc padding-bottom 5.9px = kompenzace tesnejsiho renderovani pisma na iOS (zmereno z Markova
+     screenshotu 2026-07-20: karta zebricku koncila o 7.4pt vys nez v mockup nahledu) — jen Dnesek. */
+  ov.textContent=':host{display:block;font-family:var(--font-ui);font-size:16px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:92px;}.tb{position:fixed;}.lc{padding-bottom:5.9px;}'+(document.documentElement.classList.contains('pwa-standalone')?'.nav:not(:has(.date)){padding-top:15px;}':'');
   sh.appendChild(ov);
   if(sprite) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(0)}</div>`;
