@@ -45,3 +45,8 @@
 
 ---
 *Pozn.: Toto je živý seznam priorit. Velká vize = vícefázový projekt, ne jednorázová změna — rozdělit na milníky až se k tomu dostaneme.*
+
+## Napad (Marek, 2026-07-20): plusko ma "svitit"
+- Kolecko + (pridani aktivity) by melo nejak svitit / zit.
+- Napad: po obvodu kolecka jezdi svetelna linka s NELINEARNIM pohybem (zrychluje/zpomaluje), aby bylo jasne, ze se pluskem pridava aktivita.
+- Az po dokonceni vzhledu 1:1 (fáze funkce/efekty).
