@@ -3710,6 +3710,7 @@ function isAdminActive() {
 
 // F25: Odhlasit se - vrati appku do "Kdo jsi?" stavu
 async function logoutPlayer() {
+  if (typeof demoGuard === 'function' && demoGuard()) return;
   if (!confirm('Opravdu se odhlásit?')) return;
   try { await db.auth.signOut(); } catch(_) {}
   localStorage.removeItem(CURRENT_PLAYER_KEY);
@@ -4843,6 +4844,7 @@ async function sha256Hex(text) {
 }
 
 async function startLoginFlow(playerId) {
+  if (demoGuard()) return;
   const p = state.players.find(pl => pl.id === playerId);
   if (!p) return;
   // F25: admin-device bypass — Marek muze prepinat hrace bez zadavani jejich hesla (jen pro testovani)
@@ -5043,6 +5045,7 @@ function attachEntryActions(container) {
 }
 
 async function deleteEntry(id, type) {
+  if (demoGuard()) return;
   const table = type === 'cvik' ? 'cviky' : 'aktivity';
   // F19: ochrana - jen vlastni nebo admin
   const arr = type === 'cvik' ? state.cviky : state.aktivity;
@@ -5057,6 +5060,7 @@ async function deleteEntry(id, type) {
 }
 
 async function deleteCurrentEntry() {
+  if (demoGuard()) return;
   if (!state.editId || !state.editTable) return;
   if (!confirm('Opravdu smazat tento záznam?')) return;
   try {
@@ -5221,6 +5225,7 @@ function renderPlayers() {
 
 // F25: Admin reset hesla hrace (smaze password_hash, hrac musi znova nastavit pri dalsim loginu)
 async function resetPlayerPassword(playerId) {
+  if (demoGuard()) return;
   if (!isAdmin()) return;
   const p = state.players.find(pl => pl.id === playerId);
   if (!p) return;
@@ -5429,7 +5434,7 @@ function renderDnesek(){
   const ov=document.createElement('style');
   /* .lc padding-bottom 5.9px = kompenzace tesnejsiho renderovani pisma na iOS (zmereno z Markova
      screenshotu 2026-07-20: karta zebricku koncila o 7.4pt vys nez v mockup nahledu) — jen Dnesek. */
-  ov.textContent=':host{display:block;font-family:var(--font-ui);font-size:16px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:92px;}.tb{position:fixed;}.lc{padding-bottom:5.9px;}'+(document.documentElement.classList.contains('pwa-standalone')?'.nav:not(:has(.date)){padding-top:15px;}':'');
+  ov.textContent=':host{display:block;font-family:var(--font-ui);font-size:16px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:92px;}.tb{position:fixed;}.lc{padding-bottom:5.9px;}'+(document.documentElement.classList.contains('pwa-standalone')?'.nav:not(:has(.date)){padding-top:15px;}.nav:not(:has(.date)) .right{margin-top:7px;}':'');
   sh.appendChild(ov);
   if(sprite) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(0)}</div>`;
@@ -5628,7 +5633,7 @@ function renderParta(){
   sh.innerHTML='';
   if(tplEl) sh.appendChild(tplEl.content.cloneNode(true));
   const ov=document.createElement('style');
-  ov.textContent=':host{display:block;font-family:var(--font-ui);font-size:16px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:92px;}.tb{position:fixed;}'+(document.documentElement.classList.contains('pwa-standalone')?'.nav:not(:has(.date)){padding-top:15px;}':'');
+  ov.textContent=':host{display:block;font-family:var(--font-ui);font-size:16px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:92px;}.tb{position:fixed;}'+(document.documentElement.classList.contains('pwa-standalone')?'.nav:not(:has(.date)){padding-top:15px;}.nav:not(:has(.date)) .right{margin-top:7px;}':'');
   sh.appendChild(ov);
   if(sprite) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(1)}</div>`;
@@ -5807,7 +5812,7 @@ function renderNavykyMM(){
   sh.innerHTML='';
   if(tplEl) sh.appendChild(tplEl.content.cloneNode(true));
   const ov=document.createElement('style');
-  ov.textContent=':host{display:block;font-family:var(--font-ui);font-size:16px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:92px;}.tb{position:fixed;}'+(document.documentElement.classList.contains('pwa-standalone')?'.nav:not(:has(.date)){padding-top:15px;}':'');
+  ov.textContent=':host{display:block;font-family:var(--font-ui);font-size:16px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:92px;}.tb{position:fixed;}'+(document.documentElement.classList.contains('pwa-standalone')?'.nav:not(:has(.date)){padding-top:15px;}.nav:not(:has(.date)) .right{margin-top:7px;}':'');
   sh.appendChild(ov);
   if(sprite) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(2)}</div>`;
@@ -5933,7 +5938,7 @@ function renderJaMM(){
   sh.innerHTML='';
   if(tplEl) sh.appendChild(tplEl.content.cloneNode(true));
   const ov=document.createElement('style');
-  ov.textContent=':host{display:block;font-family:var(--font-ui);font-size:16px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:92px;}.tb{position:fixed;}'+(document.documentElement.classList.contains('pwa-standalone')?'.nav:not(:has(.date)){padding-top:15px;}':'');
+  ov.textContent=':host{display:block;font-family:var(--font-ui);font-size:16px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:92px;}.tb{position:fixed;}'+(document.documentElement.classList.contains('pwa-standalone')?'.nav:not(:has(.date)){padding-top:15px;}.nav:not(:has(.date)) .right{margin-top:7px;}':'');
   sh.appendChild(ov);
   if(sprite) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(3)}</div>`;
@@ -7624,6 +7629,7 @@ function habitCardHtml(h, pid, sel, selDate, today, section){
 }
 
 async function toggleHabitToday(id){
+  if (demoGuard()) return;
   const pid = currentHabitPlayer(); if (!pid) return;
   const sel = state.habitDay || todayStr();
   if (sel > todayStr()) return;  // budoucnost nejde odškrtnout
@@ -7710,6 +7716,7 @@ function openHabitValue(id){
 function onHvSlider(v){ const h = state.habits.find(x => x.id === state.habitValueId); const jed = h ? (h.cil_jednotka || '') : ''; document.getElementById('hv-slider-val').textContent = `${v} ${jed}`.trim(); }
 function closeHabitValue(){ document.getElementById('habit-value-modal').classList.remove('active'); unlockBodyScroll(); state.habitValueId = null; state.statEditCell = null; }
 async function saveHabitValue(){
+  if (demoGuard()) { closeHabitValue(); return; }
   const pid = currentHabitPlayer(); const id = state.habitValueId; if (!pid || !id) return;
   const h = state.habits.find(x => x.id === id); const z = habitEffZapis(h);
   const sel = state.habitDay || todayStr();
@@ -7729,6 +7736,7 @@ async function saveHabitValue(){
   } catch(e){ toast('Chyba: ' + e.message, 'error'); }
 }
 async function clearHabitValue(){
+  if (demoGuard()) { closeHabitValue(); return; }
   const pid = currentHabitPlayer(); const id = state.habitValueId; if (!pid || !id) return;
   const sel = state.habitDay || todayStr();
   const existing = habitLogObj(id, pid, sel);
@@ -7740,6 +7748,7 @@ async function clearHabitValue(){
 }
 // check návyk z dialogu: nastav splněno / nesplněno pro daný den
 async function hvSetCheck(done){
+  if (demoGuard()) { closeHabitValue(); return; }
   const pid = currentHabitPlayer(); const id = state.habitValueId; if (!pid || !id) return;
   const sel = state.habitDay || todayStr();
   const existing = habitLogObj(id, pid, sel);
@@ -8073,6 +8082,7 @@ function updateHabitIntent(){
   el.innerHTML = '🎯 ' + s;
 }
 async function submitHabit(){
+  if (demoGuard()) { closeHabitModal(); return; }
   const pid = currentHabitPlayer();
   if (!pid){ toast('Nejdřív se přihlas', 'error'); return; }
   const nazev = document.getElementById('habit-nazev').value.trim();
@@ -8119,6 +8129,7 @@ async function submitHabit(){
   } catch(e){ toast('Chyba: ' + e.message, 'error'); } finally { btn.disabled = false; }
 }
 async function deleteCurrentHabit(){
+  if (demoGuard()) { closeHabitModal(); return; }
   if (!state.habitEditId) return;
   if (!confirm('Smazat tento návyk i jeho historii?')) return;
   try {
@@ -8804,6 +8815,7 @@ document.querySelectorAll('.stretch-btn').forEach(btn => {
 });
 
 async function submitEntry() {
+  if (demoGuard()) { closeModal(); return; }
   if (!state.selectedPlayer) { toast('Vyber hráče', 'error'); return; }
   const btn = document.getElementById('submit-btn');
   // Ukol 3 (formadmin): puvodni text muze byt "Zapsat za X" (ne jen "Zapsat") — vzit aktualni
@@ -9210,6 +9222,7 @@ function closePlayerModal() {
 }
 
 async function submitPlayerEdit() {
+  if (demoGuard()) { closePlayerModal(); return; }
   if (!state.editorPlayer) { toast('Vyber kdo upravuje', 'error'); return; }
   if (!state.playerBeingEdited) return;
 
@@ -9353,7 +9366,181 @@ document.querySelectorAll('.tb-btn').forEach(btn => {
   });
 });
 
+// ============================================================
+//  DEMO REŽIM — syntetická data 1:1 s mockup momentum-iphone.html
+//  Aktivace: ?demo=1 nebo #demo (uloží localStorage mc_demo=1), vypnutí ?demo=0
+//  nebo 7× rychlé ťuknutí na titulek hlavičky (.ttl) → toggle + reload.
+//  Data žijí jen v paměti — ŽÁDNÝ zápis do Supabase (demoGuard ve write funkcích).
+// ============================================================
+(function(){
+  try{
+    const q=new URLSearchParams(location.search);
+    if(q.get('demo')==='1'||location.hash==='#demo') localStorage.setItem('mc_demo','1');
+    else if(q.get('demo')==='0') localStorage.removeItem('mc_demo');
+  }catch(_){}
+})();
+function isDemo(){ try{ return localStorage.getItem('mc_demo')==='1'; }catch(_){ return false; } }
+function demoGuard(){ if(!isDemo()) return false; toast('Demo režim — nic se neukládá','success'); return true; }
+// 7× rychlé ťuknutí na titulek hlavičky (.ttl, i uvnitř shadow DOM) → toggle demo, bez viditelné změny UI
+(function(){
+  let taps=0, last=0;
+  document.addEventListener('click', ev=>{
+    const path=ev.composedPath?ev.composedPath():[];
+    if(!path.some(el=>el&&el.classList&&el.classList.contains('ttl'))) return;
+    const now=Date.now();
+    taps=(now-last<600)?taps+1:1; last=now;
+    if(taps>=7){
+      taps=0;
+      const on=isDemo();
+      try{ on?localStorage.removeItem('mc_demo'):localStorage.setItem('mc_demo','1'); }catch(_){}
+      const u=new URL(location.href); u.searchParams.delete('demo'); u.hash='';
+      location.href=u.toString();
+    }
+  }, true);
+})();
+
+// Naplní state syntetickými daty tak, aby obrazovky Dnešek/Parta/Návyky/Já ukazovaly čísla z mockupu.
+// Vše je generováno RELATIVNĚ k dnešku (týdenní součty sedí v libovolný den v týdnu).
+function applyDemoData(){
+  const T=new Date(); T.setHours(0,0,0,0);
+  const e=(T.getDay()+6)%7;                       // index dneška v týdnu: 0=Po .. 6=Ne
+  const D=n=>{ const d=new Date(T); d.setDate(T.getDate()-n); return dateToStr(d); };  // n dní zpět (záporné = budoucnost)
+  const CA=(n,h,m)=>{ const d=new Date(T); d.setDate(T.getDate()-n); d.setHours(h,m||0,0,0); return d.toISOString(); };
+  const off=(w,i)=>e-i+7*w;                       // „dní zpět" pro týden w (0=tento) a den i (0=Po)
+  const split=(total,k)=>{ const b=Math.floor(total/k), r=total-b*k; return Array.from({length:k},(_,i)=>b+(i<r?1:0)); };
+  let seq=0;
+  const cviky=[], aktivity=[];
+  // created_at nikdy v budoucnu (budoucí dny týdne dostanou dnešní ráno) — jinak by feedy řadily budoucnost nahoru
+  const caDef=n=> n<0 ? CA(0,6,(seq*7)%55) : CA(n,8,(seq*7)%55);
+  const akt=(pid,n,body,o)=>{ o=o||{}; aktivity.push({id:'demo-a'+(++seq),player_id:pid,nazev:o.nazev||'Posilovna',uroven:o.uroven||3,km:o.km!=null?o.km:null,body:body,datum:D(n),created_at:o.ca||caDef(n),je_stretching:!!o.stretch,poznamka:o.poznamka||null}); };
+  const cvik=(pid,n,typ,ops,body,o)=>{ o=o||{}; cviky.push({id:'demo-c'+(++seq),player_id:pid,cvik:typ,opakovani:ops,pridana_vaha:0,body:body,datum:D(n),created_at:o.ca||caDef(n),poznamka:null}); };
+
+  // ---- hráči (pořadí pole = created_at asc; barvy a maximálky dle mockupu) ----
+  const mk=(id,jmeno,barva,pohlavi,vaha,vyska,ms,md,mkl,mdp,mb,i)=>({id:id,jmeno:jmeno,pohlavi:pohlavi,vaha:vaha,vyska:vyska,max_shyby:ms,max_drep:md,max_kliky:mkl,max_dipy:mdp,max_boulder:mb,max_lano:null,barva:barva,aktivni:true,created_at:new Date(2026,0,1,10,i).toISOString(),is_admin:id==='demo-mara',auth_user_id:null});
+  // max_boulder = idx do BOULDER_GRADES (11=V7, 10=V6, 8=V5, 6=V4, 4=V3)
+  const players=[
+    mk('demo-kata','Káťa','#E8902F','Z',58,168,18,90,60,10,11,0),
+    mk('demo-martin','Martin','#E05B4B','M',82,183,32,120,110,25,8,1),
+    mk('demo-peta','Péťa','#8B6FE0','M',76,180,20,100,70,18,10,2),
+    mk('demo-mara','Mára','#2FB170','M',78,181,25,140,100,20,10,3),
+    mk('demo-janca','Janča','#3FAEC2','Z',62,170,12,80,40,8,6,4),
+    mk('demo-natalka','Natálka','#E8588E','Z',60,167,15,70,45,6,6,5),
+    mk('demo-matej','Matěj','#6B756F','M',88,185,10,110,55,12,4,6)
+  ];
+  const ME='demo-mara';
+
+  // ---- Mára · tento týden: 505 b, 6 tréninkových dní, dnes 92, rekord/den 120 ----
+  // (kategorie v týdnu: cvik 242 / aktivita 202 / strečink 61 → prstenec ~48/40/12 %)
+  const wkDays=[]; for(let i=0;i<=e;i++) wkDays.push(i);
+  // doplň BUDOUCÍ dny týdne do 6 tréninků; zítřek (e+1) přeskoč, aby budoucí dny neprodloužily
+  // „nejdelší streak" (longestStreakEver počítá i budoucí data) nad 17
+  for(let i=e+2;wkDays.length<6&&i<=6;i++) wkDays.push(i);
+  const others=wkDays.filter(i=>i!==e);
+  const otherTotals=(others.length===5)?[120,85,78,70,60]:[120,85,78,70,40,20];  // e=6 (neděle): 7 dní
+  const dayComp={
+    92:[['c',50,35],['s',20],['a',37,{nazev:'Běh',km:5}]],
+    120:[['c',100,55],['a',65,{nazev:'Posilovna'}]],
+    85:[['c',60,45],['s',20],['a',20,{nazev:'Kolo'}]],
+    78:[['c',58,47],['s',21],['a',10,{nazev:'Kolo'}]],
+    70:[['c',40,30],['a',40,{nazev:'Posilovna'}]],
+    60:[['c',42,30],['a',30,{nazev:'Kolo'}]],
+    40:[['a',40,{nazev:'Kolo'}]],
+    20:[['s',20]]
+  };
+  const emit=(i,total,isToday)=>{
+    const n=off(0,i);
+    (dayComp[total]||[['a',total,{}]]).forEach((p,j)=>{
+      const o={}; if(isToday) o.ca=CA(0,17,45-j*5);   // dnešní záznamy: kliky 17:45 > strečink > běh
+      if(p[0]==='c') cvik(ME,n,'Kliky',p[1],p[2],o);
+      else if(p[0]==='s') akt(ME,n,p[1],{nazev:'Strečink',stretch:true,ca:o.ca});
+      else akt(ME,n,p[1],Object.assign({},p[2],o));
+    });
+  };
+  emit(e,92,true);
+  others.forEach((i,ix)=>emit(i,otherTotals[ix],false));
+
+  // ---- Mára · minulé 3 týdny 451/445/439 (trend ▲12 %) + streak 17 (den T-17 zůstává prázdný) ----
+  [[1,451],[2,445],[3,439]].forEach(pair=>{
+    const w=pair[0], total=pair[1];
+    const days=[0,1,2,3,4,5,6].filter(i=>off(w,i)!==17);
+    const parts=split(total,days.length);
+    days.forEach((i,ix)=>akt(ME,off(w,i),parts[ix],{nazev:['Posilovna','Kolo','Běh'][ix%3]}));
+  });
+  // ---- Mára · starší týdny: dorovnání na 3 765 b celkem, výhry v týdnech w4–w6 (3× vítěz týdne) ----
+  [400,390,380,151,151,151,151,151].forEach((total,ix)=>{
+    const w=ix+4, parts=split(total,4);
+    [0,2,4,6].forEach((i,dx)=>akt(ME,off(w,i),parts[dx],{nazev:'Posilovna'}));
+  });
+
+  // ---- ostatní hráči · tento týden (žebříček 612/548/510/493/421/388) ----
+  // speciální dnešní záznamy jako v mockup feedu (nejnovější created_at)
+  akt('demo-peta',0,50,{nazev:'Běh',km:5,ca:CA(0,18,0)});
+  cvik('demo-martin',0,'Kliky',100,55,{ca:CA(0,17,50)});
+  akt('demo-martin',0,48,{nazev:'Běh',km:6,ca:CA(0,17,10)});
+  akt('demo-peta',0,95,{nazev:'Lezení',ca:CA(0,17,5),poznamka:JSON.stringify({mode:'lezeni',discipline:'boulder',routes:[{grade:'V6'}]})});
+  // zbytek týdenních bodů rozprostřený do už uplynulých dní týdne (ranní created_at)
+  const fill=(pid,parts)=>{ const days=wkDays.filter(i=>i<=e); parts.forEach((v,ix)=>akt(pid,off(0,days[ix%days.length]),v,{nazev:['Posilovna','Kolo','Plavání'][ix%3]})); };
+  fill('demo-kata',[204,204,204]);
+  fill('demo-martin',[150,150,145]);
+  fill('demo-peta',[180,185]);
+  fill('demo-janca',[165,164,164]);
+  fill('demo-natalka',[211,210]);
+  fill('demo-matej',[194,194]);
+  // ---- ostatní hráči · historie w1..w11 (celkové součty 1:1 s mockup Parta „Celkem") ----
+  const hist={
+    'demo-kata':   [520,510,500, 200,200,200, 294,294,294,293,293],   // 4 210 celkem
+    'demo-martin': [450,440,430, 250,250,250, 272,272,272,273,273],   // 3 980
+    'demo-peta':   [300,310,320, 150,150,150, 246,246,246,246,246],   // 3 120
+    'demo-janca':  [400,390,380, 180,180,180, 267,267,267,268,268],   // 3 540
+    'demo-natalka':[300,290,280, 120,120,120, 247,248,248,248,248],   // 2 890
+    'demo-matej':  [250,240,230, 100,100,100, 200,200,200,201,201]    // 2 410
+  };
+  Object.keys(hist).forEach(pid=>{
+    hist[pid].forEach((total,ix)=>{
+      const w=ix+1, h=Math.floor(total/2);
+      akt(pid,off(w,1),h,{nazev:'Posilovna'});
+      akt(pid,off(w,4),total-h,{nazev:'Kolo'});
+    });
+  });
+  // Péťa i Martin mají starší delší běh → dnešní běhy (5 km / 6 km) nejsou „rekord" a feed ukáže běžný řádek
+  const pRun=aktivity.find(a=>a.player_id==='demo-peta'&&a.datum===D(off(1,1)));
+  if(pRun){ pRun.nazev='Běh'; pRun.km=8; }
+  const mRun=aktivity.find(a=>a.player_id==='demo-martin'&&a.datum===D(off(1,1)));
+  if(mRun){ mRun.nazev='Běh'; mRun.km=9; }
+
+  // ---- návyky (5 ks dle mockupu) + logy: voda streak 17, čtení streak 6, běh 1/3 tento týden ----
+  const habits=[], hlogs=[];
+  const hb=(id,nazev,ikona,barva,extra,poradi)=>habits.push(Object.assign({id:id,player_id:ME,nazev:nazev,ikona:ikona,barva:barva,frekvence_typ:'daily',frekvence_cil:null,frekvence_dny:0,mira_typ:null,zapis_typ:'check',cil_hodnota:null,cil_jednotka:null,cast_dne:null,kotva:null,poznamka:null,zacatek:D(60),konec:null,poradi:poradi,archived:false,created_at:CA(60,8,poradi)},extra||{}));
+  hb('demo-h1','Pít 2 l vody','water','#0A84FF',null,0);
+  hb('demo-h2','Číst 20 min','book','#34C759',null,1);
+  hb('demo-h3','Spát do 23:00','moon','#8B6FE0',null,2);
+  hb('demo-h4','Strečink 10 min','stretch','#FF9F0A',null,3);
+  hb('demo-h5','Běh','run','#E8588E',{frekvence_typ:'weekly',frekvence_cil:3},4);
+  for(let n=0;n<17;n++) hlogs.push({id:'demo-l1-'+n,habit_id:'demo-h1',player_id:ME,datum:D(n),hodnota:null,created_at:CA(n,20,0)});
+  for(let n=0;n<6;n++) hlogs.push({id:'demo-l2-'+n,habit_id:'demo-h2',player_id:ME,datum:D(n),hodnota:null,created_at:CA(n,21,0)});
+  // běh 1/3: log na pondělí tohoto týdne; když JE pondělí dnes, tak na zítřek (aby „Návyky dnes" zůstalo 2/5)
+  hlogs.push({id:'demo-l5-0',habit_id:'demo-h5',player_id:ME,datum:(e>0?D(off(0,0)):D(-1)),hodnota:null,created_at:CA(0,7,0)});
+
+  // ---- zápis do state (jen paměť, DB se nesahá) ----
+  const byCa=(a,b)=>String(b.created_at).localeCompare(String(a.created_at));
+  state.players=players;
+  state.cviky=cviky.sort(byCa);
+  state.aktivity=aktivity.sort(byCa);
+  state.history=[];
+  state.habits=habits;
+  state.habitLogs=hlogs;
+  state.currentPlayerId=ME;
+}
+
 async function loadData() {
+  // DEMO režim: přeskoč všechny DB dotazy, naplň state syntetickými daty a vyrenderuj
+  if (isDemo()) {
+    applyDemoData();
+    const needsLogin = showLoginIfNeeded();   // currentPlayerId je nastaven → overlay se schová
+    if (!needsLogin) renderAllViews();
+    document.getElementById('connection-status').textContent = 'demo';
+    return;
+  }
   try {
     // M3/RLS: nejdřív počkat na načtení session, ať mají dotazy přihlašovací token.
     // Bez tohoto by se první fetch mohl odeslat ještě jako anonymní → s RLS by vrátil prázdno.
