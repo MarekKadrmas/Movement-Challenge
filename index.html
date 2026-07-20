@@ -5986,23 +5986,33 @@ function mmMountSub(host, tpl, barIdx){
 //  <div class="scr">${VERBATIM MOCKUP MARKUP}</div> + zoom. Nema jak driftovat.
 //  Vzhled TED; datovy vstup + Zapsat se napoji POZDEJI (formular zatim nezapisuje).
 // ============================================================
-/* SYNCED z momentum-iphone.html S.form* — needit rucne */
+/* SYNCED z momentum-iphone.html S.form* — jedina povolena odchylka od mockupu: staticke hodnotove
+   divy (.inpc/.inp) maji uvnitr skutecny <input data-mmb="…"> (most do skryteho light-DOM formulare)
+   a varied/lezeni radky jsou nahrazeny <div data-mmvaried>/<div data-mmroutes> (plni je mmZapisSync).
+   Vzhled nese porad wrapper trida — input je pres overlay CSS neviditelny (bez ramecku/pozadi). */
 const MM_FORMS = {
- "formcvik": "<div class=\"body formb\" style=\"padding-top:16px\"><div class=\"fhd\"><div class=\"fttl\">Nový záznam</div><span class=\"fx\">×</span></div><div class=\"tsel\"><b class=\"on\"><svg class=\"i\"><use href=\"#i-pushup\"/></svg> Cvik</b><b><svg class=\"i\"><use href=\"#i-run\"/></svg> Aktivita</b></div><div class=\"fld\"><label>Cvik</label><div class=\"pickrow\"><div class=\"pk\"><svg class=\"i\"><use href=\"#i-pullup\"/></svg> Shyby</div><div class=\"pk on\"><svg class=\"i\"><use href=\"#i-pushup\"/></svg> Kliky</div><div class=\"pk\"><svg class=\"i\"><use href=\"#i-squat\"/></svg> Dřep</div><div class=\"pk\"><svg class=\"i\"><use href=\"#i-dips\"/></svg> Dipy</div></div></div><div class=\"fld\"><label>Co chceš zapsat?</label><div class=\"mgrid\"><div class=\"mbtn on\"><b>Jedna sada</b><small>20 shybů</small></div><div class=\"mbtn\"><b>Stejné série</b><small>6× 18</small></div><div class=\"mbtn\"><b>Různé série</b><small>10/8/6</small></div></div></div><div class=\"pickrow\"><div class=\"fld\" style=\"flex:1\"><label>Opakování</label><div class=\"inpc\">50</div></div><div class=\"fld\" style=\"flex:1\"><label>Váha navíc</label><div class=\"inpc ph\">0 kg</div></div></div><div class=\"ff\"><div class=\"fld\"><label>Datum</label><div class=\"drange\"><span class=\"cal\"><svg class=\"i\"><use href=\"#i-calendar\"/></svg></span>Dnes · pá 27. 6.<span style=\"margin-left:auto;color:var(--ter)\">▾</span></div></div><div class=\"rwbar\"><span><svg class=\"i\"><use href=\"#i-trophy\"/></svg> Získáš za zápis</span><b>+35 b</b></div><div class=\"submit\">Zapsat</div></div></div>",
- "formcviks": "<div class=\"body formb\" style=\"padding-top:16px\"><div class=\"fhd\"><div class=\"fttl\">Nový záznam</div><span class=\"fx\">×</span></div><div class=\"tsel\"><b class=\"on\"><svg class=\"i\"><use href=\"#i-pushup\"/></svg> Cvik</b><b><svg class=\"i\"><use href=\"#i-run\"/></svg> Aktivita</b></div><div class=\"fld\"><label>Cvik</label><div class=\"pickrow\"><div class=\"pk\"><svg class=\"i\"><use href=\"#i-pullup\"/></svg> Shyby</div><div class=\"pk on\"><svg class=\"i\"><use href=\"#i-pushup\"/></svg> Kliky</div><div class=\"pk\"><svg class=\"i\"><use href=\"#i-squat\"/></svg> Dřep</div><div class=\"pk\"><svg class=\"i\"><use href=\"#i-dips\"/></svg> Dipy</div></div></div><div class=\"fld\"><label>Co chceš zapsat?</label><div class=\"mgrid\"><div class=\"mbtn\"><b>Jedna sada</b><small>20 shybů</small></div><div class=\"mbtn on\"><b>Stejné série</b><small>6× 18</small></div><div class=\"mbtn\"><b>Různé série</b><small>10/8/6</small></div></div></div><div class=\"pickrow\"><div class=\"fld\" style=\"flex:1\"><label>Sérií</label><div class=\"inpc\">6</div></div><div class=\"fld\" style=\"flex:1\"><label>Opakování</label><div class=\"inpc\">18</div></div><div class=\"fld\" style=\"flex:1\"><label>Váha</label><div class=\"inpc ph\">0 kg</div></div></div><div class=\"ff\"><div class=\"fld\"><label>Datum</label><div class=\"drange\"><span class=\"cal\"><svg class=\"i\"><use href=\"#i-calendar\"/></svg></span>Dnes · pá 27. 6.<span style=\"margin-left:auto;color:var(--ter)\">▾</span></div></div><div class=\"rwbar\"><span><svg class=\"i\"><use href=\"#i-trophy\"/></svg> Získáš za zápis</span><b>+120 b</b></div><div class=\"submit\">Zapsat</div></div></div>",
- "formcvikv": "<div class=\"body formb\" style=\"padding-top:16px\"><div class=\"fhd\"><div class=\"fttl\">Nový záznam</div><span class=\"fx\">×</span></div><div class=\"tsel\"><b class=\"on\"><svg class=\"i\"><use href=\"#i-pushup\"/></svg> Cvik</b><b><svg class=\"i\"><use href=\"#i-run\"/></svg> Aktivita</b></div><div class=\"fld\"><label>Cvik</label><div class=\"pickrow\"><div class=\"pk\"><svg class=\"i\"><use href=\"#i-pullup\"/></svg> Shyby</div><div class=\"pk on\"><svg class=\"i\"><use href=\"#i-pushup\"/></svg> Kliky</div><div class=\"pk\"><svg class=\"i\"><use href=\"#i-squat\"/></svg> Dřep</div><div class=\"pk\"><svg class=\"i\"><use href=\"#i-dips\"/></svg> Dipy</div></div></div><div class=\"fld\"><label>Co chceš zapsat?</label><div class=\"mgrid\"><div class=\"mbtn\"><b>Jedna sada</b><small>20 shybů</small></div><div class=\"mbtn\"><b>Stejné série</b><small>6× 18</small></div><div class=\"mbtn on\"><b>Různé série</b><small>10/8/6</small></div></div></div><div class=\"fld\"><label>Série · opakování + váha</label><div class=\"serieh\"><span>#</span><span>Opakování</span><span>Váha</span></div><div class=\"pickrow\" style=\"margin-bottom:5px\"><div class=\"serieno\">1</div><div class=\"inpc\" style=\"flex:2\">12</div><div class=\"inpc ph\" style=\"flex:2\">0 kg</div></div><div class=\"pickrow\"><div class=\"serieno\">2</div><div class=\"inpc\" style=\"flex:2\">10</div><div class=\"inpc ph\" style=\"flex:2\">0 kg</div></div><button class=\"newbtn\" style=\"margin-top:6px\">＋ Přidat sérii</button></div><div class=\"ff\"><div class=\"fld\"><label>Datum</label><div class=\"drange\"><span class=\"cal\"><svg class=\"i\"><use href=\"#i-calendar\"/></svg></span>Dnes · pá 27. 6.<span style=\"margin-left:auto;color:var(--ter)\">▾</span></div></div><div class=\"rwbar\"><span><svg class=\"i\"><use href=\"#i-trophy\"/></svg> Získáš za zápis</span><b>+95 b</b></div><div class=\"submit\">Zapsat</div></div></div>",
- "formadmin": "<div class=\"body formb\" style=\"padding-top:16px\"><div class=\"fhd\"><div class=\"fttl\">Nový záznam</div><span class=\"fx\">×</span></div><div class=\"admbar\"><svg class=\"i\"><use href=\"#i-shield\"/></svg> Admin — zapisuješ za jiného hráče</div><div class=\"fld\"><label>Za koho *</label><div class=\"pickrow\"><div class=\"pk\" style=\"background:#2FB17018;color:#1f8a52\">Mára</div><div class=\"pk\" style=\"background:#E05B4B24;color:#c0392b;box-shadow:inset 0 0 0 2px #E05B4B;font-weight:800\">Martin ✓</div><div class=\"pk\" style=\"background:#E8902F18;color:#b9701f\">Káťa</div><div class=\"pk\" style=\"background:#3FAEC218;color:#2a8599\">Janča</div><div class=\"pk\" style=\"background:#8B6FE018;color:#6a52c0\">Péťa</div><div class=\"pk\" style=\"background:#E8588E18;color:#c83f73\">Natálka</div><div class=\"pk\" style=\"background:#6B756F18;color:#566059\">Matěj</div></div></div><div class=\"tsel\"><b class=\"on\"><svg class=\"i\"><use href=\"#i-pushup\"/></svg> Cvik</b><b><svg class=\"i\"><use href=\"#i-run\"/></svg> Aktivita</b></div><div class=\"fld\"><label>Cvik</label><div class=\"pickrow\"><div class=\"pk\"><svg class=\"i\"><use href=\"#i-pullup\"/></svg> Shyby</div><div class=\"pk on\"><svg class=\"i\"><use href=\"#i-pushup\"/></svg> Kliky</div><div class=\"pk\"><svg class=\"i\"><use href=\"#i-squat\"/></svg> Dřep</div><div class=\"pk\"><svg class=\"i\"><use href=\"#i-dips\"/></svg> Dipy</div></div></div><div class=\"pickrow\"><div class=\"fld\" style=\"flex:1\"><label>Opakování</label><div class=\"inpc\">40</div></div><div class=\"fld\" style=\"flex:1\"><label>Váha navíc</label><div class=\"inpc ph\">0 kg</div></div></div><div class=\"ff\"><div class=\"fld\"><label>Datum</label><div class=\"drange\"><span class=\"cal\"><svg class=\"i\"><use href=\"#i-calendar\"/></svg></span>Dnes · pá 27. 6.<span style=\"margin-left:auto;color:var(--ter)\">▾</span></div></div><div class=\"rwbar\"><span><svg class=\"i\"><use href=\"#i-trophy\"/></svg> Získá za zápis</span><b>+28 b</b></div><div class=\"submit\">Zapsat za Martina</div></div></div>",
- "formakt": "<div class=\"body formb\" style=\"padding-top:16px\"><div class=\"fhd\"><div class=\"fttl\">Nový záznam</div><span class=\"fx\">×</span></div><div class=\"tsel\"><b><svg class=\"i\"><use href=\"#i-pushup\"/></svg> Cvik</b><b class=\"on\"><svg class=\"i\"><use href=\"#i-run\"/></svg> Aktivita</b></div><div class=\"fld\"><label>Aktivita</label><div class=\"pickrow\"><div class=\"pk\"><svg class=\"i\"><use href=\"#i-bike\"/></svg> Kolo</div><div class=\"pk\"><svg class=\"i\"><use href=\"#i-swim\"/></svg> Plavání</div><div class=\"pk\"><svg class=\"i\"><use href=\"#i-stretch\"/></svg> Strečink</div><div class=\"pk lez\"><svg class=\"i\"><use href=\"#i-run\"/></svg> Běh</div><div class=\"pk lez\"><svg class=\"i\"><use href=\"#i-climb\"/></svg> Lezení</div></div><div class=\"inp ph\" style=\"margin-top:8px;border-radius:16px;padding:8px 15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis\">Například cvíčo 30 min…</div></div><div class=\"fld\"><label>Náročnost</label><div class=\"pickrow\"><div class=\"pk\">1</div><div class=\"pk\">2</div><div class=\"pk on\">3</div><div class=\"pk\">4</div><div class=\"pk\">5</div></div><div class=\"lvlhint\">Úroveň 3 · svižný běh, kruhový trénink, fotbal</div></div><div class=\"ff\"><div class=\"fld\"><label>Datum</label><div class=\"drange\"><span class=\"cal\"><svg class=\"i\"><use href=\"#i-calendar\"/></svg></span>Dnes · pá 27. 6.<span style=\"margin-left:auto;color:var(--ter)\">▾</span></div></div><div class=\"rwbar\"><span><svg class=\"i\"><use href=\"#i-trophy\"/></svg> Získáš za zápis</span><b>+40 b</b></div><div class=\"submit\">Zapsat</div></div></div>",
- "formbeh": "<div class=\"body formb\" style=\"padding-top:16px\"><div class=\"fhd\"><div class=\"fttl\">Nový záznam</div><span class=\"fx\">×</span></div><div class=\"tsel\"><b><svg class=\"i\"><use href=\"#i-pushup\"/></svg> Cvik</b><b class=\"on\"><svg class=\"i\"><use href=\"#i-run\"/></svg> Aktivita</b></div><div class=\"fld\"><label>Aktivita</label><div class=\"pickrow\"><div class=\"pk\"><svg class=\"i\"><use href=\"#i-bike\"/></svg> Kolo</div><div class=\"pk\"><svg class=\"i\"><use href=\"#i-swim\"/></svg> Plavání</div><div class=\"pk\"><svg class=\"i\"><use href=\"#i-stretch\"/></svg> Strečink</div><div class=\"pk lezon\"><svg class=\"i\"><use href=\"#i-run\"/></svg> Běh</div><div class=\"pk lez\"><svg class=\"i\"><use href=\"#i-climb\"/></svg> Lezení</div></div></div><div class=\"fld\"><label>Kilometry *</label><div class=\"inp\" style=\"display:flex;align-items:center\"><span style=\"flex:1\">5,2</span><span style=\"color:var(--ter);font-weight:700\">km</span></div></div><div class=\"pickrow\"><div class=\"fld\" style=\"flex:1\"><label>Tempo · nepovinné</label><div class=\"inp\" style=\"display:flex;align-items:center\"><span style=\"flex:1;color:var(--ter)\">5:30</span><span style=\"color:var(--ter);font-weight:700\">min/km</span></div></div><div class=\"fld\" style=\"flex:1\"><label>Převýšení · nepovinné</label><div class=\"inp\" style=\"display:flex;align-items:center\"><span style=\"flex:1;color:var(--ter)\">0</span><span style=\"color:var(--ter);font-weight:700\">m</span></div></div></div><div class=\"ff\"><div class=\"fld\"><label>Datum</label><div class=\"drange\"><span class=\"cal\"><svg class=\"i\"><use href=\"#i-calendar\"/></svg></span>Dnes · pá 27. 6.<span style=\"margin-left:auto;color:var(--ter)\">▾</span></div></div><div class=\"rwbar\"><span><svg class=\"i\"><use href=\"#i-trophy\"/></svg> Získáš za zápis</span><b>+52 b</b></div><div class=\"submit\">Zapsat</div></div></div>",
- "formlez": "<div class=\"body formb\" style=\"padding-top:16px\"><div class=\"fhd\"><div class=\"fttl\">Nový záznam</div><span class=\"fx\">×</span></div><div class=\"tsel\"><b><svg class=\"i\"><use href=\"#i-pushup\"/></svg> Cvik</b><b class=\"on\"><svg class=\"i\"><use href=\"#i-run\"/></svg> Aktivita</b></div><div class=\"fld\"><label>Aktivita</label><div class=\"pickrow\"><div class=\"pk\"><svg class=\"i\"><use href=\"#i-bike\"/></svg> Kolo</div><div class=\"pk\"><svg class=\"i\"><use href=\"#i-swim\"/></svg> Plavání</div><div class=\"pk\"><svg class=\"i\"><use href=\"#i-stretch\"/></svg> Strečink</div><div class=\"pk lez\"><svg class=\"i\"><use href=\"#i-run\"/></svg> Běh</div><div class=\"pk lezon\"><svg class=\"i\"><use href=\"#i-climb\"/></svg> Lezení</div></div></div><div class=\"fld\"><label>Disciplína</label><div class=\"tsel\"><b class=\"on\">Boulder</b><b>Lano</b></div></div><div class=\"fld\"><label>Systém obtížností</label><div class=\"seg\"><b>V-scale</b><b class=\"on\">Font</b></div></div><div class=\"fld\"><label>Cesty (obtížnosti)</label><div class=\"pickrow\"><div class=\"inp\" style=\"flex:2\">Cesta #1</div><div class=\"inp\" style=\"flex:0.95;white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:6px\">6C+ ▾<span style=\"color:var(--ter);font-size:11px\">(V5)</span></div></div><button class=\"newbtn\" style=\"margin-top:6px\">＋ Přidat cestu</button></div><div class=\"ff\"><div class=\"fld\"><label>Datum</label><div class=\"drange\"><span class=\"cal\"><svg class=\"i\"><use href=\"#i-calendar\"/></svg></span>Dnes · pá 27. 6.<span style=\"margin-left:auto;color:var(--ter)\">▾</span></div></div><div class=\"rwbar\"><span><svg class=\"i\"><use href=\"#i-trophy\"/></svg> Získáš za zápis</span><b>+85 b</b></div><div class=\"submit\">Zapsat</div></div></div>",
+ "formcvik": "<div class=\"body formb\" style=\"padding-top:16px\"><div class=\"fhd\"><div class=\"fttl\">Nový záznam</div><span class=\"fx\">×</span></div><div class=\"tsel\"><b class=\"on\"><svg class=\"i\"><use href=\"#i-pushup\"/></svg> Cvik</b><b><svg class=\"i\"><use href=\"#i-run\"/></svg> Aktivita</b></div><div class=\"fld\"><label>Cvik</label><div class=\"pickrow\"><div class=\"pk\"><svg class=\"i\"><use href=\"#i-pullup\"/></svg> Shyby</div><div class=\"pk on\"><svg class=\"i\"><use href=\"#i-pushup\"/></svg> Kliky</div><div class=\"pk\"><svg class=\"i\"><use href=\"#i-squat\"/></svg> Dřep</div><div class=\"pk\"><svg class=\"i\"><use href=\"#i-dips\"/></svg> Dipy</div></div></div><div class=\"fld\"><label>Co chceš zapsat?</label><div class=\"mgrid\"><div class=\"mbtn on\"><b>Jedna sada</b><small>20 shybů</small></div><div class=\"mbtn\"><b>Stejné série</b><small>6× 18</small></div><div class=\"mbtn\"><b>Různé série</b><small>10/8/6</small></div></div></div><div class=\"pickrow\"><div class=\"fld\" style=\"flex:1\"><label>Opakování</label><div class=\"inpc\"><input data-mmb=\"cvik-single-op\" type=\"number\" inputmode=\"numeric\" min=\"1\" placeholder=\"50\"></div></div><div class=\"fld\" style=\"flex:1\"><label>Váha navíc</label><div class=\"inpc ph\"><input data-mmb=\"cvik-single-vaha\" type=\"number\" inputmode=\"decimal\" min=\"0\" step=\"0.5\" placeholder=\"0 kg\"></div></div></div><div class=\"ff\"><div class=\"fld\"><label>Datum</label><div class=\"drange\"><span class=\"cal\"><svg class=\"i\"><use href=\"#i-calendar\"/></svg></span>Dnes · pá 27. 6.<span style=\"margin-left:auto;color:var(--ter)\">▾</span></div></div><div class=\"rwbar\"><span><svg class=\"i\"><use href=\"#i-trophy\"/></svg> Získáš za zápis</span><b>+35 b</b></div><div class=\"submit\">Zapsat</div></div></div>",
+ "formcviks": "<div class=\"body formb\" style=\"padding-top:16px\"><div class=\"fhd\"><div class=\"fttl\">Nový záznam</div><span class=\"fx\">×</span></div><div class=\"tsel\"><b class=\"on\"><svg class=\"i\"><use href=\"#i-pushup\"/></svg> Cvik</b><b><svg class=\"i\"><use href=\"#i-run\"/></svg> Aktivita</b></div><div class=\"fld\"><label>Cvik</label><div class=\"pickrow\"><div class=\"pk\"><svg class=\"i\"><use href=\"#i-pullup\"/></svg> Shyby</div><div class=\"pk on\"><svg class=\"i\"><use href=\"#i-pushup\"/></svg> Kliky</div><div class=\"pk\"><svg class=\"i\"><use href=\"#i-squat\"/></svg> Dřep</div><div class=\"pk\"><svg class=\"i\"><use href=\"#i-dips\"/></svg> Dipy</div></div></div><div class=\"fld\"><label>Co chceš zapsat?</label><div class=\"mgrid\"><div class=\"mbtn\"><b>Jedna sada</b><small>20 shybů</small></div><div class=\"mbtn on\"><b>Stejné série</b><small>6× 18</small></div><div class=\"mbtn\"><b>Různé série</b><small>10/8/6</small></div></div></div><div class=\"pickrow\"><div class=\"fld\" style=\"flex:1\"><label>Sérií</label><div class=\"inpc\"><input data-mmb=\"cvik-same-series\" type=\"number\" inputmode=\"numeric\" min=\"1\" placeholder=\"6\"></div></div><div class=\"fld\" style=\"flex:1\"><label>Opakování</label><div class=\"inpc\"><input data-mmb=\"cvik-same-op\" type=\"number\" inputmode=\"numeric\" min=\"1\" placeholder=\"18\"></div></div><div class=\"fld\" style=\"flex:1\"><label>Váha</label><div class=\"inpc ph\"><input data-mmb=\"cvik-same-vaha\" type=\"number\" inputmode=\"decimal\" min=\"0\" step=\"0.5\" placeholder=\"0 kg\"></div></div></div><div class=\"ff\"><div class=\"fld\"><label>Datum</label><div class=\"drange\"><span class=\"cal\"><svg class=\"i\"><use href=\"#i-calendar\"/></svg></span>Dnes · pá 27. 6.<span style=\"margin-left:auto;color:var(--ter)\">▾</span></div></div><div class=\"rwbar\"><span><svg class=\"i\"><use href=\"#i-trophy\"/></svg> Získáš za zápis</span><b>+120 b</b></div><div class=\"submit\">Zapsat</div></div></div>",
+ "formcvikv": "<div class=\"body formb\" style=\"padding-top:16px\"><div class=\"fhd\"><div class=\"fttl\">Nový záznam</div><span class=\"fx\">×</span></div><div class=\"tsel\"><b class=\"on\"><svg class=\"i\"><use href=\"#i-pushup\"/></svg> Cvik</b><b><svg class=\"i\"><use href=\"#i-run\"/></svg> Aktivita</b></div><div class=\"fld\"><label>Cvik</label><div class=\"pickrow\"><div class=\"pk\"><svg class=\"i\"><use href=\"#i-pullup\"/></svg> Shyby</div><div class=\"pk on\"><svg class=\"i\"><use href=\"#i-pushup\"/></svg> Kliky</div><div class=\"pk\"><svg class=\"i\"><use href=\"#i-squat\"/></svg> Dřep</div><div class=\"pk\"><svg class=\"i\"><use href=\"#i-dips\"/></svg> Dipy</div></div></div><div class=\"fld\"><label>Co chceš zapsat?</label><div class=\"mgrid\"><div class=\"mbtn\"><b>Jedna sada</b><small>20 shybů</small></div><div class=\"mbtn\"><b>Stejné série</b><small>6× 18</small></div><div class=\"mbtn on\"><b>Různé série</b><small>10/8/6</small></div></div></div><div class=\"fld\"><label>Série · opakování + váha</label><div class=\"serieh\"><span>#</span><span>Opakování</span><span>Váha</span></div><div data-mmvaried></div><button class=\"newbtn\" style=\"margin-top:6px\">＋ Přidat sérii</button></div><div class=\"ff\"><div class=\"fld\"><label>Datum</label><div class=\"drange\"><span class=\"cal\"><svg class=\"i\"><use href=\"#i-calendar\"/></svg></span>Dnes · pá 27. 6.<span style=\"margin-left:auto;color:var(--ter)\">▾</span></div></div><div class=\"rwbar\"><span><svg class=\"i\"><use href=\"#i-trophy\"/></svg> Získáš za zápis</span><b>+95 b</b></div><div class=\"submit\">Zapsat</div></div></div>",
+ "formadmin": "<div class=\"body formb\" style=\"padding-top:16px\"><div class=\"fhd\"><div class=\"fttl\">Nový záznam</div><span class=\"fx\">×</span></div><div class=\"admbar\"><svg class=\"i\"><use href=\"#i-shield\"/></svg> Admin — zapisuješ za jiného hráče</div><div class=\"fld\"><label>Za koho *</label><div class=\"pickrow\"><div class=\"pk\" style=\"background:#2FB17018;color:#1f8a52\">Mára</div><div class=\"pk\" style=\"background:#E05B4B24;color:#c0392b;box-shadow:inset 0 0 0 2px #E05B4B;font-weight:800\">Martin ✓</div><div class=\"pk\" style=\"background:#E8902F18;color:#b9701f\">Káťa</div><div class=\"pk\" style=\"background:#3FAEC218;color:#2a8599\">Janča</div><div class=\"pk\" style=\"background:#8B6FE018;color:#6a52c0\">Péťa</div><div class=\"pk\" style=\"background:#E8588E18;color:#c83f73\">Natálka</div><div class=\"pk\" style=\"background:#6B756F18;color:#566059\">Matěj</div></div></div><div class=\"tsel\"><b class=\"on\"><svg class=\"i\"><use href=\"#i-pushup\"/></svg> Cvik</b><b><svg class=\"i\"><use href=\"#i-run\"/></svg> Aktivita</b></div><div class=\"fld\"><label>Cvik</label><div class=\"pickrow\"><div class=\"pk\"><svg class=\"i\"><use href=\"#i-pullup\"/></svg> Shyby</div><div class=\"pk on\"><svg class=\"i\"><use href=\"#i-pushup\"/></svg> Kliky</div><div class=\"pk\"><svg class=\"i\"><use href=\"#i-squat\"/></svg> Dřep</div><div class=\"pk\"><svg class=\"i\"><use href=\"#i-dips\"/></svg> Dipy</div></div></div><div class=\"pickrow\"><div class=\"fld\" style=\"flex:1\"><label>Opakování</label><div class=\"inpc\"><input data-mmb=\"cvik-single-op\" type=\"number\" inputmode=\"numeric\" min=\"1\" placeholder=\"40\"></div></div><div class=\"fld\" style=\"flex:1\"><label>Váha navíc</label><div class=\"inpc ph\"><input data-mmb=\"cvik-single-vaha\" type=\"number\" inputmode=\"decimal\" min=\"0\" step=\"0.5\" placeholder=\"0 kg\"></div></div></div><div class=\"ff\"><div class=\"fld\"><label>Datum</label><div class=\"drange\"><span class=\"cal\"><svg class=\"i\"><use href=\"#i-calendar\"/></svg></span>Dnes · pá 27. 6.<span style=\"margin-left:auto;color:var(--ter)\">▾</span></div></div><div class=\"rwbar\"><span><svg class=\"i\"><use href=\"#i-trophy\"/></svg> Získá za zápis</span><b>+28 b</b></div><div class=\"submit\">Zapsat za Martina</div></div></div>",
+ "formakt": "<div class=\"body formb\" style=\"padding-top:16px\"><div class=\"fhd\"><div class=\"fttl\">Nový záznam</div><span class=\"fx\">×</span></div><div class=\"tsel\"><b><svg class=\"i\"><use href=\"#i-pushup\"/></svg> Cvik</b><b class=\"on\"><svg class=\"i\"><use href=\"#i-run\"/></svg> Aktivita</b></div><div class=\"fld\"><label>Aktivita</label><div class=\"pickrow\"><div class=\"pk\"><svg class=\"i\"><use href=\"#i-bike\"/></svg> Kolo</div><div class=\"pk\"><svg class=\"i\"><use href=\"#i-swim\"/></svg> Plavání</div><div class=\"pk\"><svg class=\"i\"><use href=\"#i-stretch\"/></svg> Strečink</div><div class=\"pk lez\"><svg class=\"i\"><use href=\"#i-run\"/></svg> Běh</div><div class=\"pk lez\"><svg class=\"i\"><use href=\"#i-climb\"/></svg> Lezení</div></div><div class=\"inp ph\" style=\"margin-top:8px;border-radius:16px;padding:8px 15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis\"><input data-mmb=\"aktivita-nazev\" type=\"text\" placeholder=\"Například cvíčo 30 min…\"></div></div><div class=\"fld\"><label>Náročnost</label><div class=\"pickrow\"><div class=\"pk\">1</div><div class=\"pk\">2</div><div class=\"pk on\">3</div><div class=\"pk\">4</div><div class=\"pk\">5</div></div><div class=\"lvlhint\">Úroveň 3 · svižný běh, kruhový trénink, fotbal</div></div><div class=\"ff\"><div class=\"fld\"><label>Datum</label><div class=\"drange\"><span class=\"cal\"><svg class=\"i\"><use href=\"#i-calendar\"/></svg></span>Dnes · pá 27. 6.<span style=\"margin-left:auto;color:var(--ter)\">▾</span></div></div><div class=\"rwbar\"><span><svg class=\"i\"><use href=\"#i-trophy\"/></svg> Získáš za zápis</span><b>+40 b</b></div><div class=\"submit\">Zapsat</div></div></div>",
+ "formbeh": "<div class=\"body formb\" style=\"padding-top:16px\"><div class=\"fhd\"><div class=\"fttl\">Nový záznam</div><span class=\"fx\">×</span></div><div class=\"tsel\"><b><svg class=\"i\"><use href=\"#i-pushup\"/></svg> Cvik</b><b class=\"on\"><svg class=\"i\"><use href=\"#i-run\"/></svg> Aktivita</b></div><div class=\"fld\"><label>Aktivita</label><div class=\"pickrow\"><div class=\"pk\"><svg class=\"i\"><use href=\"#i-bike\"/></svg> Kolo</div><div class=\"pk\"><svg class=\"i\"><use href=\"#i-swim\"/></svg> Plavání</div><div class=\"pk\"><svg class=\"i\"><use href=\"#i-stretch\"/></svg> Strečink</div><div class=\"pk lezon\"><svg class=\"i\"><use href=\"#i-run\"/></svg> Běh</div><div class=\"pk lez\"><svg class=\"i\"><use href=\"#i-climb\"/></svg> Lezení</div></div></div><div class=\"fld\"><label>Náročnost</label><div class=\"pickrow\"><div class=\"pk\">1</div><div class=\"pk\">2</div><div class=\"pk\">3</div><div class=\"pk\">4</div><div class=\"pk\">5</div></div><div class=\"lvlhint\">vyber úroveň 1-5</div></div><div class=\"fld\"><label>Kilometry *</label><div class=\"inp\" style=\"display:flex;align-items:center\"><input data-mmb=\"aktivita-km\" type=\"number\" step=\"0.1\" min=\"0\" inputmode=\"decimal\" placeholder=\"5,2\" style=\"flex:1\"><span style=\"color:var(--ter);font-weight:700\">km</span></div></div><div class=\"pickrow\"><div class=\"fld\" style=\"flex:1\"><label>Tempo · nepovinné</label><div class=\"inp\" style=\"display:flex;align-items:center\"><input data-mmb=\"aktivita-tempo\" type=\"text\" placeholder=\"5:30\" style=\"flex:1\"><span style=\"color:var(--ter);font-weight:700\">min/km</span></div></div><div class=\"fld\" style=\"flex:1\"><label>Převýšení · nepovinné</label><div class=\"inp\" style=\"display:flex;align-items:center\"><input data-mmb=\"aktivita-prevyseni\" type=\"number\" min=\"0\" step=\"1\" inputmode=\"numeric\" placeholder=\"0\" style=\"flex:1\"><span style=\"color:var(--ter);font-weight:700\">m</span></div></div></div><div class=\"ff\"><div class=\"fld\"><label>Datum</label><div class=\"drange\"><span class=\"cal\"><svg class=\"i\"><use href=\"#i-calendar\"/></svg></span>Dnes · pá 27. 6.<span style=\"margin-left:auto;color:var(--ter)\">▾</span></div></div><div class=\"rwbar\"><span><svg class=\"i\"><use href=\"#i-trophy\"/></svg> Získáš za zápis</span><b>+52 b</b></div><div class=\"submit\">Zapsat</div></div></div>",
+ "formlez": "<div class=\"body formb\" style=\"padding-top:16px\"><div class=\"fhd\"><div class=\"fttl\">Nový záznam</div><span class=\"fx\">×</span></div><div class=\"tsel\"><b><svg class=\"i\"><use href=\"#i-pushup\"/></svg> Cvik</b><b class=\"on\"><svg class=\"i\"><use href=\"#i-run\"/></svg> Aktivita</b></div><div class=\"fld\"><label>Aktivita</label><div class=\"pickrow\"><div class=\"pk\"><svg class=\"i\"><use href=\"#i-bike\"/></svg> Kolo</div><div class=\"pk\"><svg class=\"i\"><use href=\"#i-swim\"/></svg> Plavání</div><div class=\"pk\"><svg class=\"i\"><use href=\"#i-stretch\"/></svg> Strečink</div><div class=\"pk lez\"><svg class=\"i\"><use href=\"#i-run\"/></svg> Běh</div><div class=\"pk lezon\"><svg class=\"i\"><use href=\"#i-climb\"/></svg> Lezení</div></div></div><div class=\"fld\"><label>Disciplína</label><div class=\"tsel\"><b class=\"on\">Boulder</b><b>Lano</b></div></div><div class=\"fld\"><label>Systém obtížností</label><div class=\"seg\"><b>V-scale</b><b class=\"on\">Font</b></div></div><div class=\"fld\"><label>Cesty (obtížnosti)</label><div data-mmroutes></div><button class=\"newbtn\" style=\"margin-top:6px\">＋ Přidat cestu</button></div><div class=\"ff\"><div class=\"fld\"><label>Datum</label><div class=\"drange\"><span class=\"cal\"><svg class=\"i\"><use href=\"#i-calendar\"/></svg></span>Dnes · pá 27. 6.<span style=\"margin-left:auto;color:var(--ter)\">▾</span></div></div><div class=\"rwbar\"><span><svg class=\"i\"><use href=\"#i-trophy\"/></svg> Získáš za zápis</span><b>+85 b</b></div><div class=\"submit\">Zapsat</div></div></div>",
  "datum": "<div class=\"body\" style=\"filter:brightness(.5);padding-top:16px\"><div class=\"fhd\"><div class=\"fttl\">Nový záznam</div><span class=\"fx\">×</span></div><div class=\"tsel\"><b class=\"on\"><svg class=\"i\"><use href=\"#i-pushup\"/></svg> Cvik</b><b><svg class=\"i\"><use href=\"#i-run\"/></svg> Aktivita</b></div><div class=\"fld\"><label>Cvik</label><div class=\"pickrow\"><div class=\"pk\"><svg class=\"i\"><use href=\"#i-pullup\"/></svg> Shyby</div><div class=\"pk on\"><svg class=\"i\"><use href=\"#i-pushup\"/></svg> Kliky</div><div class=\"pk\"><svg class=\"i\"><use href=\"#i-squat\"/></svg> Dřep</div><div class=\"pk\"><svg class=\"i\"><use href=\"#i-dips\"/></svg> Dipy</div></div></div><div class=\"fld\"><label>Co chceš zapsat?</label><div class=\"mgrid\"><div class=\"mbtn on\"><b>Jedna sada</b><small>20 shybů</small></div><div class=\"mbtn\"><b>Stejné série</b><small>6× 18</small></div><div class=\"mbtn\"><b>Různé série</b><small>10/8/6</small></div></div></div></div><div class=\"dim\"></div><div class=\"sheet\"><div class=\"handle\"></div><span class=\"sheetx\">×</span><h3>Vyber datum</h3><div class=\"dp\"><div class=\"dphdr\"><span>‹</span><span>Červen 2026</span><span>›</span></div><div class=\"dpgrid\"><div class=\"hh\">Po</div><div class=\"hh\">Út</div><div class=\"hh\">St</div><div class=\"hh\">Čt</div><div class=\"hh\">Pá</div><div class=\"hh\">So</div><div class=\"hh\">Ne</div><div class=\"d empty\"></div><div class=\"d empty\"></div><div class=\"d empty\"></div><div class=\"d empty\"></div><div class=\"d empty\"></div><div class=\"d empty\"></div><div class=\"d\">1</div><div class=\"d\">2</div><div class=\"d\">3</div><div class=\"d\">4</div><div class=\"d\">5</div><div class=\"d\">6</div><div class=\"d\">7</div><div class=\"d\">8</div><div class=\"d\">9</div><div class=\"d\">10</div><div class=\"d\">11</div><div class=\"d\">12</div><div class=\"d\">13</div><div class=\"d\">14</div><div class=\"d\">15</div><div class=\"d\">16</div><div class=\"d\">17</div><div class=\"d\">18</div><div class=\"d\">19</div><div class=\"d\">20</div><div class=\"d\">21</div><div class=\"d\">22</div><div class=\"d\">23</div><div class=\"d\">24</div><div class=\"d\">25</div><div class=\"d\">26</div><div class=\"d on\">27</div><div class=\"d fut\">28</div><div class=\"d fut\">29</div><div class=\"d fut\">30</div></div></div><div class=\"btn2\" style=\"margin-top:11px\"><div class=\"btng\">Dnes</div><div class=\"btng\" style=\"background:var(--green);color:#fff\">Hotovo</div></div></div>",
- "editzaznam": "<div class=\"body formb\" style=\"padding-top:16px\"><div class=\"fhd\"><div class=\"fttl\">Upravit záznam</div><span class=\"fx\">×</span></div><div class=\"tsel\"><b class=\"on\"><svg class=\"i\"><use href=\"#i-pushup\"/></svg> Cvik</b><b><svg class=\"i\"><use href=\"#i-run\"/></svg> Aktivita</b></div><div class=\"fld\"><label>Cvik</label><div class=\"pickrow\"><div class=\"pk\"><svg class=\"i\"><use href=\"#i-pullup\"/></svg> Shyby</div><div class=\"pk on\"><svg class=\"i\"><use href=\"#i-pushup\"/></svg> Kliky</div><div class=\"pk\"><svg class=\"i\"><use href=\"#i-squat\"/></svg> Dřep</div><div class=\"pk\"><svg class=\"i\"><use href=\"#i-dips\"/></svg> Dipy</div></div></div><div class=\"fld\"><label>Co chceš zapsat?</label><div class=\"mgrid\"><div class=\"mbtn on\"><b>Jedna sada</b><small>20 shybů</small></div><div class=\"mbtn\"><b>Stejné série</b><small>6× 18</small></div><div class=\"mbtn\"><b>Různé série</b><small>10/8/6</small></div></div></div><div class=\"pickrow\"><div class=\"fld\" style=\"flex:1\"><label>Opakování</label><div class=\"inpc\">50</div></div><div class=\"fld\" style=\"flex:1\"><label>Váha navíc</label><div class=\"inpc ph\">0 kg</div></div></div><div class=\"ff\"><div class=\"fld\"><label>Datum</label><div class=\"drange\"><span class=\"cal\"><svg class=\"i\"><use href=\"#i-calendar\"/></svg></span>Čtvrtek 26. 6.<span style=\"margin-left:auto;color:var(--ter)\">▾</span></div></div><div class=\"pickrow\" style=\"margin-top:11px\"><div class=\"submit\" style=\"flex:2;margin-top:0\">Uložit změny</div><div class=\"submit\" style=\"flex:1;margin-top:0;background:#E0584B;box-shadow:0 10px 24px -8px rgba(224,88,75,.45)\">Smazat</div></div></div></div>"
+ "editzaznam": "<div class=\"body formb\" style=\"padding-top:16px\"><div class=\"fhd\"><div class=\"fttl\">Upravit záznam</div><span class=\"fx\">×</span></div><div class=\"tsel\"><b class=\"on\"><svg class=\"i\"><use href=\"#i-pushup\"/></svg> Cvik</b><b><svg class=\"i\"><use href=\"#i-run\"/></svg> Aktivita</b></div><div class=\"fld\"><label>Cvik</label><div class=\"pickrow\"><div class=\"pk\"><svg class=\"i\"><use href=\"#i-pullup\"/></svg> Shyby</div><div class=\"pk on\"><svg class=\"i\"><use href=\"#i-pushup\"/></svg> Kliky</div><div class=\"pk\"><svg class=\"i\"><use href=\"#i-squat\"/></svg> Dřep</div><div class=\"pk\"><svg class=\"i\"><use href=\"#i-dips\"/></svg> Dipy</div></div></div><div class=\"fld\"><label>Co chceš zapsat?</label><div class=\"mgrid\"><div class=\"mbtn on\"><b>Jedna sada</b><small>20 shybů</small></div><div class=\"mbtn\"><b>Stejné série</b><small>6× 18</small></div><div class=\"mbtn\"><b>Různé série</b><small>10/8/6</small></div></div></div><div class=\"pickrow\"><div class=\"fld\" style=\"flex:1\"><label>Opakování</label><div class=\"inpc\"><input data-mmb=\"cvik-single-op\" type=\"number\" inputmode=\"numeric\" min=\"1\" placeholder=\"50\"></div></div><div class=\"fld\" style=\"flex:1\"><label>Váha navíc</label><div class=\"inpc ph\"><input data-mmb=\"cvik-single-vaha\" type=\"number\" inputmode=\"decimal\" min=\"0\" step=\"0.5\" placeholder=\"0 kg\"></div></div></div><div class=\"ff\"><div class=\"fld\"><label>Datum</label><div class=\"drange\"><span class=\"cal\"><svg class=\"i\"><use href=\"#i-calendar\"/></svg></span>Čtvrtek 26. 6.<span style=\"margin-left:auto;color:var(--ter)\">▾</span></div></div><div class=\"pickrow\" style=\"margin-top:11px\"><div class=\"submit\" style=\"flex:2;margin-top:0\">Uložit změny</div><div class=\"submit\" style=\"flex:1;margin-top:0;background:#E0584B;box-shadow:0 10px 24px -8px rgba(224,88,75,.45)\">Smazat</div></div></div></div>"
 };
+
+// Admin rezim zapisu: admin jeste nevybral hrace, nebo zapisuje za jineho — formular musi mit
+// "Za koho" pilulky + admin banner. V edit rezimu ne (hrac je dany zaznamem).
+function mmZapisAdminMode(){
+  return isAdmin() && !state.editMode && (!state.selectedPlayer || state.selectedPlayer !== state.currentPlayerId);
+}
 
 // Vyber sablonu dle stavu formulare (cistě vizualni vrstva — DB/submitEntry se nemeni).
 function mmZapisTplKey(){
-  // Admin zapisuje za jineho hrace -> formadmin (jediny mockup s player-pills + admin bannerem).
-  if (isAdmin() && state.selectedPlayer && state.selectedPlayer !== state.currentPlayerId) return 'formadmin';
+  // Admin rezim: formadmin je mockup jen pro cvik+single; u ostatnich rezimu se pouzije bezna
+  // sablona a admin hlavicku ("Za koho" + banner) do ni vlozi mmZapisSync.
+  if (mmZapisAdminMode() && state.entryType === 'cvik' && state.serieMode === 'single') return 'formadmin';
   if (state.entryType === 'cvik') {
     if (state.serieMode === 'same') return 'formcviks';
     if (state.serieMode === 'varied') return 'formcvikv';
@@ -6024,7 +6034,13 @@ function mmMountZapis(){
   if(tplEl) sh.appendChild(tplEl.content.cloneNode(true));
   const ov = document.createElement('style');
   // Skryj cerveny ramecek "konec displeje" (.scr::before/::after z mockupu) + zplosti scr do formulare.
-  ov.textContent=':host{display:block;font-family:var(--font-ui);font-size:16px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr::before,.scr::after{display:none!important}.scr{border-radius:0;box-shadow:none;width:306px;height:auto;}';
+  // + MOST: inputy/selecty uvnitr .inpc/.inp wrapperu jsou "neviditelne" (vzhled nese wrapper trida,
+  //   font/barvy dedi) — vizual formulare se proti mockupu nesmi zmenit.
+  ov.textContent=':host{display:block;font-family:var(--font-ui);font-size:16px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr::before,.scr::after{display:none!important}.scr{border-radius:0;box-shadow:none;width:306px;height:auto;}'
+    +'.inpc input,.inp input{border:0;outline:0;background:transparent;font:inherit;color:var(--label);width:100%;min-width:0;padding:0;margin:0;-moz-appearance:textfield;}'
+    +'.inpc input::placeholder,.inp input::placeholder{color:var(--ter);opacity:1;}'
+    +'.inpc input::-webkit-outer-spin-button,.inpc input::-webkit-inner-spin-button,.inp input::-webkit-outer-spin-button,.inp input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}'
+    +'.inp select{border:0;outline:0;background:transparent;font:inherit;color:var(--label);appearance:none;-webkit-appearance:none;-moz-appearance:none;padding:0;margin:0;}';
   sh.appendChild(ov);
   if(sprite) sh.appendChild(sprite.cloneNode(true));
   // Sablona MM_FORMS je uz cely `<div class="body formb">…` — jde primo do .scr (bez extra .body, bez tabbaru).
@@ -6032,6 +6048,8 @@ function mmMountZapis(){
   w.innerHTML = `<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}">${tpl}</div>`;
   sh.appendChild(w);
   const scrEl = w.querySelector('.scr');
+  // MOST: naplnit shadow ze state/light-DOM (hodnoty, .on stavy, datum, reward, edit rezim, admin pilulky)
+  mmZapisSync(sh);
   const z = (Math.min(Math.max(1,window.innerWidth),393)-8)/306;   // strop 393 = velikost mockupu (varianta A: nikdy vetsi nez mockup)
   scrEl.style.zoom = z;
   scrEl.style.margin = (window.innerWidth>393?'0 auto':'');   // sirsi telefon: vycentrovat obsah; <=393 nechat jako mockup (doleva)
@@ -6042,38 +6060,102 @@ function mmMountZapis(){
   const bodyEl = scrEl.querySelector('.body.formb');
   const ffEl = scrEl.querySelector('.ff');
   if (bodyEl && ffEl) bodyEl.style.paddingBottom = (ffEl.offsetHeight + 16) + 'px';
-  // Delegace klikani jednou na shadowRoot (preziva sh.innerHTML=''). Jen vizualni re-render/toggle, ZADNA data.
-  if(!host._mmZapisBound){ host._mmZapisBound = true; sh.addEventListener('click', mmZapisClick); }
+  // Delegace jednou na shadowRoot (preziva sh.innerHTML=''): klik-mosty + input/change mosty do light-DOM.
+  if(!host._mmZapisBound){
+    host._mmZapisBound = true;
+    sh.addEventListener('click', mmZapisClick);
+    sh.addEventListener('input', mmZapisInput);
+    sh.addEventListener('change', mmZapisChange);
+  }
 }
 
-// Vizualni interaktivita KROK2 (delegace). Datum/inputy/Zapsat/newbtn zatim nedelaji nic (napoji se pozdeji).
+// ===== KROK2 MOSTY: shadow formular jen pohani SKRYTOU light-DOM logiku (submitEntry,
+// updateCvikPointsPreview, setEntryType, setSerieMode, date picker…) — zadne duplikovani vypoctu. =====
+
+// Klik-mosty (delegace na shadowRoot).
 function mmZapisClick(e){
   const t = e.target;
   // × zavre modal
   if (t.closest('.fx')) { closeModal(); return; }
-  // Serie mode u Cviku (Jedna sada / Stejné série / Různé série)
+  // Zapsat / Uložit změny / Smazat -> skryta tlacitka (submitEntry / deleteCurrentEntry)
+  const sub = t.closest('.submit');
+  if (sub) {
+    if (sub.dataset.mmdel) { const d = document.getElementById('delete-btn'); if (d) d.click(); return; }
+    const b = document.getElementById('submit-btn');
+    if (b && !b.disabled) b.click();
+    return;
+  }
+  // Datum -> stavajici light-DOM kalendar (overlay funguje nad modalem; text .drange
+  // aktualizuje updateDateTrigger po kazde zmene vyberu)
+  if (t.closest('.drange')) { openDatePicker(); return; }
+  // ＋ Přidat sérii / cestu
+  if (t.closest('.newbtn')) {
+    if (state.entryType === 'lezeni') addLezeniRoute(); else addVariedSerie();
+    mmMountZapis(); return;
+  }
+  // Serie mode u Cviku (Jedna sada / Stejné série / Různé série) -> setSerieMode + remount
   const mbtn = t.closest('.mbtn');
   if (mbtn) {
     const txt = mbtn.textContent;
-    if (/Jedna sada/.test(txt)) state.serieMode = 'single';
-    else if (/Stejn/.test(txt)) state.serieMode = 'same';
-    else if (/zn.? s|Různ|Ruzn/.test(txt)) state.serieMode = 'varied';
+    let mode = 'single';
+    if (/Stejn/.test(txt)) mode = 'same';
+    else if (/zn.? s|Různ|Ruzn/.test(txt)) mode = 'varied';
+    setSerieMode(mode);
     mmMountZapis(); return;
   }
-  // Pilulky .pk — bud Aktivita sub-picker (meni formular) nebo cvik-cipy/naročnost/hraci (jen vizual)
+  // Pilulky .pk — most podle labelu pole
   const pk = t.closest('.pk');
   if (pk) {
     const fld = pk.closest('.fld');
     const lbl = fld ? (fld.querySelector('label') ? fld.querySelector('label').textContent : '') : '';
+    // Admin: "Za koho" -> light player-pill (nastavi selectedPlayer, submit label, preview)
+    if (/Za koho/i.test(lbl)) {
+      const pid = pk.dataset.mmplayer;
+      const lp = pid ? document.querySelector(`#player-pills .player-pill[data-player-id="${pid}"]`) : null;
+      if (lp) lp.click();
+      mmMountZapis(); return;
+    }
+    // Sub-picker "Aktivita" (Kolo/Plavání/Strečink/Běh/Lezení) -> stejne vetve jako pickActivitySub
     if (/Aktivita/i.test(lbl)) {
       const txt = pk.textContent.trim();
-      if (/Kolo/.test(txt)) state.actSub = 'kolo';
-      else if (/Plav/.test(txt)) state.actSub = 'plavani';
-      else if (/Streč|Strec/.test(txt)) state.actSub = 'strecink';
-      else if (/Běh|Beh/.test(txt)) state.actSub = 'beh';
-      else if (/Lezen/.test(txt)) state.actSub = 'lezeni';
-      state.entryType = 'aktivita';
+      if (/Kolo/.test(txt)) { state.actSub = 'kolo'; setEntryType('aktivita'); }
+      else if (/Plav/.test(txt)) { state.actSub = 'plavani'; setEntryType('aktivita'); }
+      else if (/Streč|Strec/.test(txt)) { state.actSub = null; setEntryType('stretching'); }
+      else if (/Běh|Beh/.test(txt)) { state.actSub = 'beh'; setEntryType('aktivita'); }
+      else if (/Lezen/.test(txt)) { state.actSub = null; setEntryType('lezeni'); }
       mmMountZapis(); return;
+    }
+    // Cvik-čip (Shyby/Kliky/Dřep/Dipy) -> light #cvik-pills klik (state.selectedCvik + preview)
+    if (lbl.trim() === 'Cvik') {
+      const name = pk.textContent.trim();
+      const lp = document.querySelector(`#cvik-pills .pk[data-cvik="${name}"]`);
+      if (lp) lp.click();
+      if (state.selectedCvik === name) {  // klik prosel guardem (vybrany hrac)
+        fld.querySelectorAll('.pk').forEach(x => x.classList.remove('on'));
+        pk.classList.add('on');
+      }
+      mmZapisReward(); return;
+    }
+    // Náročnost 1-5 -> light [data-level] klik (LEVEL_POINTS preview); u stretchingu most na
+    // .stretch-btn (light stretch ma jen 2 delky: 1-2 -> krátký, 3-5 -> delší)
+    if (/Náročnost|Narocnost/i.test(lbl)) {
+      const n = parseInt(pk.textContent.trim());
+      if (state.entryType === 'stretching') {
+        const sb = document.querySelector(`.stretch-btn[data-stretch="${n <= 2 ? 'krat' : 'dlou'}"]`);
+        if (sb) sb.click();
+        if (state.selectedStretch) { fld.querySelectorAll('.pk').forEach(x => x.classList.remove('on')); pk.classList.add('on'); }
+      } else {
+        const lb = document.querySelector(`#form-aktivita [data-level="${n}"]`);
+        if (lb) lb.click();
+        if (state.selectedLevel === n) {
+          fld.querySelectorAll('.pk').forEach(x => x.classList.remove('on'));
+          pk.classList.add('on');
+          const hint = fld.querySelector('.lvlhint');
+          const lh = document.getElementById('level-hint');
+          if (hint && lh) hint.textContent = lh.textContent;
+        }
+      }
+      mmZapisReward(); return;
     }
     // ostatni pilulky — jen vizualne prepnout .on v ramci skupiny
     const grp = pk.closest('.pickrow') || fld;
@@ -6084,17 +6166,189 @@ function mmZapisClick(e){
   const seg = t.closest('.tsel b, .seg b');
   if (seg) {
     const group = seg.closest('.tsel, .seg');
-    const parent = group.parentElement;
-    const isTopType = parent && (parent.classList.contains('formb') || parent.classList.contains('body'));
-    if (isTopType) {
-      const txt = seg.textContent.trim();
-      if (/Cvik/.test(txt)) { state.entryType = 'cvik'; }
-      else { state.entryType = 'aktivita'; state.actSub = null; }
+    const segFld = group.closest('.fld');
+    const lbl = segFld ? (segFld.querySelector('label') ? segFld.querySelector('label').textContent : '') : '';
+    // Lezení: Disciplína (Boulder/Lano) -> setLezeniDisc (meni systemy + resetuje cesty)
+    if (/Disciplína|Disciplina/i.test(lbl)) {
+      setLezeniDisc(/Boulder/i.test(seg.textContent) ? 'boulder' : 'lano');
       mmMountZapis(); return;
     }
-    // Disciplína/Systém — jen vizualni prepnuti .on (bez state, napoji se pozdeji)
-    group.querySelectorAll('b').forEach(x => x.classList.remove('on'));
-    seg.classList.add('on'); return;
+    // Lezení: Systém obtížností -> setLezeniSys (prepocita grade texty vsech cest)
+    if (/Systém|System/i.test(lbl)) {
+      if (seg.dataset.mmsys) setLezeniSys(seg.dataset.mmsys);
+      mmMountZapis(); return;
+    }
+    // Horni Cvik/Aktivita (bez .fld) -> setEntryType (light vizual + state konzistentne)
+    state.actSub = null;
+    setEntryType(/Cvik/.test(seg.textContent.trim()) ? 'cvik' : 'aktivita');
+    mmMountZapis(); return;
+  }
+}
+
+// Input-most: hodnota ze shadow inputu -> light-DOM protejsek + jeho 'input' event
+// (spusti existujici preview handlery: updateCvikPointsPreview, varied state update…).
+function mmZapisInput(e){
+  const inp = e.target;
+  if (!inp.dataset) return;
+  if (inp.dataset.mmb) {
+    const l = document.getElementById(inp.dataset.mmb);
+    if (l) { l.value = inp.value; l.dispatchEvent(new Event('input', { bubbles: true })); }
+  } else if (inp.dataset.mmvar) {
+    const cut = inp.dataset.mmvar.lastIndexOf('-');
+    const idx = inp.dataset.mmvar.slice(0, cut), field = inp.dataset.mmvar.slice(cut + 1);
+    const l = document.querySelector(`#varied-series-list input[data-idx="${idx}"][data-field="${field}"]`);
+    if (l) { l.value = inp.value; l.dispatchEvent(new Event('input', { bubbles: true })); }
+  } else return;
+  mmZapisReward();
+}
+
+// Change-most: grade <select> cesty (lezeni) -> light select (stavajici lezeniRoutes logika) + remount
+// (obnovi konverzni "(V5)" hint i reward bar).
+function mmZapisChange(e){
+  const sel = e.target;
+  if (!sel.dataset || sel.dataset.mmroute == null) return;
+  const l = document.querySelector(`#lezeni-routes-list select[data-idx="${sel.dataset.mmroute}"]`);
+  if (l) { l.value = sel.value; l.dispatchEvent(new Event('change', { bubbles: true })); }
+  mmMountZapis();
+}
+
+// Reward bar: precti existujici light-DOM points display aktualniho typu a zapis do shadow .rwbar b.
+// Bez bodu "+0 b" (bar zustava — mockup layout).
+function mmZapisReward(sh){
+  sh = sh || (document.getElementById('zapis-shadow') || {}).shadowRoot; if (!sh) return;
+  const b = sh.querySelector('.rwbar b'); if (!b) return;
+  const id = POINTS_DISPLAY_BY_TYPE[state.entryType];
+  const el = id ? document.getElementById(id) : null;
+  b.textContent = (el && el.classList.contains('show') && el.textContent.trim()) ? el.textContent.trim() : '+0 b';
+}
+
+// Text data v shadow .drange (mockup "Dnes · pá 27. 6.") — sdili format s light date-triggerem.
+function mmZapisSetDrange(dr){
+  Array.from(dr.childNodes).forEach(n => { if (n.nodeType === 3) n.remove(); });
+  dr.insertBefore(document.createTextNode(formatDateTriggerDisplay(state.selectedDate)), dr.lastElementChild);
+}
+
+// Init sync po montazi: naplni shadow ze state/light-DOM — hodnoty inputu, .on stavy, datum,
+// reward, admin "Za koho" pilulky, edit rezim (Uložit změny + Smazat, bez reward baru).
+function mmZapisSync(sh){
+  sh = sh || (document.getElementById('zapis-shadow') || {}).shadowRoot; if (!sh) return;
+  const scr = sh.querySelector('.scr'); if (!scr) return;
+  const body = scr.querySelector('.body'); if (!body) return;
+  // Titulek dle rezimu
+  const fttl = body.querySelector('.fttl');
+  if (fttl) fttl.textContent = state.editMode ? 'Upravit záznam' : 'Nový záznam';
+  // Admin hlavicka (banner + "Za koho") do sablon bez ni (formadmin ji ma; ostatni ji potrebuji
+  // kdyz admin zapisuje — jinak by nemel jak vybrat hrace)
+  if (mmZapisAdminMode() && !body.querySelector('.admbar')) {
+    const fhd = body.querySelector('.fhd');
+    if (fhd) {
+      const tmp = document.createElement('div');
+      tmp.innerHTML = '<div class="admbar"><svg class="i"><use href="#i-shield"/></svg> Admin — zapisuješ za jiného hráče</div>'
+        + '<div class="fld"><label>Za koho *</label><div class="pickrow"></div></div>';
+      while (tmp.lastChild) fhd.after(tmp.lastChild);
+    }
+  }
+  // Horni prepinac Cvik/Aktivita (primy potomek .body, bez .fld)
+  const topTsel = Array.from(body.children).find(el => el.classList && el.classList.contains('tsel'));
+  if (topTsel) {
+    const isCvik = state.entryType === 'cvik';
+    topTsel.querySelectorAll('b').forEach(bEl => bEl.classList.toggle('on', /Cvik/.test(bEl.textContent) === isCvik));
+  }
+  // Pole podle labelu
+  body.querySelectorAll('.fld').forEach(fld => {
+    const lblEl = fld.querySelector('label');
+    const lbl = lblEl ? lblEl.textContent : '';
+    if (/Za koho/i.test(lbl)) {
+      const row = fld.querySelector('.pickrow');
+      if (row) row.innerHTML = state.players.filter(p => p.aktivni).map(p => {
+        const c = safeColor(p.barva);
+        const bg = /^#[0-9a-fA-F]{6}$/.test(c) ? c + '18' : c;
+        const on = p.id === state.selectedPlayer;
+        return `<div class="pk" data-mmplayer="${p.id}" style="background:${bg};color:${c};${on ? `box-shadow:inset 0 0 0 2px ${c};font-weight:800;` : ''}">${habitEsc(p.jmeno)}${on ? ' ✓' : ''}</div>`;
+      }).join('');
+    } else if (lbl.trim() === 'Cvik') {
+      fld.querySelectorAll('.pk').forEach(pk => pk.classList.toggle('on', pk.textContent.trim() === state.selectedCvik));
+    } else if (/Aktivita/i.test(lbl)) {
+      fld.querySelectorAll('.pk').forEach(pk => {
+        const txt = pk.textContent.trim();
+        if (/Běh|Beh/.test(txt)) {
+          const on = state.entryType === 'aktivita' && state.actSub === 'beh';
+          pk.classList.toggle('lezon', on); pk.classList.toggle('lez', !on);
+        } else if (/Lezen/.test(txt)) {
+          const on = state.entryType === 'lezeni';
+          pk.classList.toggle('lezon', on); pk.classList.toggle('lez', !on);
+        } else {
+          let on = false;
+          if (/Kolo/.test(txt)) on = state.entryType === 'aktivita' && state.actSub === 'kolo';
+          else if (/Plav/.test(txt)) on = state.entryType === 'aktivita' && state.actSub === 'plavani';
+          else if (/Streč|Strec/.test(txt)) on = state.entryType === 'stretching';
+          pk.classList.toggle('on', on);
+        }
+      });
+      // Nazev aktivity: u stretchingu se stejny shadow input mapuje na light #stretch-nazev
+      const nameInp = fld.querySelector('input[data-mmb]');
+      if (nameInp) nameInp.dataset.mmb = state.entryType === 'stretching' ? 'stretch-nazev' : 'aktivita-nazev';
+    } else if (/Náročnost|Narocnost/i.test(lbl)) {
+      let lvl = state.selectedLevel;
+      if (state.entryType === 'stretching') lvl = state.selectedStretch ? (state.selectedStretch === 'krat' ? 1 : 3) : null;
+      fld.querySelectorAll('.pk').forEach(pk => pk.classList.toggle('on', parseInt(pk.textContent.trim()) === lvl));
+      const hint = fld.querySelector('.lvlhint');
+      const lh = document.getElementById('level-hint');
+      if (hint && lh && state.entryType !== 'stretching') hint.textContent = lh.textContent;
+    } else if (/Disciplína|Disciplina/i.test(lbl)) {
+      fld.querySelectorAll('.tsel b').forEach(bEl => bEl.classList.toggle('on', (/Boulder/i.test(bEl.textContent) ? 'boulder' : 'lano') === state.lezeniDisc));
+    } else if (/Systém|System/i.test(lbl)) {
+      const segEl = fld.querySelector('.seg');
+      if (segEl) segEl.innerHTML = (LEZENI_SYS_ORDER[state.lezeniDisc] || []).map(s =>
+        `<b data-mmsys="${s}" class="${s === state.lezeniSys ? 'on' : ''}">${LEZENI_SYS_LABEL[s]}</b>`).join('');
+    }
+  });
+  // Různé série: radky ze state.variedSeries (stejny mockup markup jako formcvikv)
+  const varHost = body.querySelector('[data-mmvaried]');
+  if (varHost) varHost.innerHTML = state.variedSeries.map((s, i) =>
+    `<div class="pickrow"${i ? ' style="margin-top:5px"' : ''}><div class="serieno">${i + 1}</div>`
+    + `<div class="inpc" style="flex:2"><input data-mmvar="${i}-op" type="number" inputmode="numeric" min="1" placeholder="Opakování" value="${s.op != null ? habitEsc(String(s.op)) : ''}"></div>`
+    + `<div class="inpc ph" style="flex:2"><input data-mmvar="${i}-vaha" type="number" inputmode="decimal" min="0" step="0.5" placeholder="0 kg" value="${s.vaha ? habitEsc(String(s.vaha)) : ''}"></div></div>`).join('');
+  // Lezení: cesty ze state.lezeniRoutes (grade select v aktualnim globalnim systemu, mockup markup)
+  const rHost = body.querySelector('[data-mmroutes]');
+  if (rHost) {
+    const disc = state.lezeniDisc, sys = state.lezeniSys, grades = lezeniTable(disc);
+    rHost.innerHTML = state.lezeniRoutes.map((r, i) => {
+      const opts = '<option value="">—</option>' + grades.map(g =>
+        `<option value="${habitEsc(g[sys])}"${lezeniNorm(g[sys]) === lezeniNorm(r.grade) ? ' selected' : ''}>${habitEsc(g[sys])}</option>`).join('');
+      const conv = r.idx != null ? `<span style="color:var(--ter);font-size:11px">(${habitEsc(lezeniConvOther(disc, r.idx, sys))})</span>` : '';
+      return `<div class="pickrow"${i ? ' style="margin-top:5px"' : ''}><div class="inp" style="flex:2">Cesta #${i + 1}</div>`
+        + `<div class="inp" style="flex:0.95;white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:6px"><select data-mmroute="${i}">${opts}</select> ▾${conv}</div></div>`;
+    }).join('');
+  }
+  // Hodnoty inputu z light-DOM protejsku (edit rezim ma light predvyplneny openEditModal-em)
+  body.querySelectorAll('input[data-mmb]').forEach(inp => {
+    const l = document.getElementById(inp.dataset.mmb);
+    if (l) inp.value = l.value;
+  });
+  // Datum text
+  const dr = body.querySelector('.drange');
+  if (dr) mmZapisSetDrange(dr);
+  // Edit rezim: bez reward baru, Uložit změny + Smazat vedle sebe (mockup editzaznam);
+  // novy zaznam: label Zapsat / "Zapsat za X" z light submit-btn + reward
+  const ff = body.querySelector('.ff');
+  if (ff) {
+    if (state.editMode) {
+      const rw = ff.querySelector('.rwbar'); if (rw) rw.remove();
+      const subEl = ff.querySelector('.submit');
+      if (subEl && !ff.querySelector('[data-mmdel]')) {
+        const row = document.createElement('div');
+        row.className = 'pickrow'; row.style.marginTop = '11px';
+        row.innerHTML = '<div class="submit" style="flex:2;margin-top:0">Uložit změny</div>'
+          + '<div class="submit" data-mmdel="1" style="flex:1;margin-top:0;background:#E0584B;box-shadow:0 10px 24px -8px rgba(224,88,75,.45)">Smazat</div>';
+        subEl.replaceWith(row);
+      }
+    } else {
+      const subEl = ff.querySelector('.submit');
+      const lightBtn = document.getElementById('submit-btn');
+      if (subEl && lightBtn && lightBtn.textContent && lightBtn.textContent !== 'Ukládám...') subEl.textContent = lightBtn.textContent;
+      mmZapisReward(sh);
+    }
   }
 }
 
@@ -7716,6 +7970,11 @@ function formatDateTriggerDisplay(dateStr) {
 function updateDateTrigger() {
   const text = document.getElementById('date-trigger-text');
   if (text) text.textContent = formatDateTriggerDisplay(state.selectedDate);
+  // MOST (KROK2 shadow): zrcadli datum i do shadow .drange — picker je light-DOM overlay nad
+  // modalem, po vyberu/zavreni se shadow text musi obnovit.
+  const host = document.getElementById('zapis-shadow');
+  const dr = host && host.shadowRoot ? host.shadowRoot.querySelector('.drange') : null;
+  if (dr) mmZapisSetDrange(dr);
 }
 
 // Vraci datum pro zapis: bud zvolene nebo dnes
