@@ -752,6 +752,28 @@ body.modal-open .modal { touch-action: auto; }
 #modal.step-2 #step2-zoom-top, #modal.step-2 #step2-zoom-bottom { display: none !important; }
 #modal.step-2 .modal { padding-left: 0; padding-right: 0; padding-bottom: 0; }
 
+/* ============================================================
+   BULLETPROOF2: dalsi okna ve stinovem DOM (Tvorba navyku / Knihovna / Uprava profilu / Historie uprav /
+   Vyber data). Stejna konvence jako #zapis-shadow: modal = celoobrazovkovy mockup formular, stara
+   light-DOM okna JEN skryta (display:none) — jejich logika/inputy zustavaji jedina pravda (mosty).
+   ============================================================ */
+#habit-modal, #player-modal, #history-modal { align-items: stretch; background: var(--bg); backdrop-filter: none; }
+#habit-modal .modal, #player-modal .modal, #history-modal .modal {
+  width: 100%; max-width: none; height: 100dvh; max-height: none; border-radius: 0;
+  background: var(--bg); padding: env(safe-area-inset-top) 0 0;
+  overflow-y: auto; animation: fadeIn 0.2s;
+}
+#habit-modal .modal-handle, #habit-modal .modal-head-row, #habit-modal .modal-body, #habit-modal .modal-footer,
+#player-modal .modal-handle, #player-modal .modal-head-row, #player-modal .modal-body, #player-modal .modal-footer,
+#history-modal .modal-handle, #history-modal .modal-head-row, #history-modal .history-list { display: none !important; }
+#habit-shadow, #player-shadow, #histup-shadow { display: block; max-width: 480px; margin: 0 auto; }
+/* Vyber data (zapis/edit zaznamu): stary light picker skryty, stinovy sheet pres cely overlay.
+   Overlay dim dela .dim ze sablony S.datum (verbatim), overlay samotny je pruhledny.
+   POZOR: scoped na #date-picker-overlay — habit date picker (#habit-date-picker-overlay) bezi postaru. */
+#date-picker-overlay { background: transparent; backdrop-filter: none; }
+#date-picker-overlay .date-picker { display: none !important; }
+#datum-shadow { position: absolute; inset: 0; }
+
 /* F45: Guest mode banner + skryt editacni prvky */
 .guest-banner {
   display: flex; align-items: center; gap: 10px;
@@ -2759,6 +2781,10 @@ body.mm-full{background:#EDF0EC;}
 <!-- F52: HABIT modal (nový/úprava návyku) -->
 <div class="modal-overlay" id="habit-modal">
   <div class="modal">
+    <!-- BULLETPROOF2: verbatim mockup okno (S.knihovna / hf tvorba*) ve stinovem DOM — stare light
+         okno nize NENI smazane, jen skryte CSS (#habit-modal .modal-head-row/.modal-body/.modal-footer),
+         logika jede dal pres mosty (mmHabitClick/mmHabitInput/mmHabitSync). -->
+    <div id="habit-shadow"></div>
     <div class="modal-handle"></div>
     <!-- Ukol 2/3: stejna hlavicka+X konvence jako #modal/#player-modal (mockup .fhd) — puvodne chybela -->
     <div class="modal-head-row">
@@ -3189,6 +3215,9 @@ body.mm-full{background:#EDF0EC;}
 <!-- EDIT PLAYER MODAL — F53: Momentum reskin dle mockup S.uprava (vizual na existujicich tridach, pole/ID/handlery beze zmeny) -->
 <div class="modal-overlay" id="player-modal">
   <div class="modal">
+    <!-- BULLETPROOF2: verbatim mockup okno (S.uprava) ve stinovem DOM — stare light okno nize jen skryte,
+         logika jede pres mosty (mmUpravaClick/mmUpravaInput/mmUpravaChange/mmUpravaSync). -->
+    <div id="player-shadow"></div>
     <div class="modal-handle"></div>
     <div class="modal-head-row">
       <div>
@@ -3282,6 +3311,9 @@ body.mm-full{background:#EDF0EC;}
 <!-- PLAYER HISTORY MODAL — Ukol 2: hlavicka 1:1 mockup historieuprav (sipka zpet + centrovany nazev, zadny Zavrit — zavira se sipkou/klikem mimo) -->
 <div class="modal-overlay" id="history-modal">
   <div class="modal">
+    <!-- BULLETPROOF2: verbatim mockup okno (S.historieuprav) ve stinovem DOM — stary light seznam nize
+         jen skryty (mmMountHistUprav z nej cte radky), zavira se sipkou ‹ v hlavicce. -->
+    <div id="histup-shadow"></div>
     <div class="modal-handle"></div>
     <div class="modal-head-row hist-head">
       <span class="modal-back-x" onclick="closeHistoryModal()">‹</span>
@@ -3346,6 +3378,10 @@ body.mm-full{background:#EDF0EC;}
       <button type="button" class="date-picker-btn primary" onclick="closeDatePicker()">Hotovo</button>
     </div>
   </div>
+  <!-- BULLETPROOF2: verbatim mockup sheet (S.datum) ve stinovem DOM — stary light .date-picker vyse
+       jen skryty (renderDatePicker do nej dal kresli), mosty: mmDatumClick -> selectDateCell/changeMonth/
+       jumpToToday/closeDatePicker. Habit date picker (nize) zustava beze zmeny. -->
+  <div id="datum-shadow" onclick="event.stopPropagation()"></div>
 </div>
 
 <!-- Ukol 2: samostatny mini-kalendar pro "Platnost od-do" v Tvorbe navyku — klon vzoru vyse (STEJNE CSS tridy,
@@ -6225,9 +6261,15 @@ function mmZapisReward(sh){
 }
 
 // Text data v shadow .drange (mockup "Dnes · pá 27. 6.") — sdili format s light date-triggerem.
+// Ukol 5 (editzaznam): edit rezim ma v mockupu PLNY nazev dne ("Čtvrtek 26. 6."), novy zapis zkraceny.
 function mmZapisSetDrange(dr){
   Array.from(dr.childNodes).forEach(n => { if (n.nodeType === 3) n.remove(); });
-  dr.insertBefore(document.createTextNode(formatDateTriggerDisplay(state.selectedDate)), dr.lastElementChild);
+  let txt;
+  if (state.editMode) {
+    const d = new Date((state.selectedDate || todayStr()) + 'T00:00:00');
+    txt = `${czDayName(d)} ${d.getDate()}. ${d.getMonth() + 1}.`;
+  } else txt = formatDateTriggerDisplay(state.selectedDate);
+  dr.insertBefore(document.createTextNode(txt), dr.lastElementChild);
 }
 
 // Init sync po montazi: naplni shadow ze state/light-DOM — hodnoty inputu, .on stavy, datum,
@@ -6352,6 +6394,353 @@ function mmZapisSync(sh){
       mmZapisReward(sh);
     }
   }
+}
+
+// ============================================================
+//  BULLETPROOF2: dalsi okna ve stinovem DOM — Tvorba navyku (tvorba/tvorba2/tvorba3/tvorba4/tvorbad),
+//  Knihovna navyku (knihovna), Uprava profilu (uprava), Historie uprav (historieuprav), Vyber data (datum).
+//  Stejna metoda jako mmMountZapis: verbatim mockup markup + mm-tpl CSS ve stinovem DOM, funkce pres
+//  mosty do skryte stare light-DOM logiky (zadne nove vypocty, stara okna jen display:none).
+// ============================================================
+/* SYNCED z momentum-iphone.html hf()/S.tvorba/S.tvorba2/S.tvorba3/S.tvorba4/S.tvorbad/S.knihovna/
+   S.uprava/S.historieuprav/S.datum — povolene odchylky (stejna konvence jako MM_FORMS):
+   - staticke hodnotove divy (.inp) maji uvnitr skutecny <input data-mmhb|data-mmpe>/<select data-mmpesel>
+     (most do skrytych light-DOM protejsku), vzhled nese porad wrapper trida;
+   - dynamicke seznamy (ikony/barvy/dny/kategorie/presety/audit radky/kalendarove dny/editor pilulky)
+     jsou <div data-mm*> plnene syncem MOCKUP MARKUPEM (.em/.col/.wks span/.filt b/.hbm/.audr/.d/.pk);
+   - "Kdo upravuje" pole v uprava je VEDOMA ODCHYLKA (mockup ho nema, appka ho vyzaduje) — stylizovano
+     mockup tridami .fld/.pickrow/.pk (stejne jako admin "Za koho" v MM_FORMS). */
+// Builder formulare tvorby — 1:1 mockup hf(name,icon,freqOn,sub); "Denní cíl" blok (z S.tvorba) je
+// v sablone vzdy a sync ho skryva u typu Splnit (mockup hf ho u Splnit nema, S.tvorba u Zmerit ma).
+function mmHabitHf(sub){
+  return `<div class="body formb tcompact" style="padding-top:16px"><div class="fhd"><div class="fttl">Nový návyk</div><span class="fx">×</span></div><div class="fld"><label>Název</label><div class="inp"><input data-mmhb="habit-nazev" type="text" maxlength="40" placeholder="Např. Pít 2 l vody"></div></div><div class="fld"><label>Ikona</label><div class="emojirow" data-mmicons></div></div><div class="fld"><label>Barva</label><div class="colors" data-mmcolors></div></div><div class="fld"><label>Typ návyku</label><div class="seg"><b class="on">Splnit ✓</b><b>Změřit #</b></div></div><div class="fld" data-mmcil><label>Denní cíl</label><div class="pickrow"><div class="inp" style="flex:1"><input data-mmhb="habit-cil-hodnota" type="number" inputmode="decimal" min="1" placeholder="8"></div><div class="inp" style="flex:2"><input data-mmhb="habit-cil-jednotka" type="text" maxlength="12" placeholder="sklenic"></div></div></div><div class="fld"><label>Jak často</label><div class="pickrow"><div class="pk on">Každý den</div><div class="pk">Vybrané</div><div class="pk">Týdně</div><div class="pk">Měsíčně</div><div class="pk">Ročně</div></div></div>${sub}<div class="ff"><div class="fld"><label>Platnost · od – do</label><div class="pickrow"><div class="drange" data-mmdate="start" style="flex:1"><span class="cal"><svg class="i"><use href="#i-calendar"/></svg></span><span data-mmdtext>27. 6.</span></div><div class="drange" data-mmdate="end" style="flex:1"><span class="cal"><svg class="i"><use href="#i-calendar"/></svg></span><span data-mmdtext>bez konce</span></div></div></div><div class="submit">Vytvořit návyk</div></div></div>`;
+}
+const MM_BP2 = {
+ "tvorba":  mmHabitHf(""),
+ "tvorba2": mmHabitHf(`<div class="fld"><label>Dny</label><div class="wks" data-mmdays></div></div>`),
+ "tvorba3": mmHabitHf(`<div class="fld"><label>Kolikrát za týden?</label><div class="inp" data-mmcount><input data-mmhb="habit-freq-cil" type="number" inputmode="numeric" min="1"><span>× za týden</span></div></div>`),
+ "tvorba4": mmHabitHf(`<div class="fld"><label>Kolikrát za měsíc?</label><div class="inp" data-mmcount><input data-mmhb="habit-freq-cil" type="number" inputmode="numeric" min="1"><span>× za měsíc</span></div></div>`),
+ "tvorbad": mmHabitHf(`<div class="fld"><label>Kolikrát za rok?</label><div class="inp" data-mmcount><input data-mmhb="habit-freq-cil" type="number" inputmode="numeric" min="1"><span>× za rok</span></div></div>`),
+ "knihovna": `<div class="body" style="padding-top:16px"><div class="fhd"><div class="fttl">Nový návyk</div><span class="fx">×</span></div><div class="inp ph" style="margin-bottom:10px;display:flex;align-items:center;gap:6px"><svg class="i"><use href="#i-search"/></svg><input data-mmhb="habit-search" type="text" placeholder="Hledat návyk…"></div><div class="filt" style="margin-bottom:11px" data-mmcats></div><div data-mmpresets></div><button class="newbtn" data-mmcustom style="margin-top:11px">＋ Vytvořit vlastní návyk</button></div>`,
+ "uprava": `<div class="body" style="padding-top:16px"><div class="fhd"><div class="fttl">Upravit profil</div><span class="fx">×</span></div><div class="fld"><label>Kdo upravuje *</label><div class="pickrow" data-mmeditors></div></div><div data-mmform><div class="fld"><label>Jméno</label><div class="inp"><input data-mmpe="pe-jmeno" type="text" maxlength="40" placeholder="Jméno hráče"></div></div><div class="fld"><label>Barva avataru</label><div class="colors" data-mmpecolors></div></div><div class="pickrow"><div class="fld" style="flex:1"><label>Váha</label><div class="inp" style="display:flex;align-items:center"><input data-mmpe="pe-vaha" type="number" inputmode="decimal" min="30" max="200" step="0.5" style="flex:1"><span style="color:var(--ter);font-weight:700">kg</span></div></div><div class="fld" style="flex:1"><label>Výška</label><div class="inp" style="display:flex;align-items:center"><input data-mmpe="pe-vyska" type="number" inputmode="numeric" min="100" max="220" style="flex:1"><span style="color:var(--ter);font-weight:700">cm</span></div></div></div><div class="fld"><label>Maximálky (pro výpočet bodů)</label><div class="pickrow" style="margin-bottom:6px"><div class="inp" style="flex:1;display:flex;align-items:center;gap:6px"><span>Shyby</span><input data-mmpe="pe-shyby" type="number" inputmode="numeric" min="0" style="flex:1"></div><div class="inp" style="flex:1;display:flex;align-items:center;gap:6px"><span>Kliky</span><input data-mmpe="pe-kliky" type="number" inputmode="numeric" min="0" style="flex:1"></div></div><div class="pickrow"><div class="inp" style="flex:1;display:flex;align-items:center;gap:6px"><span>Dřep</span><input data-mmpe="pe-drep" type="number" inputmode="decimal" min="0" step="0.5" style="flex:1"></div><div class="inp" style="flex:1;display:flex;align-items:center;gap:6px"><span>Dipy</span><input data-mmpe="pe-dipy" type="number" inputmode="numeric" min="0" style="flex:1"></div></div></div><div class="pickrow"><div class="fld" style="flex:1"><label>Max boulder</label><div class="inp" style="display:flex;align-items:center"><select data-mmpesel="pe-boulder" style="flex:1"></select><span style="color:var(--ter)">▾</span></div></div><div class="fld" style="flex:1"><label>Max lano</label><div class="inp" style="display:flex;align-items:center"><select data-mmpesel="pe-lano" style="flex:1"></select><span style="color:var(--ter)">▾</span></div></div></div><div class="hbm" data-mmhistlink style="margin-top:2px;padding:9px 13px"><div class="hi" style="background:#8B6FE022;width:26px;height:26px;font-size:13px"><svg class="i"><use href="#i-clock"/></svg></div><div class="ht">Historie úprav<small>kdo a kdy měnil parametry</small></div><span class="rx" style="color:var(--ter);font-size:16px">›</span></div><div class="info" style="margin-top:8px">Změny maximálek se ukládají do historie a admin dostane upozornění.</div><div class="submit">Uložit změny</div></div></div>`,
+ "historieuprav": `<div class="body" style="padding-top:16px"><div class="fhd" style="margin-bottom:14px"><span class="fx" style="font-size:27px">‹</span><div class="fttl" style="flex:1;text-align:center">Historie úprav</div><span style="width:22px"></span></div><div style="margin-top:4px" data-mmaudits></div></div>`,
+ "datum": `<div class="dim"></div><div class="sheet"><div class="handle"></div><span class="sheetx">×</span><h3>Vyber datum</h3><div class="dp"><div class="dphdr"><span data-mmnav="-1">‹</span><span data-mmmonth>Červen 2026</span><span data-mmnav="1">›</span></div><div class="dpgrid"><div class="hh">Po</div><div class="hh">Út</div><div class="hh">St</div><div class="hh">Čt</div><div class="hh">Pá</div><div class="hh">So</div><div class="hh">Ne</div></div></div><div class="btn2" style="margin-top:11px"><div class="btng" data-mmtoday>Dnes</div><div class="btng" data-mmdone style="background:var(--green);color:#fff">Hotovo</div></div></div>`
+};
+
+// Sdileny mount — STEJNA technika jako mmMountZapis (mm-tpl klon + sprite + overlay style + .scr + zoom).
+function mmBpMount(host, tpl, extraCss){
+  if (!host) return null;
+  const sh = host.shadowRoot || host.attachShadow({mode:'open'});
+  const tplEl = document.getElementById('mm-tpl'); const sprite = document.getElementById('momentum-sprite');
+  sh.innerHTML = '';
+  if (tplEl) sh.appendChild(tplEl.content.cloneNode(true));
+  const ov = document.createElement('style');
+  ov.textContent = ':host{display:block;font-family:var(--font-ui);font-size:16px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr::before,.scr::after{display:none!important}.scr{border-radius:0;box-shadow:none;width:306px;height:auto;}'
+    + '.inp input,.inpc input{border:0;outline:0;background:transparent;font:inherit;color:var(--label);width:100%;min-width:0;padding:0;margin:0;-moz-appearance:textfield;}'
+    + '.inp input::placeholder,.inpc input::placeholder{color:var(--ter);opacity:1;}'
+    + '.inp input::-webkit-outer-spin-button,.inp input::-webkit-inner-spin-button,.inpc input::-webkit-outer-spin-button,.inpc input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}'
+    + '.inp select{border:0;outline:0;background:transparent;font:inherit;color:var(--label);appearance:none;-webkit-appearance:none;-moz-appearance:none;padding:0;margin:0;}'
+    + (extraCss || '');
+  sh.appendChild(ov);
+  if (sprite) sh.appendChild(sprite.cloneNode(true));
+  const w = document.createElement('div');
+  w.innerHTML = `<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}">${tpl}</div>`;
+  sh.appendChild(w);
+  const scr = w.querySelector('.scr');
+  const z = (Math.min(Math.max(1,window.innerWidth),393)-8)/306;
+  scr.style.zoom = z;
+  scr.style.margin = (window.innerWidth>393?'0 auto':'');
+  scr.style.minHeight = (window.innerHeight/z)+'px';
+  return sh;
+}
+// Obsah tece nad absolutni .ff — rezervuj jeji vysku (stejny fix jako mmMountZapis).
+function mmBpFfPad(sh){
+  const bodyEl = sh.querySelector('.body.formb'); const ffEl = sh.querySelector('.ff');
+  if (bodyEl && ffEl) bodyEl.style.paddingBottom = (ffEl.offsetHeight + 16) + 'px';
+}
+
+// ----- TVORBA NAVYKU + KNIHOVNA (#habit-modal -> #habit-shadow) -----
+const MM_HABIT_FREQ_KEYS = { daily:'tvorba', specific_days:'tvorba2', weekly:'tvorba3', monthly:'tvorba4', yearly:'tvorbad' };
+const MM_HABIT_FREQ_LABELS = { 'Každý den':'daily', 'Vybrané':'specific_days', 'Týdně':'weekly', 'Měsíčně':'monthly', 'Ročně':'yearly' };
+
+function mmMountHabit(){
+  const host = document.getElementById('habit-shadow'); if (!host) return;
+  const key = state.habitView === 'catalog' ? 'knihovna' : (MM_HABIT_FREQ_KEYS[state.habitFreq] || 'tvorba');
+  const sh = mmBpMount(host, MM_BP2[key], '[data-mmcount] input{width:auto;flex:0 0 auto;text-align:right;}');
+  if (!sh) return;
+  mmHabitSync(sh);
+  mmBpFfPad(sh);
+  if (!host._mmBound){
+    host._mmBound = true;
+    sh.addEventListener('click', mmHabitClick);
+    sh.addEventListener('input', mmHabitInput);
+  }
+}
+
+function mmHabitSync(sh){
+  sh = sh || (document.getElementById('habit-shadow') || {}).shadowRoot; if (!sh) return;
+  const body = sh.querySelector('.body'); if (!body) return;
+  // Titulek dle rezimu (Nový návyk / Upravit návyk / Kopie návyku) — z existujici light logiky
+  const t = document.getElementById('habit-modal-title');
+  const fttl = body.querySelector('.fttl'); if (fttl && t && t.textContent) fttl.textContent = t.textContent;
+  if (state.habitView === 'catalog'){
+    const si = body.querySelector('input[data-mmhb="habit-search"]');
+    if (si && sh.activeElement !== si) si.value = state.habitSearch || '';
+    const cats = body.querySelector('[data-mmcats]');
+    if (cats) cats.innerHTML = HABIT_CAT_META.map(c =>
+      `<b class="${c.key === state.habitCat ? 'on' : ''}" data-mmcat="${c.key}">${habitEsc(c.nazev)}</b>`).join('');
+    // presety — stejny filtr jako renderHabitPresets (jen prezentace, zadny novy vypocet dat)
+    const q = (state.habitSearch || '').trim().toLowerCase();
+    let list;
+    if (q) list = HABIT_PRESETS.filter(p => p.nazev.toLowerCase().includes(q));
+    else if (state.habitCat === 'dop') list = HABIT_PRESETS.filter(p => p.dop);
+    else list = HABIT_PRESETS.filter(p => p.kat === state.habitCat);
+    const wrap = body.querySelector('[data-mmpresets]');
+    if (wrap) wrap.innerHTML = list.map(p => {
+      const idx = HABIT_PRESETS.indexOf(p); const c = safeColor(HABIT_CAT_COLOR[p.kat] || '#0FA968'); const sub = presetSub(p);
+      return `<div class="hbm" data-mmpreset="${idx}"><div class="hi" style="background:${c}22">${habitIconHtml(p.ikona)}</div><div class="ht">${habitEsc(p.nazev)}${sub ? `<small>${habitEsc(sub)}</small>` : ''}</div><span class="rx" style="color:var(--green);font-size:18px">＋</span></div>`;
+    }).join('') + (!list.length && q ? `<div class="info" style="margin-top:6px">Nic nenalezeno — zkus „Vlastní návyk“.</div>` : '');
+    return;
+  }
+  // ----- formular -----
+  const icons = body.querySelector('[data-mmicons]');
+  if (icons) icons.innerHTML = HABIT_ICONS.map(ic =>
+    `<div class="em ${ic === state.habitIcon ? 'on' : ''}" data-mmic="${habitEsc(ic)}">${habitIconHtml(ic)}</div>`).join('');
+  const cols = body.querySelector('[data-mmcolors]');
+  if (cols) cols.innerHTML = HABIT_COLORS.map(c =>
+    `<div class="col ${c === state.habitColor ? 'on' : ''}" data-mmcol="${c}" style="background:${c}"></div>`).join('');
+  body.querySelectorAll('.seg b').forEach(b =>
+    b.classList.toggle('on', (/Splnit/.test(b.textContent) ? 'check' : 'number') === state.habitZapis));
+  const cil = body.querySelector('[data-mmcil]'); if (cil) cil.style.display = state.habitZapis === 'check' ? 'none' : '';
+  body.querySelectorAll('.fld').forEach(fld => {
+    const lbl = fld.querySelector('label') ? fld.querySelector('label').textContent : '';
+    if (/Jak často/.test(lbl)) fld.querySelectorAll('.pk').forEach(pk =>
+      pk.classList.toggle('on', MM_HABIT_FREQ_LABELS[pk.textContent.trim()] === state.habitFreq));
+  });
+  const days = body.querySelector('[data-mmdays]');
+  if (days) days.innerHTML = HABIT_DEN_NAMES.map((d,i) =>
+    `<span class="${(state.habitDays & (1 << i)) ? 'on' : ''}" data-mmday="${i}">${d}</span>`).join('');
+  body.querySelectorAll('input[data-mmhb]').forEach(inp => {
+    const l = document.getElementById(inp.dataset.mmhb); if (l) inp.value = l.value;
+  });
+  const cnt = body.querySelector('[data-mmcount] input');
+  if (cnt){ const l = document.getElementById('habit-freq-cil'); if (l){ cnt.min = l.min || 1; cnt.max = l.max || 366; cnt.style.width = ((String(cnt.value).length || 1) + 1.2) + 'ch'; } }
+  // Platnost od–do: texty z light pilulek (habitSyncDatePills je jedina pravda)
+  const st = document.getElementById('habit-date-start-text'), en = document.getElementById('habit-date-end-text');
+  const drs = body.querySelectorAll('.drange[data-mmdate]');
+  if (drs[0] && st) drs[0].querySelector('[data-mmdtext]').textContent = st.textContent;
+  if (drs[1] && en) drs[1].querySelector('[data-mmdtext]').textContent = en.textContent;
+  // Submit / edit rezim (Uložit změny + Smazat + Duplikovat — mockup editzaznam vzor tlacitek)
+  const ff = body.querySelector('.ff'); const lightBtn = document.getElementById('habit-submit-btn');
+  if (ff){
+    const subEl = ff.querySelector('.submit');
+    if (state.habitEditId){
+      if (subEl && !ff.querySelector('[data-mmdel]')){
+        const row = document.createElement('div');
+        row.className = 'pickrow'; row.style.marginTop = '11px';
+        row.innerHTML = '<div class="submit" style="flex:2;margin-top:0">Uložit změny</div>'
+          + '<div class="submit" data-mmdel="1" style="flex:1;margin-top:0;background:#E0584B;box-shadow:0 10px 24px -8px rgba(224,88,75,.45)">Smazat</div>';
+        subEl.replaceWith(row);
+        const dup = document.createElement('button');
+        dup.className = 'newbtn'; dup.setAttribute('data-mmdup','1'); dup.style.marginTop = '11px';
+        dup.textContent = '📋 Duplikovat návyk';
+        ff.insertBefore(dup, row);
+      }
+    } else if (subEl && lightBtn && lightBtn.textContent && !lightBtn.disabled) subEl.textContent = lightBtn.textContent;
+  }
+}
+
+function mmHabitClick(e){
+  const t = e.target;
+  if (t.closest('.fx')) { closeHabitModal(); return; }
+  if (t.closest('[data-mmdel]')) { const b = document.getElementById('habit-delete-btn'); if (b) b.click(); return; }
+  if (t.closest('[data-mmdup]')) { duplicateHabit(state.habitEditId); mmMountHabit(); return; }
+  const sub = t.closest('.submit');
+  if (sub) { const b = document.getElementById('habit-submit-btn'); if (b && !b.disabled) b.click(); return; }
+  if (t.closest('[data-mmcustom]')) { startCustomHabit(); mmMountHabit(); return; }
+  const pr = t.closest('[data-mmpreset]');
+  if (pr) { selectPreset(parseInt(pr.dataset.mmpreset)); mmMountHabit(); return; }
+  const cat = t.closest('[data-mmcat]');
+  if (cat) { setHabitCat(cat.dataset.mmcat); mmHabitSync(); return; }
+  const em = t.closest('[data-mmic]');
+  if (em) { const l = document.querySelector(`#habit-icon-picker .habit-icon-opt[data-ic="${em.dataset.mmic}"]`); if (l) l.click(); mmHabitSync(); return; }
+  const col = t.closest('[data-mmcol]');
+  if (col) { const l = document.querySelector(`#habit-color-picker .habit-color-opt[data-col="${col.dataset.mmcol}"]`); if (l) l.click(); mmHabitSync(); return; }
+  const day = t.closest('[data-mmday]');
+  if (day) { toggleHabitDay(parseInt(day.dataset.mmday)); mmHabitSync(); return; }
+  const dr = t.closest('.drange[data-mmdate]');
+  if (dr) { habitOpenDatePicker(dr.dataset.mmdate); return; }
+  const seg = t.closest('.seg b');
+  if (seg) { setHabitZapis(/Splnit/.test(seg.textContent) ? 'check' : 'number'); mmHabitSync(); return; }
+  const pk = t.closest('.pk');
+  if (pk) {
+    const fld = pk.closest('.fld');
+    const lbl = fld && fld.querySelector('label') ? fld.querySelector('label').textContent : '';
+    if (/Jak často/.test(lbl)) {
+      const f = MM_HABIT_FREQ_LABELS[pk.textContent.trim()];
+      if (f) { setHabitFreq(f); mmMountHabit(); }
+      return;
+    }
+  }
+}
+
+function mmHabitInput(e){
+  const inp = e.target; if (!inp.dataset || !inp.dataset.mmhb) return;
+  if (inp.dataset.mmhb === 'habit-search') { onHabitSearch(inp.value); mmHabitSync(); return; }
+  const l = document.getElementById(inp.dataset.mmhb);
+  if (l) { l.value = inp.value; l.dispatchEvent(new Event('input', { bubbles: true })); }
+  if (inp.dataset.mmhb === 'habit-nazev') {
+    // auto-navrh ikony (onHabitNameInput) se mohl zmenit — obnov jen .on stavy ikon
+    const sh = (document.getElementById('habit-shadow') || {}).shadowRoot;
+    if (sh) sh.querySelectorAll('[data-mmicons] .em').forEach(el => el.classList.toggle('on', el.dataset.mmic === state.habitIcon));
+  }
+  if (inp.dataset.mmhb === 'habit-freq-cil') inp.style.width = ((String(inp.value).length || 1) + 1.2) + 'ch';
+}
+
+// ----- UPRAVA PROFILU (#player-modal -> #player-shadow) -----
+function mmMountUprava(){
+  const host = document.getElementById('player-shadow'); if (!host) return;
+  const sh = mmBpMount(host, MM_BP2.uprava, '[data-mmform].off{opacity:.35;pointer-events:none;}');
+  if (!sh) return;
+  mmUpravaSync(sh);
+  if (!host._mmBound){
+    host._mmBound = true;
+    sh.addEventListener('click', mmUpravaClick);
+    sh.addEventListener('input', mmUpravaInput);
+    sh.addEventListener('change', mmUpravaChange);
+  }
+}
+
+function mmUpravaSync(sh){
+  sh = sh || (document.getElementById('player-shadow') || {}).shadowRoot; if (!sh) return;
+  const body = sh.querySelector('.body'); if (!body) return;
+  // "Kdo upravuje" — pilulky jako admin "Za koho" (most na light #editor-pills)
+  const eds = body.querySelector('[data-mmeditors]');
+  if (eds) eds.innerHTML = state.players.filter(p => p.aktivni).map(p => {
+    const c = safeColor(p.barva);
+    const bg = /^#[0-9a-fA-F]{6}$/.test(c) ? c + '18' : c;
+    const on = p.id === state.editorPlayer;
+    return `<div class="pk" data-mmeditor="${p.id}" style="background:${bg};color:${c};${on ? `box-shadow:inset 0 0 0 2px ${c};font-weight:800;` : ''}">${habitEsc(p.jmeno)}${on ? ' ✓' : ''}</div>`;
+  }).join('');
+  const form = body.querySelector('[data-mmform]');
+  if (form) form.classList.toggle('off', !state.editorPlayer);
+  const cols = body.querySelector('[data-mmpecolors]');
+  if (cols) cols.innerHTML = PLAYER_COLORS.map(c =>
+    `<div class="col ${c === state.peBarva ? 'on' : ''}" data-mmpecol="${c}" style="background:${c}"></div>`).join('');
+  body.querySelectorAll('input[data-mmpe]').forEach(inp => {
+    const l = document.getElementById(inp.dataset.mmpe); if (l) inp.value = l.value;
+  });
+  body.querySelectorAll('select[data-mmpesel]').forEach(sel => {
+    const l = document.getElementById(sel.dataset.mmpesel);
+    if (l) { sel.innerHTML = l.innerHTML; sel.value = l.value; }
+  });
+}
+
+function mmUpravaClick(e){
+  const t = e.target;
+  if (t.closest('.fx')) { closePlayerModal(); return; }
+  const ed = t.closest('[data-mmeditor]');
+  if (ed) { const l = document.querySelector(`#editor-pills .player-pill[data-editor-id="${ed.dataset.mmeditor}"]`); if (l) l.click(); mmUpravaSync(); return; }
+  const col = t.closest('[data-mmpecol]');
+  if (col) { const l = document.querySelector(`#pe-barva-row .pe-color-opt[data-col="${col.dataset.mmpecol}"]`); if (l) l.click(); mmUpravaSync(); return; }
+  if (t.closest('[data-mmhistlink]')) { openPlayerHistory(state.playerBeingEdited); return; }
+  if (t.closest('.submit')) { const b = document.getElementById('player-submit-btn'); if (b && !b.disabled) b.click(); return; }
+}
+
+function mmUpravaInput(e){
+  const inp = e.target;
+  if (!inp.dataset || !inp.dataset.mmpe) return;
+  const l = document.getElementById(inp.dataset.mmpe);
+  if (l) { l.value = inp.value; l.dispatchEvent(new Event('input', { bubbles: true })); }
+}
+
+function mmUpravaChange(e){
+  const sel = e.target;
+  if (!sel.dataset || !sel.dataset.mmpesel) return;
+  const l = document.getElementById(sel.dataset.mmpesel);
+  if (l) { l.value = sel.value; l.dispatchEvent(new Event('change', { bubbles: true })); }
+}
+
+// ----- HISTORIE UPRAV (#history-modal -> #histup-shadow) -----
+// Radky cte z existujici light logiky (openPlayerHistory uz naplnil #history-list) — zadne nove vypocty.
+function mmMountHistUprav(){
+  const host = document.getElementById('histup-shadow'); if (!host) return;
+  const sh = mmBpMount(host, MM_BP2.historieuprav, '');
+  if (!sh) return;
+  const wrap = sh.querySelector('[data-mmaudits]');
+  const light = document.getElementById('history-list');
+  if (wrap && light){
+    const items = light.querySelectorAll('.history-item');
+    if (items.length){
+      wrap.innerHTML = Array.from(items).map(it => {
+        const w = it.querySelector('.when'), c = it.querySelector('.change');
+        return `<div class="audr"><div class="w">${w ? w.innerHTML : ''}</div><div class="c">${c ? c.innerHTML : ''}</div></div>`;
+      }).join('');
+    } else {
+      // prazdny stav — mockup histempty vzor
+      wrap.innerHTML = `<div style="text-align:center;padding:74px 24px;color:var(--sec)"><div style="font-size:38px;margin-bottom:12px;opacity:.85"><svg class="i"><use href="#i-note"/></svg></div><div style="font-size:15px;font-weight:700;color:var(--label);margin-bottom:5px">Zatím žádné úpravy</div><div style="font-size:12.5px;line-height:1.5">Změny parametrů profilu se zobrazí tady.</div></div>`;
+    }
+  }
+  if (!host._mmBound){
+    host._mmBound = true;
+    sh.addEventListener('click', e => { if (e.target.closest('.fx')) closeHistoryModal(); });
+  }
+}
+
+// ----- VYBER DATA (#date-picker-overlay -> #datum-shadow) — mockup S.datum sheet -----
+function mmMountDatum(){
+  const host = document.getElementById('datum-shadow'); if (!host) return;
+  // Overlay uz dimuje pres vlastni .dim v sablone; .scr musi byt pruhledny (formular pod nim zustava videt)
+  const sh = mmBpMount(host, MM_BP2.datum, '.scr{background:none!important;}[data-mmnav]{cursor:pointer;}');
+  if (!sh) return;
+  mmDatumSync(sh);
+  if (!host._mmBound){
+    host._mmBound = true;
+    sh.addEventListener('click', mmDatumClick);
+  }
+}
+
+function mmDatumSync(sh){
+  sh = sh || (document.getElementById('datum-shadow') || {}).shadowRoot; if (!sh) return;
+  const ml = sh.querySelector('[data-mmmonth]');
+  if (ml){ const m = MESICE_CZ[state.pickerMonth] || ''; ml.textContent = `${m.charAt(0).toUpperCase()}${m.slice(1)} ${state.pickerYear}`; }
+  const grid = sh.querySelector('.dpgrid'); if (!grid) return;
+  grid.querySelectorAll('.d').forEach(x => x.remove());
+  const year = state.pickerYear, month = state.pickerMonth;
+  let first = new Date(year, month, 1).getDay() - 1; if (first < 0) first = 6;
+  const dim = new Date(year, month + 1, 0).getDate();
+  const today = todayStr();
+  let html = '';
+  for (let i = 0; i < first; i++) html += '<div class="d empty"></div>';
+  for (let d = 1; d <= dim; d++){
+    const ds = dateToStr(new Date(year, month, d));
+    const cls = 'd' + (ds === state.selectedDate ? ' on' : (ds > today ? ' fut' : ''));
+    html += `<div class="${cls}" data-mmds="${ds}">${d}</div>`;
+  }
+  grid.insertAdjacentHTML('beforeend', html);
+}
+
+function mmDatumClick(e){
+  const t = e.target;
+  if (t.closest('.sheetx') || t.closest('[data-mmdone]')) { closeDatePicker(); return; }
+  if (t.closest('[data-mmtoday]')) { jumpToToday(); mmDatumSync(); return; }
+  const nav = t.closest('[data-mmnav]');
+  if (nav) { changeMonth(parseInt(nav.dataset.mmnav)); mmDatumSync(); return; }
+  const d = t.closest('.d[data-mmds]');
+  if (d) { if (d.classList.contains('fut')) return; selectDateCell(d.dataset.mmds); mmDatumSync(); return; }
+  if (t.closest('.dim') || t.classList.contains('scr')) { closeDatePicker(); return; }
+}
+
+// Resize: remount aktivnich stinovych oken (stejna konvence jako _mmStep2Rz u zapisu)
+if (!window._mmBp2Rz){
+  window._mmBp2Rz = true;
+  window.addEventListener('resize', () => {
+    const act = id => { const el = document.getElementById(id); return el && el.classList.contains('active'); };
+    if (act('habit-modal')) mmMountHabit();
+    if (act('player-modal')) mmMountUprava();
+    if (act('history-modal')) mmMountHistUprav();
+    if (act('date-picker-overlay')) mmMountDatum();
+  });
 }
 
 // ----- Celá historie (mockup S.historie „Moje záznamy") — VŠECHNY zaznamy hrace, ne jen tento tyden -----
@@ -7394,6 +7783,7 @@ function openHabitModal(id){
   }
   document.getElementById('habit-modal').classList.add('active');
   lockBodyScroll();
+  mmMountHabit();  // BULLETPROOF2: verbatim mockup okno ve stinovem DOM (light okno je skryte)
 }
 function closeHabitModal(){
   document.getElementById('habit-modal').classList.remove('active');
@@ -7481,6 +7871,13 @@ function habitSyncDatePills(){
   if (en){
     const noEnd = document.getElementById('habit-no-end').checked;
     en.textContent = noEnd ? 'bez konce' : (habitFmtPillDate(document.getElementById('habit-konec').value) || 'bez konce');
+  }
+  // BULLETPROOF2 most: zrcadli texty i do stinovych .drange pilulek (pokud je okno namontovane)
+  const sh = (document.getElementById('habit-shadow') || {}).shadowRoot;
+  if (sh){
+    const drs = sh.querySelectorAll('.drange[data-mmdate]');
+    if (drs[0] && st) drs[0].querySelector('[data-mmdtext]').textContent = st.textContent;
+    if (drs[1] && en) drs[1].querySelector('[data-mmdtext]').textContent = en.textContent;
   }
 }
 let habitDatePickerTarget = null;   // 'start' | 'end'
@@ -7854,6 +8251,7 @@ function openDatePicker() {
   renderDatePicker();
   document.getElementById('date-picker-overlay').classList.add('active');
   lockBodyScroll();
+  mmMountDatum();  // BULLETPROOF2: verbatim mockup sheet (S.datum) ve stinovem DOM (light picker skryty)
 }
 
 function closeDatePicker() {
@@ -8754,6 +9152,7 @@ function openPlayerEdit(playerId) {
 
   document.getElementById('player-modal').classList.add('active');
   lockBodyScroll();
+  mmMountUprava();  // BULLETPROOF2: verbatim mockup okno ve stinovem DOM (light okno je skryte)
 }
 
 // F51: naplní select lezeckým gradem (value = idx); zobrazí primární systém + převod
@@ -8927,6 +9326,7 @@ function openPlayerHistory(playerId) {
   }
   document.getElementById('history-modal').classList.add('active');
   lockBodyScroll();
+  mmMountHistUprav();  // BULLETPROOF2: verbatim mockup okno ve stinovem DOM (light okno je skryte)
 }
 
 function closeHistoryModal() {
