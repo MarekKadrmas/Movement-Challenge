@@ -8173,8 +8173,9 @@ function openModal() {
     selField.style.display = '';
   }
   updateSubmitLabel();  // Ukol 3 (formadmin): "Zapsat" vs "Zapsat za X"
-  // Momentum dvoukrok: novy zaznam vzdy zacina na KROKU 1 (dlaždice "Co jsi dělal?")
-  goToAddStep(1);
+  // Marek 2026-07-20: mezikrok "Co jsi delal?" zrusen — + otevre rovnou formular
+  // (typ se prepina nahore ve formulari: Cvik/Aktivita + sub-picker). Vychozi: Cvik.
+  goToAddStep(2);
   document.getElementById('modal').classList.add('active');
   lockBodyScroll();  // F44
 }
