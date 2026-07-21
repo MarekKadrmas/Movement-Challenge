@@ -2791,6 +2791,8 @@ body.mm-full{background:#EDF0EC;}
 <!-- F56: Detail dne (z Celá historie / Moje záznamy / Naposledy v partě) + Rok party (z Parta "celý rok →") -->
 <div class="mm mm-sub" id="sub-den"></div>
 <div class="mm mm-sub" id="sub-rokparty"></div>
+<!-- F57: Historie party (z Parta "Naposledy · celá historie →") — mockup 2.4 S.zaznamy -->
+<div class="mm mm-sub" id="sub-zaznamy"></div>
 
 <!-- F52: HABIT modal (nový/úprava návyku) -->
 <div class="modal-overlay" id="habit-modal">
@@ -5654,7 +5656,7 @@ function renderParta(){
   <div class="sl" onclick="mmOpenSub('rokparty')" style="cursor:pointer;touch-action:manipulation"><span>Aktivita party</span><a style="pointer-events:none">celý rok →</a></div>
   <div class="heatcard"><div class="hbnav"><span class="hbarr" onclick="mmPartaHeatMove(1)">‹</span><span class="hbrange">${heatLabel}</span><span class="hbarr" onclick="mmPartaHeatMove(-1)">›</span><span class="hbtoday" onclick="mmPartaHeatToday()">⟳ Dnes</span></div>${heatHtml}</div>
   <div class="hbm" style="margin-top:13px;padding:6px 12px;cursor:pointer" onclick="mmOpenSub('rekordyparty')"><div class="hi" style="background:#E0A23A22;width:27px;height:27px;font-size:14px"><svg class="i"><use href="#i-medal"/></svg></div><div class="ht">Rekordy & maximálky všech<small>všichni hráči na jednom místě</small></div><span class="rx" style="color:var(--ter);font-size:16px">›</span></div>
-  <div class="sl"><span>Naposledy · dnes</span><a>celá historie →</a></div>
+  <div class="sl" onclick="mmOpenSub('zaznamy')" style="cursor:pointer;touch-action:manipulation"><span>Naposledy · dnes</span><a style="pointer-events:none">celá historie →</a></div>
   ${feed.html}
   ${feed.hasMore?'<button class="loadmore" onclick="mmPartaLoadMoreFeed()">Načíst starší ↓</button>':''}`;
 
@@ -5981,7 +5983,7 @@ function renderJaMM(){
 //  mmOpenSub(name) / mmCloseSub() ovladaji fullscreen overlay (#sub-<name>, viz .mm-sub CSS).
 //  render funkce pouzivaji STEJNY Shadow DOM vzor jako Dnesek/Parta/Navyky/Ja (mmMountSub()).
 // ============================================================
-let mmSubOpen = null; // null | 'historie' | 'rekordy' | 'bodovani' | 'profil' | 'rekordyparty' | 'feed' | 'pozvat' | 'cile' | 'notifikace' | 'den' | 'rokparty' — nejvrchnejsi otevrena podobrazovka
+let mmSubOpen = null; // null | 'historie' | 'rekordy' | 'bodovani' | 'profil' | 'rekordyparty' | 'feed' | 'pozvat' | 'cile' | 'notifikace' | 'den' | 'rokparty' | 'zaznamy' — nejvrchnejsi otevrena podobrazovka
 let mmSubStack = []; // F54: podpora vnoreni (napr. profil -> rekordyparty, viz S.profil odkaz "Rekordy & maximálky všech"), polozky {name, arg}
 
 function mmRenderSub(name, arg){
@@ -5996,6 +5998,7 @@ function mmRenderSub(name, arg){
   else if(name==='notifikace') renderSubNotifikace();
   else if(name==='den') renderSubDen(arg);
   else if(name==='rokparty') renderSubRokParty();
+  else if(name==='zaznamy') renderSubZaznamy();
 }
 function mmOpenSub(name, arg){
   const el = document.getElementById('sub-'+name); if(!el) return;
@@ -7078,6 +7081,9 @@ function mmFeedApplyCtx(ctx){
   if(ctx==='dnesek'||ctx==='parta'){
     const host=document.getElementById(ctx==='dnesek'?'dnesek-mm':'parta-mm');
     if(host&&host.shadowRoot) mmDeniApplyFeedState(host.shadowRoot, ctx);
+  } else if(ctx==='zaznamy'){
+    const host=document.getElementById('sub-zaznamy');
+    if(host&&host.shadowRoot) mmDeniApplyFeedState(host.shadowRoot, ctx);
   } else renderSubFeed();
 }
 function mmFeedToggle(id, ctx){
@@ -7142,18 +7148,25 @@ function mmDenLabel(ds){
 function renderSubDen(arg){
   const host=document.getElementById('sub-den'); if(!host) return;
   const parts=String(arg||'').split('|'); const pid=parts[0]; const ds=parts[1];
-  const p = state.players.find(x=>x.id===pid);
-  if(!p || !ds){ mmCloseSub(); return; }
-  const all=[...state.cviky.filter(c=>c.player_id===pid&&c.datum===ds).map(c=>({...c,_type:'cvik'})),
-             ...state.aktivity.filter(a=>a.player_id===pid&&a.datum===ds).map(a=>({...a,_type:'aktivita'}))];
+  const isParta = pid==='all'; // F57: agregovany rezim (Historie party) — zaznamy VSECH hracu za den
+  const p = isParta ? null : state.players.find(x=>x.id===pid);
+  if((!isParta && !p) || !ds){ mmCloseSub(); return; }
+  const all=[...state.cviky.filter(c=>(isParta||c.player_id===pid)&&c.datum===ds).map(c=>({...c,_type:'cvik'})),
+             ...state.aktivity.filter(a=>(isParta||a.player_id===pid)&&a.datum===ds).map(a=>({...a,_type:'aktivita'}))]
+             .filter(e=>!isParta || state.players.some(x=>x.id===e.player_id));
   all.sort((a,b)=>String(a.created_at||'').localeCompare(String(b.created_at||'')));
-  const title = `${esc(mmFirst(p.jmeno))} · ${mmDenLabel(ds)}`;
+  const title = isParta ? `Parta · ${mmDenLabel(ds)}` : `${esc(mmFirst(p.jmeno))} · ${mmDenLabel(ds)}`;
   let body;
   if(!all.length){
-    body=`<div style="text-align:center;padding:70px 24px;color:var(--sec)"><div style="font-size:38px;margin-bottom:12px;opacity:.85"><svg class="i"><use href="#i-note"/></svg></div><div style="font-size:15px;font-weight:700;color:var(--label);margin-bottom:5px">Žádné záznamy</div><div style="font-size:12.5px;line-height:1.5">Tenhle den ${esc(mmFirst(p.jmeno))} nic ${p.pohlavi==='Z'?'nezapsala':'nezapsal'}.</div></div>`;
+    const who = isParta ? 'nikdo nic nezapsal' : `${esc(mmFirst(p.jmeno))} nic ${p.pohlavi==='Z'?'nezapsala':'nezapsal'}`;
+    body=`<div style="text-align:center;padding:70px 24px;color:var(--sec)"><div style="font-size:38px;margin-bottom:12px;opacity:.85"><svg class="i"><use href="#i-note"/></svg></div><div style="font-size:15px;font-weight:700;color:var(--label);margin-bottom:5px">Žádné záznamy</div><div style="font-size:12.5px;line-height:1.5">Tenhle den ${who}.</div></div>`;
   } else {
     const total=sumRoundedBody(all);
     const rows=all.map(e=>{
+      if(isParta){
+        const pl=state.players.find(x=>x.id===e.player_id); const col=safeColor(pl.barva);
+        return `<div class="frow"><div class="fav" style="background:${col}22;color:${col}"><svg class="i"><use href="#${mmEntryIcon(e)}"/></svg></div><div class="fmain">${esc(mmFirst(pl.jmeno))} · ${esc(mmEntryLabel(e))}<small>${mmEntryType(e)}</small></div><div class="fpts">+${Math.round(Number(e.body)||0)}</div></div>`;
+      }
       const [bg,fg]=mmJaEntryColors(e);
       return `<div class="frow"><div class="fav" style="background:${bg}22;color:${fg}"><svg class="i"><use href="#${mmEntryIcon(e)}"/></svg></div><div class="fmain">${esc(mmJaCap(mmEntryLabel(e)))}<small>${mmEntryType(e)}</small></div><div class="fpts">+${Math.round(Number(e.body)||0)}</div></div>`;
     }).join('');
@@ -7162,7 +7175,7 @@ function renderSubDen(arg){
   const hdr = `<div class="fhd"><span class="fx" style="font-size:27px;cursor:pointer" onclick="mmCloseSub()">‹</span><div class="fttl" style="flex:1;text-align:center;font-size:16px">${title}</div><span class="fx" style="opacity:0">×</span></div>`;
   const tpl = `<div style="padding-top:3px">${hdr}${body}</div>`;
   const me = state.players.find(x=>x.id===state.currentPlayerId);
-  const barIdx = (me && pid===me.id) ? 3 : 1;
+  const barIdx = (!isParta && me && pid===me.id) ? 3 : 1;
   mmMountSub(host, tpl, barIdx);
 }
 
@@ -7275,6 +7288,72 @@ function renderSubRokParty(){
   mmMountSub(host, tpl, 1);
 }
 
+// ----- Historie party (mockup S.zaznamy, 2.4) — VŠECHNY zaznamy VŠECH hracu, filtry Hráč / Typ / Období -----
+// Vstup: Parta -> "Naposledy · dnes / celá historie →". Radky = stejny vzor jako feed "Naposledy" (mmPartaFeedHtml):
+// barva hrace, "Jméno · label", 💬 inline komentare (sdileny state.mmFeed, ctx 'zaznamy'). Hlavicka dne -> Detail dne (agregace 'all|ds').
+let mmSubZazGroups = 20;    // kolik dnu (skupin) je zobrazeno; "Nacist starsi" pricte dalsich 20
+let mmSubZazCat = 'all';    // all|cvik|aktivita|stretching (stejne moznosti jako mmSubHistCat)
+let mmSubZazPlayer = 'all'; // 'all' | player id — filtr hrace (mockup pill "Hráč: Všichni")
+let mmSubZazPeriod = 'all'; // all|week|month (mockup pill "Období")
+function mmSubZazTypeLabel(){ return {all:'Vše',cvik:'Cviky',aktivita:'Aktivity',stretching:'Stretching'}[mmSubZazCat]||'Vše'; }
+function mmSubZazCycleType(){ const o=['all','cvik','aktivita','stretching']; mmSubZazCat=o[(o.indexOf(mmSubZazCat)+1)%o.length]; mmSubZazGroups=20; renderSubZaznamy(); }
+function mmSubZazPlayerLabel(){ if(mmSubZazPlayer==='all') return 'Všichni'; const p=state.players.find(x=>x.id===mmSubZazPlayer); return p?esc(mmFirst(p.jmeno)):'Všichni'; }
+function mmSubZazCyclePlayer(){
+  const ids=['all',...state.players.filter(p=>p.aktivni).map(p=>p.id)];
+  let i=ids.indexOf(mmSubZazPlayer); if(i<0) i=0;
+  mmSubZazPlayer=ids[(i+1)%ids.length]; mmSubZazGroups=20; renderSubZaznamy();
+}
+function mmSubZazPeriodLabel(){ return {all:'Vše',week:'Týden',month:'Měsíc'}[mmSubZazPeriod]||'Vše'; }
+function mmSubZazCyclePeriod(){ const o=['all','week','month']; mmSubZazPeriod=o[(o.indexOf(mmSubZazPeriod)+1)%o.length]; mmSubZazGroups=20; renderSubZaznamy(); }
+function mmSubZazMatches(e){
+  if(mmSubZazPlayer!=='all' && e.player_id!==mmSubZazPlayer) return false;
+  if(mmSubZazPeriod!=='all'){
+    let from,to;
+    if(mmSubZazPeriod==='week'){ const w=mmWeek(); from=w.from; to=w.to; }
+    else { const n=new Date(); from=dateToStr(new Date(n.getFullYear(),n.getMonth(),1)); to=dateToStr(new Date(n.getFullYear(),n.getMonth()+1,0)); }
+    if(!(e.datum>=from && e.datum<=to)) return false;
+  }
+  if(mmSubZazCat==='cvik') return !!e.cvik;
+  if(mmSubZazCat==='stretching') return !e.cvik && isStretchActivity(e);
+  if(mmSubZazCat==='aktivita') return !e.cvik && !isStretchActivity(e);
+  return true;
+}
+function mmSubZazLoadMore(){ mmSubZazGroups+=20; renderSubZaznamy(); }
+function renderSubZaznamy(){
+  const host=document.getElementById('sub-zaznamy'); if(!host) return;
+  const all=[...state.cviky.map(c=>({...c,_type:'cvik'})),...state.aktivity.map(a=>({...a,_type:'aktivita'}))]
+    .filter(e=>e.datum && state.players.some(p=>p.id===e.player_id) && mmSubZazMatches(e));
+  const byDay={}; const days=[];
+  all.forEach(e=>{ if(!byDay[e.datum]){ byDay[e.datum]=[]; days.push(e.datum); } byDay[e.datum].push(e); });
+  days.sort((a,b)=>b.localeCompare(a));
+  days.forEach(ds=>byDay[ds].sort((a,b)=>String(b.created_at||'').localeCompare(String(a.created_at||''))));
+  const shown=days.slice(0, mmSubZazGroups);
+  const today=todayStr();
+  let body;
+  if(!days.length){
+    body=`<div style="text-align:center;padding:74px 24px;color:var(--sec)"><div style="font-size:38px;margin-bottom:12px;opacity:.85"><svg class="i"><use href="#i-note"/></svg></div><div style="font-size:15px;font-weight:700;color:var(--label);margin-bottom:5px">Zatím žádné záznamy</div><div style="font-size:12.5px;line-height:1.5">Tomuhle filtru nic neodpovídá.</div></div>`;
+  } else {
+    let list='';
+    shown.forEach(ds=>{
+      const d=new Date(ds+'T00:00:00');
+      const lbl = ds===today ? `Dnes · ${czDayName(d).slice(0,2).toLowerCase()} ${d.getDate()}. ${d.getMonth()+1}.` : `${czDayName(d)} ${d.getDate()}. ${d.getMonth()+1}.`;
+      list+=`<div class="recday" style="cursor:pointer" onclick="mmOpenSub('den','all|${ds}')">${lbl}</div><div class="rec">`;
+      byDay[ds].forEach(e=>{
+        const pl=state.players.find(p=>p.id===e.player_id);
+        const col=safeColor(pl.barva);
+        list+=`<div class="frow hlc" data-feedrow="e:${e.id}" style="cursor:pointer" onclick="mmFeedToggle('e:${e.id}','zaznamy')"><div class="fav" style="background:${col}22;color:${col}"><svg class="i"><use href="#${mmEntryIcon(e)}"/></svg></div><div class="fmain">${esc(mmFirst(pl.jmeno))} · ${esc(mmEntryLabel(e))}<small>${mmEntryType(e)}</small></div><div class="fpts">+${Math.round(Number(e.body)||0)}</div>${mmFeedCtogHtml('e:'+e.id)}</div>`;
+      });
+      list+='</div>';
+    });
+    body=`${list}${days.length>shown.length?'<button class="loadmore" onclick="mmSubZazLoadMore()">Načíst starší ↓</button>':''}`;
+  }
+  const tpl = mmBackHdr('Historie party')
+    + `<div class="filterbar"><div class="fpill" onclick="mmSubZazCyclePlayer()"><span class="k">Hráč:</span> ${mmSubZazPlayerLabel()} <span class="cx">▾</span></div><div class="fpill" onclick="mmSubZazCycleType()"><span class="k">Typ:</span> ${mmSubZazTypeLabel()} <span class="cx">▾</span></div><div class="fpill" onclick="mmSubZazCyclePeriod()"><span class="k">Období:</span> ${mmSubZazPeriodLabel()} <span class="cx">▾</span></div></div>`
+    + body;
+  mmMountSub(host, tpl, 1);
+  if(host.shadowRoot) mmDeniApplyFeedState(host.shadowRoot, 'zaznamy');
+}
+
 function renderAllViews() {
   renderDnesek();
   renderParta();
@@ -7291,6 +7370,7 @@ function renderAllViews() {
   else if(mmSubOpen==='notifikace') renderSubNotifikace();
   else if(mmSubOpen==='den') renderSubDen(state.mmSubDenArg);
   else if(mmSubOpen==='rokparty') renderSubRokParty();
+  else if(mmSubOpen==='zaznamy') renderSubZaznamy();
   mmChrome();
   renderWeekLabel();
   updatePeriodUI();
