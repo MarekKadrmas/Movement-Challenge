@@ -121,6 +121,14 @@
   .admbar{background:#8B6FE018;color:#6a52c0;font-size:11.5px;font-weight:700;border-radius:12px;padding:8px 13px;margin-bottom:12px;display:flex;align-items:center;gap:7px;}
   .audr{background:var(--card);box-shadow:var(--shadow);border-radius:12px;padding:10px 14px;margin-bottom:6px;} .audr .w{font-size:11px;color:var(--sec);font-weight:600;} .audr .c{font-size:13px;font-weight:600;margin-top:3px;} .audr .c b{color:var(--green);}
   .fdc{background:var(--card);box-shadow:var(--shadow);border-radius:16px;padding:10px 13px;margin-bottom:7px;} .fdh{display:flex;align-items:center;gap:10px;font-size:13px;} .fdbar{display:flex;align-items:center;gap:9px;margin-top:7px;font-size:10.5px;font-weight:700;color:var(--sec);} .fdbar .rem.on{color:var(--green);} .radd{width:17px;height:17px;border-radius:50%;background:var(--track);display:grid;place-items:center;font-size:10px;color:var(--sec);} .ctog{margin-left:auto;display:flex;align-items:center;gap:6px;} .newdot{width:7px;height:7px;border-radius:50%;background:#E0584B;display:inline-block;} .fdcoms{margin-top:10px;border-top:1px solid var(--sep);padding-top:9px;display:flex;flex-direction:column;gap:6px;} .fdcom{font-size:12px;} .fdcom b{color:var(--label);} .fdadd{font-size:12px;color:var(--ter);background:var(--track);border-radius:999px;padding:7px 13px;margin-top:3px;}
+  /* Komentáře v .hl kontextu (S.dnesek · Dění v partě) — sdílený design s S.feed (.fdcoms/.fdcom/.fdadd).
+     .hlc = klikatelný řádek (tap-target přes padding, ≥40pt); .hlkoms = inline rozbalené komentáře POD řádkem. */
+  .komlist{display:flex;flex-direction:column;gap:6px;} .ctog{cursor:pointer;-webkit-tap-highlight-color:transparent;}
+  .hlr.hlc{cursor:pointer;-webkit-tap-highlight-color:rgba(15,169,104,.12);touch-action:manipulation;padding-top:11px;padding-bottom:11px;}
+  .hlr .ctog{margin-left:8px;flex:0 0 auto;font-size:10.5px;font-weight:700;color:var(--sec);letter-spacing:0;}
+  .hlkoms{position:relative;padding:9px 12px 11px 41px;display:flex;flex-direction:column;gap:6px;}
+  .hlkoms:not(:last-child)::after{content:"";position:absolute;left:40px;right:0;bottom:0;height:1px;background:var(--sep);}
+  .hlkoms .fdadd{margin-top:3px;}
   .rwbar{display:flex;align-items:center;justify-content:space-between;padding:9px 18px;border-radius:999px;margin-top:11px;border:1.5px solid transparent;background-image:linear-gradient(var(--card),var(--card)),linear-gradient(115deg,#D6A23A,#0FA968,#3FAEC2,#8A7BCB);background-origin:border-box;background-clip:padding-box,border-box;} .rwbar span{font-size:12px;font-weight:700;color:var(--sec);} .rwbar b{font-size:17px;font-weight:900;color:var(--green);}
   .logo{width:54px;height:54px;border-radius:15px;background:var(--card);box-shadow:var(--shadow);display:grid;place-items:center;font-size:26px;margin:18px auto 10px;}
   .authh{text-align:center;font-size:21px;font-weight:800;margin-bottom:3px;} .auths{text-align:center;font-size:12.5px;color:var(--sec);margin-bottom:16px;} .alink{text-align:center;font-size:12.5px;color:var(--green);font-weight:700;margin-top:12px;}
@@ -392,8 +400,8 @@ S.dnesek=()=>`<div class="nav"><div><div class="date">Pátek 27. 6.</div><div cl
   <div class="sl"><span>Dění v partě</span><a>Parta →</a></div>
   <div class="hl">
     <div class="hlr"><span class="ic"><svg class="i"><use href="#i-bolt"/></svg></span><div>Janča tě dohání — <b>jen 12 b</b> za tebou</div></div>
-    <div class="hlr"><span class="ic"><svg class="i"><use href="#i-run"/></svg></span><div>Péťa · běh 5 km <small>· +50 b · 20 min</small></div><span class="rx"><svg class="i"><use href="#i-pushup"/></svg><svg class="i"><use href="#i-flame"/></svg><svg class="i"><use href="#i-clap"/></svg></span></div>
-    <div class="hlr"><span class="ic"><svg class="i"><use href="#i-medal"/></svg></span><div>Martin překonal rekord <b>100 kliků</b></div><span class="rx"><svg class="i"><use href="#i-pushup"/></svg><svg class="i"><use href="#i-flame"/></svg><svg class="i"><use href="#i-clap"/></svg></span></div>
+    <div class="hlr hlc"><span class="ic"><svg class="i"><use href="#i-run"/></svg></span><div>Péťa · běh 5 km <small>· +50 b · 20 min</small></div><span class="rx"><svg class="i"><use href="#i-pushup"/></svg><svg class="i"><use href="#i-flame"/></svg><svg class="i"><use href="#i-clap"/></svg></span><span class="ctog"><svg class="i"><use href="#i-comment"/></svg> 2</span></div>
+    <div class="hlr hlc"><span class="ic"><svg class="i"><use href="#i-medal"/></svg></span><div>Martin překonal rekord <b>100 kliků</b></div><span class="rx"><svg class="i"><use href="#i-pushup"/></svg><svg class="i"><use href="#i-flame"/></svg><svg class="i"><use href="#i-clap"/></svg></span><span class="ctog"><svg class="i"><use href="#i-comment"/></svg> 1<span class="newdot"></span></span></div>
   </div>`;
 S.parta=()=>navhdr('Parta')+`
   <div class="wkl"><div class="wklh"><div class="wklt"><svg class="i"><use href="#i-trophy"/></svg> Liga týdne</div><div class="wkls">končí za 2 dny ›</div></div>

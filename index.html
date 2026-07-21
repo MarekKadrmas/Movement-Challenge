@@ -2418,6 +2418,15 @@ body.mm-full{background:#EDF0EC;}
   .admbar{background:#8B6FE018;color:#6a52c0;font-size:11.5px;font-weight:700;border-radius:12px;padding:8px 13px;margin-bottom:12px;display:flex;align-items:center;gap:7px;}
   .audr{background:var(--card);box-shadow:var(--shadow);border-radius:12px;padding:10px 14px;margin-bottom:6px;} .audr .w{font-size:11px;color:var(--sec);font-weight:600;} .audr .c{font-size:13px;font-weight:600;margin-top:3px;} .audr .c b{color:var(--green);}
   .fdc{background:var(--card);box-shadow:var(--shadow);border-radius:16px;padding:10px 13px;margin-bottom:7px;} .fdh{display:flex;align-items:center;gap:10px;font-size:13px;} .fdbar{display:flex;align-items:center;gap:9px;margin-top:7px;font-size:10.5px;font-weight:700;color:var(--sec);} .fdbar .rem.on{color:var(--green);} .radd{width:17px;height:17px;border-radius:50%;background:var(--track);display:grid;place-items:center;font-size:10px;color:var(--sec);} .ctog{margin-left:auto;display:flex;align-items:center;gap:6px;} .newdot{width:7px;height:7px;border-radius:50%;background:#E0584B;display:inline-block;} .fdcoms{margin-top:10px;border-top:1px solid var(--sep);padding-top:9px;display:flex;flex-direction:column;gap:6px;} .fdcom{font-size:12px;} .fdcom b{color:var(--label);} .fdadd{font-size:12px;color:var(--ter);background:var(--track);border-radius:999px;padding:7px 13px;margin-top:3px;}
+  /* Komentáře v .hl kontextu (Dnešek · Dění v partě) — sdílený design s Feed stránkou (.fdcoms/.fdcom/.fdadd).
+     .hlc = klikatelný řádek (tap-target přes padding, ≥40pt i před zoomem); .hlkoms = inline rozbalené komentáře POD řádkem. */
+  .komlist{display:flex;flex-direction:column;gap:6px;} .ctog{cursor:pointer;-webkit-tap-highlight-color:transparent;}
+  .fdadd input{border:0;outline:0;background:transparent;font:inherit;color:var(--label);width:100%;min-width:0;padding:0;margin:0;} .fdadd input::placeholder{color:var(--ter);opacity:1;}
+  .hlr.hlc{cursor:pointer;-webkit-tap-highlight-color:rgba(15,169,104,.12);touch-action:manipulation;padding-top:11px;padding-bottom:11px;}
+  .hlr .ctog{margin-left:8px;flex:0 0 auto;font-size:10.5px;font-weight:700;color:var(--sec);letter-spacing:0;}
+  .hlkoms{position:relative;padding:9px 12px 11px 41px;display:flex;flex-direction:column;gap:6px;}
+  .hlkoms:not(:last-child)::after{content:"";position:absolute;left:40px;right:0;bottom:0;height:1px;background:var(--sep);}
+  .hlkoms .fdadd{margin-top:3px;}
   .rwbar{display:flex;align-items:center;justify-content:space-between;padding:9px 18px;border-radius:999px;margin-top:11px;border:1.5px solid transparent;background-image:linear-gradient(var(--card),var(--card)),linear-gradient(115deg,#D6A23A,#0FA968,#3FAEC2,#8A7BCB);background-origin:border-box;background-clip:padding-box,border-box;} .rwbar span{font-size:12px;font-weight:700;color:var(--sec);} .rwbar b{font-size:17px;font-weight:900;color:var(--green);}
   .logo{width:54px;height:54px;border-radius:15px;background:var(--card);box-shadow:var(--shadow);display:grid;place-items:center;font-size:26px;margin:18px auto 10px;}
   .authh{text-align:center;font-size:21px;font-weight:800;margin-bottom:3px;} .auths{text-align:center;font-size:12.5px;color:var(--sec);margin-bottom:16px;} .alink{text-align:center;font-size:12.5px;color:var(--green);font-weight:700;margin-top:12px;}
@@ -5426,12 +5435,19 @@ function renderDnesek(){
   const allE=[...state.cviky,...state.aktivity].filter(e=>e.datum).sort((a,b)=>String(b.created_at||b.datum).localeCompare(String(a.created_at||a.datum))).slice(0,4);
   // Reakcni pilulky (💪🔥👏) — VIZUALNI PLACEHOLDER 1:1 s mockupem, bez akce (reakce = backend, Faze 6).
   const mmRx='<span class="rx"><svg class="i"><use href="#i-pushup"/></svg><svg class="i"><use href="#i-flame"/></svg><svg class="i"><use href="#i-clap"/></svg></span>';
+  // Komentare (Marek 2026-07: "PRIMO POD ZAZNAMEM, zadna navigace"): kazdy radek zaznamu ma 💬 indikator
+  // a tap na CELY radek rozbali/sbali komentare inline pod nim. Stav sdileny s Feed strankou (state.mmFeed),
+  // klic = 'e:'+id zaznamu. Do tpl jde jen holy indikator (data-sig="") — pocty/tecku/rozbaleni dosadi
+  // mmDeniApplyFeedState() PO mountu primym DOM patchem, aby memo klic host._mmTpl nezavisel na stavu komentaru.
+  mmFeedState();
   feed+=allE.map(e=>{
     const pl=state.players.find(p=>p.id===e.player_id); const nm=pl?esc(mmFirst(pl.jmeno)):'—';
     const rec=mmHighlightRecord(e,pl);
     const icon=rec?'i-medal':mmEntryIcon(e);
     const text=rec ? `${nm} ${rec}` : `${nm} · ${esc(mmEntryLabel(e))}<small>· +${Math.round(Number(e.body)||0)} b</small>`;
-    return `<div class="hlr"><span class="ic"><svg class="i"><use href="#${icon}"/></svg></span><div>${text}</div>${mmRx}</div>`; }).join('');
+    const key='e:'+(e.id||((e.player_id||'')+'|'+e.datum+'|'+(e.created_at||'')));
+    const ctog=`<span class="ctog" data-ctog="${key}" data-sig=""><svg class="i"><use href="#i-comment"/></svg></span>`;
+    return `<div class="hlr hlc" data-feedrow="${key}" onclick="mmFeedToggle('${key}','dnesek')"><span class="ic"><svg class="i"><use href="#${icon}"/></svg></span><div>${text}</div>${mmRx}${ctog}</div>`; }).join('');
   const dl=czDayName(new Date())+' '+new Date().getDate()+'. '+(new Date().getMonth()+1)+'.';
   const tpl=`<div class="nav"><div><div class="date">${dl}</div><div class="ttl" style="font-size:18px">${mmGreet()}${me?', '+esc(mmFirst(me.jmeno)):''}</div></div><div class="right"><div class="sck"><svg class="i"><use href="#i-flame"/></svg> ${streak}</div><div class="add" onclick="openModal()">＋</div></div></div>
   <div class="hero"><div class="ring" style="background:${conic}"><div class="h"><div><div class="n">${fmtNum(todayPts)}</div><div class="rpct ${dTrend>=0?'up':''}">${dTrend>=0?'▲':'▼'} ${Math.abs(dTrend)} %</div><div class="avg">ø ${fmtNum(avgDen)}</div></div></div></div><div class="hs"><div class="hst">Tento týden</div><div class="r"><span class="e"><svg class="i"><use href="#i-calendar"/></svg></span><b>${fmtNum(myTotal)} b</b><small>&nbsp;body ${trend>=0?(`<span class="up">▲${trend} %</span>`):(`<span style="color:var(--red)">▼${Math.abs(trend)} %</span>`)}</small></div><div class="r"><span class="e"><svg class="i"><use href="#i-pullup"/></svg></span><b>${trainings}</b><small>&nbsp;tréninky</small></div><div class="r"><span class="e"><svg class="i"><use href="#i-trophy"/></svg></span><b>${fmtNum(recordDay)} b</b><small>&nbsp;rekord/den</small></div></div></div>
@@ -5440,7 +5456,7 @@ function renderDnesek(){
   <div class="lc">${rows||'<div style="padding:20px;text-align:center;color:var(--ter)">Zatím žádné body tento týden</div>'}</div>
   <div class="sl"><span>Dění v partě</span><a onclick="mmGo('hraci')">Parta →</a></div>
   <div class="hl">${feed||'<div class="hlr"><div style="color:var(--ter)">Zatím žádná aktivita</div></div>'}</div>`;
-  const _mmK=tpl+'|'+(document.documentElement.getAttribute('data-theme')||'light'); if(host._mmTpl===_mmK&&host.shadowRoot){const s=host.shadowRoot.querySelector('.scr'); if(s){const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; s.style.zoom=z; s.style.minHeight=(window.innerHeight/z)+'px';} return;} host._mmTpl=_mmK; const sh=host.shadowRoot||host.attachShadow({mode:'open'});
+  const _mmK=tpl+'|'+(document.documentElement.getAttribute('data-theme')||'light'); if(host._mmTpl===_mmK&&host.shadowRoot){const s=host.shadowRoot.querySelector('.scr'); if(s){const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; s.style.zoom=z; s.style.minHeight=(window.innerHeight/z)+'px';} mmDeniApplyFeedState(host.shadowRoot); return;} host._mmTpl=_mmK; const sh=host.shadowRoot||host.attachShadow({mode:'open'});
   const tplEl=document.getElementById('mm-tpl'); const sprite=document.getElementById('momentum-sprite');
   sh.innerHTML='';
   if(tplEl) sh.appendChild(tplEl.content.cloneNode(true));
@@ -5453,6 +5469,7 @@ function renderDnesek(){
   const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(0)}</div>`;
   sh.appendChild(w);
   const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; scrEl.style.margin=(window.innerWidth>393?'0 auto':'');
+  mmDeniApplyFeedState(sh);   // po plnem re-renderu obnov rozbaleni/pocty/tecky komentaru ze state.mmFeed
   if(!window._mmRz){ window._mmRz=true; window.addEventListener('resize',()=>{ if(state.view==='prehled') renderDnesek(); else if(state.view==='hraci') renderParta(); else if(state.view==='navyky') renderNavykyMM(); else if(state.view==='historie') renderJaMM(); if(mmSubOpen==='historie') renderSubHistorie(); else if(mmSubOpen==='rekordy') renderSubRekordy(); else if(mmSubOpen==='bodovani') renderSubBodovani(); else if(mmSubOpen==='profil') renderSubProfil(state.mmSubProfilId); else if(mmSubOpen==='rekordyparty') renderSubRekordyParty(); else if(mmSubOpen==='feed') renderSubFeed(); else if(mmSubOpen==='pozvat') renderSubPozvat(); else if(mmSubOpen==='cile') renderSubCile(); else if(mmSubOpen==='notifikace') renderSubNotifikace(); else if(mmSubOpen==='den') renderSubDen(state.mmSubDenArg); else if(mmSubOpen==='rokparty') renderSubRokParty(); }); }
 }
 
@@ -6976,7 +6993,8 @@ function renderSubRekordyParty(){
 // komentáře = INLINE ROZBALENÍ (Marek: „žádný proklik na další stránku — pod záznamem je vidět indikátor
 // a ťuknutím se komentáře rozbalí/sbalí"). Karty a výchozí komentáře = ukázková data 1:1 s mockup demem;
 // rozbalený stav + přidané komentáře žijí v state.mmFeed (jen paměť). Most na budoucí backend: mmFeedPersistComment.
-// Vstup: hbm řádek v renderParta().
+// Vstupy: hbm řádek v renderParta() (Feed stránka) + řádky „Dění v partě" na Dnešku (renderDnesek →
+// mmDeniApplyFeedState, ctx 'dnesek') — obě plochy čtou/píší TENTÝŽ state.mmFeed.
 const MM_FEED_DEMO=[
   {id:'f1',ini:'MA',bg:'#E05B4B22',fg:'#c0392b',jmeno:'Martin',label:'běh 6 km',kdy:'dnes 7:20',body:48,nova:true,
    rems:[['i-pushup','3',1],['i-flame','2',0],['i-clap','',0]],
@@ -6990,44 +7008,88 @@ const MM_FEED_DEMO=[
 ];
 function mmFeedState(){
   if(!state.mmFeed){
-    state.mmFeed={open:{f2:true},seen:{},koms:{}};   // f2 rozbalené jako v mockup demu
-    MM_FEED_DEMO.forEach(c=>{ state.mmFeed.koms[c.id]=c.koms.map(k=>Object.assign({},k)); });
+    state.mmFeed={open:{f2:true},seen:{},koms:{},nova:{}};   // f2 rozbalené jako v mockup demu
+    MM_FEED_DEMO.forEach(c=>{ state.mmFeed.koms[c.id]=c.koms.map(k=>Object.assign({},k)); if(c.nova) state.mmFeed.nova[c.id]=true; });
+    // DEMO: ukázkové komentáře i pro řádky „Dění v partě" na Dnešku — klíč = 'e:'+id záznamu,
+    // stejný sklad (state.mmFeed) jako Feed stránka → rozbalené/přečtené/komentáře jsou sdílené.
+    if(typeof isDemo==='function'&&isDemo()){
+      const run5=(state.aktivity||[]).find(a=>a.player_id==='demo-peta'&&Number(a.km)===5);
+      const rec=(state.cviky||[]).find(c=>c.player_id==='demo-martin'&&c.cvik==='Kliky'&&Number(c.opakovani)===100);
+      if(run5) state.mmFeed.koms['e:'+run5.id]=[{jmeno:'Káťa',text:'Pěkný tempo!'},{jmeno:'Mára',text:'Zítra jdu taky',ikona:'i-run'}];
+      if(rec){ state.mmFeed.koms['e:'+rec.id]=[{jmeno:'Janča',text:'Stroj!',ikona:'i-flame'}]; state.mmFeed.nova['e:'+rec.id]=true; }
+    }
   }
+  if(!state.mmFeed.nova) state.mmFeed.nova={};
   return state.mmFeed;
+}
+// ---- Sdílené stavební bloky Feed stránky + Dnešku (jeden stav, dva kontexty) ----
+// Indikátor 💬: ikona + počet + ▴ (rozbaleno) + červená tečka (nepřečtené). withClick=true → vlastní onclick
+// (Feed karty); na Dnešku kliká celý řádek, indikátor je bez vlastního handleru. data-sig = otisk stavu pro
+// idempotentní DOM patch (mmDeniApplyFeedState) bez full re-renderu.
+function mmFeedCtogHtml(id, withClick){
+  const fs=mmFeedState(); const koms=fs.koms[id]||[]; const open=!!fs.open[id];
+  const dot=(fs.nova[id]&&!fs.seen[id])?'<span class="newdot"></span>':'';
+  return `<span class="ctog" data-ctog="${id}" data-sig="${koms.length}|${open?1:0}|${dot?1:0}"${withClick?` onclick="mmFeedToggle('${id}')"`:''}><svg class="i"><use href="#i-comment"/></svg>${koms.length?' '+koms.length:''}${open?' ▴':''}${dot}</span>`;
+}
+function mmFeedKomListHtml(id){
+  const koms=mmFeedState().koms[id]||[];
+  return `<div class="komlist" data-komlist data-n="${koms.length}">${koms.map(k=>`<div class="fdcom"><b>${esc(k.jmeno)}:</b> ${esc(k.text)}${k.ikona?` <svg class="i"><use href="#${k.ikona}"/></svg>`:''}</div>`).join('')}</div>`;
+}
+// Rozbalený blok komentářů: ctx 'feed' → .fdcoms uvnitř karty, ctx 'dnesek' → .hlkoms jako sourozenec POD .hlr řádkem.
+function mmFeedKomsHtml(id, ctx){
+  const cls=ctx==='dnesek'?'hlkoms':'fdcoms';
+  return `<div class="${cls}" data-koms="${id}">${mmFeedKomListHtml(id)}<div class="fdadd"><input type="text" placeholder="Napiš komentář…" maxlength="200" data-mmfeed="${id}" onkeydown="mmFeedKey(event,'${id}','${ctx}')"></div></div>`;
+}
+// Dnešek: uvede DOM feedu v shadow rootu do souladu se state.mmFeed PŘÍMO (bez full re-renderu → memo-mount
+// host._mmTpl zůstává platný). Idempotentní: volá se po mountu, při memo-hitu i po každé interakci.
+// Nesahá na <input>, dokud se nemění počet komentářů → fokus/rozepsaný text přežije.
+function mmDeniApplyFeedState(sh){
+  const fs=mmFeedState();
+  sh.querySelectorAll('[data-feedrow]').forEach(row=>{
+    const id=row.getAttribute('data-feedrow');
+    const koms=fs.koms[id]||[]; const open=!!fs.open[id];
+    const dot=(fs.nova[id]&&!fs.seen[id])?1:0;
+    const sig=koms.length+'|'+(open?1:0)+'|'+dot;
+    const ct=row.querySelector('[data-ctog]');
+    if(ct&&ct.getAttribute('data-sig')!==sig) ct.outerHTML=mmFeedCtogHtml(id);
+    const next=row.nextElementSibling;
+    const has=!!(next&&next.getAttribute&&next.getAttribute('data-koms')===id);
+    if(open&&!has) row.insertAdjacentHTML('afterend', mmFeedKomsHtml(id,'dnesek'));
+    else if(!open&&has) next.remove();
+    else if(open&&has){ const list=next.querySelector('[data-komlist]'); if(list&&list.getAttribute('data-n')!==String(koms.length)) list.outerHTML=mmFeedKomListHtml(id); }
+  });
 }
 function renderSubFeed(){
   const host=document.getElementById('sub-feed'); if(!host) return;
   const fs=mmFeedState();
-  // overlay jen pro interaktivitu: kurzor na indikátoru + neviditelný <input> uvnitř .fdadd pilulky
-  // (stejný most jako formuláře — vzhled nese wrapper, vizuál 1:1 s mockupem)
-  const css='<style>.ctog{cursor:pointer;-webkit-tap-highlight-color:transparent}.fdadd input{border:0;outline:0;background:transparent;font:inherit;color:var(--label);width:100%;min-width:0;padding:0;margin:0}.fdadd input::placeholder{color:var(--ter);opacity:1}</style>';
   const body=MM_FEED_DEMO.map(c=>{
-    const koms=fs.koms[c.id]||[];
     const open=!!fs.open[c.id];
     const rems=c.rems.map(r=>`<span class="rem${r[2]?' on':''}"><svg class="i"><use href="#${r[0]}"/></svg>${r[1]?' '+r[1]:''}</span>`).join('');
-    const dot=(c.nova&&!fs.seen[c.id])?'<span class="newdot"></span>':'';
-    const ctog=`<span class="ctog" onclick="mmFeedToggle('${c.id}')"><svg class="i"><use href="#i-comment"/></svg>${koms.length?' '+koms.length:''}${open?' ▴':''}${dot}</span>`;
-    const komsHtml=open?`<div class="fdcoms">${koms.map(k=>`<div class="fdcom"><b>${esc(k.jmeno)}:</b> ${esc(k.text)}${k.ikona?` <svg class="i"><use href="#${k.ikona}"/></svg>`:''}</div>`).join('')}<div class="fdadd"><input type="text" placeholder="Napiš komentář…" maxlength="200" data-mmfeed="${c.id}" onkeydown="mmFeedKey(event,'${c.id}')"></div></div>`:'';
+    const ctog=mmFeedCtogHtml(c.id,true);
+    const komsHtml=open?mmFeedKomsHtml(c.id,'feed'):'';
     return `<div class="fdc"><div class="fdh"><span class="lav" style="width:30px;height:30px;background:${c.bg};color:${c.fg};font-size:10px">${c.ini}</span><div style="flex:1"><b>${esc(c.jmeno)}</b> · ${esc(c.label)}<div style="font-size:11px;color:var(--sec)">${c.kdy}</div></div><b style="color:var(--green);font-size:15px">+${c.body}</b></div><div class="fdbar">${rems}<span class="radd">＋</span>${ctog}</div>${komsHtml}</div>`;
   }).join('');
-  const tpl = mmBackHdr('Dění v partě') + css + body;
+  const tpl = mmBackHdr('Dění v partě') + body;
   mmMountSub(host, tpl, 1);
 }
-// Ťuknutí na 💬 indikátor: rozbalí/sbalí komentáře inline pod záznamem (accordion) + zhasne tečku „nové".
-function mmFeedToggle(id){
+// Ťuknutí na 💬 indikátor (Feed) nebo na celý řádek (Dnešek): rozbalí/sbalí komentáře inline pod záznamem
+// (accordion) + zhasne tečku „nové". ctx 'dnesek' → přímý DOM patch v shadow rootu, jinak re-render Feedu.
+function mmFeedToggle(id, ctx){
   const fs=mmFeedState();
   fs.open[id]=!fs.open[id];
   fs.seen[id]=true;
-  renderSubFeed();
+  if(ctx==='dnesek'){ const host=document.getElementById('dnesek-mm'); if(host&&host.shadowRoot) mmDeniApplyFeedState(host.shadowRoot); }
+  else renderSubFeed();
 }
-function mmFeedKey(ev,id){ if(ev.key==='Enter'){ ev.preventDefault(); mmFeedAddComment(id, ev.target.value); } }
-function mmFeedAddComment(id, text){
+function mmFeedKey(ev,id,ctx){ if(ev.key==='Enter'){ ev.preventDefault(); const v=ev.target.value; ev.target.value=''; mmFeedAddComment(id, v, ctx); } }
+function mmFeedAddComment(id, text, ctx){
   text=String(text||'').trim(); if(!text) return;
   const me=state.players.find(p=>p.id===state.currentPlayerId);
   const fs=mmFeedState();
   (fs.koms[id]=fs.koms[id]||[]).push({jmeno: me?mmFirst(me.jmeno):'Ty', text:text});
   mmFeedPersistComment({card_id:id, player_id:state.currentPlayerId||null, text:text});
-  renderSubFeed();
+  if(ctx==='dnesek'){ const host=document.getElementById('dnesek-mm'); if(host&&host.shadowRoot) mmDeniApplyFeedState(host.shadowRoot); }
+  else renderSubFeed();
 }
 // MOST na komentářový backend (Fáze 6): tabulka v Supabase zatím NEEXISTUJE, proto je jméno tabulky null
 // a zápis je no-op — komentář žije jen v paměti (jako celý feed). Až Fáze 6 tabulku založí, stačí nastavit
