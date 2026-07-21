@@ -5924,7 +5924,7 @@ function mmJaFeedHtml(playerId, extraDays){
   days.forEach(ds=>{
     const d=new Date(ds+'T00:00:00');
     const lbl = ds===today ? `Dnes · ${czDayName(d).slice(0,2).toLowerCase()} ${d.getDate()}. ${d.getMonth()+1}.` : `${czDayName(d)} ${d.getDate()}. ${d.getMonth()+1}.`;
-    html+=`<div class="recday" style="cursor:pointer" onclick="mmOpenSub('den','${playerId}|${ds}')">${lbl}</div><div class="rec">`;
+    html+=`<div class="recday">${lbl}</div><div class="rec">`;
     byDay[ds].forEach(e=>{
       const [bg,fg]=mmJaEntryColors(e);
       html+=`<div class="frow"><div class="fav" style="background:${bg}22;color:${fg}"><svg class="i"><use href="#${mmEntryIcon(e)}"/></svg></div><div class="fmain">${esc(mmJaCap(mmEntryLabel(e)))}<small>${mmEntryType(e)}</small></div><div class="fpts">+${Math.round(Number(e.body)||0)}</div><div class="edit" onclick="openEditModal('${e.id}','${e._type}')"><svg class="i"><use href="#i-edit"/></svg></div></div>`;
@@ -6820,7 +6820,7 @@ function renderSubHistorie(){
     shown.forEach(ds=>{
       const d=new Date(ds+'T00:00:00');
       const lbl = ds===today ? `Dnes · ${czDayName(d).slice(0,2).toLowerCase()} ${d.getDate()}. ${d.getMonth()+1}.` : `${czDayName(d)} ${d.getDate()}. ${d.getMonth()+1}.`;
-      list+=`<div class="recday" style="cursor:pointer" onclick="mmOpenSub('den','${pid}|${ds}')">${lbl}</div><div class="rec">`;
+      list+=`<div class="recday">${lbl}</div><div class="rec">`;
       byDay[ds].forEach(e=>{
         const [bg,fg]=mmJaEntryColors(e);
         list+=`<div class="frow"><div class="fav" style="background:${bg}22;color:${fg}"><svg class="i"><use href="#${mmEntryIcon(e)}"/></svg></div><div class="fmain">${esc(mmJaCap(mmEntryLabel(e)))}<small>${mmEntryType(e)}</small></div><div class="fpts">+${Math.round(Number(e.body)||0)}</div><div class="edit" onclick="openEditModal('${e.id}','${e._type}')"><svg class="i"><use href="#i-edit"/></svg></div></div>`;
@@ -7337,7 +7337,7 @@ function renderSubZaznamy(){
     shown.forEach(ds=>{
       const d=new Date(ds+'T00:00:00');
       const lbl = ds===today ? `Dnes · ${czDayName(d).slice(0,2).toLowerCase()} ${d.getDate()}. ${d.getMonth()+1}.` : `${czDayName(d)} ${d.getDate()}. ${d.getMonth()+1}.`;
-      list+=`<div class="recday" style="cursor:pointer" onclick="mmOpenSub('den','all|${ds}')">${lbl}</div><div class="rec">`;
+      list+=`<div class="recday">${lbl}</div><div class="rec">`;
       byDay[ds].forEach(e=>{
         const pl=state.players.find(p=>p.id===e.player_id);
         const col=safeColor(pl.barva);
