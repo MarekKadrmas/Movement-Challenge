@@ -50,3 +50,7 @@
 - Kolecko + (pridani aktivity) by melo nejak svitit / zit.
 - Napad: po obvodu kolecka jezdi svetelna linka s NELINEARNIM pohybem (zrychluje/zpomaluje), aby bylo jasne, ze se pluskem pridava aktivita.
 - Az po dokonceni vzhledu 1:1 (fáze funkce/efekty).
+
+## Backlog (Marek, 2026-07-21): tlacitko Zpet
+- "Nejde moc dobre dat zpet tlacitko vsude" - zpetna navigace na podobrazovkach je neohrabana/spatne dostupna.
+- Promyslet: vetsi tap-target sipky, konzistentni pozice, pripadne gesto swipe-back.
