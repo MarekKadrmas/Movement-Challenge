@@ -6972,13 +6972,72 @@ function renderSubRekordyParty(){
   mmMountSub(host, tpl, 1);
 }
 
-// ----- Dění v partě / Feed s reakcemi (mockup S.feed, 2.6) — VIZUÁLNÍ PLACEHOLDER 1:1, funkce zatím neexistuje (reakce/komentáře = net-new backend, Fáze 6) -----
-// Vstup: hbm řádek v renderParta(). Reakce/přidání/rozbalení komentářů jsou čistě vizuální ukázková data z mockupu, bez onclick (no-op).
+// ----- Dění v partě / Feed s reakcemi (mockup S.feed, 2.6) — reakce = vizuální placeholder (backend Fáze 6),
+// komentáře = INLINE ROZBALENÍ (Marek: „žádný proklik na další stránku — pod záznamem je vidět indikátor
+// a ťuknutím se komentáře rozbalí/sbalí"). Karty a výchozí komentáře = ukázková data 1:1 s mockup demem;
+// rozbalený stav + přidané komentáře žijí v state.mmFeed (jen paměť). Most na budoucí backend: mmFeedPersistComment.
+// Vstup: hbm řádek v renderParta().
+const MM_FEED_DEMO=[
+  {id:'f1',ini:'MA',bg:'#E05B4B22',fg:'#c0392b',jmeno:'Martin',label:'běh 6 km',kdy:'dnes 7:20',body:48,nova:true,
+   rems:[['i-pushup','3',1],['i-flame','2',0],['i-clap','',0]],
+   koms:[{jmeno:'Káťa',text:'Pěkný tempo!'},{jmeno:'Mára',text:'Zítra jdu taky',ikona:'i-run'}]},
+  {id:'f2',ini:'PÉ',bg:'#8B6FE022',fg:'#6a52c0',jmeno:'Péťa',label:'boulder V6',kdy:'dnes 6:10',body:95,
+   rems:[['i-pushup','4',1],['i-flame','1',1],['i-clap','',0]],
+   koms:[{jmeno:'Mára',text:'Frajer!',ikona:'i-flame'},{jmeno:'Janča',text:'Ukaž fotku',ikona:'i-camera'}]},
+  {id:'f3',ini:'MÁ',bg:'#2FB17022',fg:'#1f8a52',jmeno:'Mára',label:'kliky 50×',kdy:'včera 21:10',body:35,
+   rems:[['i-pushup','',0],['i-flame','',0],['i-clap','',0]],
+   koms:[]}
+];
+function mmFeedState(){
+  if(!state.mmFeed){
+    state.mmFeed={open:{f2:true},seen:{},koms:{}};   // f2 rozbalené jako v mockup demu
+    MM_FEED_DEMO.forEach(c=>{ state.mmFeed.koms[c.id]=c.koms.map(k=>Object.assign({},k)); });
+  }
+  return state.mmFeed;
+}
 function renderSubFeed(){
   const host=document.getElementById('sub-feed'); if(!host) return;
-  const body = `<div class="fdc"><div class="fdh"><span class="lav" style="width:30px;height:30px;background:#E05B4B22;color:#c0392b;font-size:10px">MA</span><div style="flex:1"><b>Martin</b> · běh 6 km<div style="font-size:11px;color:var(--sec)">dnes 7:20</div></div><b style="color:var(--green);font-size:15px">+48</b></div><div class="fdbar"><span class="rem on"><svg class="i"><use href="#i-pushup"/></svg> 3</span><span class="rem"><svg class="i"><use href="#i-flame"/></svg> 2</span><span class="rem"><svg class="i"><use href="#i-clap"/></svg></span><span class="radd">＋</span><span class="ctog"><svg class="i"><use href="#i-comment"/></svg> 2<span class="newdot"></span></span></div></div><div class="fdc"><div class="fdh"><span class="lav" style="width:30px;height:30px;background:#8B6FE022;color:#6a52c0;font-size:10px">PÉ</span><div style="flex:1"><b>Péťa</b> · boulder V6<div style="font-size:11px;color:var(--sec)">dnes 6:10</div></div><b style="color:var(--green);font-size:15px">+95</b></div><div class="fdbar"><span class="rem on"><svg class="i"><use href="#i-pushup"/></svg> 4</span><span class="rem on"><svg class="i"><use href="#i-flame"/></svg> 1</span><span class="rem"><svg class="i"><use href="#i-clap"/></svg></span><span class="radd">＋</span><span class="ctog"><svg class="i"><use href="#i-comment"/></svg> 2 ▴</span></div><div class="fdcoms"><div class="fdcom"><b>Mára:</b> Frajer! <svg class="i"><use href="#i-flame"/></svg></div><div class="fdcom"><b>Janča:</b> Ukaž fotku <svg class="i"><use href="#i-camera"/></svg></div><div class="fdadd">Napiš komentář…</div></div></div><div class="fdc"><div class="fdh"><span class="lav" style="width:30px;height:30px;background:#2FB17022;color:#1f8a52;font-size:10px">MÁ</span><div style="flex:1"><b>Mára</b> · kliky 50×<div style="font-size:11px;color:var(--sec)">včera 21:10</div></div><b style="color:var(--green);font-size:15px">+35</b></div><div class="fdbar"><span class="rem"><svg class="i"><use href="#i-pushup"/></svg></span><span class="rem"><svg class="i"><use href="#i-flame"/></svg></span><span class="rem"><svg class="i"><use href="#i-clap"/></svg></span><span class="radd">＋</span><span class="ctog"><svg class="i"><use href="#i-comment"/></svg></span></div></div>`;
-  const tpl = mmBackHdr('Dění v partě') + body;
+  const fs=mmFeedState();
+  // overlay jen pro interaktivitu: kurzor na indikátoru + neviditelný <input> uvnitř .fdadd pilulky
+  // (stejný most jako formuláře — vzhled nese wrapper, vizuál 1:1 s mockupem)
+  const css='<style>.ctog{cursor:pointer;-webkit-tap-highlight-color:transparent}.fdadd input{border:0;outline:0;background:transparent;font:inherit;color:var(--label);width:100%;min-width:0;padding:0;margin:0}.fdadd input::placeholder{color:var(--ter);opacity:1}</style>';
+  const body=MM_FEED_DEMO.map(c=>{
+    const koms=fs.koms[c.id]||[];
+    const open=!!fs.open[c.id];
+    const rems=c.rems.map(r=>`<span class="rem${r[2]?' on':''}"><svg class="i"><use href="#${r[0]}"/></svg>${r[1]?' '+r[1]:''}</span>`).join('');
+    const dot=(c.nova&&!fs.seen[c.id])?'<span class="newdot"></span>':'';
+    const ctog=`<span class="ctog" onclick="mmFeedToggle('${c.id}')"><svg class="i"><use href="#i-comment"/></svg>${koms.length?' '+koms.length:''}${open?' ▴':''}${dot}</span>`;
+    const komsHtml=open?`<div class="fdcoms">${koms.map(k=>`<div class="fdcom"><b>${esc(k.jmeno)}:</b> ${esc(k.text)}${k.ikona?` <svg class="i"><use href="#${k.ikona}"/></svg>`:''}</div>`).join('')}<div class="fdadd"><input type="text" placeholder="Napiš komentář…" maxlength="200" data-mmfeed="${c.id}" onkeydown="mmFeedKey(event,'${c.id}')"></div></div>`:'';
+    return `<div class="fdc"><div class="fdh"><span class="lav" style="width:30px;height:30px;background:${c.bg};color:${c.fg};font-size:10px">${c.ini}</span><div style="flex:1"><b>${esc(c.jmeno)}</b> · ${esc(c.label)}<div style="font-size:11px;color:var(--sec)">${c.kdy}</div></div><b style="color:var(--green);font-size:15px">+${c.body}</b></div><div class="fdbar">${rems}<span class="radd">＋</span>${ctog}</div>${komsHtml}</div>`;
+  }).join('');
+  const tpl = mmBackHdr('Dění v partě') + css + body;
   mmMountSub(host, tpl, 1);
+}
+// Ťuknutí na 💬 indikátor: rozbalí/sbalí komentáře inline pod záznamem (accordion) + zhasne tečku „nové".
+function mmFeedToggle(id){
+  const fs=mmFeedState();
+  fs.open[id]=!fs.open[id];
+  fs.seen[id]=true;
+  renderSubFeed();
+}
+function mmFeedKey(ev,id){ if(ev.key==='Enter'){ ev.preventDefault(); mmFeedAddComment(id, ev.target.value); } }
+function mmFeedAddComment(id, text){
+  text=String(text||'').trim(); if(!text) return;
+  const me=state.players.find(p=>p.id===state.currentPlayerId);
+  const fs=mmFeedState();
+  (fs.koms[id]=fs.koms[id]||[]).push({jmeno: me?mmFirst(me.jmeno):'Ty', text:text});
+  mmFeedPersistComment({card_id:id, player_id:state.currentPlayerId||null, text:text});
+  renderSubFeed();
+}
+// MOST na komentářový backend (Fáze 6): tabulka v Supabase zatím NEEXISTUJE, proto je jméno tabulky null
+// a zápis je no-op — komentář žije jen v paměti (jako celý feed). Až Fáze 6 tabulku založí, stačí nastavit
+// window.MM_FEED_COMMENTS_TABLE a payload {card_id, player_id, text} se začne ukládat beze změny UI kódu.
+window.MM_FEED_COMMENTS_TABLE = window.MM_FEED_COMMENTS_TABLE || null;
+async function mmFeedPersistComment(payload){
+  const t=window.MM_FEED_COMMENTS_TABLE;
+  if(!t || typeof db==='undefined' || !db) return {local:true};
+  try{ const r=await db.from(t).insert(payload); if(r&&r.error) throw r.error; return {ok:true}; }
+  catch(e){ return {error:e}; }
 }
 
 // ----- Pozvat kamaráda (mockup S.pozvat, 4.6) — VIZUÁLNÍ PLACEHOLDER 1:1, párovací kód generátor zatím neexistuje (net-new backend, Fáze 6) -----
