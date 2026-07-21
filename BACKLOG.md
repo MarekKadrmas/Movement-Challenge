@@ -54,3 +54,8 @@
 ## Backlog (Marek, 2026-07-21): tlacitko Zpet
 - "Nejde moc dobre dat zpet tlacitko vsude" - zpetna navigace na podobrazovkach je neohrabana/spatne dostupna.
 - Promyslet: vetsi tap-target sipky, konzistentni pozice, pripadne gesto swipe-back.
+
+## Bug (Marek, 2026-07-21) - admin rezim se vypina pri vyberu sebe
+- Admin rezim + Novy zaznam + "Za koho" -> klik na Mara (sebe) VYPNE admin rezim.
+- Ocekavani: vyber sebe = jen prepnuti cile zapisu, admin rezim zustava zapnuty.
+- Faze funkce - doladit spolu s ostatnimi mosty formularu.
