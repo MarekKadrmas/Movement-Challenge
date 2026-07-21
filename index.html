@@ -5452,11 +5452,11 @@ function renderDnesek(){
   const tpl=`<div class="nav"><div><div class="date">${dl}</div><div class="ttl" style="font-size:18px">${mmGreet()}${me?', '+esc(mmFirst(me.jmeno)):''}</div></div><div class="right"><div class="sck"><svg class="i"><use href="#i-flame"/></svg> ${streak}</div><div class="add" onclick="openModal()">＋</div></div></div>
   <div class="hero"><div class="ring" style="background:${conic}"><div class="h"><div><div class="n">${fmtNum(todayPts)}</div><div class="rpct ${dTrend>=0?'up':''}">${dTrend>=0?'▲':'▼'} ${Math.abs(dTrend)} %</div><div class="avg">ø ${fmtNum(avgDen)}</div></div></div></div><div class="hs"><div class="hst">Tento týden</div><div class="r"><span class="e"><svg class="i"><use href="#i-calendar"/></svg></span><b>${fmtNum(myTotal)} b</b><small>&nbsp;body ${trend>=0?(`<span class="up">▲${trend} %</span>`):(`<span style="color:var(--red)">▼${Math.abs(trend)} %</span>`)}</small></div><div class="r"><span class="e"><svg class="i"><use href="#i-pullup"/></svg></span><b>${trainings}</b><small>&nbsp;tréninky</small></div><div class="r"><span class="e"><svg class="i"><use href="#i-trophy"/></svg></span><b>${fmtNum(recordDay)} b</b><small>&nbsp;rekord/den</small></div></div></div>
   <div class="hbm" style="margin-top:11px;cursor:pointer" onclick="mmGo('navyky')"><div class="hi" style="background:#34C75922"><svg class="i"><use href="#i-list"/></svg></div><div class="ht">Návyky dnes<small>${habDone} splněné · ${Math.max(0,habTotal-habDone)} zbývají</small></div><div class="pct" style="display:flex;align-items:center;gap:5px">${habDone}/${habTotal}<span style="color:var(--ter);font-weight:400">›</span></div></div>
-  <div class="sl"><span>Žebříček · tento týden</span><a onclick="mmGo('hraci')">Parta →</a></div>
+  <div class="sl" onclick="mmGo('hraci')" style="cursor:pointer;touch-action:manipulation"><span>Žebříček · tento týden</span><a style="pointer-events:none">Parta →</a></div>
   <div class="lc">${rows||'<div style="padding:20px;text-align:center;color:var(--ter)">Zatím žádné body tento týden</div>'}</div>
-  <div class="sl"><span>Dění v partě</span><a onclick="mmGo('hraci')">Parta →</a></div>
+  <div class="sl" onclick="mmGo('hraci')" style="cursor:pointer;touch-action:manipulation"><span>Dění v partě</span><a style="pointer-events:none">Parta →</a></div>
   <div class="hl">${feed||'<div class="hlr"><div style="color:var(--ter)">Zatím žádná aktivita</div></div>'}</div>`;
-  const _mmK=tpl+'|'+(document.documentElement.getAttribute('data-theme')||'light'); if(host._mmTpl===_mmK&&host.shadowRoot){const s=host.shadowRoot.querySelector('.scr'); if(s){const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; s.style.zoom=z; s.style.minHeight=(window.innerHeight/z)+'px';} mmDeniApplyFeedState(host.shadowRoot); return;} host._mmTpl=_mmK; const sh=host.shadowRoot||host.attachShadow({mode:'open'});
+  const _mmK=tpl+'|'+(document.documentElement.getAttribute('data-theme')||'light'); if(host._mmTpl===_mmK&&host.shadowRoot){const s=host.shadowRoot.querySelector('.scr'); if(s){const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; s.style.zoom=z; s.style.minHeight=(window.innerHeight/z)+'px';} mmDeniApplyFeedState(host.shadowRoot, (host.id==='parta-mm'?'parta':'dnesek')); return;} host._mmTpl=_mmK; const sh=host.shadowRoot||host.attachShadow({mode:'open'});
   const tplEl=document.getElementById('mm-tpl'); const sprite=document.getElementById('momentum-sprite');
   sh.innerHTML='';
   if(tplEl) sh.appendChild(tplEl.content.cloneNode(true));
@@ -5596,7 +5596,7 @@ function mmPartaFeedHtml(maxDays){
     byDay[ds].forEach(e=>{
       const pl=state.players.find(p=>p.id===e.player_id); if(!pl) return;
       const col=safeColor(pl.barva);
-      html+=`<div class="frow" style="cursor:pointer" onclick="mmOpenSub('feed')"><div class="fav" style="background:${col}22;color:${col}"><svg class="i"><use href="#${mmEntryIcon(e)}"/></svg></div><div class="fmain">${esc(mmFirst(pl.jmeno))} · ${esc(mmEntryLabel(e))}<small>${mmEntryType(e)}</small></div><div class="fpts">+${Math.round(Number(e.body)||0)}</div></div>`;
+      html+=`<div class="frow hlc" data-feedrow="e:${e.id}" style="cursor:pointer" onclick="mmFeedToggle('e:${e.id}','parta')"><div class="fav" style="background:${col}22;color:${col}"><svg class="i"><use href="#${mmEntryIcon(e)}"/></svg></div><div class="fmain">${esc(mmFirst(pl.jmeno))} · ${esc(mmEntryLabel(e))}<small>${mmEntryType(e)}</small></div><div class="fpts">+${Math.round(Number(e.body)||0)}</div>${mmFeedCtogHtml('e:'+e.id)}</div>`;
     });
     html+='</div>';
   });
@@ -5651,14 +5651,14 @@ function renderParta(){
   <div class="wkl"><div class="wklh"><div class="wklt"><svg class="i"><use href="#i-trophy"/></svg> Liga týdne</div><div class="wkls">${wklLabel} ›</div></div><div class="wkbars">${wkRows}</div></div>
   <div class="pcbar"><div class="pcb" onclick="mmPartaCyclePeriod()"><span class="k">Období:</span> ${mmPartaPeriodLabel()} <span class="cx">▾</span></div><div class="pcb" onclick="mmPartaCycleCategory()"><span class="k">Kategorie:</span> ${mmPartaCategoryLabel()} <span class="cx">▾</span></div></div>
   <div class="lc">${rows||'<div style="padding:20px;text-align:center;color:var(--ter)">Zatím žádné body</div>'}</div>
-  <div class="sl"><span>Aktivita party</span><a onclick="mmOpenSub('rokparty')">celý rok →</a></div>
+  <div class="sl" onclick="mmOpenSub('rokparty')" style="cursor:pointer;touch-action:manipulation"><span>Aktivita party</span><a style="pointer-events:none">celý rok →</a></div>
   <div class="heatcard"><div class="hbnav"><span class="hbarr" onclick="mmPartaHeatMove(1)">‹</span><span class="hbrange">${heatLabel}</span><span class="hbarr" onclick="mmPartaHeatMove(-1)">›</span><span class="hbtoday" onclick="mmPartaHeatToday()">⟳ Dnes</span></div>${heatHtml}</div>
   <div class="hbm" style="margin-top:13px;padding:6px 12px;cursor:pointer" onclick="mmOpenSub('rekordyparty')"><div class="hi" style="background:#E0A23A22;width:27px;height:27px;font-size:14px"><svg class="i"><use href="#i-medal"/></svg></div><div class="ht">Rekordy & maximálky všech<small>všichni hráči na jednom místě</small></div><span class="rx" style="color:var(--ter);font-size:16px">›</span></div>
   <div class="sl"><span>Naposledy · dnes</span><a>celá historie →</a></div>
   ${feed.html}
   ${feed.hasMore?'<button class="loadmore" onclick="mmPartaLoadMoreFeed()">Načíst starší ↓</button>':''}`;
 
-  const _mmK=tpl+'|'+(document.documentElement.getAttribute('data-theme')||'light'); if(host._mmTpl===_mmK&&host.shadowRoot){const s=host.shadowRoot.querySelector('.scr'); if(s){const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; s.style.zoom=z; s.style.minHeight=(window.innerHeight/z)+'px';} return;} host._mmTpl=_mmK; const sh=host.shadowRoot||host.attachShadow({mode:'open'});
+  const _mmK=tpl+'|'+(document.documentElement.getAttribute('data-theme')||'light'); if(host._mmTpl===_mmK&&host.shadowRoot){const s=host.shadowRoot.querySelector('.scr'); if(s){const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; s.style.zoom=z; s.style.minHeight=(window.innerHeight/z)+'px';} mmDeniApplyFeedState(host.shadowRoot, (host.id==='parta-mm'?'parta':'dnesek')); return;} host._mmTpl=_mmK; const sh=host.shadowRoot||host.attachShadow({mode:'open'});
   const tplEl=document.getElementById('mm-tpl'); const sprite=document.getElementById('momentum-sprite');
   sh.innerHTML='';
   if(tplEl) sh.appendChild(tplEl.content.cloneNode(true));
@@ -5668,7 +5668,7 @@ function renderParta(){
   if(sprite) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(1)}</div>`;
   sh.appendChild(w);
-  const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; scrEl.style.margin=(window.innerWidth>393?'0 auto':'');
+  const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; scrEl.style.margin=(window.innerWidth>393?'0 auto':''); mmDeniApplyFeedState(sh,'parta');
 }
 
 // ============================================================
@@ -5954,11 +5954,11 @@ function renderJaMM(){
   const nav=`<div class="nav"><div><div class="ttl">Já</div></div><div class="right"><div class="av" style="background:${meCol}22;color:${meCol}">${meIn}</div><div class="add" onclick="openModal()">＋</div></div></div>`;
   const tpl=`${nav}
   <div class="pcard"><div class="pav" style="background:${meCol}22;color:${meCol}">${meIn}</div><div><div class="pn">${me?esc(me.jmeno):'—'}</div><div class="ps">${fmtNum(totalBody)} b · <svg class="i"><use href="#i-flame"/></svg> ${streak} ${streakLabel(streak)} · <svg class="i"><use href="#i-trophy"/></svg> ${weekWins}× vítěz týdne</div></div></div>
-  <div class="sl"><span>Rekordy & odznaky</span><a onclick="mmOpenSub('rekordy')">Vše →</a></div>
+  <div class="sl" onclick="mmOpenSub('rekordy')" style="cursor:pointer;touch-action:manipulation"><span>Rekordy & odznaky</span><a style="pointer-events:none">Vše →</a></div>
   ${prs.length?`<div class="badges">${badgesHtml}</div>`:'<div style="padding:14px;text-align:center;color:var(--ter);font-size:12px">Zatím žádné rekordy</div>'}
   <div class="sl"><span>Moje aktivita · posledních 45 dní</span></div>
   <div class="heatcard"><div class="mh">${heatHtml}</div></div>
-  <div class="sl"><span>Moje záznamy · tento týden</span><a onclick="mmOpenSub('historie')">Celá historie →</a></div>
+  <div class="sl" onclick="mmOpenSub('historie')" style="cursor:pointer;touch-action:manipulation"><span>Moje záznamy · tento týden</span><a style="pointer-events:none">Celá historie →</a></div>
   ${feed.html}
   ${feed.hasMore?'<button class="loadmore" onclick="mmJaLoadMoreFeed()">Načíst starší ↓</button>':''}
   <div class="sl"><span>Nastavení</span></div>
@@ -7043,7 +7043,7 @@ function mmFeedKomsHtml(id, ctx){
 // Dnešek: uvede DOM feedu v shadow rootu do souladu se state.mmFeed PŘÍMO (bez full re-renderu → memo-mount
 // host._mmTpl zůstává platný). Idempotentní: volá se po mountu, při memo-hitu i po každé interakci.
 // Nesahá na <input>, dokud se nemění počet komentářů → fokus/rozepsaný text přežije.
-function mmDeniApplyFeedState(sh){
+function mmDeniApplyFeedState(sh, ctx){ ctx=ctx||'dnesek';
   const fs=mmFeedState();
   sh.querySelectorAll('[data-feedrow]').forEach(row=>{
     const id=row.getAttribute('data-feedrow');
@@ -7054,7 +7054,7 @@ function mmDeniApplyFeedState(sh){
     if(ct&&ct.getAttribute('data-sig')!==sig) ct.outerHTML=mmFeedCtogHtml(id);
     const next=row.nextElementSibling;
     const has=!!(next&&next.getAttribute&&next.getAttribute('data-koms')===id);
-    if(open&&!has) row.insertAdjacentHTML('afterend', mmFeedKomsHtml(id,'dnesek'));
+    if(open&&!has) row.insertAdjacentHTML('afterend', mmFeedKomsHtml(id,ctx));
     else if(!open&&has) next.remove();
     else if(open&&has){ const list=next.querySelector('[data-komlist]'); if(list&&list.getAttribute('data-n')!==String(koms.length)) list.outerHTML=mmFeedKomListHtml(id); }
   });
@@ -7074,12 +7074,17 @@ function renderSubFeed(){
 }
 // Ťuknutí na 💬 indikátor (Feed) nebo na celý řádek (Dnešek): rozbalí/sbalí komentáře inline pod záznamem
 // (accordion) + zhasne tečku „nové". ctx 'dnesek' → přímý DOM patch v shadow rootu, jinak re-render Feedu.
+function mmFeedApplyCtx(ctx){
+  if(ctx==='dnesek'||ctx==='parta'){
+    const host=document.getElementById(ctx==='dnesek'?'dnesek-mm':'parta-mm');
+    if(host&&host.shadowRoot) mmDeniApplyFeedState(host.shadowRoot, ctx);
+  } else renderSubFeed();
+}
 function mmFeedToggle(id, ctx){
   const fs=mmFeedState();
   fs.open[id]=!fs.open[id];
   fs.seen[id]=true;
-  if(ctx==='dnesek'){ const host=document.getElementById('dnesek-mm'); if(host&&host.shadowRoot) mmDeniApplyFeedState(host.shadowRoot); }
-  else renderSubFeed();
+  mmFeedApplyCtx(ctx);
 }
 function mmFeedKey(ev,id,ctx){ if(ev.key==='Enter'){ ev.preventDefault(); const v=ev.target.value; ev.target.value=''; mmFeedAddComment(id, v, ctx); } }
 function mmFeedAddComment(id, text, ctx){
@@ -7088,8 +7093,7 @@ function mmFeedAddComment(id, text, ctx){
   const fs=mmFeedState();
   (fs.koms[id]=fs.koms[id]||[]).push({jmeno: me?mmFirst(me.jmeno):'Ty', text:text});
   mmFeedPersistComment({card_id:id, player_id:state.currentPlayerId||null, text:text});
-  if(ctx==='dnesek'){ const host=document.getElementById('dnesek-mm'); if(host&&host.shadowRoot) mmDeniApplyFeedState(host.shadowRoot); }
-  else renderSubFeed();
+  mmFeedApplyCtx(ctx);
 }
 // MOST na komentářový backend (Fáze 6): tabulka v Supabase zatím NEEXISTUJE, proto je jméno tabulky null
 // a zápis je no-op — komentář žije jen v paměti (jako celý feed). Až Fáze 6 tabulku založí, stačí nastavit
