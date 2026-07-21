@@ -287,6 +287,32 @@
 .ipx-k-ja .recday{margin:7.2px 2px 2.75px;}
 .ipx-k-ja .sl+.recday{margin-top:8.9px;}
 
+/* ===== Kalibrace 2 — podobrazovky Party podle fotek iPhone 15 Pro (2026-07-21) =====
+   profil/rekordy/rokparty/zaznamy/feed: app ma nizsi back-header (SHIFT ~72-75) a tesnejsi mezery.
+   Jen .ipx nahled (scoped .ipx-k-*), sdilene .scr tridy nedotcene. */
+.ipx-k-profil .fhd{padding-top:7px;margin-bottom:7px!important;}
+.ipx-k-profil .pcard+.sl{margin-top:16px;}
+.ipx-k-profil .sl{margin-bottom:4.2px;}
+.ipx-k-profil .sgrid+.sl{margin-top:12.5px;}
+.ipx-k-profil .info{margin:4.5px 0!important;}
+.ipx-k-profil .info+.sl{margin-top:14.3px;}
+.ipx-k-profil .hlr,.ipx-k-rekordy .hlr{padding-top:7px;padding-bottom:7px;}
+.ipx-k-rekordy .fhd{padding-top:3px;margin-bottom:0!important;}
+.ipx-k-rekordy .fhd+.sl{margin-top:11px;}
+.ipx-k-rekordy table.rk td{padding-top:6.1px;padding-bottom:6.1px;}
+.ipx-k-rekordy table.rk+.sl{margin-top:14.5px;}
+.ipx-k-rekordy .sl+.hl{margin-top:-2.8px;}
+.ipx-k-rokparty .fhd{padding-top:2px;margin-bottom:12px!important;}
+.ipx-k-rokparty .tabs{margin-bottom:10.7px;}
+.ipx-k-rokparty .sl{margin-bottom:3.8px;}
+.ipx-k-rokparty .statg+.ccap{margin-top:4.9px!important;}
+.ipx-k-rokparty .ccap+.sl{margin-top:13.4px;}
+.ipx-k-rokparty .chart{margin-top:-1.5px;}
+.ipx-k-zaznamy .fhd,.ipx-k-feed .fhd{padding-top:4.5px;margin-bottom:9.5px!important;}
+.ipx-k-zaznamy .recday{margin:5.3px 2px 0.5px;}
+.ipx-k-zaznamy .frow{padding-top:8.8px;padding-bottom:8.8px;}
+.ipx-k-feed .fdadd{padding-top:4px;padding-bottom:4px;}
+
 .secwrap:not(:has(.tree)){display:none!important;}
 </style>
 </head>
@@ -523,7 +549,7 @@ function iphone(bodyKey, opts={}){
   const inner = (bodyKey in S)? S[bodyKey]() : bodyKey;
   const body = inner.trim().startsWith('<div class="body"')? inner : `<div class="body">${inner}</div>`;
   const barHtml = (opts.active!=null) ? `<div class="ipx-bar">${bar(opts.active)}</div>` : '';
-  const SHIFT={dnesek:26,parta:26,navyky:26,ja:26,pozvat:43,cile:43,feed:43,notifikace:43,addsheet:26,vyb1:38,vyb2:38,vyb3:38,vyb4:38,vyb5:38,vyb6:38,vyb7:38,formcviks:21,formcvikv:21,formcvik:21,formlez:21,navykyempty:26,histempty:43,formadmin:21,historieuprav:43,editzaznam:21,formbeh:21,formakt:21,datum:38,rekordy:43,zaznamy:43,profil:43,den:39,statistiky:26,knihovna:38,tvorba2:21,tvorba3:21,tvorba4:21,tvorbad:21,tvorba:21,zapis:26,uprava:38,bodovani:38,historie:43,rokparty:43};
+  const SHIFT={dnesek:26,parta:26,navyky:26,ja:26,pozvat:43,cile:43,feed:72.5,notifikace:43,addsheet:26,vyb1:38,vyb2:38,vyb3:38,vyb4:38,vyb5:38,vyb6:38,vyb7:38,formcviks:21,formcvikv:21,formcvik:21,formlez:21,navykyempty:26,histempty:43,formadmin:21,historieuprav:43,editzaznam:21,formbeh:21,formakt:21,datum:38,rekordy:74.5,zaznamy:72.5,profil:72.5,den:39,statistiky:26,knihovna:38,tvorba2:21,tvorba3:21,tvorba4:21,tvorbad:21,tvorba:21,zapis:26,uprava:38,bodovani:38,historie:43,rokparty:75.2};
   const shift=SHIFT[bodyKey]||0;
   const kcls=(bodyKey in S)?` ipx-k-${bodyKey}`:'';
   return `<div class="ipx"><div class="ipx-scr">
