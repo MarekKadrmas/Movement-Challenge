@@ -6663,8 +6663,10 @@ function mmMountUprava(){
 function mmUpravaSync(sh){
   sh = sh || (document.getElementById('player-shadow') || {}).shadowRoot; if (!sh) return;
   const body = sh.querySelector('.body'); if (!body) return;
-  // "Kdo upravuje" — pilulky jako admin "Za koho" (most na light #editor-pills)
+  // "Kdo upravuje" ZRUSENO (Marek 2026-07-22): upravu provadi vzdy prihlaseny hrac,
+  // attribution do historie = state.currentPlayerId. Blok se skryva VZDY.
   const eds = body.querySelector('[data-mmeditors]');
+  if (eds) { const fld = eds.closest('.fld'); if (fld) fld.style.display = 'none'; }
   if (eds) eds.innerHTML = state.players.filter(p => p.aktivni).map(p => {
     const c = safeColor(p.barva);
     const bg = /^#[0-9a-fA-F]{6}$/.test(c) ? c + '18' : c;
@@ -9402,15 +9404,16 @@ function openPlayerEdit(playerId) {
   // F19: jen vlastni nebo admin
   if (!isAdmin() && playerId !== state.currentPlayerId) { toast('Nemůžeš upravovat cizího hráče', 'error'); return; }
   state.playerBeingEdited = playerId;
-  state.editorPlayer = null;
+  // Marek 2026-07-22: "Kdo upravuje" zruseno — upravu provadi vzdy prihlaseny hrac
+  // (hrac muze jen sebe, admin kohokoli — gate vyse). Attribution do historie = ja.
+  state.editorPlayer = state.currentPlayerId || playerId;
   const player = state.players.find(p => p.id === playerId);
   if (!player) return;
 
   document.getElementById('pe-jmeno').value = player.jmeno || '';
   renderPeColorPicker(player.barva);
   buildEditorPills();
-  document.getElementById('player-edit-form').classList.add('disabled');
-  document.getElementById('player-modal-subtitle').textContent = 'Vyber kdo provádí úpravu';
+  document.getElementById('player-edit-form').classList.remove('disabled');
 
   // Naplnit puvodnimi hodnotami
   document.getElementById('pe-vaha').value = player.vaha || '';
