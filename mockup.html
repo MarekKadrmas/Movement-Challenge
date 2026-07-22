@@ -313,6 +313,48 @@
 .ipx-k-zaznamy .frow{padding-top:8.8px;padding-bottom:8.8px;}
 .ipx-k-feed .fdadd{padding-top:4px;padding-bottom:4px;}
 
+/* ===== Kalibrace 4 — podobrazovky JA podle fotek iPhone 15 Pro (2026-07-22) =====
+   historie/editzaznam/uprava/bodovani/notifikace/cile/pozvat.
+   Back-header obrazovky maji v appce nizsi header (SHIFT ~76.5), modal formy ~41-57.5.
+   Jen .ipx nahled (scoped .ipx-k-*), sdilene .scr tridy nedotcene. */
+.ipx-k-historie .filterbar{margin-top:4.5px;}
+.ipx-k-historie .fpill{padding-top:4.5px;padding-bottom:4.5px;}
+.ipx-k-historie .sl{margin-top:15.5px;}
+.ipx-k-historie .recday{margin:10px 2px 13px;}
+.ipx-k-historie .rec+.recday{margin-top:19px;}
+.ipx-k-historie .frow{padding-top:6.7px;padding-bottom:6.7px;}
+.ipx-k-notifikace .sl{margin-bottom:10px;}
+.ipx-k-notifikace .hlr,.ipx-k-bodovani .hlr{padding-top:7px;padding-bottom:7px;}
+.ipx-k-notifikace .hlr:first-child,.ipx-k-bodovani .hlr:first-child{padding-top:2px;}
+.ipx-k-notifikace .hlr:last-child{padding-bottom:2px;}
+.ipx-k-bodovani .hlr:last-child{padding-bottom:6px;}
+.ipx-k-bodovani .hl{margin-top:15.5px;}
+.ipx-k-bodovani .hlr{padding-top:6.5px;padding-bottom:6.5px;}
+.ipx-k-bodovani .hl+.sl{margin-top:17.5px!important;margin-bottom:4.5px;}
+.ipx-k-bodovani .cmpr{padding-top:5px;padding-bottom:5px;}
+.ipx-k-bodovani .cmp{gap:8.5px;}
+.ipx-k-bodovani .cmp+.info{margin-top:11.5px!important;padding-top:9px;padding-bottom:9px;}
+.ipx-k-bodovani .info+.sl{margin-top:15px!important;}
+.ipx-k-cile .sl{margin-bottom:9px;}
+.ipx-k-cile .body>div:nth-child(3){padding:11px 14px!important;}
+.ipx-k-cile .pbtrack{height:5px;}
+.ipx-k-cile .hbm{margin-top:17px!important;padding-top:4px;padding-bottom:4px;}
+.ipx-k-cile .hbm+.sl{margin-top:18.5px!important;}
+.ipx-k-cile .hlr{padding-top:3.5px;padding-bottom:3.5px;}
+.ipx-k-cile .hl+.info{margin-top:11px!important;padding-top:9.5px;padding-bottom:9.5px;}
+.ipx-k-pozvat .info{font-size:10.4px;line-height:1.45;padding:10.5px 13px;}
+.ipx-k-pozvat .fld{margin-top:14px!important;}
+.ipx-k-pozvat .fld>label{margin-bottom:7.5px;}
+.ipx-k-pozvat .inp{padding-top:6.5px;padding-bottom:6.5px;}
+.ipx-k-pozvat .fld+.sl{margin-top:11px!important;}
+.ipx-k-pozvat .body>div:nth-child(5){padding:15px!important;}
+.ipx-k-pozvat .submit{margin-top:13px;}
+.ipx-k-editzaznam .body.formb .ff{bottom:17px;}
+.ipx-k-editzaznam .drange{padding-top:6px;padding-bottom:6px;}
+.ipx-k-editzaznam .fld>label{margin-bottom:2.5px;}
+.ipx-k-uprava .fld{margin-bottom:7px;}
+.ipx-k-uprava .fhd+.fld{margin-top:1.5px;}
+
 .secwrap:not(:has(.tree)){display:none!important;}
 </style>
 </head>
@@ -549,7 +591,7 @@ function iphone(bodyKey, opts={}){
   const inner = (bodyKey in S)? S[bodyKey]() : bodyKey;
   const body = inner.trim().startsWith('<div class="body"')? inner : `<div class="body">${inner}</div>`;
   const barHtml = (opts.active!=null) ? `<div class="ipx-bar">${bar(opts.active)}</div>` : '';
-  const SHIFT={dnesek:26,parta:26,navyky:26,ja:26,pozvat:43,cile:43,feed:72.5,notifikace:43,addsheet:26,vyb1:38,vyb2:38,vyb3:38,vyb4:38,vyb5:38,vyb6:38,vyb7:38,formcviks:21,formcvikv:21,formcvik:21,formlez:21,navykyempty:26,histempty:43,formadmin:21,historieuprav:43,editzaznam:21,formbeh:21,formakt:21,datum:38,rekordy:74.5,zaznamy:72.5,profil:72.5,den:39,statistiky:26,knihovna:38,tvorba2:21,tvorba3:21,tvorba4:21,tvorbad:21,tvorba:21,zapis:26,uprava:38,bodovani:38,historie:43,rokparty:75.2};
+  const SHIFT={dnesek:26,parta:26,navyky:26,ja:26,pozvat:76.5,cile:76.5,feed:72.5,notifikace:76.5,addsheet:26,vyb1:38,vyb2:38,vyb3:38,vyb4:38,vyb5:38,vyb6:38,vyb7:38,formcviks:21,formcvikv:21,formcvik:21,formlez:21,navykyempty:26,histempty:43,formadmin:21,historieuprav:43,editzaznam:41,formbeh:21,formakt:21,datum:38,rekordy:74.5,zaznamy:72.5,profil:72.5,den:39,statistiky:26,knihovna:38,tvorba2:21,tvorba3:21,tvorba4:21,tvorbad:21,tvorba:21,zapis:26,uprava:57.5,bodovani:73,historie:76.5,rokparty:75.2};
   const shift=SHIFT[bodyKey]||0;
   const kcls=(bodyKey in S)?` ipx-k-${bodyKey}`:'';
   return `<div class="ipx"><div class="ipx-scr">
@@ -581,7 +623,7 @@ R.innerHTML = [
     ['3.1 <svg class="i"><use href="#i-check"/></svg> Statistiky návyků','statistiky',{active:2}],['3.2 <svg class="i"><use href="#i-check"/></svg> Knihovna návyků','knihovna'],['3.3 <svg class="i"><use href="#i-check"/></svg> Nový návyk · Každý den','tvorba'],['3.3b <svg class="i"><use href="#i-check"/></svg> Frekvence · Vybrané dny','tvorba2'],['3.3c <svg class="i"><use href="#i-check"/></svg> Frekvence · Týdně','tvorba3'],['3.3d <svg class="i"><use href="#i-check"/></svg> Frekvence · Měsíčně','tvorba4'],['3.3e <svg class="i"><use href="#i-check"/></svg> Frekvence · Ročně','tvorbad'],['3.4 <svg class="i"><use href="#i-check"/></svg> Zápis hodnoty','zapis',{full:false}],['3 <svg class="i"><use href="#i-check"/></svg> (prázdné) žádný návyk','navykyempty',{active:2}]
   ],'done'),
   tree('4 · Já','Tvůj osobní svět a nastavení.','ja',3,[
-    ['4.1 Moje historie','historie',{active:3}],['4.1b Úprava/smazání záznamu','editzaznam'],['4.1c Historie prázdná','histempty'],['4.2 Úprava profilu','uprava'],['4.2b Historie úprav','historieuprav'],['4.3 Jak se boduje','bodovani'],['4.4 Notifikace','notifikace'],['4.5 Cíle & ochrana série','cile'],['4.6 Pozvat kamaráda (admin)','pozvat']
+    ['4.1 Moje historie','historie',{active:3}],['4.1b Úprava/smazání záznamu','editzaznam'],['4.1c Historie prázdná','histempty'],['4.2 Úprava profilu','uprava'],['4.2b Historie úprav','historieuprav'],['4.3 Jak se boduje','bodovani',{active:3}],['4.4 Notifikace','notifikace',{active:3}],['4.5 Cíle & ochrana série','cile',{active:3}],['4.6 Pozvat kamaráda (admin)','pozvat',{active:3}]
   ],'done'),
   tree('5 · Přihlášení','Přihlášení a první přiřazení profilu.','login',null,[
     ['5.1 Výběr profilu (claim)','claim'],['5.2 Registrace','registrace'],['5.3 Zapomenuté heslo','forgot'],['5.4 Odkaz odeslán','authsent'],['5.5 Nové heslo','newpass']
