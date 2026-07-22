@@ -1835,7 +1835,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .rplbl{font-size:12px;font-weight:700;color:var(--sec);text-transform:uppercase;letter-spacing:.06em;margin-bottom:11px;}
 .mm .body{flex:1;overflow:hidden;padding:13px 14px 78px;color:var(--label);}
 .mm .formb{position:static;}
-.mm .body.formb .ff{position:absolute;left:14px;right:14px;bottom:12px;}
+.mm .body.formb .ff{position:absolute;left:14px;right:14px;bottom:12px;background:var(--bg);padding-top:8px;}
 .mm .notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:116px;height:24px;background:#111;border-radius:0 0 15px 15px;z-index:5;}
 .mm .nav{display:flex;justify-content:space-between;align-items:center;padding:15px 2px 7px;}
 .mm .nav .ttl{font-size:23px;font-weight:800;letter-spacing:-.03em;}
@@ -2336,7 +2336,7 @@ body.mm-full{background:#EDF0EC;}
   .rootpair{display:flex;gap:34px;justify-content:center;align-items:flex-start;flex-wrap:wrap;margin-bottom:6px;} .rp{display:flex;flex-direction:column;align-items:center;} .rplbl{font-size:12px;font-weight:700;color:var(--sec);text-transform:uppercase;letter-spacing:.06em;margin-bottom:11px;}
   .scr{width:100%;height:100%;background-color:var(--bg);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");border-radius:31px;overflow:hidden;position:relative;display:flex;flex-direction:column;}
   .body{flex:1;overflow:hidden;padding:13px 14px 78px;color:var(--label);}
-  .formb{position:static;} .body.formb .ff{position:absolute;left:14px;right:14px;bottom:12px;}
+  .formb{position:static;} .body.formb .ff{position:absolute;left:14px;right:14px;bottom:12px;background:var(--bg);padding-top:8px;}
   .notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:116px;height:24px;background:#111;border-radius:0 0 15px 15px;z-index:5;} [data-theme="dark"] .notch{background:#000;}
   .nav{display:flex;justify-content:space-between;align-items:center;padding:15px 2px 7px;} .nav:not(:has(.date)){padding-top:20px;} .nav:has(.date){padding-top:10px;} .lc .lr{padding-top:7px;padding-bottom:7px;} .lc ~ .sl:has(+ .hl){margin-top:21px;} .nav .ttl{font-size:23px;font-weight:800;letter-spacing:-.03em;} .nav .date{font-size:12px;font-weight:600;color:var(--sec);}
   .nav .right{display:flex;align-items:center;gap:9px;} .av{width:29px;height:29px;border-radius:50%;display:grid;place-items:center;font-size:10.5px;font-weight:700;background:#2FB17022;color:#1f8a52;}
@@ -7858,7 +7858,20 @@ function habitCardHtml(h, pid, sel, selDate, today, section){
 }
 
 async function toggleHabitToday(id){
-  if (demoGuard()) return;
+  // DEMO: UI funguje naplno, jen se nepise do DB (zmeny in-memory) — Marek 2026-07-22
+  if (isDemo()){
+    const pidD = currentHabitPlayer(); if(!pidD) return;
+    const selD = state.habitDay || todayStr(); if (selD > todayStr()) return;
+    const hD = state.habits.find(x=>x.id===id); if(!hD) return;
+    const zD = habitEffZapis(hD);
+    const exD = habitLogObj(id, pidD, selD);
+    const doneD = habitIsDoneOn(hD, pidD, selD);
+    if (zD !== 'check' && !doneD){ openHabitValue(id); return; }   // meritelny -> sheet Zapis hodnoty
+    if (doneD && exD) state.habitLogs = state.habitLogs.filter(l=>l.id!==exD.id);
+    else if (!doneD) state.habitLogs.push({ id:'demo-'+Math.random().toString(36).slice(2), habit_id:id, player_id:pidD, datum:selD, hodnota:null });
+    renderNavyky();
+    return;
+  }
   const pid = currentHabitPlayer(); if (!pid) return;
   const sel = state.habitDay || todayStr();
   if (sel > todayStr()) return;  // budoucnost nejde odškrtnout
@@ -7945,7 +7958,17 @@ function openHabitValue(id){
 function onHvSlider(v){ const h = state.habits.find(x => x.id === state.habitValueId); const jed = h ? (h.cil_jednotka || '') : ''; document.getElementById('hv-slider-val').textContent = `${v} ${jed}`.trim(); }
 function closeHabitValue(){ document.getElementById('habit-value-modal').classList.remove('active'); unlockBodyScroll(); state.habitValueId = null; state.statEditCell = null; }
 async function saveHabitValue(){
-  if (demoGuard()) { closeHabitValue(); return; }
+  if (isDemo()){
+    const pid = currentHabitPlayer(); const id = state.habitValueId; if (!pid || !id){ closeHabitValue(); return; }
+    const h = state.habits.find(x => x.id === id); const z = habitEffZapis(h);
+    const sel = state.habitDay || todayStr();
+    const val = z === 'slider' ? Number(document.getElementById('hv-slider').value) : parseFloat(document.getElementById('hv-input').value);
+    const existing = habitLogObj(id, pid, sel);
+    if (val > 0){ if (existing) existing.hodnota = val; else state.habitLogs.push({ id:'demo-'+Math.random().toString(36).slice(2), habit_id:id, player_id:pid, datum:sel, hodnota:val }); }
+    const se = state.statEditCell; closeHabitValue();
+    if (se && state.habitTab === 'stats') renderHabitStats(); else renderNavyky();
+    return;
+  }
   const pid = currentHabitPlayer(); const id = state.habitValueId; if (!pid || !id) return;
   const h = state.habits.find(x => x.id === id); const z = habitEffZapis(h);
   const sel = state.habitDay || todayStr();
@@ -7965,7 +7988,15 @@ async function saveHabitValue(){
   } catch(e){ toast('Chyba: ' + e.message, 'error'); }
 }
 async function clearHabitValue(){
-  if (demoGuard()) { closeHabitValue(); return; }
+  if (isDemo()){
+    const pid = currentHabitPlayer(); const id = state.habitValueId;
+    const sel = state.habitDay || todayStr();
+    const existing = id ? habitLogObj(id, pid, sel) : null;
+    if (existing) state.habitLogs = state.habitLogs.filter(l => l.id !== existing.id);
+    const se = state.statEditCell; closeHabitValue();
+    if (se && state.habitTab === 'stats') renderHabitStats(); else renderNavyky();
+    return;
+  }
   const pid = currentHabitPlayer(); const id = state.habitValueId; if (!pid || !id) return;
   const sel = state.habitDay || todayStr();
   const existing = habitLogObj(id, pid, sel);
@@ -9743,7 +9774,7 @@ function applyDemoData(){
   // ---- návyky (5 ks dle mockupu) + logy: voda streak 17, čtení streak 6, běh 1/3 tento týden ----
   const habits=[], hlogs=[];
   const hb=(id,nazev,ikona,barva,extra,poradi)=>habits.push(Object.assign({id:id,player_id:ME,nazev:nazev,ikona:ikona,barva:barva,frekvence_typ:'daily',frekvence_cil:null,frekvence_dny:0,mira_typ:null,zapis_typ:'check',cil_hodnota:null,cil_jednotka:null,cast_dne:null,kotva:null,poznamka:null,zacatek:D(60),konec:null,poradi:poradi,archived:false,created_at:CA(60,8,poradi)},extra||{}));
-  hb('demo-h1','Pít 2 l vody','water','#0A84FF',null,0);
+  hb('demo-h1','Pít 2 l vody','water','#0A84FF',{zapis_typ:'number',cil_hodnota:8,cil_jednotka:'sklenic'},0); /* meritelny - kvuli sheetu Zapis hodnoty (mockup 3.4) */
   hb('demo-h2','Číst 20 min','book','#34C759',null,1);
   hb('demo-h3','Spát do 23:00','moon','#8B6FE0',null,2);
   hb('demo-h4','Strečink 10 min','stretch','#FF9F0A',null,3);
