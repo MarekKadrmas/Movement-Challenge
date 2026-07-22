@@ -6492,7 +6492,14 @@ function mmBpMount(host, tpl, extraCss){
   const z = (Math.min(Math.max(1,window.innerWidth),393)-8)/306;
   scr.style.zoom = z;
   scr.style.margin = (window.innerWidth>393?'0 auto':'');
-  scr.style.minHeight = (window.innerHeight/z)+'px';
+  // UNIFORMNI SPODEK (stejny fix jako mmMountZapis): pevna vyska misto min-height —
+  // u vysokeho obsahu (tvorba navyku s celou mrizkou ikon) jinak spodni .ff
+  // (Platnost + Vytvorit navyk) ujel pod obrazovku. Obsah scrolluje uvnitr .body,
+  // .ff kotvi na .scr -> tlacitko je VZDY videt.
+  scr.style.height = (window.innerHeight/z)+'px';
+  scr.style.overflow = 'hidden';
+  const bodyScroll = scr.querySelector('.body');
+  if (bodyScroll) { bodyScroll.style.height = '100%'; bodyScroll.style.overflowY = 'auto'; bodyScroll.style.webkitOverflowScrolling = 'touch'; }
   return sh;
 }
 // Obsah tece nad absolutni .ff — rezervuj jeji vysku (stejny fix jako mmMountZapis).
