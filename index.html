@@ -2189,7 +2189,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .bmk svg{width:28px;height:28px;}
 .mm /* ＋ tlačítko + spodní lišta */
   .add{box-shadow:0 6px 16px -4px color-mix(in srgb,var(--green) 55%,transparent);}
-.mm .tb a.on{opacity:1;background:color-mix(in srgb,var(--green) 16%,transparent);color:var(--green);}.tbind{position:absolute;left:0;top:6px;width:46px;height:36px;border-radius:999px;background:color-mix(in srgb,var(--green) 16%,transparent);transition:transform .3s cubic-bezier(.25,.8,.3,1);will-change:transform;pointer-events:none;}.tb:has(.tbind) a.on{background:transparent;}.tb a{transition:color .25s,opacity .25s;}
+.mm .tb a.on{opacity:1;background:color-mix(in srgb,var(--green) 16%,transparent);color:var(--green);}.tbind{position:absolute;left:0;top:6px;width:46px;height:36px;border-radius:999px;background:color-mix(in srgb,var(--green) 16%,transparent);transition:transform .42s cubic-bezier(.3,1.45,.42,1);will-change:transform;pointer-events:none;}.tb:has(.tbind) a.on{background:transparent;}.tb a{transition:color .25s,opacity .25s;}@keyframes mm-tabpop{0%{transform:scale(.82);}55%{transform:scale(1.14);}100%{transform:scale(1);}}
 .mm /* ===== Momentum — detaily,.mm ikonografie & signature ===== */
   .i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.14em;flex:0 0 auto;}
 .mm .sck .i{color:#F0603F;animation:flame 2.4s ease-in-out infinite;transform-origin:center 78%;}
@@ -2488,7 +2488,7 @@ body.mm-full{background:#EDF0EC;}
   .brandsub{color:var(--docmuted);font-size:15px;max-width:640px;margin:2px auto 10px;font-weight:600;}
   /* ＋ tlačítko + spodní lišta */
   .add{box-shadow:0 6px 16px -4px color-mix(in srgb,var(--green) 55%,transparent);}
-  .tb a.on{opacity:1;background:color-mix(in srgb,var(--green) 16%,transparent);color:var(--green);}.tbind{position:absolute;left:0;top:6px;width:46px;height:36px;border-radius:999px;background:color-mix(in srgb,var(--green) 16%,transparent);transition:transform .3s cubic-bezier(.25,.8,.3,1);will-change:transform;pointer-events:none;}.tb:has(.tbind) a.on{background:transparent;}.tb a{transition:color .25s,opacity .25s;}
+  .tb a.on{opacity:1;background:color-mix(in srgb,var(--green) 16%,transparent);color:var(--green);}.tbind{position:absolute;left:0;top:6px;width:46px;height:36px;border-radius:999px;background:color-mix(in srgb,var(--green) 16%,transparent);transition:transform .42s cubic-bezier(.3,1.45,.42,1);will-change:transform;pointer-events:none;}.tb:has(.tbind) a.on{background:transparent;}.tb a{transition:color .25s,opacity .25s;}@keyframes mm-tabpop{0%{transform:scale(.82);}55%{transform:scale(1.14);}100%{transform:scale(1);}}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;}}
 
   /* ===== Momentum — detaily, ikonografie & signature ===== */
@@ -5394,6 +5394,8 @@ function mmBarPos(sh, idx, fromIdx){
     ind.style.transition="";
   }
   ind.style.transform="translateX("+links[idx].offsetLeft+"px)";
+  const svg=links[idx].querySelector("svg");
+  if(svg && fromIdx!=null && fromIdx!==idx){ svg.style.animation="none"; void svg.getBoundingClientRect(); svg.style.animation="mm-tabpop .38s cubic-bezier(.3,1.5,.4,1)"; }
 }
 function mmGo(v){ mmCloseSub(); const b=document.querySelector(".tb-btn[data-view=\""+v+"\"]"); if(b){ const prev=(window._mmTabIdx!=null?window._mmTabIdx:null); b.click(); window._mmTabIdx=MM_TAB_IDX[v]; requestAnimationFrame(()=>{ const h=mmBarHost(v); mmBarPos(h&&h.shadowRoot, MM_TAB_IDX[v], prev); }); } }
 function mmChrome(){ const full=state.view==='prehled'||state.view==='hraci'||state.view==='navyky'||state.view==='historie'; document.body.classList.toggle('mm-full', full); const tb=document.getElementById('mc-tabbar'); if(tb) tb.style.display=full?'none':''; const h=document.querySelector('.header'); if(h) h.style.display=full?'none':''; const f=document.querySelector('.fab-group'); if(f) f.style.display=full?'none':''; }
