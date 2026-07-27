@@ -210,7 +210,7 @@
   .lc>.lr:nth-child(1) .lrk{color:#C79A2E;}
   .lc>.lr:nth-child(2) .lrk{color:#8E97A0;}
   .lc>.lr:nth-child(3) .lrk{color:#B06C3C;}
-  .lpt{display:grid;grid-template-columns:48px 42px;gap:5px;align-items:baseline;text-align:right;}
+  .lpt{display:flex;align-items:baseline;justify-content:flex-end;gap:6px;}.lpt .lv{font-size:14.5px;font-weight:800;color:var(--label);font-variant-numeric:tabular-nums;}.lr{position:relative;}.lbar{position:absolute;left:66px;right:13px;bottom:5px;height:3px;border-radius:2px;background:color-mix(in srgb,var(--sep) 55%,transparent);overflow:hidden;}.lbar i{display:block;height:100%;border-radius:2px;}.wkempty{padding:10px 4px;font-size:11.5px;color:var(--sec);font-weight:600;text-align:center;}
   .lpt .gap{margin-left:0;text-align:left;min-width:0;}
   .lnm .i{color:var(--gold);vertical-align:-.12em;}
   .wkbars .wkbar:nth-child(1) .wkm{color:#C6982B;}
@@ -457,13 +457,13 @@ S.dnesek=()=>`<div class="nav"><div><div class="date">Pátek 27. 6.</div><div cl
   <div class="hbm" style="margin-top:11px"><div class="hi" style="background:#34C75922"><svg class="i"><use href="#i-list"/></svg></div><div class="ht">Návyky dnes<small>2 splněné · 3 zbývají</small></div><div class="pct" style="display:flex;align-items:center;gap:5px">2/5<span style="color:var(--ter);font-weight:400">›</span></div></div>
   <div class="sl"><span>Žebříček · tento týden</span><a>Parta →</a></div>
   <div class="lc">
-    <div class="lr one"><div class="lrk">1</div><div class="lav" style="background:#E8902F22;color:#b9701f">KÁ</div><div class="lnm">Káťa <svg class="i"><use href="#i-crown"/></svg></div><div class="lpt">612 <small class="gap">+107</small></div></div>
-    <div class="lr"><div class="lrk">2</div><div class="lav" style="background:#E05B4B22;color:#c0392b">MA</div><div class="lnm">Martin</div><div class="lpt">548 <small class="gap">+43</small></div></div>
-    <div class="lr"><div class="lrk">3</div><div class="lav" style="background:#8B6FE022;color:#6a52c0">PÉ</div><div class="lnm">Péťa</div><div class="lpt">510 <small class="gap">+5</small></div></div>
-    <div class="lr me"><div class="lrk">4</div><div class="lav" style="background:#2FB17022;color:#1f8a52">MÁ</div><div class="lnm">Mára (ty)</div><div class="lpt">505 <small class="gap" style="color:var(--green)">ty</small></div></div>
-    <div class="lr"><div class="lrk">5</div><div class="lav" style="background:#3FAEC222;color:#2a8599">JA</div><div class="lnm">Janča</div><div class="lpt">493 <small class="gap">−12</small></div></div>
-    <div class="lr"><div class="lrk">6</div><div class="lav" style="background:#E8588E22;color:#c83f73">NA</div><div class="lnm">Natálka</div><div class="lpt">421 <small class="gap">−84</small></div></div>
-    <div class="lr"><div class="lrk">7</div><div class="lav" style="background:#6B756F22;color:#566059">MT</div><div class="lnm">Matěj</div><div class="lpt">388 <small class="gap">−117</small></div></div>
+    <div class="lr one"><div class="lrk">1</div><div class="lav" style="background:#E8902F22;color:#b9701f">KÁ</div><div class="lnm">Káťa <svg class="i"><use href="#i-crown"/></svg></div><div class="lpt"><small class="gap">+107</small><b class="lv">612</b></div><div class="lbar"><i style="width:100%;background:#b9701f"></i></div></div>
+    <div class="lr"><div class="lrk">2</div><div class="lav" style="background:#E05B4B22;color:#c0392b">MA</div><div class="lnm">Martin</div><div class="lpt"><small class="gap">+43</small><b class="lv">548</b></div><div class="lbar"><i style="width:90%;background:#c0392b"></i></div></div>
+    <div class="lr"><div class="lrk">3</div><div class="lav" style="background:#8B6FE022;color:#6a52c0">PÉ</div><div class="lnm">Péťa</div><div class="lpt"><small class="gap">+5</small><b class="lv">510</b></div><div class="lbar"><i style="width:83%;background:#6a52c0"></i></div></div>
+    <div class="lr me"><div class="lrk">4</div><div class="lav" style="background:#2FB17022;color:#1f8a52">MÁ</div><div class="lnm">Mára (ty)</div><div class="lpt"><small class="gap" style="color:var(--green)">ty</small><b class="lv">505</b></div><div class="lbar"><i style="width:83%;background:#1f8a52"></i></div></div>
+    <div class="lr"><div class="lrk">5</div><div class="lav" style="background:#3FAEC222;color:#2a8599">JA</div><div class="lnm">Janča</div><div class="lpt"><small class="gap">−12</small><b class="lv">493</b></div><div class="lbar"><i style="width:81%;background:#2a8599"></i></div></div>
+    <div class="lr"><div class="lrk">6</div><div class="lav" style="background:#E8588E22;color:#c83f73">NA</div><div class="lnm">Natálka</div><div class="lpt"><small class="gap">−84</small><b class="lv">421</b></div><div class="lbar"><i style="width:69%;background:#c83f73"></i></div></div>
+    <div class="lr"><div class="lrk">7</div><div class="lav" style="background:#6B756F22;color:#566059">MT</div><div class="lnm">Matěj</div><div class="lpt"><small class="gap">−117</small><b class="lv">388</b></div><div class="lbar"><i style="width:63%;background:#566059"></i></div></div>
   </div>
   <div class="sl"><span>Dění v partě</span><a>Parta →</a></div>
   <div class="hl">
@@ -481,13 +481,13 @@ S.parta=()=>navhdr('Parta')+`
     </div></div>
   <div class="pcbar"><div class="pseg"><i class="psegt" style="transform:translateX(100%)"></i><b>Celkem</b><b class="on">Týden</b><b>Měsíc</b></div><div class="pseg pdiv"><i class="psegt"></i><b class="on">Vše</b><b>Cviky</b><b>Aktivity</b></div></div>
   <div class="lc">
-    <div class="lr one"><div class="lrk">1</div><div class="lav" style="background:#E8902F22;color:#b9701f">KÁ</div><div class="lnm">Káťa <svg class="i"><use href="#i-crown"/></svg></div><div class="lpt">4 210 <small class="gap">+445</small></div></div>
-    <div class="lr"><div class="lrk">2</div><div class="lav" style="background:#E05B4B22;color:#c0392b">MA</div><div class="lnm">Martin</div><div class="lpt">3 980 <small class="gap">+215</small></div></div>
-    <div class="lr me"><div class="lrk">3</div><div class="lav" style="background:#2FB17022;color:#1f8a52">MÁ</div><div class="lnm">Mára (ty)</div><div class="lpt">3 765 <small class="gap" style="color:var(--green)">ty</small></div></div>
-    <div class="lr"><div class="lrk">4</div><div class="lav" style="background:#3FAEC222;color:#2a8599">JA</div><div class="lnm">Janča</div><div class="lpt">3 540 <small class="gap">−225</small></div></div>
-    <div class="lr"><div class="lrk">5</div><div class="lav" style="background:#8B6FE022;color:#6a52c0">PÉ</div><div class="lnm">Péťa</div><div class="lpt">3 120 <small class="gap">−645</small></div></div>
-    <div class="lr"><div class="lrk">6</div><div class="lav" style="background:#E8588E22;color:#c83f73">NA</div><div class="lnm">Natálka</div><div class="lpt">2 890 <small class="gap">−875</small></div></div>
-    <div class="lr"><div class="lrk">7</div><div class="lav" style="background:#6B756F22;color:#566059">MT</div><div class="lnm">Matěj</div><div class="lpt">2 410 <small class="gap">−1355</small></div></div>
+    <div class="lr one"><div class="lrk">1</div><div class="lav" style="background:#E8902F22;color:#b9701f">KÁ</div><div class="lnm">Káťa <svg class="i"><use href="#i-crown"/></svg></div><div class="lpt"><small class="gap">+445</small><b class="lv">4 210</b></div><div class="lbar"><i style="width:100%;background:#b9701f"></i></div></div>
+    <div class="lr"><div class="lrk">2</div><div class="lav" style="background:#E05B4B22;color:#c0392b">MA</div><div class="lnm">Martin</div><div class="lpt"><small class="gap">+215</small><b class="lv">3 980</b></div><div class="lbar"><i style="width:95%;background:#c0392b"></i></div></div>
+    <div class="lr me"><div class="lrk">3</div><div class="lav" style="background:#2FB17022;color:#1f8a52">MÁ</div><div class="lnm">Mára (ty)</div><div class="lpt"><small class="gap" style="color:var(--green)">ty</small><b class="lv">3 765</b></div><div class="lbar"><i style="width:89%;background:#1f8a52"></i></div></div>
+    <div class="lr"><div class="lrk">4</div><div class="lav" style="background:#3FAEC222;color:#2a8599">JA</div><div class="lnm">Janča</div><div class="lpt"><small class="gap">−225</small><b class="lv">3 540</b></div><div class="lbar"><i style="width:84%;background:#2a8599"></i></div></div>
+    <div class="lr"><div class="lrk">5</div><div class="lav" style="background:#8B6FE022;color:#6a52c0">PÉ</div><div class="lnm">Péťa</div><div class="lpt"><small class="gap">−645</small><b class="lv">3 120</b></div><div class="lbar"><i style="width:74%;background:#6a52c0"></i></div></div>
+    <div class="lr"><div class="lrk">6</div><div class="lav" style="background:#E8588E22;color:#c83f73">NA</div><div class="lnm">Natálka</div><div class="lpt"><small class="gap">−875</small><b class="lv">2 890</b></div><div class="lbar"><i style="width:69%;background:#c83f73"></i></div></div>
+    <div class="lr"><div class="lrk">7</div><div class="lav" style="background:#6B756F22;color:#566059">MT</div><div class="lnm">Matěj</div><div class="lpt"><small class="gap">−1355</small><b class="lv">2 410</b></div><div class="lbar"><i style="width:57%;background:#566059"></i></div></div>
   </div>
   <div class="sl"><span>Aktivita party</span><a>celý rok →</a></div><div class="heatcard"><div class="hbnav"><span class="hbarr">‹</span><span class="hbrange">14.–27. 6.</span><span class="hbarr">›</span><span class="hbtoday">⟳ Dnes</span></div>${heat()}</div>
   <div class="hbm" style="margin-top:13px;padding:6px 12px"><div class="hi" style="background:#E0A23A22;width:27px;height:27px;font-size:14px"><svg class="i"><use href="#i-medal"/></svg></div><div class="ht">Rekordy & maximálky všech<small>všichni hráči na jednom místě</small></div><span class="rx" style="color:var(--ter);font-size:16px">›</span></div>

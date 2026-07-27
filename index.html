@@ -2204,7 +2204,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .lc>.lr:nth-child(1) .lrk{color:#C79A2E;}
 .mm .lc>.lr:nth-child(2) .lrk{color:#8E97A0;}
 .mm .lc>.lr:nth-child(3) .lrk{color:#B06C3C;}
-.mm .lpt{display:grid;grid-template-columns:48px 42px;gap:5px;align-items:baseline;text-align:right;}
+.mm .lpt{display:flex;align-items:baseline;justify-content:flex-end;gap:6px;}.lpt .lv{font-size:14.5px;font-weight:800;color:var(--label);font-variant-numeric:tabular-nums;}.lr{position:relative;}.lbar{position:absolute;left:66px;right:13px;bottom:5px;height:3px;border-radius:2px;background:color-mix(in srgb,var(--sep) 55%,transparent);overflow:hidden;}.lbar i{display:block;height:100%;border-radius:2px;}.wkempty{padding:10px 4px;font-size:11.5px;color:var(--sec);font-weight:600;text-align:center;}
 .mm .lpt .gap{margin-left:0;text-align:left;min-width:0;}
 .mm .lnm .i{color:var(--gold);vertical-align:-.12em;}
 .mm .wkbars .wkbar:nth-child(1) .wkm{color:#C6982B;}
@@ -2508,7 +2508,7 @@ body.mm-full{background:#EDF0EC;}
   .lc>.lr:nth-child(1) .lrk{color:#C79A2E;}
   .lc>.lr:nth-child(2) .lrk{color:#8E97A0;}
   .lc>.lr:nth-child(3) .lrk{color:#B06C3C;}
-  .lpt{display:grid;grid-template-columns:48px 42px;gap:5px;align-items:baseline;text-align:right;}
+  .lpt{display:flex;align-items:baseline;justify-content:flex-end;gap:6px;}.lpt .lv{font-size:14.5px;font-weight:800;color:var(--label);font-variant-numeric:tabular-nums;}.lr{position:relative;}.lbar{position:absolute;left:66px;right:13px;bottom:5px;height:3px;border-radius:2px;background:color-mix(in srgb,var(--sep) 55%,transparent);overflow:hidden;}.lbar i{display:block;height:100%;border-radius:2px;}.wkempty{padding:10px 4px;font-size:11.5px;color:var(--sec);font-weight:600;text-align:center;}
   .lpt .gap{margin-left:0;text-align:left;min-width:0;}
   .lnm .i{color:var(--gold);vertical-align:-.12em;}
   .wkbars .wkbar:nth-child(1) .wkm{color:#C6982B;}
@@ -5444,8 +5444,8 @@ function renderDnesek(){
   const habTotal=state.habits.length;
   const habDone=new Set(state.habitLogs.filter(l=>l.datum===today).map(l=>l.habit_id)).size;
   const rows=board.slice(0,7).map((p,i)=>{ const isMe=me&&p.id===me.id; const col=safeColor(p.barva);
-    const d=p.total-myTotal; const gap=isMe?'<small class="gap" style="color:var(--green)">ty</small>':`<small class="gap">${d>0?'+':(d<0?'−':'')}${Math.abs(d)}</small>`;
-    return `<div class="lr${i===0?' one':''}${isMe?' me':''}"><div class="lrk">${i+1}</div><div class="lav" style="background:${col}22;color:${col}">${esc(initials(p.jmeno))}</div><div class="lnm">${esc(p.jmeno)}${isMe?' (ty)':''}${i===0?' <svg class="i"><use href="#i-crown"/></svg>':''}</div><div class="lpt">${fmtNum(p.total)} ${gap}</div></div>`;
+    const d=p.total-myTotal; const gap=isMe?'<small class="gap" style="color:var(--green)">ty</small>':`<small class="gap">${d>0?'+':(d<0?'−':'')}${Math.abs(d)}</small>`; const pct=Math.max(4,Math.round(((p.total||0)/Math.max(1,(board[0]&&board[0].total)||0))*100));
+    return `<div class="lr${i===0?' one':''}${isMe?' me':''}"><div class="lrk">${i+1}</div><div class="lav" style="background:${col}22;color:${col}">${esc(initials(p.jmeno))}</div><div class="lnm">${esc(p.jmeno)}${isMe?' (ty)':''}${i===0?' <svg class="i"><use href="#i-crown"/></svg>':''}</div><div class="lpt">${gap}<b class="lv">${fmtNum(p.total)}</b></div><div class="lbar"><i style="width:${pct}%;background:${col}"></i></div></div>`;
   }).join('');
   let feed='';
   const mi=board.findIndex(b=>me&&b.id===me.id);
@@ -5647,7 +5647,9 @@ function renderParta(){
     const pct=topWk>0?Math.max(4,Math.round(p.total/topWk*100)):0;
     return `<div class="wkbar${isMe?' me':''}"><span class="wkm"><svg class="i"><use href="#i-medal"/></svg></span><span class="wknm">${isMe?'Ty':esc(mmFirst(p.jmeno))}</span><span class="wktr"><i style="width:${pct}%;background:${rankColors[i]}"></i></span><span class="wkpt">${fmtNum(p.total)}</span></div>`;
   }).join('');
-  if(me && (meWkIdx<0 || meWkIdx>=3)){
+  // Marek 2026-07-27: vsichni 0 b -> zadne medaile/poradi, neutralni prazdny stav
+  if(!(topWk>0)) wkRows='<div class="wkempty">Tento týden zatím bez zápisů — první zápis povede ligu</div>';
+  if(topWk>0 && me && (meWkIdx<0 || meWkIdx>=3)){
     const p=meWkIdx>=0?weekBoard[meWkIdx]:{total:0};
     const pct=topWk>0?Math.max(4,Math.round(p.total/topWk*100)):0;
     wkRows+=`<div class="wkbar me"><span class="wkm">${meWkIdx>=0?(meWkIdx+1)+'.':'—'}</span><span class="wknm">Ty</span><span class="wktr"><i style="width:${pct}%;background:var(--green)"></i></span><span class="wkpt">${fmtNum(p.total)}</span></div>`;
@@ -5658,8 +5660,8 @@ function renderParta(){
   const myTotal=me?(board.find(b=>b.id===me.id)?.total||0):0;
   const rows=board.map((p,i)=>{
     const isMe=me&&p.id===me.id; const col=safeColor(p.barva);
-    const d=p.total-myTotal; const gap=isMe?'<small class="gap" style="color:var(--green)">ty</small>':`<small class="gap">${d>0?'+':(d<0?'−':'')}${Math.abs(d)}</small>`;
-    return `<div class="lr${i===0?' one':''}${isMe?' me':''}" style="cursor:pointer" onclick="mmOpenSub('profil','${p.id}')"><div class="lrk">${i+1}</div><div class="lav" style="background:${col}22;color:${col}">${esc(initials(p.jmeno))}</div><div class="lnm">${esc(p.jmeno)}${isMe?' (ty)':''}${i===0?' <svg class="i"><use href="#i-crown"/></svg>':''}</div><div class="lpt">${fmtNum(p.total)} ${gap}</div></div>`;
+    const d=p.total-myTotal; const gap=isMe?'<small class="gap" style="color:var(--green)">ty</small>':`<small class="gap">${d>0?'+':(d<0?'−':'')}${Math.abs(d)}</small>`; const pct=Math.max(4,Math.round(((p.total||0)/Math.max(1,(board[0]&&board[0].total)||0))*100));
+    return `<div class="lr${i===0?' one':''}${isMe?' me':''}" style="cursor:pointer" onclick="mmOpenSub('profil','${p.id}')"><div class="lrk">${i+1}</div><div class="lav" style="background:${col}22;color:${col}">${esc(initials(p.jmeno))}</div><div class="lnm">${esc(p.jmeno)}${isMe?' (ty)':''}${i===0?' <svg class="i"><use href="#i-crown"/></svg>':''}</div><div class="lpt">${gap}<b class="lv">${fmtNum(p.total)}</b></div><div class="lbar"><i style="width:${pct}%;background:${col}"></i></div></div>`;
   }).join('');
 
   // Heatmapa party
