@@ -9655,6 +9655,28 @@ document.querySelectorAll('.tb-btn').forEach(btn => {
   const EDGE = 26, THRESH = 0.32;
   let act=null, sx=0, sy=0, dx=0, drag=false, canceled=false;
   function topLayer(){
+    // Navyky: vnitrni krok — z detailu/tvorby zpet do KNIHOVNY (ne zavrit cele okno).
+    // Pod odsouvany formular se podlozi zivy nahled knihovny (iOS efekt "predchozi stranka pod tim").
+    const hm = document.getElementById('habit-modal');
+    if(hm && hm.classList.contains('active') && state.habitView !== 'catalog'){
+      const host = document.getElementById('habit-shadow');
+      if(host) return {
+        el: host,
+        close: ()=>{ state.habitView = 'catalog'; mmMountHabit(); },
+        under: ()=>{
+          const u = document.createElement('div'); u.id = 'mm-swipe-under';
+          u.style.cssText = 'position:absolute;inset:0;z-index:0;background:var(--bg);overflow:hidden;';
+          host.parentElement.insertBefore(u, host);
+          host.style.position = 'relative'; host.style.zIndex = '1'; host.style.background = 'var(--bg)';
+          try{ const shU = mmBpMount(u, MM_BP2['knihovna'], ''); if(shU) mmHabitSync(shU); }catch(_){}
+        },
+        cleanup: ()=>{
+          const u = document.getElementById('mm-swipe-under'); if(u) u.remove();
+          host.style.position = ''; host.style.zIndex = ''; host.style.background = '';
+        }
+      };
+    }
+    // Modaly: odsouva se CELE okno vcetne podkladu -> pod nim je videt skutecna stranka.
     const MODS = [
       ['habit-value-modal', ()=>closeHabitValue()],
       ['habit-modal',       ()=>closeHabitModal()],
@@ -9667,9 +9689,8 @@ document.querySelectorAll('.tb-btn').forEach(btn => {
     for(const [id, fn] of MODS){
       const el = document.getElementById(id);
       if(el && el.classList.contains('active')){
-        const inner = el.querySelector('.modal') || el;
         const close = fn || (()=>{ el.classList.remove('active'); try{ unlockBodyScroll(); }catch(_){} });
-        return { el: inner, close };
+        return { el, close };
       }
     }
     if(typeof mmSubStack !== 'undefined' && mmSubStack.length){
@@ -9684,6 +9705,7 @@ document.querySelectorAll('.tb-btn').forEach(btn => {
     act = topLayer(); if(!act) return;
     sx = t.clientX; sy = t.clientY; dx = 0; drag = true; canceled = false;
     act.el.style.transition = 'none';
+    if(act.under){ try{ act.under(); }catch(_){} }
   }, {passive:true});
   document.addEventListener('touchmove', e=>{
     if(!drag || !act || canceled) return;
@@ -9698,14 +9720,15 @@ document.querySelectorAll('.tb-btn').forEach(btn => {
     if(!drag || !act) return;
     drag = false;
     const el = act.el, close = act.close, w = window.innerWidth;
+    const cleanup = act.cleanup || null;
     if(!canceled && dx > w * THRESH){
       el.style.transition = 'transform .18s ease-out';
       el.style.transform = 'translateX(' + w + 'px)';
-      setTimeout(()=>{ close(); el.style.transform=''; el.style.transition=''; }, 180);
+      setTimeout(()=>{ close(); el.style.transform=''; el.style.transition=''; if(cleanup){ try{ cleanup(); }catch(_){} } }, 180);
     } else {
       el.style.transition = 'transform .2s ease-out';
       el.style.transform = '';
-      setTimeout(()=>{ el.style.transition=''; }, 210);
+      setTimeout(()=>{ el.style.transition=''; if(cleanup){ try{ cleanup(); }catch(_){} } }, 210);
     }
     act = null;
   }, {passive:true});
