@@ -5611,11 +5611,14 @@ function mmPartaHeatHtml(){
   const today=new Date(); today.setHours(0,0,0,0);
   const curMon=mmHeatWeekStart(today);
   const tds=dateToStr(today);
+  // STRANKY po 14 dnech kotvene od DNESKA dozadu (Marek: jedno pretazeni = presne 2 tydny,
+  // vychozi pozice dnesek vpravo, zadne castecne tydeny/mini-skoky)
   const weeks=[];
-  for(let w=MM_HEAT_WEEKS-1; w>=0; w--){
-    const start=new Date(curMon); start.setDate(start.getDate()-w*7);
-    const days=[]; for(let i=0;i<7;i++){ const d=new Date(start); d.setDate(start.getDate()+i); const ds=dateToStr(d); if(ds<=tds) days.push(ds); }
-    if(days.length) weeks.push(days);
+  const PAGES=6;
+  for(let pg=PAGES-1; pg>=0; pg--){
+    const days=[];
+    for(let i=13;i>=0;i--){ const d=new Date(today); d.setDate(today.getDate()-(pg*14+i)); days.push(dateToStr(d)); }
+    weeks.push(days);
   }
   const allDays=weeks.flat();
   const per={}; players.forEach(p=>{ const m={}; allDays.forEach(ds=>{ m[ds]=sumRoundedBody(state.cviky.filter(c=>c.player_id===p.id&&c.datum===ds))+sumRoundedBody(state.aktivity.filter(a=>a.player_id===p.id&&a.datum===ds)); }); per[p.id]=m; });
@@ -5643,9 +5646,11 @@ function mmHeatUpdateLabel(sh){
   const sc=sh.querySelector('[data-heatscroll]'); const lab=sh.querySelector('.hbrange'); if(!sc||!lab) return;
   const blocks=[...sc.querySelectorAll('.hweek')]; if(!blocks.length) return;
   const CW=15; // bunka 13 + gap 2
-  let px=sc.scrollLeft, k=0;
-  while(k<blocks.length-1 && px>=blocks[k].offsetWidth+MM_HEAT_GAPX){ px-=blocks[k].offsetWidth+MM_HEAT_GAPX; k++; }
-  const dIdx=Math.min(6, Math.round(px/CW));
+  const unit=blocks[0].offsetWidth+MM_HEAT_GAPX;
+  const px=sc.scrollLeft;
+  const k=Math.min(blocks.length-1, Math.floor((px+1)/unit));
+  let rem=px-k*unit; if(rem<0) rem=0;
+  const dIdx=Math.min(13, Math.round(rem/CW));
   const d0=new Date(blocks[k].getAttribute('data-w0')+'T00:00:00'); d0.setDate(d0.getDate()+dIdx);
   const dEnd=new Date(d0); dEnd.setDate(d0.getDate()+13);
   const lastD=new Date(blocks[blocks.length-1].getAttribute('data-w6')+'T00:00:00');
