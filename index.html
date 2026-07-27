@@ -1982,7 +1982,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .fpill .cx{color:var(--ter);margin-left:1px;}
 .mm .pcbar{display:flex;background:var(--card);box-shadow:var(--shadow);border-radius:999px;overflow:hidden;margin:2px 0 10px;}
 .mm .pcbar .pcb{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:9px 8px;font-size:12px;font-weight:700;}
-.mm .pcbar .pcb+.pcb{border-left:1px solid var(--sep);}
+.mm .pcbar .pcb+.pcb{border-left:1px solid var(--sep);}.pseg{position:relative;flex:1;display:flex;padding:4px;}.pseg b{position:relative;z-index:1;flex:1;text-align:center;font-size:11.5px;font-weight:700;padding:5px 0;color:var(--sec);cursor:pointer;border-radius:999px;white-space:nowrap;}.pseg b.on{color:var(--green);}.psegt{position:absolute;top:4px;bottom:4px;left:4px;width:calc((100% - 8px)/3);border-radius:999px;background:color-mix(in srgb,var(--green) 14%,transparent);transition:transform .3s cubic-bezier(.55,1.3,.2,1);}.pdiv{border-left:1px solid var(--sep);}
 .mm .pcbar .k{color:var(--sec);font-weight:600;}
 .mm .pcbar .cx{color:var(--ter);}
 .mm .rec{background:var(--card);box-shadow:var(--shadow);border-radius:25px;overflow:hidden;}
@@ -2383,7 +2383,7 @@ body.mm-full{background:#EDF0EC;}
   .pcard{background:var(--card);box-shadow:var(--shadow);border-radius:15px;padding:12px;display:flex;align-items:center;gap:11px;} .pcard .pav{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:14px;font-weight:700;background:#2FB17022;color:#1f8a52;} .pcard .pn{font-size:16px;font-weight:800;} .pcard .ps{font-size:11.5px;color:var(--sec);font-weight:600;}
   .filt{display:flex;gap:6px;margin:2px 0 8px;flex-wrap:wrap;} .filt b{font-size:11px;font-weight:700;padding:5px 10px;border-radius:999px;background:rgba(120,120,128,.14);color:var(--sec);} .filt b.on{background:var(--green);color:#fff;}
   .filterbar{display:flex;gap:7px;flex-wrap:wrap;margin:2px 0 10px;} .fpill{display:flex;align-items:center;gap:5px;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:7px 12px;font-size:12px;font-weight:700;} .fpill .k{color:var(--sec);font-weight:600;} .fpill .cx{color:var(--ter);margin-left:1px;}
-  .pcbar{display:flex;background:var(--card);box-shadow:var(--shadow);border-radius:999px;overflow:hidden;margin:2px 0 10px;} .pcbar .pcb{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:9px 8px;font-size:12px;font-weight:700;} .pcbar .pcb+.pcb{border-left:1px solid var(--sep);} .pcbar .k{color:var(--sec);font-weight:600;} .pcbar .cx{color:var(--ter);}
+  .pcbar{display:flex;background:var(--card);box-shadow:var(--shadow);border-radius:999px;overflow:hidden;margin:2px 0 10px;} .pcbar .pcb{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:9px 8px;font-size:12px;font-weight:700;} .pcbar .pcb+.pcb{border-left:1px solid var(--sep);}.pseg{position:relative;flex:1;display:flex;padding:4px;}.pseg b{position:relative;z-index:1;flex:1;text-align:center;font-size:11.5px;font-weight:700;padding:5px 0;color:var(--sec);cursor:pointer;border-radius:999px;white-space:nowrap;}.pseg b.on{color:var(--green);}.psegt{position:absolute;top:4px;bottom:4px;left:4px;width:calc((100% - 8px)/3);border-radius:999px;background:color-mix(in srgb,var(--green) 14%,transparent);transition:transform .3s cubic-bezier(.55,1.3,.2,1);}.pdiv{border-left:1px solid var(--sep);} .pcbar .k{color:var(--sec);font-weight:600;} .pcbar .cx{color:var(--ter);}
   .rec{background:var(--card);box-shadow:var(--shadow);border-radius:25px;overflow:hidden;} .frow{display:flex;align-items:center;gap:9px;padding:8px 12px;position:relative;} .frow:not(:last-child)::after{content:"";position:absolute;left:44px;right:0;bottom:0;height:1px;background:var(--sep);}
   .fav{width:25px;height:25px;border-radius:50%;display:grid;place-items:center;font-size:9.5px;font-weight:700;} .fmain{flex:1;font-size:12px;font-weight:600;} .fmain small{display:block;color:var(--sec);font-weight:500;font-size:10.5px;} .fpts{font-size:12px;font-weight:800;color:var(--green);} .edit{color:var(--ter);font-size:13px;margin-left:7px;}
   .recday{font-size:11px;font-weight:800;color:var(--sec);margin:10px 2px 5px;} .loadmore{margin-top:8px;width:100%;border:1px solid var(--sep);background:var(--card);color:var(--sec);border-radius:999px;padding:9px;font:inherit;font-size:12px;font-weight:700;box-shadow:var(--shadow);} .drange{display:flex;align-items:center;gap:7px;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:9px 14px;font-size:12.5px;font-weight:700;} .drange .cal{font-size:14px;}
@@ -5564,6 +5564,11 @@ function mmPartaBoard(){
 }
 function mmPartaPeriodLabel(){ return {all:'Celkem',week:'Týden',month:'Měsíc'}[state.totalPeriod||'all']||'Celkem'; }
 function mmPartaCategoryLabel(){ return {all:'Dohromady',cvik:'Cviky',aktivita:'Aktivity',stretching:'Stretching'}[state.totalCategory||'all']||'Dohromady'; }
+const MM_PSEG={period:{opts:["all","week","month"],labels:["Celkem","Týden","Měsíc"]},cat:{opts:["all","cvik","aktivita"],labels:["Vše","Cviky","Aktivity"]}};
+function mmPartaSegIdx(kind){ if(kind==="period") return Math.max(0,MM_PSEG.period.opts.indexOf(state.totalPeriod||"all")); let c=state.totalCategory||"all"; if(c==="stretching") c="all"; return Math.max(0,MM_PSEG.cat.opts.indexOf(c)); }
+function mmPartaSegBar(){ const seg=(kind,extra)=>{ const d=MM_PSEG[kind]; const idx=mmPartaSegIdx(kind); return '<div class="pseg'+(extra||"")+'" data-pseg="'+kind+'"><i class="psegt" style="transform:translateX('+(idx*100)+'%)"></i>'+d.opts.map((o,i)=>'<b class="'+(i===idx?"on":"")+'" onclick="mmPartaSeg(\''+kind+'\',\''+o+'\')">'+d.labels[i]+'</b>').join("")+'</div>'; }; return '<div class="pcbar">'+seg("period")+seg("cat"," pdiv")+'</div>'; }
+function mmPartaSeg(kind,val){ window._psegPrev={period:mmPartaSegIdx("period"),cat:mmPartaSegIdx("cat")}; if(kind==="period") setLeaderboardPeriod(val); else setTotalCategory(val); renderParta(); }
+function mmPsegAnim(sh){ const prev=window._psegPrev; if(!prev||!sh) return; window._psegPrev=null; sh.querySelectorAll(".pseg").forEach(el=>{ const kind=el.getAttribute("data-pseg"); const t=el.querySelector(".psegt"); const now=mmPartaSegIdx(kind); const from=prev[kind]; if(t && from!=null && from!==now){ t.style.transition="none"; t.style.transform="translateX("+(from*100)+"%)"; void t.offsetWidth; t.style.transition=""; t.style.transform="translateX("+(now*100)+"%)"; } }); }
 function mmPartaCyclePeriod(){ const o=['all','week','month']; const n=o[(o.indexOf(state.totalPeriod||'all')+1)%o.length]; setLeaderboardPeriod(n); renderParta(); }
 function mmPartaCycleCategory(){ const o=['all','cvik','aktivita','stretching']; const n=o[(o.indexOf(state.totalCategory||'all')+1)%o.length]; setTotalCategory(n); renderParta(); }
 
@@ -5667,7 +5672,7 @@ function renderParta(){
 
   const tpl=`<div class="nav"><div><div class="ttl">Parta</div></div><div class="right"><div class="av" style="background:${meCol}22;color:${meCol}">${me?esc(initials(me.jmeno)):'?'}</div><div class="add" onclick="openModal()">＋</div></div></div>
   <div class="wkl"><div class="wklh"><div class="wklt"><svg class="i"><use href="#i-trophy"/></svg> Liga týdne</div><div class="wkls">${wklLabel} ›</div></div><div class="wkbars">${wkRows}</div></div>
-  <div class="pcbar"><div class="pcb" onclick="mmPartaCyclePeriod()"><span class="k">Období:</span> ${mmPartaPeriodLabel()} <span class="cx">▾</span></div><div class="pcb" onclick="mmPartaCycleCategory()"><span class="k">Kategorie:</span> ${mmPartaCategoryLabel()} <span class="cx">▾</span></div></div>
+  ${mmPartaSegBar()}
   <div class="lc">${rows||'<div style="padding:20px;text-align:center;color:var(--ter)">Zatím žádné body</div>'}</div>
   <div class="sl" onclick="mmOpenSub('rokparty')" style="cursor:pointer;touch-action:manipulation"><span>Aktivita party</span><a style="pointer-events:none">celý rok →</a></div>
   <div class="heatcard"><div class="hbnav"><span class="hbarr" onclick="mmPartaHeatMove(1)">‹</span><span class="hbrange">${heatLabel}</span><span class="hbarr" onclick="mmPartaHeatMove(-1)">›</span><span class="hbtoday" onclick="mmPartaHeatToday()">⟳ Dnes</span></div>${heatHtml}</div>
@@ -5686,7 +5691,7 @@ function renderParta(){
   if(sprite) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(1)}</div>`;
   sh.appendChild(w);
-  const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; scrEl.style.margin=(window.innerWidth>393?'0 auto':''); mmDeniApplyFeedState(sh,'parta');
+  const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; scrEl.style.margin=(window.innerWidth>393?'0 auto':''); mmDeniApplyFeedState(sh,'parta'); mmPsegAnim(sh);
 }
 
 // ============================================================
