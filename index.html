@@ -5656,7 +5656,7 @@ function mmHeatInit(sh){
   if(!sh) return;
   const sc=sh.querySelector('[data-heatscroll]'); if(!sc) return;
   const go=(k)=>{ if(sc.scrollWidth<=sc.clientWidth){ if(k<15) setTimeout(()=>go(k+1),80); return; } sc.scrollLeft=sc.scrollWidth; mmHeatUpdateLabel(sh); };
-  if(!sc._mmBound){ sc._mmBound=true; sc.addEventListener('scroll', ()=>{ clearTimeout(sc._mmT); sc._mmT=setTimeout(()=>mmHeatUpdateLabel(sh),80); }, {passive:true}); }
+  if(!sc._mmBound){ sc._mmBound=true; sc.addEventListener('scroll', ()=>mmHeatUpdateLabel(sh), {passive:true}); }
   go(0);
 }
 function mmPartaHeatMove(dir){ const h=document.getElementById('parta-mm'); const sh=h&&h.shadowRoot; if(!sh) return; const sc=sh.querySelector('[data-heatscroll]'); if(!sc) return; const w=sc.querySelector('.hweek'); const bw=(w?w.offsetWidth:105)+MM_HEAT_GAPX; const max=sc.scrollWidth-sc.clientWidth; const idx=Math.round(sc.scrollLeft/bw); const target=Math.max(0, Math.min(max, (idx+(dir===1?-1:1))*bw)); sc.scrollTo({left:target, behavior:'smooth'}); }
