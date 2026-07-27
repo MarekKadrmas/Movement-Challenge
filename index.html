@@ -2189,7 +2189,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .bmk svg{width:28px;height:28px;}
 .mm /* ＋ tlačítko + spodní lišta */
   .add{box-shadow:0 6px 16px -4px color-mix(in srgb,var(--green) 55%,transparent);}
-.mm .tb a.on{opacity:1;background:color-mix(in srgb,var(--green) 16%,transparent);color:var(--green);}
+.mm .tb a.on{opacity:1;background:color-mix(in srgb,var(--green) 16%,transparent);color:var(--green);}.tbind{position:absolute;left:0;top:6px;width:46px;height:36px;border-radius:999px;background:color-mix(in srgb,var(--green) 16%,transparent);transition:transform .3s cubic-bezier(.25,.8,.3,1);will-change:transform;pointer-events:none;}.tb:has(.tbind) a.on{background:transparent;}.tb a{transition:color .25s,opacity .25s;}
 .mm /* ===== Momentum — detaily,.mm ikonografie & signature ===== */
   .i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.14em;flex:0 0 auto;}
 .mm .sck .i{color:#F0603F;animation:flame 2.4s ease-in-out infinite;transform-origin:center 78%;}
@@ -2488,7 +2488,7 @@ body.mm-full{background:#EDF0EC;}
   .brandsub{color:var(--docmuted);font-size:15px;max-width:640px;margin:2px auto 10px;font-weight:600;}
   /* ＋ tlačítko + spodní lišta */
   .add{box-shadow:0 6px 16px -4px color-mix(in srgb,var(--green) 55%,transparent);}
-  .tb a.on{opacity:1;background:color-mix(in srgb,var(--green) 16%,transparent);color:var(--green);}
+  .tb a.on{opacity:1;background:color-mix(in srgb,var(--green) 16%,transparent);color:var(--green);}.tbind{position:absolute;left:0;top:6px;width:46px;height:36px;border-radius:999px;background:color-mix(in srgb,var(--green) 16%,transparent);transition:transform .3s cubic-bezier(.25,.8,.3,1);will-change:transform;pointer-events:none;}.tb:has(.tbind) a.on{background:transparent;}.tb a{transition:color .25s,opacity .25s;}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;}}
 
   /* ===== Momentum — detaily, ikonografie & signature ===== */
@@ -5381,14 +5381,28 @@ function renderScoringExplanation() {
 function czDayName(d){ return ['Neděle','Pondělí','Úterý','Středa','Čtvrtek','Pátek','Sobota'][d.getDay()]; }
 function mmGreet(){ const h=new Date().getHours(); return h<11?'Dobré ráno':(h<18?'Dobrý den':'Dobrý večer'); }
 function mmWeek(){ const a=new Date(); a.setHours(0,0,0,0); const day=a.getDay()||7; const s=new Date(a); s.setDate(a.getDate()-day+1); const e=new Date(s); e.setDate(s.getDate()+6); return {from:dateToStr(s),to:dateToStr(e),start:s,end:e}; }
-function mmGo(v){ mmCloseSub(); const b=document.querySelector('.tb-btn[data-view="'+v+'"]'); if(b) b.click(); }
+const MM_TAB_IDX={prehled:0,hraci:1,navyky:2,historie:3};
+function mmBarHost(v){ return document.getElementById({prehled:"dnesek-mm",hraci:"parta-mm",navyky:"navyky-mm",historie:"ja-mm"}[v]); }
+// Klouzava pilulka aktivni zalozky (Marek 2026-07-27): indikator prijede z pozice predchozi zalozky.
+function mmBarPos(sh, idx, fromIdx){
+  if(!sh) return; const tb=sh.querySelector(".tb"); if(!tb) return;
+  const ind=tb.querySelector(".tbind"); const links=tb.querySelectorAll("a");
+  if(!ind || !links[idx]) return;
+  if(fromIdx!=null && links[fromIdx] && fromIdx!==idx){
+    ind.style.transition="none"; ind.style.transform="translateX("+links[fromIdx].offsetLeft+"px)";
+    void ind.offsetWidth;
+    ind.style.transition="";
+  }
+  ind.style.transform="translateX("+links[idx].offsetLeft+"px)";
+}
+function mmGo(v){ mmCloseSub(); const b=document.querySelector(".tb-btn[data-view=\""+v+"\"]"); if(b){ const prev=(window._mmTabIdx!=null?window._mmTabIdx:null); b.click(); window._mmTabIdx=MM_TAB_IDX[v]; requestAnimationFrame(()=>{ const h=mmBarHost(v); mmBarPos(h&&h.shadowRoot, MM_TAB_IDX[v], prev); }); } }
 function mmChrome(){ const full=state.view==='prehled'||state.view==='hraci'||state.view==='navyky'||state.view==='historie'; document.body.classList.toggle('mm-full', full); const tb=document.getElementById('mc-tabbar'); if(tb) tb.style.display=full?'none':''; const h=document.querySelector('.header'); if(h) h.style.display=full?'none':''; const f=document.querySelector('.fab-group'); if(f) f.style.display=full?'none':''; }
 function mmFirst(n){ return String(n||'').split(' ')[0]; }
 
 function mmBar(a){
   var IC=['<path fill="currentColor" stroke="none" d="M12 3.2 21 11v8.2a1.8 1.8 0 0 1-1.8 1.8H15v-4.8a3 3 0 0 0-6 0V21H4.8A1.8 1.8 0 0 1 3 19.2V11Z"/>','<circle cx="8" cy="8.4" r="2.7" fill="currentColor" stroke="none"/><circle cx="16" cy="8.4" r="2.7" fill="currentColor" stroke="none"/><path fill="currentColor" stroke="none" d="M8 12.3c-2.9 0-5 2.1-5 5 0 .8.5 1.1 1.2 1.1h7.6c.7 0 1.2-.3 1.2-1.1 0-2.9-2.1-5-5-5Z"/><path fill="currentColor" stroke="none" d="M16 12.3c-.7 0-1.3.1-1.9.3 1.3 1.2 2.1 3 2.1 4.7 0 .4-.1.8-.3 1.1h3.9c.7 0 1.2-.3 1.2-1.1 0-2.9-2.1-5-5-5Z"/>','<rect x="3.5" y="3.5" width="17" height="17" rx="4.8" fill="currentColor" stroke="none"/><path d="M8 12.3 10.7 15 16 9.3" stroke="var(--card)" stroke-width="2.1" fill="none" stroke-linecap="round" stroke-linejoin="round"/>','<circle cx="12" cy="8" r="3.8" fill="currentColor" stroke="none"/><path fill="currentColor" stroke="none" d="M12 13c-4 0-7 2.7-7 6.2 0 .6.4 1 1.4 1h11.2c1 0 1.4-.4 1.4-1 0-3.5-3-6.2-7-6.2Z"/>'];
   var T=['prehled','hraci','navyky','historie'];
-  var h='<div class="tb">';
+  var h='<div class="tb"><i class="tbind"></i>';
   for(var i=0;i<4;i++){ h+='<a class="'+(i==a?'on':'')+'" onclick="mmGo(\''+T[i]+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">'+IC[i]+'</svg></a>'; }
   return h+'</div>';
 }
@@ -6051,7 +6065,7 @@ function mmMountSub(host, tpl, barIdx){
   if(sprite) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(barIdx)}</div>`;
   sh.appendChild(w);
-  const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; scrEl.style.margin=(window.innerWidth>393?'0 auto':'');
+  const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; scrEl.style.margin=(window.innerWidth>393?'0 auto':''); mmBarPos(sh, barIdx, null);
 }
 
 
@@ -9999,7 +10013,7 @@ db.channel('public:all-test-v12')
 
 // Fix "koruna poskoci": prvni render az po nacteni fontu (fallback font je uzsi -> po nacteni
 // custom fontu se text rozsiri a prvky za nim odskoci). Pojistka 1.5s, aby boot nikdy nevisel.
-(async()=>{ try{ if(document.fonts && document.fonts.status!=='loaded') await Promise.race([document.fonts.ready, new Promise(r=>setTimeout(r,1500))]); }catch(e){} await loadData(); try{ await mmFeedLoadComments(); renderAllViews(); }catch(_){} })();
+(async()=>{ try{ if(document.fonts && document.fonts.status!=='loaded') await Promise.race([document.fonts.ready, new Promise(r=>setTimeout(r,1500))]); }catch(e){} await loadData(); try{ await mmFeedLoadComments(); renderAllViews(); }catch(_){} try{ window._mmTabIdx=MM_TAB_IDX[state.view]!=null?MM_TAB_IDX[state.view]:0; const h0=mmBarHost(state.view); mmBarPos(h0&&h0.shadowRoot, window._mmTabIdx, null); }catch(_){} })();
 
 document.getElementById('modal').addEventListener('click', (e) => { if (e.target.id === 'modal') closeModal(); });
 document.getElementById('day-modal').addEventListener('click', (e) => { if (e.target.id === 'day-modal') closeDayModal(); });
