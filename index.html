@@ -7115,8 +7115,25 @@ function mmFeedAddComment(id, text, ctx){
 // MOST na komentářový backend (Fáze 6): tabulka v Supabase zatím NEEXISTUJE, proto je jméno tabulky null
 // a zápis je no-op — komentář žije jen v paměti (jako celý feed). Až Fáze 6 tabulku založí, stačí nastavit
 // window.MM_FEED_COMMENTS_TABLE a payload {card_id, player_id, text} se začne ukládat beze změny UI kódu.
-window.MM_FEED_COMMENTS_TABLE = window.MM_FEED_COMMENTS_TABLE || null;
+window.MM_FEED_COMMENTS_TABLE = window.MM_FEED_COMMENTS_TABLE || 'feed_comments';   // Marek 2026-07-27: tabulka zalozena (SQL hotovo)
+// Nacteni komentaru z DB do state.mmFeed (po loadData; v demu se preskakuje — demo ma vlastni seed).
+async function mmFeedLoadComments(){
+  if(typeof isDemo==='function' && isDemo()) return;
+  const t=window.MM_FEED_COMMENTS_TABLE; if(!t || typeof db==='undefined' || !db) return;
+  try{
+    const r=await db.from(t).select('card_id,player_id,text,created_at').order('created_at',{ascending:true});
+    if(r && r.error) throw r.error;
+    const fs=mmFeedState();
+    const byCard={};
+    (r.data||[]).forEach(row=>{
+      const pl=state.players.find(p=>p.id===row.player_id);
+      (byCard[row.card_id]=byCard[row.card_id]||[]).push({jmeno: pl?mmFirst(pl.jmeno):'?', text:row.text});
+    });
+    Object.keys(byCard).forEach(k=>{ fs.koms[k]=byCard[k]; });
+  }catch(e){ /* tabulka nedostupna -> UI bezi dal in-memory */ }
+}
 async function mmFeedPersistComment(payload){
+  if(typeof isDemo==='function' && isDemo()) return {local:true};   // demo nikdy nepise do DB
   const t=window.MM_FEED_COMMENTS_TABLE;
   if(!t || typeof db==='undefined' || !db) return {local:true};
   try{ const r=await db.from(t).insert(payload); if(r&&r.error) throw r.error; return {ok:true}; }
@@ -9981,7 +9998,7 @@ db.channel('public:all-test-v12')
 
 // Fix "koruna poskoci": prvni render az po nacteni fontu (fallback font je uzsi -> po nacteni
 // custom fontu se text rozsiri a prvky za nim odskoci). Pojistka 1.5s, aby boot nikdy nevisel.
-(async()=>{ try{ if(document.fonts && document.fonts.status!=='loaded') await Promise.race([document.fonts.ready, new Promise(r=>setTimeout(r,1500))]); }catch(e){} loadData(); })();
+(async()=>{ try{ if(document.fonts && document.fonts.status!=='loaded') await Promise.race([document.fonts.ready, new Promise(r=>setTimeout(r,1500))]); }catch(e){} await loadData(); try{ await mmFeedLoadComments(); renderAllViews(); }catch(_){} })();
 
 document.getElementById('modal').addEventListener('click', (e) => { if (e.target.id === 'modal') closeModal(); });
 document.getElementById('day-modal').addEventListener('click', (e) => { if (e.target.id === 'day-modal') closeDayModal(); });
