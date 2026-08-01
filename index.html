@@ -2427,6 +2427,13 @@ body.mm-full{background:#EDF0EC;}
   .hlkoms{position:relative;padding:9px 12px 11px 41px;display:flex;flex-direction:column;gap:6px;}
   .hlkoms:not(:last-child)::after{content:"";position:absolute;left:40px;right:0;bottom:0;height:1px;background:var(--sep);}
   .hlkoms .fdadd{margin-top:3px;}
+  /* Přehled (2026-08): sloučený feed DĚNÍ — sbalené dny + události + liga chip */
+  .frow.fsub{padding-left:30px;background:color-mix(in srgb,var(--track) 30%,transparent);}
+  .frow.fsub::after{left:62px!important;}
+  .ctog .fcar{margin-left:2px;font-weight:800;}
+  .evb{display:block;width:fit-content;max-width:100%;line-height:1.45;font-size:11px;font-weight:700;color:var(--sec);background:color-mix(in srgb,var(--gold) 10%,var(--card));border:1px solid color-mix(in srgb,var(--gold) 32%,transparent);border-radius:999px;padding:5px 12px;margin:7px 2px 0;} .evb b{color:var(--label);}
+  .ligachip{display:flex;align-items:center;gap:6px;width:fit-content;font-size:11px;font-weight:800;color:var(--sec);background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:6px 12px;margin:2px 0 8px;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+  .ligachip.on{color:#fff;background:var(--green);box-shadow:0 6px 16px -4px color-mix(in srgb,var(--green) 50%,transparent);}
   .rwbar{display:flex;align-items:center;justify-content:space-between;padding:9px 18px;border-radius:999px;margin-top:11px;border:1.5px solid transparent;background-image:linear-gradient(var(--card),var(--card)),linear-gradient(115deg,#D6A23A,#0FA968,#3FAEC2,#8A7BCB);background-origin:border-box;background-clip:padding-box,border-box;} .rwbar span{font-size:12px;font-weight:700;color:var(--sec);} .rwbar b{font-size:17px;font-weight:900;color:var(--green);}
   .logo{width:54px;height:54px;border-radius:15px;background:var(--card);box-shadow:var(--shadow);display:grid;place-items:center;font-size:26px;margin:18px auto 10px;}
   .authh{text-align:center;font-size:21px;font-weight:800;margin-bottom:3px;} .auths{text-align:center;font-size:12.5px;color:var(--sec);margin-bottom:16px;} .alink{text-align:center;font-size:12.5px;color:var(--green);font-weight:700;margin-top:12px;}
@@ -2655,7 +2662,6 @@ body.mm-full{background:#EDF0EC;}
 
   <nav class="tb" id="mc-tabbar">
   <a class="tb-btn active" data-view="prehled" aria-label="Dnešek"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path fill="currentColor" stroke="none" d="M12 3.2 21 11v8.2a1.8 1.8 0 0 1-1.8 1.8H15v-4.8a3 3 0 0 0-6 0V21H4.8A1.8 1.8 0 0 1 3 19.2V11Z"/></svg></a>
-  <a class="tb-btn" data-view="hraci" aria-label="Parta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8.4" r="2.7" fill="currentColor" stroke="none"/><circle cx="16" cy="8.4" r="2.7" fill="currentColor" stroke="none"/><path fill="currentColor" stroke="none" d="M8 12.3c-2.9 0-5 2.1-5 5 0 .8.5 1.1 1.2 1.1h7.6c.7 0 1.2-.3 1.2-1.1 0-2.9-2.1-5-5-5Z"/><path fill="currentColor" stroke="none" d="M16 12.3c-.7 0-1.3.1-1.9.3 1.3 1.2 2.1 3 2.1 4.7 0 .4-.1.8-.3 1.1h3.9c.7 0 1.2-.3 1.2-1.1 0-2.9-2.1-5-5-5Z"/></svg></a>
   <a class="tb-btn" data-view="navyky" aria-label="Návyky"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="4.8" fill="currentColor" stroke="none"/><path d="M8 12.3 10.7 15 16 9.3" stroke="var(--card)" stroke-width="2.1" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
   <a class="tb-btn" data-view="historie" aria-label="Já"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.8" fill="currentColor" stroke="none"/><path fill="currentColor" stroke="none" d="M12 13c-4 0-7 2.7-7 6.2 0 .6.4 1 1.4 1h11.2c1 0 1.4-.4 1.4-1 0-3.5-3-6.2-7-6.2Z"/></svg></a>
 </nav>
@@ -5393,8 +5399,10 @@ function mmVocative(n){
 }
 function mmGreet(){ const h=new Date().getHours(); if(h>=5&&h<11) return 'Dobré ráno'; if(h>=11&&h<14) return 'Dobré poledne'; if(h>=14&&h<18) return 'Dobré odpoledne'; return 'Dobrý večer'; }
 function mmWeek(){ const a=new Date(); a.setHours(0,0,0,0); const day=a.getDay()||7; const s=new Date(a); s.setDate(a.getDate()-day+1); const e=new Date(s); e.setDate(s.getDate()+6); return {from:dateToStr(s),to:dateToStr(e),start:s,end:e}; }
-const MM_TAB_IDX={prehled:0,hraci:1,navyky:2,historie:3};
-function mmBarHost(v){ return document.getElementById({prehled:"dnesek-mm",hraci:"parta-mm",navyky:"navyky-mm",historie:"ja-mm"}[v]); }
+// Marek 2026-08: slouceni Dnesek+Parta do JEDNE obrazovky Prehled -> bar ma 3 zalozky.
+// 'hraci' zustava jako ALIAS (mmGo presmeruje na 'prehled'), aby stare odkazy nespadly.
+const MM_TAB_IDX={prehled:0,navyky:1,historie:2};
+function mmBarHost(v){ return document.getElementById({prehled:"dnesek-mm",navyky:"navyky-mm",historie:"ja-mm"}[v]); }
 // Klouzava pilulka aktivni zalozky (Marek 2026-07-27): indikator prijede z pozice predchozi zalozky.
 function mmBarPos(sh, idx, fromIdx){
   if(!sh) return; const tb=sh.querySelector(".tb"); if(!tb) return;
@@ -5409,15 +5417,15 @@ function mmBarPos(sh, idx, fromIdx){
   const svg=links[idx].querySelector("svg");
   if(svg && fromIdx!=null && fromIdx!==idx){ svg.style.animation="none"; void svg.getBoundingClientRect(); svg.style.animation="mm-tabpop .38s cubic-bezier(.3,1.5,.4,1)"; }
 }
-function mmGo(v){ mmCloseSub(); const b=document.querySelector(".tb-btn[data-view=\""+v+"\"]"); if(b){ const prev=(window._mmTabIdx!=null?window._mmTabIdx:null); b.click(); window._mmTabIdx=MM_TAB_IDX[v]; requestAnimationFrame(()=>{ const h=mmBarHost(v); mmBarPos(h&&h.shadowRoot, MM_TAB_IDX[v], prev); mmLbarAlign(h&&h.shadowRoot); if(v==='hraci') mmHeatInit(h&&h.shadowRoot); }); } }
+function mmGo(v){ if(v==='hraci') v='prehled'; mmCloseSub(); const b=document.querySelector(".tb-btn[data-view=\""+v+"\"]"); if(b){ const prev=(window._mmTabIdx!=null?window._mmTabIdx:null); b.click(); window._mmTabIdx=MM_TAB_IDX[v]; requestAnimationFrame(()=>{ const h=mmBarHost(v); mmBarPos(h&&h.shadowRoot, MM_TAB_IDX[v], prev); mmLbarAlign(h&&h.shadowRoot); if(v==='prehled') mmHeatInit(h&&h.shadowRoot); }); } }
 function mmChrome(){ const full=state.view==='prehled'||state.view==='hraci'||state.view==='navyky'||state.view==='historie'; document.body.classList.toggle('mm-full', full); const tb=document.getElementById('mc-tabbar'); if(tb) tb.style.display=full?'none':''; const h=document.querySelector('.header'); if(h) h.style.display=full?'none':''; const f=document.querySelector('.fab-group'); if(f) f.style.display=full?'none':''; }
 function mmFirst(n){ return String(n||'').split(' ')[0]; }
 
 function mmBar(a){
-  var IC=['<path fill="currentColor" stroke="none" d="M12 3.2 21 11v8.2a1.8 1.8 0 0 1-1.8 1.8H15v-4.8a3 3 0 0 0-6 0V21H4.8A1.8 1.8 0 0 1 3 19.2V11Z"/>','<circle cx="8" cy="8.4" r="2.7" fill="currentColor" stroke="none"/><circle cx="16" cy="8.4" r="2.7" fill="currentColor" stroke="none"/><path fill="currentColor" stroke="none" d="M8 12.3c-2.9 0-5 2.1-5 5 0 .8.5 1.1 1.2 1.1h7.6c.7 0 1.2-.3 1.2-1.1 0-2.9-2.1-5-5-5Z"/><path fill="currentColor" stroke="none" d="M16 12.3c-.7 0-1.3.1-1.9.3 1.3 1.2 2.1 3 2.1 4.7 0 .4-.1.8-.3 1.1h3.9c.7 0 1.2-.3 1.2-1.1 0-2.9-2.1-5-5-5Z"/>','<rect x="3.5" y="3.5" width="17" height="17" rx="4.8" fill="currentColor" stroke="none"/><path d="M8 12.3 10.7 15 16 9.3" stroke="var(--card)" stroke-width="2.1" fill="none" stroke-linecap="round" stroke-linejoin="round"/>','<circle cx="12" cy="8" r="3.8" fill="currentColor" stroke="none"/><path fill="currentColor" stroke="none" d="M12 13c-4 0-7 2.7-7 6.2 0 .6.4 1 1.4 1h11.2c1 0 1.4-.4 1.4-1 0-3.5-3-6.2-7-6.2Z"/>'];
-  var T=['prehled','hraci','navyky','historie'];
+  var IC=['<path fill="currentColor" stroke="none" d="M12 3.2 21 11v8.2a1.8 1.8 0 0 1-1.8 1.8H15v-4.8a3 3 0 0 0-6 0V21H4.8A1.8 1.8 0 0 1 3 19.2V11Z"/>','<rect x="3.5" y="3.5" width="17" height="17" rx="4.8" fill="currentColor" stroke="none"/><path d="M8 12.3 10.7 15 16 9.3" stroke="var(--card)" stroke-width="2.1" fill="none" stroke-linecap="round" stroke-linejoin="round"/>','<circle cx="12" cy="8" r="3.8" fill="currentColor" stroke="none"/><path fill="currentColor" stroke="none" d="M12 13c-4 0-7 2.7-7 6.2 0 .6.4 1 1.4 1h11.2c1 0 1.4-.4 1.4-1 0-3.5-3-6.2-7-6.2Z"/>'];
+  var T=['prehled','navyky','historie'];
   var h='<div class="tb"><i class="tbind"></i>';
-  for(var i=0;i<4;i++){ h+='<a class="'+(i==a?'on':'')+'" onclick="mmGo(\''+T[i]+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">'+IC[i]+'</svg></a>'; }
+  for(var i=0;i<3;i++){ h+='<a class="'+(i==a?'on':'')+'" onclick="mmGo(\''+T[i]+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">'+IC[i]+'</svg></a>'; }
   return h+'</div>';
 }
 
@@ -5440,32 +5448,26 @@ function mmLbarAlign(sh){
   };
   requestAnimationFrame(()=>attempt(0));
 }
+// Marek 2026-08: PREHLED = slouceni Dnesek + Parta do jedne obrazovky (duplicitni data matly).
+// Struktura shora dolu: kompaktni hlavicka (pozdrav + MALY kruh ~64px misto velkeho banneru),
+// zebricek (JEDINY v appce, filtry z Party + liga chip), kalendar aktivity (heatmapa z Party),
+// DENI (slouceny feed - mmPrehledFeedHtml), navyky dnes, rekordy karta. Host #dnesek-mm zustava.
 function renderDnesek(){
   const host=document.getElementById('dnesek-mm'); if(!host) return;
   const me=state.players.find(p=>p.id===state.currentPlayerId);
-  const wk=mmWeek(); const inWk=e=>e.datum>=wk.from&&e.datum<=wk.to;
+  const meCol=me?safeColor(me.barva):'#2FB170';
+  const wk=mmWeek();
   const ent=id=>[...state.cviky.filter(c=>c.player_id===id),...state.aktivity.filter(a=>a.player_id===id)];
-  const board=state.players.filter(p=>p.aktivni).map(p=>({...p,total:sumRoundedBody(ent(p.id).filter(inWk))})).sort((a,b)=>b.total-a.total);
-  const myTotal=me?(board.find(b=>b.id===me.id)?.total||0):0;
-  const streak=me?computeStreak(me.id):0;
-  const myWk=me?ent(me.id).filter(inWk):[];
-  const byDay={}; myWk.forEach(e=>{byDay[e.datum]=(byDay[e.datum]||0)+Math.round(Number(e.body)||0);});
-  const trainings=Object.keys(byDay).length;
-  const recordDay=Object.values(byDay).length?Math.max(...Object.values(byDay)):0;
   const today=todayStr();
-  // Velky kruh = DNESEK (Marek 2026-07-20, volba "A"): cislo = dnesni body, segmenty = dnesni kategorie.
-  const todayPts=byDay[today]||0;
+  // Maly kruh = DNESEK: cislo = dnesni body, segmenty = dnesni kategorie (stejna data jako drive, kompaktni layout)
+  const todayPts=me?sumRoundedBody(ent(me.id).filter(e=>e.datum===today)):0;
   let cCvik=0,cAkt=0,cStr=0;
   if(me){ cCvik=sumRoundedBody(state.cviky.filter(c=>c.player_id===me.id&&c.datum===today));
     const ak=state.aktivity.filter(a=>a.player_id===me.id&&a.datum===today);
     cStr=sumRoundedBody(ak.filter(isStretchActivity)); cAkt=sumRoundedBody(ak.filter(a=>!isStretchActivity(a))); }
   const ct=cCvik+cAkt+cStr||1, q1=Math.round(cCvik/ct*100), q2=Math.round(cAkt/ct*100);
   const conic=todayPts>0?`conic-gradient(var(--green) 0 ${q1}%,var(--blue) ${q1}% ${q1+q2}%,var(--orange) ${q1+q2}% 100%)`:'conic-gradient(var(--track) 0 100%)';
-  const pf=dateToStr(new Date(wk.start.getTime()-7*864e5)), pt=dateToStr(new Date(wk.end.getTime()-7*864e5));
-  const prev=me?sumRoundedBody(ent(me.id).filter(e=>e.datum>=pf&&e.datum<=pt)):0;
-  const trend=prev>0?Math.round((myTotal-prev)/prev*100):0;
-  // o (denni prumer) = soucet bodu za posledni 4 UKONCENE tydny / pocet aktivnich dni (dni se zaznamem)
-  // v tomto okne. Tento (rozjety) tyden se nepocita. ▲% na kruhu = dnesni body vs tento denni prumer.
+  // o (denni prumer) = soucet bodu za posledni 4 UKONCENE tydny / pocet aktivnich dni; ▲% = dnesek vs prumer
   let s4=0; const d4=new Set();
   if(me){ const f4=dateToStr(new Date(wk.start.getTime()-4*7*864e5)), t4=dateToStr(new Date(wk.end.getTime()-7*864e5));
     const es4=ent(me.id).filter(e=>e.datum>=f4&&e.datum<=t4);
@@ -5474,38 +5476,38 @@ function renderDnesek(){
   const dTrend=avgDen>0?Math.round((todayPts-avgDen)/avgDen*100):0;
   const habTotal=state.habits.length;
   const habDone=new Set(state.habitLogs.filter(l=>l.datum===today).map(l=>l.habit_id)).size;
-  const rows=board.slice(0,7).map((p,i)=>{ const isMe=me&&p.id===me.id; const col=safeColor(p.barva);
+  // Zebricek — respektuje filtry Obdobi/Kategorie (mmPartaBoard, prevzato z renderParta)
+  const board=mmPartaBoard();
+  const myTotal=me?(board.find(b=>b.id===me.id)?.total||0):0;
+  const rows=board.map((p,i)=>{
+    const isMe=me&&p.id===me.id; const col=safeColor(p.barva);
     const d=p.total-myTotal; const gap=isMe?'<small class="gap" style="color:var(--green)">ty</small>':`<small class="gap">${d>0?'+':(d<0?'−':'')}${Math.abs(d)}</small>`; const pct=Math.max(4,Math.round(((p.total||0)/Math.max(1,(board[0]&&board[0].total)||0))*100));
-    return `<div class="lr${i===0?' one':''}${isMe?' me':''}"><div class="lrk">${i+1}</div><div class="lav" style="background:linear-gradient(135deg,${col}4d,${col}12);color:${col}">${esc(initials(p.jmeno))}</div><div class="lnm">${esc(p.jmeno)}${isMe?' (ty)':''}${i===0?' <svg class="i"><use href="#i-crown"/></svg>':''}</div><div class="lpt">${gap}<b class="lv">${fmtNum(p.total)}</b></div><div class="lbar"><i style="width:${pct}%;background:${col}"></i></div></div>`;
+    return `<div class="lr${i===0?' one':''}${isMe?' me':''}" style="cursor:pointer" onclick="mmOpenSub('profil','${p.id}')"><div class="lrk">${i+1}</div><div class="lav" style="background:linear-gradient(135deg,${col}4d,${col}12);color:${col}">${esc(initials(p.jmeno))}</div><div class="lnm">${esc(p.jmeno)}${isMe?' (ty)':''}${i===0?' <svg class="i"><use href="#i-crown"/></svg>':''}</div><div class="lpt">${gap}<b class="lv">${fmtNum(p.total)}</b></div><div class="lbar"><i style="width:${pct}%;background:${col}"></i></div></div>`;
   }).join('');
-  let feed='';
-  const mi=board.findIndex(b=>me&&b.id===me.id);
-  if(mi>=0&&board[mi+1]){ const c=board[mi+1], dd=myTotal-c.total; if(dd>=0&&dd<=25) feed+=`<div class="hlr"><span class="ic"><svg class="i"><use href="#i-bolt"/></svg></span><div>${esc(mmFirst(c.jmeno))} tě dohání — <b>jen ${dd} b</b> za tebou</div></div>`; }
-  const allE=[...state.cviky,...state.aktivity].filter(e=>e.datum).sort((a,b)=>String(b.created_at||b.datum).localeCompare(String(a.created_at||a.datum))).slice(0,4);
-  // Reakcni pilulky (💪🔥👏) — VIZUALNI PLACEHOLDER 1:1 s mockupem, bez akce (reakce = backend, Faze 6).
-  const mmRx='<span class="rx"><svg class="i"><use href="#i-pushup"/></svg><svg class="i"><use href="#i-flame"/></svg><svg class="i"><use href="#i-clap"/></svg></span>';
-  // Komentare (Marek 2026-07: "PRIMO POD ZAZNAMEM, zadna navigace"): kazdy radek zaznamu ma 💬 indikator
-  // a tap na CELY radek rozbali/sbali komentare inline pod nim. Stav sdileny s Feed strankou (state.mmFeed),
-  // klic = 'e:'+id zaznamu. Do tpl jde jen holy indikator (data-sig="") — pocty/tecku/rozbaleni dosadi
-  // mmDeniApplyFeedState() PO mountu primym DOM patchem, aby memo klic host._mmTpl nezavisel na stavu komentaru.
+  // Liga chip: N = dni do nedele VCETNE; tap prepne Obdobi=Tyden; pri aktivnim Tydnu zvyrazneny
+  const today0=new Date(); today0.setHours(0,0,0,0);
+  const nLeft=Math.max(1,Math.round((wk.end-today0)/864e5)+1);
+  const ligaLbl=nLeft===1?'zbývá 1 den':`zbývají ${nLeft} ${streakLabel(nLeft)}`;
+  const ligaChip=`<div class="ligachip${(state.totalPeriod||'all')==='week'?' on':''}" onclick="mmPartaSeg('period','week')">⚡ Týdenní soutěž · ${ligaLbl}</div>`;
+  // Heatmapa party (presun z Party beze zmen)
+  const heatHtml=mmPartaHeatHtml();
+  // DENI — slouceny feed (sbalene dny + udalosti)
   mmFeedState();
-  feed+=allE.map(e=>{
-    const pl=state.players.find(p=>p.id===e.player_id); const nm=pl?esc(mmFirst(pl.jmeno)):'—';
-    const rec=mmHighlightRecord(e,pl);
-    const icon=rec?'i-medal':mmEntryIcon(e);
-    const text=rec ? `${nm} ${rec}` : `${nm} · ${esc(mmEntryLabel(e))}<small>· +${Math.round(Number(e.body)||0)} b</small>`;
-    const key='e:'+(e.id||((e.player_id||'')+'|'+e.datum+'|'+(e.created_at||'')));
-    const ctog=`<span class="ctog" data-ctog="${key}" data-sig=""><svg class="i"><use href="#i-comment"/></svg></span>`;
-    return `<div class="hlr hlc" data-feedrow="${key}" onclick="mmFeedToggle('${key}','dnesek')"><span class="ic"><svg class="i"><use href="#${icon}"/></svg></span><div>${text}</div>${mmRx}${ctog}</div>`; }).join('');
+  const feed=mmPrehledFeedHtml();
   const dl=czDayName(new Date())+' '+new Date().getDate()+'. '+(new Date().getMonth()+1)+'.';
-  const tpl=`<div class="nav"><div><div class="date">${dl}</div><div class="ttl" style="font-size:18px">${mmGreet()}${me?', '+esc(mmVocative(mmFirst(me.jmeno))):''}</div></div><div class="right"><div class="sck"><svg class="i"><use href="#i-flame"/></svg> ${streak}</div><div class="add" onclick="openModal()">＋</div></div></div>
-  <div class="hero"><div class="ring" style="background:${conic}"><div class="h"><div><div class="n">${fmtNum(todayPts)}</div><div class="rpct ${dTrend>=0?'up':''}">${dTrend>=0?'▲':'▼'} ${Math.abs(dTrend)} %</div><div class="avg">ø ${fmtNum(avgDen)}</div></div></div></div><div class="hs"><div class="hst">Tento týden</div><div class="r"><span class="e"><svg class="i"><use href="#i-calendar"/></svg></span><b>${fmtNum(myTotal)} b</b><small>&nbsp;body ${trend>=0?(`<span class="up">▲${trend} %</span>`):(`<span style="color:var(--red)">▼${Math.abs(trend)} %</span>`)}</small></div><div class="r"><span class="e"><svg class="i"><use href="#i-pullup"/></svg></span><b>${trainings}</b><small>&nbsp;tréninky</small></div><div class="r"><span class="e"><svg class="i"><use href="#i-trophy"/></svg></span><b>${fmtNum(recordDay)} b</b><small>&nbsp;rekord/den</small></div></div></div>
-  <div class="hbm" style="margin-top:11px;cursor:pointer" onclick="mmGo('navyky')"><div class="hi" style="background:#34C75922"><svg class="i"><use href="#i-list"/></svg></div><div class="ht">Návyky dnes<small>${habDone} splněné · ${Math.max(0,habTotal-habDone)} zbývají</small></div><div class="pct" style="display:flex;align-items:center;gap:5px">${habDone}/${habTotal}<span style="color:var(--ter);font-weight:400">›</span></div></div>
-  <div class="sl" onclick="mmGo('hraci')" style="cursor:pointer;touch-action:manipulation"><span>Žebříček · tento týden</span><a style="pointer-events:none">Parta →</a></div>
-  <div class="lc">${rows||'<div style="padding:20px;text-align:center;color:var(--ter)">Zatím žádné body tento týden</div>'}</div>
-  <div class="sl" onclick="mmGo('hraci')" style="cursor:pointer;touch-action:manipulation"><span>Dění v partě</span><a style="pointer-events:none">Parta →</a></div>
-  <div class="hl">${feed||'<div class="hlr"><div style="color:var(--ter)">Zatím žádná aktivita</div></div>'}</div>`;
-  const _mmK=tpl+'|'+(document.documentElement.getAttribute('data-theme')||'light'); if(host._mmTpl===_mmK&&host.shadowRoot){const s=host.shadowRoot.querySelector('.scr'); if(s){const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; s.style.zoom=z; s.style.minHeight=(window.innerHeight/z)+'px';} mmDeniApplyFeedState(host.shadowRoot, (host.id==='parta-mm'?'parta':'dnesek')); mmLbarAlign(host.shadowRoot); return;} host._mmTpl=_mmK; const sh=host.shadowRoot||host.attachShadow({mode:'open'});
+  const tpl=`<div class="nav"><div><div class="ttl">Přehled</div></div><div class="right"><div class="av" style="background:linear-gradient(135deg,${meCol}4d,${meCol}12);color:${meCol}">${me?esc(initials(me.jmeno)):'?'}</div><div class="add" onclick="openModal()">＋</div></div></div>
+  <div class="hero" style="padding:11px 13px;gap:13px"><div class="hs"><div class="hst">${dl}</div><div style="font-size:16.5px;font-weight:800;letter-spacing:-.02em">${mmGreet()}${me?', '+esc(mmVocative(mmFirst(me.jmeno))):''}</div><div style="font-size:11.5px;font-weight:700;color:var(--sec);margin-top:2px">ø ${fmtNum(avgDen)} · ${dTrend>=0?`<span class="up">▲ ${dTrend} %</span>`:`<span style="color:var(--red)">▼ ${Math.abs(dTrend)} %</span>`} dnes</div></div><div class="ring" style="width:64px;height:64px;background:${conic}"><div class="h" style="width:50px;height:50px"><div><div class="n" style="font-size:15px">${fmtNum(todayPts)}</div></div></div></div></div>
+  <div class="sl"><span>Žebříček</span></div>
+  ${ligaChip}
+  ${mmPartaSegBar()}
+  <div class="lc">${rows||'<div style="padding:20px;text-align:center;color:var(--ter)">Zatím žádné body</div>'}</div>
+  <div class="sl" onclick="mmOpenSub('rokparty')" style="cursor:pointer;touch-action:manipulation"><span>Kalendář aktivity</span><a style="pointer-events:none">celý rok →</a></div>
+  <div class="heatcard"><div class="hbnav"><span class="hbarr" onclick="mmPartaHeatMove(1)">‹</span><span class="hbrange"></span><span class="hbarr" onclick="mmPartaHeatMove(-1)">›</span><span class="hbtoday" onclick="mmPartaHeatToday()">⟳ Dnes</span></div>${heatHtml}</div>
+  <div class="sl" onclick="mmOpenSub('zaznamy')" style="cursor:pointer;touch-action:manipulation"><span>Dění</span><a style="pointer-events:none">celá historie →</a></div>
+  ${feed}
+  <div class="hbm" style="margin-top:13px;cursor:pointer" onclick="mmGo('navyky')"><div class="hi" style="background:#34C75922"><svg class="i"><use href="#i-list"/></svg></div><div class="ht">Návyky dnes<small>${habDone} splněné · ${Math.max(0,habTotal-habDone)} zbývají</small></div><div class="pct" style="display:flex;align-items:center;gap:5px">${habDone}/${habTotal}<span style="color:var(--ter);font-weight:400">›</span></div></div>
+  <div class="hbm" style="margin-top:6px;padding:6px 12px;cursor:pointer" onclick="mmOpenSub('rekordyparty')"><div class="hi" style="background:#E0A23A22;width:27px;height:27px;font-size:14px"><svg class="i"><use href="#i-medal"/></svg></div><div class="ht">Rekordy & maximálky všech<small>všichni hráči na jednom místě</small></div><span class="rx" style="color:var(--ter);font-size:16px">›</span></div>`;
+  const _mmK=tpl+'|'+(document.documentElement.getAttribute('data-theme')||'light'); if(host._mmTpl===_mmK&&host.shadowRoot){const s=host.shadowRoot.querySelector('.scr'); if(s){const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; s.style.zoom=z; s.style.minHeight=(window.innerHeight/z)+'px';} mmDeniApplyFeedState(host.shadowRoot,'prehled'); mmLbarAlign(host.shadowRoot); mmHeatInit(host.shadowRoot); return;} host._mmTpl=_mmK; const sh=host.shadowRoot||host.attachShadow({mode:'open'});
   const tplEl=document.getElementById('mm-tpl'); const sprite=document.getElementById('momentum-sprite');
   sh.innerHTML='';
   if(tplEl) sh.appendChild(tplEl.content.cloneNode(true));
@@ -5518,9 +5520,11 @@ function renderDnesek(){
   const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(0)}</div>`;
   sh.appendChild(w);
   const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; scrEl.style.margin=(window.innerWidth>393?'0 auto':'');
-  mmDeniApplyFeedState(sh);   // po plnem re-renderu obnov rozbaleni/pocty/tecky komentaru ze state.mmFeed
+  mmDeniApplyFeedState(sh,'prehled');   // po plnem re-renderu obnov rozbaleni/pocty/tecky komentaru ze state.mmFeed
+  mmPsegAnim(sh);
   mmLbarAlign(sh);
-  if(!window._mmRz){ window._mmRz=true; window.addEventListener('resize',()=>{ if(state.view==='prehled') renderDnesek(); else if(state.view==='hraci') renderParta(); else if(state.view==='navyky') renderNavykyMM(); else if(state.view==='historie') renderJaMM(); if(mmSubOpen==='historie') renderSubHistorie(); else if(mmSubOpen==='rekordy') renderSubRekordy(); else if(mmSubOpen==='bodovani') renderSubBodovani(); else if(mmSubOpen==='profil') renderSubProfil(state.mmSubProfilId); else if(mmSubOpen==='rekordyparty') renderSubRekordyParty(); else if(mmSubOpen==='feed') renderSubFeed(); else if(mmSubOpen==='pozvat') renderSubPozvat(); else if(mmSubOpen==='cile') renderSubCile(); else if(mmSubOpen==='notifikace') renderSubNotifikace(); else if(mmSubOpen==='den') renderSubDen(state.mmSubDenArg); else if(mmSubOpen==='rokparty') renderSubRokParty(); }); }
+  mmHeatInit(sh);
+  if(!window._mmRz){ window._mmRz=true; window.addEventListener('resize',()=>{ if(state.view==='prehled') renderDnesek(); else if(state.view==='navyky') renderNavykyMM(); else if(state.view==='historie') renderJaMM(); if(mmSubOpen==='historie') renderSubHistorie(); else if(mmSubOpen==='rekordy') renderSubRekordy(); else if(mmSubOpen==='bodovani') renderSubBodovani(); else if(mmSubOpen==='profil') renderSubProfil(state.mmSubProfilId); else if(mmSubOpen==='rekordyparty') renderSubRekordyParty(); else if(mmSubOpen==='feed') renderSubFeed(); else if(mmSubOpen==='pozvat') renderSubPozvat(); else if(mmSubOpen==='cile') renderSubCile(); else if(mmSubOpen==='notifikace') renderSubNotifikace(); else if(mmSubOpen==='den') renderSubDen(state.mmSubDenArg); else if(mmSubOpen==='rokparty') renderSubRokParty(); }); }
 }
 
 // ============================================================
@@ -5599,7 +5603,7 @@ function mmPartaCategoryLabel(){ return {all:'Dohromady',cvik:'Cviky',aktivita:'
 const MM_PSEG={period:{opts:["all","week","month"],labels:["Celkem","Týden","Měsíc"]},cat:{opts:["all","cvik","aktivita"],labels:["Vše","Cviky","Aktivity"]}};
 function mmPartaSegIdx(kind){ if(kind==="period") return Math.max(0,MM_PSEG.period.opts.indexOf(state.totalPeriod||"all")); let c=state.totalCategory||"all"; if(c==="stretching") c="all"; return Math.max(0,MM_PSEG.cat.opts.indexOf(c)); }
 function mmPartaSegBar(){ const seg=(kind,extra)=>{ const d=MM_PSEG[kind]; const idx=mmPartaSegIdx(kind); return '<div class="pseg'+(extra||"")+'" data-pseg="'+kind+'"><i class="psegt" style="transform:translateX('+(idx*100)+'%)"></i>'+d.opts.map((o,i)=>'<b class="'+(i===idx?"on":"")+'" onclick="mmPartaSeg(\''+kind+'\',\''+o+'\')">'+d.labels[i]+'</b>').join("")+'</div>'; }; return '<div class="pcbar">'+seg("period")+seg("cat"," pdiv")+'</div>'; }
-function mmPartaSeg(kind,val){ window._psegPrev={period:mmPartaSegIdx("period"),cat:mmPartaSegIdx("cat")}; if(kind==="period") setLeaderboardPeriod(val); else setTotalCategory(val); renderParta(); }
+function mmPartaSeg(kind,val){ window._psegPrev={period:mmPartaSegIdx("period"),cat:mmPartaSegIdx("cat")}; if(kind==="period") setLeaderboardPeriod(val); else setTotalCategory(val); renderDnesek(); }   // Marek 2026-08: filtry ziji na Prehledu
 function mmPsegAnim(sh){ const prev=window._psegPrev; if(!prev||!sh) return; window._psegPrev=null; sh.querySelectorAll(".pseg").forEach(el=>{ const kind=el.getAttribute("data-pseg"); const t=el.querySelector(".psegt"); const now=mmPartaSegIdx(kind); const from=prev[kind]; if(t && from!=null && from!==now){ t.style.transition="none"; t.style.transform="translateX("+(from*100)+"%)"; void t.offsetWidth; t.style.transition=""; t.style.transform="translateX("+(now*100)+"%)"; } }); }
 function mmPartaCyclePeriod(){ const o=['all','week','month']; const n=o[(o.indexOf(state.totalPeriod||'all')+1)%o.length]; setLeaderboardPeriod(n); renderParta(); }
 function mmPartaCycleCategory(){ const o=['all','cvik','aktivita','stretching']; const n=o[(o.indexOf(state.totalCategory||'all')+1)%o.length]; setTotalCategory(n); renderParta(); }
@@ -5676,8 +5680,8 @@ function mmHeatInit(sh){
   if(!sc._mmBound){ sc._mmBound=true; sc.addEventListener('scroll', ()=>{ window._mmHeatPx=sc.scrollLeft; mmHeatUpdateLabel(sh); }, {passive:true}); }
   go(0);
 }
-function mmPartaHeatMove(dir){ const h=document.getElementById('parta-mm'); const sh=h&&h.shadowRoot; if(!sh) return; const sc=sh.querySelector('[data-heatscroll]'); if(!sc) return; const w=sc.querySelector('.hweek'); const bw=(w?w.offsetWidth:105)+MM_HEAT_GAPX; const max=sc.scrollWidth-sc.clientWidth; const idx=Math.round(sc.scrollLeft/bw); const target=Math.max(0, Math.min(max, (idx+(dir===1?-1:1))*bw)); sc.scrollTo({left:target, behavior:'smooth'}); }
-function mmPartaHeatToday(){ const h=document.getElementById('parta-mm'); const sh=h&&h.shadowRoot; if(!sh) return; const sc=sh.querySelector('[data-heatscroll]'); if(sc) sc.scrollTo({left:sc.scrollWidth-sc.clientWidth, behavior:'smooth'}); }
+function mmPartaHeatMove(dir){ const h=document.getElementById('dnesek-mm'); const sh=h&&h.shadowRoot; if(!sh) return; const sc=sh.querySelector('[data-heatscroll]'); if(!sc) return; const w=sc.querySelector('.hweek'); const bw=(w?w.offsetWidth:105)+MM_HEAT_GAPX; const max=sc.scrollWidth-sc.clientWidth; const idx=Math.round(sc.scrollLeft/bw); const target=Math.max(0, Math.min(max, (idx+(dir===1?-1:1))*bw)); sc.scrollTo({left:target, behavior:'smooth'}); }
+function mmPartaHeatToday(){ const h=document.getElementById('dnesek-mm'); const sh=h&&h.shadowRoot; if(!sh) return; const sc=sh.querySelector('[data-heatscroll]'); if(sc) sc.scrollTo({left:sc.scrollWidth-sc.clientWidth, behavior:'smooth'}); }
 function mmPartaLoadMoreFeed(){ mmPartaFeedDays+=2; renderParta(); }
 
 function mmPartaFeedHtml(maxDays){
@@ -5700,6 +5704,115 @@ function mmPartaFeedHtml(maxDays){
     html+='</div>';
   });
   return {html, hasMore: days.length>shown.length};
+}
+
+// ============================================================
+//  PREHLED: DENI — slouceny feed (Marek 2026-08, jadro slouceni obrazovek)
+//  Zdroj: vsechny zaznamy (cviky+aktivity) vsech hracu, cas sestupne.
+//  SBALOVANI: vice zaznamu jednoho hrace v jednom dni = 1 radek
+//  "{avatar} {Jmeno} · {N} zaznamy · +{soucet} ▾" se souctovym 💬; tap rozbali
+//  jednotlive zaznamy (kazdy ma vlastni 💬 inline komentare, ctx 'prehled').
+//  UDALOSTI: mini-bubliny .evb mezi polozkami (rekord/serie/vedeni/vitez tydne),
+//  pocitane z dat jednoduchymi heuristikami — nic se neuklada.
+// ============================================================
+let mmPrehledOpen = {};   // 'g:pid|datum' -> true (rozbalene sbalene dny; jen pamet)
+function mmPrehledGroupToggle(key){ mmPrehledOpen[key]=!mmPrehledOpen[key]; renderDnesek(); }
+function mmPrehledEntryRow(e, pl, sub){
+  const col=safeColor(pl.barva); const key='e:'+e.id;
+  return `<div class="frow hlc${sub?' fsub':''}" data-feedrow="${key}" style="cursor:pointer" onclick="mmFeedToggle('${key}','prehled')"><div class="fav" style="background:linear-gradient(135deg,${col}4d,${col}12);color:${col}"><svg class="i"><use href="#${mmEntryIcon(e)}"/></svg></div><div class="fmain">${esc(mmFirst(pl.jmeno))} · ${esc(mmEntryLabel(e))}<small>${mmEntryType(e)}</small></div><div class="fpts">+${Math.round(Number(e.body)||0)}</div>${mmFeedCtogHtml(key)}</div>`;
+}
+// Udalosti feedu: (a) rekord — nejvic opakovani cviku za den (unikatni maximum, stejna logika
+// jako mmHighlightRecord), (b) milniky serie 7/14/30/50/100 dni, (c) zmena v cele tydenniho
+// zebricku, (d) vitez minuleho tydne (jen v pondeli). Okno = od fromDs, max 7 dni zpet.
+function mmPrehledEvents(fromDs){
+  const evs=[]; const today=todayStr();
+  const week7=dateToStr(new Date(new Date(today+'T00:00:00').getTime()-6*864e5));
+  const minDs=(fromDs&&fromDs<week7)?fromDs:week7;
+  const players=state.players.filter(p=>p.aktivni);
+  // (a) rekordy cviku
+  players.forEach(pl=>{
+    const verb=pl.pohlavi==='Z'?'překonala':'překonal';
+    const byCvik={};
+    state.cviky.filter(c=>c.player_id===pl.id&&c.cvik).forEach(c=>{ const m=byCvik[c.cvik]=byCvik[c.cvik]||{}; m[c.datum]=(m[c.datum]||0)+(Number(c.opakovani)||0); });
+    Object.keys(byCvik).forEach(cv=>{
+      const m=byCvik[cv]; const ds=Object.keys(m);
+      const max=Math.max(...ds.map(d=>m[d])); const best=ds.filter(d=>m[d]===max);
+      if(max>0&&best.length===1&&best[0]>=minDs&&best[0]<=today)
+        evs.push({ds:best[0], html:`🏅 ${esc(mmFirst(pl.jmeno))} ${verb} rekord — <b>${max}× ${esc(cv.toLowerCase())}</b> za den`});
+    });
+  });
+  // (b) milniky serie
+  players.forEach(pl=>{
+    const s=computeStreak(pl.id); const ms=[100,50,30,14,7].find(m=>s>=m); if(!ms) return;
+    const d=new Date(today+'T00:00:00'); d.setDate(d.getDate()-(s-ms)); const ds=dateToStr(d);
+    if(ds>=minDs&&ds<=today) evs.push({ds, html:`🔥 ${esc(mmFirst(pl.jmeno))} drží sérii <b>${ms} dní</b>`});
+  });
+  // (c) zmena v cele tydenniho zebricku (kumulativne den po dni)
+  { const wk=mmWeek(); const t=new Date(today+'T00:00:00'); let prevLead=null;
+    for(let x=new Date(wk.start); x<=t; x.setDate(x.getDate()+1)){
+      const ds=dateToStr(x); let best=null,bestV=0,tie=false;
+      players.forEach(pl=>{
+        const v=sumRoundedBody(state.cviky.filter(c=>c.player_id===pl.id&&c.datum>=wk.from&&c.datum<=ds))
+               +sumRoundedBody(state.aktivity.filter(a=>a.player_id===pl.id&&a.datum>=wk.from&&a.datum<=ds));
+        if(v>bestV){bestV=v;best=pl;tie=false;} else if(v===bestV&&v>0){tie=true;}
+      });
+      if(bestV>0&&!tie&&best){
+        if(prevLead&&prevLead.id!==best.id&&ds>=minDs) evs.push({ds, html:`👑 ${esc(mmFirst(best.jmeno))} se ${best.pohlavi==='Z'?'ujala':'ujal'} vedení`});
+        prevLead=best;
+      }
+    }
+  }
+  // (d) vitez tydne — jen v pondeli ("Minuly tyden vyhrala Kata 👑")
+  { const now=new Date();
+    if(((now.getDay()+6)%7)===0){
+      const wk=mmWeek(); const pf=dateToStr(new Date(wk.start.getTime()-7*864e5)), pt=dateToStr(new Date(wk.end.getTime()-7*864e5));
+      let best=null,bestV=0,tie=false;
+      players.forEach(pl=>{
+        const v=sumRoundedBody(state.cviky.filter(c=>c.player_id===pl.id&&c.datum>=pf&&c.datum<=pt))
+               +sumRoundedBody(state.aktivity.filter(a=>a.player_id===pl.id&&a.datum>=pf&&a.datum<=pt));
+        if(v>bestV){bestV=v;best=pl;tie=false;} else if(v===bestV&&v>0){tie=true;}
+      });
+      if(bestV>0&&!tie&&best) evs.push({ds:today, html:`👑 Minulý týden ${best.pohlavi==='Z'?'vyhrála':'vyhrál'} <b>${esc(mmFirst(best.jmeno))}</b>`});
+    }
+  }
+  evs.sort((a,b)=>b.ds.localeCompare(a.ds));
+  return evs.slice(0,4);
+}
+function mmPrehledFeedHtml(){
+  const all=[...state.cviky,...state.aktivity].filter(e=>e.datum&&state.players.some(p=>p.id===e.player_id))
+    .sort((a,b)=>String(b.created_at||b.datum).localeCompare(String(a.created_at||a.datum)));
+  // skupiny hrac+den v poradi nejnovejsiho zaznamu; ~5 polozek (sbaleny den = 1 polozka)
+  const groups=[]; const byKey={};
+  all.forEach(e=>{ const k='g:'+e.player_id+'|'+e.datum; let g=byKey[k]; if(!g){ g=byKey[k]={key:k,pid:e.player_id,datum:e.datum,items:[],sum:0}; groups.push(g);} g.items.push(e); g.sum+=Math.round(Number(e.body)||0); });
+  const shown=groups.slice(0,5);
+  const fs=mmFeedState();
+  const evs=mmPrehledEvents(shown.length?shown[shown.length-1].datum:null);
+  const dayset={};
+  shown.forEach(g=>{ (dayset[g.datum]=dayset[g.datum]||{gs:[],evs:[]}).gs.push(g); });
+  evs.forEach(ev=>{ (dayset[ev.ds]=dayset[ev.ds]||{gs:[],evs:[]}).evs.push(ev); });
+  const days=Object.keys(dayset).sort((a,b)=>b.localeCompare(a));
+  if(!days.length) return '<div class="rec"><div class="frow"><div class="fmain" style="color:var(--ter)">Zatím žádná aktivita</div></div></div>';
+  const today=todayStr();
+  let html='';
+  days.forEach(ds=>{
+    const d=new Date(ds+'T00:00:00');
+    const lbl=ds===today?`Dnes · ${czDayName(d).slice(0,2).toLowerCase()} ${d.getDate()}. ${d.getMonth()+1}.`:`${czDayName(d)} ${d.getDate()}. ${d.getMonth()+1}.`;
+    html+=`<div class="recday">${lbl}</div>`;
+    const dd=dayset[ds];
+    if(dd.gs.length){
+      html+='<div class="rec">'+dd.gs.map(g=>{
+        const pl=state.players.find(p=>p.id===g.pid); if(!pl) return '';
+        if(g.items.length===1) return mmPrehledEntryRow(g.items[0],pl,false);
+        const col=safeColor(pl.barva); const open=!!mmPrehledOpen[g.key];
+        const kom=g.items.reduce((s,e)=>s+((fs.koms['e:'+e.id]||[]).length),0);
+        let h=`<div class="frow hlc" style="cursor:pointer" onclick="mmPrehledGroupToggle('${g.key}')"><div class="fav" style="background:linear-gradient(135deg,${col}4d,${col}12);color:${col}">${esc(initials(pl.jmeno))}</div><div class="fmain">${esc(mmFirst(pl.jmeno))} · ${g.items.length} ${mmRecordCountLabel(g.items.length)}<small>${open?'ťukni pro sbalení':'ťukni pro rozbalení'}</small></div><div class="fpts">+${fmtNum(g.sum)}</div><span class="ctog"><svg class="i"><use href="#i-comment"/></svg>${kom?' '+kom:''}<b class="fcar">${open?'▴':'▾'}</b></span></div>`;
+        if(open) h+=g.items.map(e=>mmPrehledEntryRow(e,pl,true)).join('');
+        return h;
+      }).join('')+'</div>';
+    }
+    dd.evs.forEach(ev=>{ html+=`<div class="evb">${ev.html}</div>`; });
+  });
+  return html;
 }
 
 function renderParta(){
@@ -5945,7 +6058,7 @@ function renderNavykyMM(){
   ov.textContent=':host{-webkit-text-size-adjust:120.7%;display:block;font-family:var(--font-ui);font-size:16px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:92px;}.tb{position:fixed;}.nav{position:relative;}.nav .right{position:absolute;right:2px;top:16.5px;}'+(document.documentElement.classList.contains('pwa-standalone')?'.nav:not(:has(.date)){padding-top:15px;}':'');
   sh.appendChild(ov);
   if(sprite) sh.appendChild(sprite.cloneNode(true));
-  const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(2)}</div>`;
+  const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(1)}</div>`;
   sh.appendChild(w);
   const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; scrEl.style.margin=(window.innerWidth>393?'0 auto':'');
 }
@@ -6071,7 +6184,7 @@ function renderJaMM(){
   ov.textContent=':host{-webkit-text-size-adjust:120.7%;display:block;font-family:var(--font-ui);font-size:16px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:92px;}.tb{position:fixed;}.nav{position:relative;}.nav .right{position:absolute;right:2px;top:16.5px;}'+(document.documentElement.classList.contains('pwa-standalone')?'.nav:not(:has(.date)){padding-top:15px;}':'');
   sh.appendChild(ov);
   if(sprite) sh.appendChild(sprite.cloneNode(true));
-  const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(3)}</div>`;
+  const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(2)}</div>`;
   sh.appendChild(w);
   const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; scrEl.style.margin=(window.innerWidth>393?'0 auto':'');
 }
@@ -6939,7 +7052,7 @@ function renderSubHistorie(){
     body=`<div class="sl"><span>${fmtNum(totalCount)} ${mmRecordCountLabel(totalCount)} · ${fmtNum(totalPts)} b</span></div>${list}${days.length>shown.length?'<button class="loadmore" onclick="mmSubHistLoadMore()">Načíst starší ↓</button>':''}`;
   }
   const tpl = mmBackHdr('Moje záznamy') + `<div class="filterbar"><div class="fpill" onclick="mmSubHistCycleType()"><span class="k">Typ:</span> ${mmSubHistTypeLabel()} <span class="cx">▾</span></div></div>` + body;
-  mmMountSub(host, tpl, 3);
+  mmMountSub(host, tpl, 2);
 }
 
 // ----- Rekordy („Vše →" u REKORDY & ODZNAKY v Já) — VŠECHNY osobni rekordy prihlaseneho hrace -----
@@ -6955,7 +7068,7 @@ function renderSubRekordy(){
     body=`<div class="sl"><span>Všechny tvoje osobní rekordy</span></div><div class="hl">${rows}</div>`;
   }
   const tpl = mmBackHdr('Rekordy') + body;
-  mmMountSub(host, tpl, 3);
+  mmMountSub(host, tpl, 2);
 }
 
 // ----- Jak se boduje (mockup S.bodovani) — staticke vysvetleni + priklady, s realnymi konstantami kde to jde -----
@@ -6996,7 +7109,7 @@ function renderSubBodovani(){
   <div class="exl">${exlHtml}</div>`;
 
   const tpl = mmBackHdr('Jak se boduje') + body;
-  mmMountSub(host, tpl, 3);
+  mmMountSub(host, tpl, 2);
 }
 
 // ----- Profil hráče (mockup S.profil) — detail JINÉHO hráče z Parta žebříčku, read-only, žádné email/heslo -----
@@ -7046,7 +7159,7 @@ function renderSubProfil(playerId){
   <div class="hbm" style="margin-top:9px;cursor:pointer" onclick="mmOpenSub('rekordyparty')"><div class="hi" style="background:#E0A23A22"><svg class="i"><use href="#i-medal"/></svg></div><div class="ht">Rekordy & maximálky všech<small>porovnej všechny hráče</small></div><span class="rx" style="color:var(--ter);font-size:16px">›</span></div>`;
 
   const tpl = mmBackHdr(p.jmeno) + body;
-  mmMountSub(host, tpl, 1);
+  mmMountSub(host, tpl, 0);
 }
 
 // ----- Rekordy party (mockup S.rekordy) — cross-player maximálky + nej výkony, vstup z Parta -----
@@ -7098,7 +7211,7 @@ function renderSubRekordyParty(){
 
   const body = `<div class="sl"><span>Maximálky všech na jednom místě</span></div>${table}<div class="sl"><span>Rekordy party · nej výkony</span></div><div class="hl">${hlHtml}</div>`;
   const tpl = mmBackHdr('Rekordy') + body;
-  mmMountSub(host, tpl, 1);
+  mmMountSub(host, tpl, 0);
 }
 
 // ----- Dění v partě / Feed s reakcemi (mockup S.feed, 2.6) — reakce = vizuální placeholder (backend Fáze 6),
@@ -7182,13 +7295,13 @@ function renderSubFeed(){
     return `<div class="fdc"><div class="fdh"><span class="lav" style="width:30px;height:30px;background:${c.bg};color:${c.fg};font-size:10px">${c.ini}</span><div style="flex:1"><b>${esc(c.jmeno)}</b> · ${esc(c.label)}<div style="font-size:11px;color:var(--sec)">${c.kdy}</div></div><b style="color:var(--green);font-size:15px">+${c.body}</b></div><div class="fdbar">${rems}<span class="radd">＋</span>${ctog}</div>${komsHtml}</div>`;
   }).join('');
   const tpl = mmBackHdr('Dění v partě') + body;
-  mmMountSub(host, tpl, 1);
+  mmMountSub(host, tpl, 0);
 }
 // Ťuknutí na 💬 indikátor (Feed) nebo na celý řádek (Dnešek): rozbalí/sbalí komentáře inline pod záznamem
 // (accordion) + zhasne tečku „nové". ctx 'dnesek' → přímý DOM patch v shadow rootu, jinak re-render Feedu.
 function mmFeedApplyCtx(ctx){
-  if(ctx==='dnesek'||ctx==='parta'){
-    const host=document.getElementById(ctx==='dnesek'?'dnesek-mm':'parta-mm');
+  if(ctx==='dnesek'||ctx==='parta'||ctx==='prehled'){
+    const host=document.getElementById(ctx==='parta'?'parta-mm':'dnesek-mm');
     if(host&&host.shadowRoot) mmDeniApplyFeedState(host.shadowRoot, ctx);
   } else if(ctx==='zaznamy'){
     const host=document.getElementById('sub-zaznamy');
@@ -7244,7 +7357,7 @@ function renderSubPozvat(){
   const host=document.getElementById('sub-pozvat'); if(!host) return;
   const body = `<div class="info" style="margin-top:2px">Vytvoř profil pro nového hráče. Pošli mu párovací kód — zadá ho při prvním přihlášení a profil bude jeho.</div><div class="fld" style="margin-top:12px"><label>Jméno hráče</label><div class="inp">Kuba</div></div><div class="sl" style="margin-top:6px"><span>Párovací kód</span></div><div style="background:var(--card);box-shadow:var(--shadow);border-radius:16px;padding:18px;text-align:center"><div style="font-size:30px;font-weight:900;letter-spacing:.12em;color:var(--green)">X7-K2P9</div><div class="pbcap" style="text-align:center;margin-top:6px">Platí 24 h · pošli ho Kubovi</div></div><div class="ff" style="position:absolute;left:14px;right:14px;bottom:12px;background:var(--bg);padding-top:8px"><div class="submit"><svg class="i"><use href="#i-share"/></svg> Sdílet kód</div></div>`;
   const tpl = mmBackHdr('Pozvat kamaráda') + body;
-  mmMountSub(host, tpl, 3);
+  mmMountSub(host, tpl, 2);
 }
 
 // ----- Cíle & ochrana série (mockup S.cile, 4.5) — VIZUÁLNÍ PLACEHOLDER 1:1, týdenní cíle/streak-freeze zatím neexistují (net-new backend, Fáze 6) -----
@@ -7253,7 +7366,7 @@ function renderSubCile(){
   const host=document.getElementById('sub-cile'); if(!host) return;
   const body = `<div class="sl"><span>Týdenní cíl</span></div><div style="background:var(--card);box-shadow:var(--shadow);border-radius:16px;padding:14px"><div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700"><span>Tento týden</span><span>380 / 500 b</span></div><div class="pbtrack" style="margin-top:9px"><div class="pbfill" style="width:76%"></div></div><div class="pbcap">Ještě 120 b do splnění cíle <svg class="i"><use href="#i-target"/></svg></div></div><div class="hbm" style="margin-top:10px"><div class="hi" style="background:#2FB17022;width:27px;height:27px;font-size:14px"><svg class="i"><use href="#i-target"/></svg></div><div class="ht">Změnit týdenní cíl<small>teď 500 b / týden</small></div><span class="rx" style="color:var(--ter);font-size:16px">›</span></div><div class="sl" style="margin-top:14px"><span>Ochrana série</span></div><div class="hl"><div class="hlr"><span class="ic"><svg class="i"><use href="#i-snow"/></svg></span><div>Zapnuto<small style="display:block;font-size:10.5px;color:var(--sec);font-weight:600">když vynecháš den, série se nezlomí</small></div><div class="sw on" onclick="this.classList.toggle('on')"><i></i></div></div></div><div class="info" style="margin-top:8px">Máš <b>1 ochranu</b> na tento týden — použije se automaticky. Doplní se každé pondělí.</div>`;
   const tpl = mmBackHdr('Cíle & ochrana série') + body;
-  mmMountSub(host, tpl, 3);
+  mmMountSub(host, tpl, 2);
 }
 
 // ----- Notifikace (mockup S.notifikace, 4.4) — VIZUÁLNÍ PLACEHOLDER 1:1, push notifikace / service worker zatím neexistují (Fáze 7) -----
@@ -7262,7 +7375,7 @@ function renderSubNotifikace(){
   const host=document.getElementById('sub-notifikace'); if(!host) return;
   const body = `<div class="sl"><span>Co ti má appka hlásit</span></div><div class="hl"><div class="hlr"><span class="ic"><svg class="i"><use href="#i-trophy"/></svg></span><div>Liga týdne končí<small style="display:block;font-size:10.5px;color:var(--sec);font-weight:600">den před uzávěrkou</small></div><div class="sw on" onclick="this.classList.toggle('on')"><i></i></div></div><div class="hlr"><span class="ic"><svg class="i"><use href="#i-bolt"/></svg></span><div>Parťák tě dohnal<small style="display:block;font-size:10.5px;color:var(--sec);font-weight:600">někdo tě v žebříčku předběhl</small></div><div class="sw on" onclick="this.classList.toggle('on')"><i></i></div></div><div class="hlr"><span class="ic"><svg class="i"><use href="#i-comment"/></svg></span><div>Reakce a komentáře<small style="display:block;font-size:10.5px;color:var(--sec);font-weight:600">na tvoje záznamy</small></div><div class="sw on" onclick="this.classList.toggle('on')"><i></i></div></div><div class="hlr"><span class="ic"><svg class="i"><use href="#i-crown"/></svg></span><div>Vítěz týdne<small style="display:block;font-size:10.5px;color:var(--sec);font-weight:600">kdo vyhrál ligu</small></div><div class="sw on" onclick="this.classList.toggle('on')"><i></i></div></div><div class="hlr"><span class="ic"><svg class="i"><use href="#i-bell"/></svg></span><div>Připomínka návyků<small style="display:block;font-size:10.5px;color:var(--sec);font-weight:600">každý den ve 20:00</small></div><div class="sw" onclick="this.classList.toggle('on')"><i></i></div></div></div>`;
   const tpl = mmBackHdr('Notifikace') + body;
-  mmMountSub(host, tpl, 3);
+  mmMountSub(host, tpl, 2);
 }
 
 // ----- Detail dne (mockup S.den, 2.5) — vsechny zaznamy JEDNOHO hrace za JEDEN den + soucet bodu -----
@@ -7301,7 +7414,7 @@ function renderSubDen(arg){
   const hdr = `<div class="fhd"><span class="fx" style="font-size:27px;cursor:pointer" onclick="mmCloseSub()">‹</span><div class="fttl" style="flex:1;text-align:center;font-size:16px">${title}</div><span class="fx" style="opacity:0">×</span></div>`;
   const tpl = `<div style="padding-top:3px">${hdr}${body}</div>`;
   const me = state.players.find(x=>x.id===state.currentPlayerId);
-  const barIdx = (!isParta && me && pid===me.id) ? 3 : 1;
+  const barIdx = (!isParta && me && pid===me.id) ? 2 : 0;   // Marek 2026-08: 3 zalozky (prehled/navyky/ja)
   mmMountSub(host, tpl, barIdx);
 }
 
@@ -7411,7 +7524,7 @@ function renderSubRokParty(){
   <div class="ccap" style="margin-top:4px">1 čtvereček = 1 týden · tmavší = víc dní</div>
   <div class="sl"><span>Body v čase · celý rok</span></div><div class="chart">${chart}<div class="ccap">Body party v čase · silná zelená = ty</div></div>`;
   const tpl = mmBackHdr('Rok party') + body;
-  mmMountSub(host, tpl, 1);
+  mmMountSub(host, tpl, 0);
 }
 
 // ----- Historie party (mockup S.zaznamy, 2.4) — VŠECHNY zaznamy VŠECH hracu, filtry Hráč / Typ / Období -----
@@ -7476,13 +7589,12 @@ function renderSubZaznamy(){
   const tpl = mmBackHdr('Historie party')
     + `<div class="filterbar"><div class="fpill" onclick="mmSubZazCyclePlayer()"><span class="k">Hráč:</span> ${mmSubZazPlayerLabel()} <span class="cx">▾</span></div><div class="fpill" onclick="mmSubZazCycleType()"><span class="k">Typ:</span> ${mmSubZazTypeLabel()} <span class="cx">▾</span></div><div class="fpill" onclick="mmSubZazCyclePeriod()"><span class="k">Období:</span> ${mmSubZazPeriodLabel()} <span class="cx">▾</span></div></div>`
     + body;
-  mmMountSub(host, tpl, 1);
+  mmMountSub(host, tpl, 0);
   if(host.shadowRoot) mmDeniApplyFeedState(host.shadowRoot, 'zaznamy');
 }
 
 function renderAllViews() {
   renderDnesek();
-  renderParta();
   renderNavykyMM();
   renderJaMM();
   if(mmSubOpen==='historie') renderSubHistorie();
