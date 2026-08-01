@@ -2201,9 +2201,9 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .lc>.lr.one,.mm .lc>.lr:nth-child(1){background:transparent;}
 .mm .lc>.lr.me{background:color-mix(in srgb,var(--green) 8%,transparent);box-shadow:none;}
 .mm .lc>.lr:nth-child(-n+3) .lrk{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;margin:0 auto;border:1.5px solid currentColor;font-family:var(--font-display);font-weight:700;font-size:11px;}
-.mm .lc>.lr:nth-child(1) .lrk{color:#C79A2E;}
-.mm .lc>.lr:nth-child(2) .lrk{color:#8E97A0;}
-.mm .lc>.lr:nth-child(3) .lrk{color:#B06C3C;}
+.mm .lc>.lr:nth-child(1) .lrk{background:linear-gradient(135deg,#F3C64B,#C79A2E);color:#fff;border:none;box-shadow:0 2px 6px rgba(199,154,46,.45);}
+.mm .lc>.lr:nth-child(2) .lrk{background:linear-gradient(135deg,#C6CDD4,#8E97A0);color:#fff;border:none;box-shadow:0 2px 6px rgba(142,151,160,.4);}
+.mm .lc>.lr:nth-child(3) .lrk{background:linear-gradient(135deg,#D08A50,#B06C3C);color:#fff;border:none;box-shadow:0 2px 6px rgba(176,108,60,.4);}
 .mm .lpt{display:flex;align-items:baseline;justify-content:flex-end;gap:6px;}.lpt .lv{font-size:14.5px;font-weight:800;color:var(--label);font-variant-numeric:tabular-nums;}.lr{position:relative;}.lbar{position:absolute;left:68px;right:13px;bottom:5px;height:3px;border-radius:2px;background:color-mix(in srgb,var(--sep) 55%,transparent);overflow:hidden;display:flex;justify-content:flex-end;}.lbar i{display:block;height:100%;border-radius:2px;}.wkempty{padding:10px 4px;font-size:11.5px;color:var(--sec);font-weight:600;text-align:center;}
 .mm .lpt .gap{margin-left:0;text-align:left;min-width:0;}
 .mm .lnm .i{color:var(--gold);vertical-align:-.12em;}
@@ -2505,9 +2505,9 @@ body.mm-full{background:#EDF0EC;}
   .lc>.lr.one,.lc>.lr:nth-child(1){background:transparent;}
   .lc>.lr.me{background:color-mix(in srgb,var(--green) 8%,transparent);box-shadow:none;}
   .lc>.lr:nth-child(-n+3) .lrk{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;margin:0 auto;border:1.5px solid currentColor;font-family:var(--font-display);font-weight:700;font-size:11px;}
-  .lc>.lr:nth-child(1) .lrk{color:#C79A2E;}
-  .lc>.lr:nth-child(2) .lrk{color:#8E97A0;}
-  .lc>.lr:nth-child(3) .lrk{color:#B06C3C;}
+  .lc>.lr:nth-child(1) .lrk{background:linear-gradient(135deg,#F3C64B,#C79A2E);color:#fff;border:none;box-shadow:0 2px 6px rgba(199,154,46,.45);}
+  .lc>.lr:nth-child(2) .lrk{background:linear-gradient(135deg,#C6CDD4,#8E97A0);color:#fff;border:none;box-shadow:0 2px 6px rgba(142,151,160,.4);}
+  .lc>.lr:nth-child(3) .lrk{background:linear-gradient(135deg,#D08A50,#B06C3C);color:#fff;border:none;box-shadow:0 2px 6px rgba(176,108,60,.4);}
   .lpt{display:flex;align-items:baseline;justify-content:flex-end;gap:6px;}.lpt .lv{font-size:14.5px;font-weight:800;color:var(--label);font-variant-numeric:tabular-nums;}.lr{position:relative;}.lbar{position:absolute;left:68px;right:13px;bottom:5px;height:3px;border-radius:2px;background:color-mix(in srgb,var(--sep) 55%,transparent);overflow:hidden;display:flex;justify-content:flex-end;}.lbar i{display:block;height:100%;border-radius:2px;}.wkempty{padding:10px 4px;font-size:11.5px;color:var(--sec);font-weight:600;text-align:center;}
   .lpt .gap{margin-left:0;text-align:left;min-width:0;}
   .lnm .i{color:var(--gold);vertical-align:-.12em;}
@@ -5379,6 +5379,18 @@ function renderScoringExplanation() {
 //  MOMENTUM: Dnešek (Fáze 3) — reálná data v novém designu
 // ============================================================
 function czDayName(d){ return ['Neděle','Pondělí','Úterý','Středa','Čtvrtek','Pátek','Sobota'][d.getDay()]; }
+// Marek 2026-08-01: osloveni v 5. padu (rikame si zdrobnelinami). Mapa ma prednost pred pravidly.
+const MM_VOKATIV={'Mára':'Máro','Káťa':'Káťo','Péťa':'Péťo','Janča':'Jančo','Natálka':'Natálko','Martin':'Martine','Matěj':'Matěji','Marek':'Marku'};
+function mmVocative(n){
+  n=String(n||'').trim(); if(!n) return n;
+  if(MM_VOKATIV[n]) return MM_VOKATIV[n];
+  if(/ka$/.test(n)) return n.slice(0,-1)+'o';
+  if(/a$/.test(n)) return n.slice(0,-1)+'o';
+  if(/ek$/.test(n)) return n.slice(0,-2)+'ku';
+  if(/[jšžč]$/.test(n)) return n+'i';
+  if(/[bdfghklmnprstvz]$/.test(n)) return n+'e';
+  return n;
+}
 function mmGreet(){ const h=new Date().getHours(); if(h>=5&&h<11) return 'Dobré ráno'; if(h>=11&&h<14) return 'Dobré poledne'; if(h>=14&&h<18) return 'Dobré odpoledne'; return 'Dobrý večer'; }
 function mmWeek(){ const a=new Date(); a.setHours(0,0,0,0); const day=a.getDay()||7; const s=new Date(a); s.setDate(a.getDate()-day+1); const e=new Date(s); e.setDate(s.getDate()+6); return {from:dateToStr(s),to:dateToStr(e),start:s,end:e}; }
 const MM_TAB_IDX={prehled:0,hraci:1,navyky:2,historie:3};
@@ -5486,7 +5498,7 @@ function renderDnesek(){
     const ctog=`<span class="ctog" data-ctog="${key}" data-sig=""><svg class="i"><use href="#i-comment"/></svg></span>`;
     return `<div class="hlr hlc" data-feedrow="${key}" onclick="mmFeedToggle('${key}','dnesek')"><span class="ic"><svg class="i"><use href="#${icon}"/></svg></span><div>${text}</div>${mmRx}${ctog}</div>`; }).join('');
   const dl=czDayName(new Date())+' '+new Date().getDate()+'. '+(new Date().getMonth()+1)+'.';
-  const tpl=`<div class="nav"><div><div class="date">${dl}</div><div class="ttl" style="font-size:18px">${mmGreet()}${me?', '+esc(mmFirst(me.jmeno)):''}</div></div><div class="right"><div class="sck"><svg class="i"><use href="#i-flame"/></svg> ${streak}</div><div class="add" onclick="openModal()">＋</div></div></div>
+  const tpl=`<div class="nav"><div><div class="date">${dl}</div><div class="ttl" style="font-size:18px">${mmGreet()}${me?', '+esc(mmVocative(mmFirst(me.jmeno))):''}</div></div><div class="right"><div class="sck"><svg class="i"><use href="#i-flame"/></svg> ${streak}</div><div class="add" onclick="openModal()">＋</div></div></div>
   <div class="hero"><div class="ring" style="background:${conic}"><div class="h"><div><div class="n">${fmtNum(todayPts)}</div><div class="rpct ${dTrend>=0?'up':''}">${dTrend>=0?'▲':'▼'} ${Math.abs(dTrend)} %</div><div class="avg">ø ${fmtNum(avgDen)}</div></div></div></div><div class="hs"><div class="hst">Tento týden</div><div class="r"><span class="e"><svg class="i"><use href="#i-calendar"/></svg></span><b>${fmtNum(myTotal)} b</b><small>&nbsp;body ${trend>=0?(`<span class="up">▲${trend} %</span>`):(`<span style="color:var(--red)">▼${Math.abs(trend)} %</span>`)}</small></div><div class="r"><span class="e"><svg class="i"><use href="#i-pullup"/></svg></span><b>${trainings}</b><small>&nbsp;tréninky</small></div><div class="r"><span class="e"><svg class="i"><use href="#i-trophy"/></svg></span><b>${fmtNum(recordDay)} b</b><small>&nbsp;rekord/den</small></div></div></div>
   <div class="hbm" style="margin-top:11px;cursor:pointer" onclick="mmGo('navyky')"><div class="hi" style="background:#34C75922"><svg class="i"><use href="#i-list"/></svg></div><div class="ht">Návyky dnes<small>${habDone} splněné · ${Math.max(0,habTotal-habDone)} zbývají</small></div><div class="pct" style="display:flex;align-items:center;gap:5px">${habDone}/${habTotal}<span style="color:var(--ter);font-weight:400">›</span></div></div>
   <div class="sl" onclick="mmGo('hraci')" style="cursor:pointer;touch-action:manipulation"><span>Žebříček · tento týden</span><a style="pointer-events:none">Parta →</a></div>
