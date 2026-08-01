@@ -205,7 +205,7 @@
   .sck .i{color:#F0603F;animation:flame 2.4s ease-in-out infinite;transform-origin:center 78%;}
   @keyframes flame{0%,100%{transform:scale(1) rotate(0)}50%{transform:scale(1.16) rotate(-4deg)}}
   .hero .ring{position:relative;}
-  .hero .ring::before{content:"";position:absolute;inset:-5px;border-radius:50%;background:var(--irid);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 2.5px));mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 2.5px));animation:spin 9s linear infinite;opacity:.92;}
+  .hero 
   @keyframes spin{to{transform:rotate(360deg)}}
   .hero{box-shadow:var(--shadow-lg),inset 0 1px 0 rgba(255,255,255,.55);}
   [data-theme="dark"] .hero{box-shadow:var(--shadow-lg),inset 0 1px 0 rgba(255,255,255,.06);}
@@ -217,7 +217,7 @@
   .lc>.lr:nth-child(1) .lrk{background:linear-gradient(135deg,#F3C64B,#C79A2E);color:#fff;border:none;box-shadow:0 2px 6px rgba(199,154,46,.45);}
   .lc>.lr:nth-child(2) .lrk{background:linear-gradient(135deg,#C6CDD4,#8E97A0);color:#fff;border:none;box-shadow:0 2px 6px rgba(142,151,160,.4);}
   .lc>.lr:nth-child(3) .lrk{background:linear-gradient(135deg,#D08A50,#B06C3C);color:#fff;border:none;box-shadow:0 2px 6px rgba(176,108,60,.4);}
-  .lpt{display:flex;align-items:baseline;justify-content:flex-end;gap:6px;}.lpt .lv{font-size:14.5px;font-weight:800;color:var(--label);font-variant-numeric:tabular-nums;}.lr{position:relative;}.lbar{position:absolute;left:82px;right:13px;bottom:5px;height:3px;border-radius:2px;background:color-mix(in srgb,var(--sep) 55%,transparent);overflow:hidden;display:flex;justify-content:flex-end;}.lbar i{display:block;height:100%;border-radius:2px;}.wkempty{padding:10px 4px;font-size:11.5px;color:var(--sec);font-weight:600;text-align:center;}
+  .lpt{display:flex;align-items:baseline;justify-content:flex-end;gap:6px;}.lpt .lv{font-size:14.5px;font-weight:800;color:var(--label);font-variant-numeric:tabular-nums;}.lr{position:relative;}.lbar{position:absolute;left:82px;right:13px;bottom:5px;height:3px;border-radius:2px;background:color-mix(in srgb,var(--sep) 55%,transparent);overflow:hidden;display:flex;justify-content:flex-end;}.lbar i{display:block;height:100%;border-radius:2px;}.hleg{display:flex;align-items:center;gap:4px;font-size:10px;font-weight:700;color:var(--sec);margin-top:4px;}.hleg i{width:7px;height:7px;border-radius:50%;flex:0 0 auto;}.hleg i:nth-of-type(2){margin-left:7px;}.wkempty{padding:10px 4px;font-size:11.5px;color:var(--sec);font-weight:600;text-align:center;}
   .lpt .gap{margin-left:0;text-align:left;min-width:0;}
   .lnm .i{color:var(--gold);vertical-align:-.12em;}
   .wkbars .wkbar:nth-child(1) .wkm{color:#C6982B;}
@@ -483,7 +483,8 @@ S.dnesek=()=>`<div class="nav"><div><div class="date">Pátek 27. 6.</div><div cl
    kalendář aktivity, DĚNÍ (sbalený den Péťa rozbalený + normální řádek + 2 události-bubliny),
    návyky dnes, rekordy karta. */
 S.prehled=()=>navhdr('Přehled')+`
-  <div class="hero" style="padding:11px 13px;gap:13px"><div class="hs"><div class="hst">Pátek 27. 6.</div><div style="font-size:16.5px;font-weight:800;letter-spacing:-.02em">Dobré ráno, Máro</div><div style="font-size:11.5px;font-weight:700;color:var(--sec);margin-top:2px">ø 80 · <span class="up">▲ 15 %</span> dnes</div></div><div class="ring" style="width:64px;height:64px;background:conic-gradient(var(--green) 0 48%,var(--blue) 48% 72%,var(--orange) 72% 100%)"><div class="h" style="width:50px;height:50px"><div><div class="n" style="font-size:15px">92</div></div></div></div></div>
+  <div class="hero" style="padding:11px 13px;gap:13px"><div class="hs"><div class="hst">Pátek 27. 6.</div><div style="font-size:16.5px;font-weight:800;letter-spacing:-.02em">Dobré ráno, Máro</div><div style="font-size:11.5px;font-weight:700;color:var(--sec);margin-top:2px">ø 80 · <span class="up">▲ 15 %</span> dnes</div><div class="hleg"><i style="background:var(--green)"></i>Cviky 35<i style="background:var(--blue)"></i>Aktivity 57</div></div><div class="ring" style="width:64px;height:64px;background:conic-gradient(var(--green) 0 38%,var(--blue) 38% 100%)"><div class="h" style="width:50px;height:50px"><div><div class="n" style="font-size:15px">92</div></div></div></div></div>
+  <div class="hbm" style="margin-top:10px"><div class="hi" style="background:#34C75922"><svg class="i"><use href="#i-list"/></svg></div><div class="ht">Návyky dnes<small>2 splněné · 3 zbývají</small></div><div class="pct" style="display:flex;align-items:center;gap:5px">2/5<span style="color:var(--ter);font-weight:400">›</span></div></div>
   <div class="sl"><span>Žebříček</span></div>
   <div class="ligachip on">⚡ Týdenní soutěž · zbývají 3 dny</div>
   <div class="pcbar"><div class="pseg"><i class="psegt" style="transform:translateX(100%)"></i><b>Celkem</b><b class="on">Týden</b><b>Měsíc</b></div><div class="pseg pdiv"><i class="psegt"></i><b class="on">Vše</b><b>Cviky</b><b>Aktivity</b></div></div>
@@ -510,8 +511,7 @@ S.prehled=()=>navhdr('Přehled')+`
   <div class="evb">🏅 Martin překonal rekord — <b>100× kliky</b> za den</div>
   <div class="recday">Středa 25. 6.</div>
   <div class="evb">🔥 Káťa drží sérii <b>14 dní</b></div>
-  <div class="hbm" style="margin-top:13px"><div class="hi" style="background:#34C75922"><svg class="i"><use href="#i-list"/></svg></div><div class="ht">Návyky dnes<small>2 splněné · 3 zbývají</small></div><div class="pct" style="display:flex;align-items:center;gap:5px">2/5<span style="color:var(--ter);font-weight:400">›</span></div></div>
-  <div class="hbm" style="margin-top:6px;padding:6px 12px"><div class="hi" style="background:#E0A23A22;width:27px;height:27px;font-size:14px"><svg class="i"><use href="#i-medal"/></svg></div><div class="ht">Rekordy & maximálky všech<small>všichni hráči na jednom místě</small></div><span class="rx" style="color:var(--ter);font-size:16px">›</span></div>`;
+    <div class="hbm" style="margin-top:6px;padding:6px 12px"><div class="hi" style="background:#E0A23A22;width:27px;height:27px;font-size:14px"><svg class="i"><use href="#i-medal"/></svg></div><div class="ht">Rekordy & maximálky všech<small>všichni hráči na jednom místě</small></div><span class="rx" style="color:var(--ter);font-size:16px">›</span></div>`;
 S.parta=()=>navhdr('Parta')+`
   <div class="wkl"><div class="wklh"><div class="wklt"><svg class="i"><use href="#i-trophy"/></svg> Liga týdne</div><div class="wkls">končí za 2 dny ›</div></div>
     <div class="wkbars">
