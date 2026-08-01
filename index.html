@@ -1842,7 +1842,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .nav .date{font-size:12px;font-weight:600;color:var(--sec);}
 .mm .nav .right{display:flex;align-items:center;gap:9px;}
 .mm .av{width:29px;height:29px;border-radius:50%;display:grid;place-items:center;font-size:10.5px;font-weight:700;background:#2FB17022;color:#1f8a52;}
-.mm .add{width:32px;height:32px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-size:20px;box-shadow:0 4px 12px rgba(52,199,89,.4);}.add{position:relative;overflow:hidden;}.add::before{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 50% 42%,rgba(255,255,255,.5),rgba(255,255,255,0) 62%);opacity:.12;animation:mm-plusbreathe 3s ease-in-out infinite;pointer-events:none;}@keyframes mm-plusbreathe{0%,100%{opacity:.12;transform:scale(.9);}50%{opacity:.75;transform:scale(1.06);}}
+.mm .add{width:32px;height:32px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-size:20px;box-shadow:0 4px 12px rgba(52,199,89,.4);}.add{animation:mm-plusbreathe 3.2s ease-in-out infinite;will-change:transform;}@keyframes mm-plusbreathe{0%,100%{transform:scale(1);}50%{transform:scale(1.055);}}
 .mm .sck{display:inline-flex;align-items:center;gap:3px;font-size:12px;font-weight:800;color:var(--label);padding:6px 11px;border-radius:999px;white-space:nowrap;border:1.5px solid transparent;background-image:linear-gradient(var(--card),var(--card)),linear-gradient(115deg,#D6A23A,#0FA968,#3FAEC2,#8A7BCB);background-origin:border-box;background-clip:padding-box,border-box;}
 .mm .hero{display:flex;align-items:center;gap:16px;padding:8px 4px 4px;}
 .mm 
@@ -2340,7 +2340,7 @@ body.mm-full{background:#EDF0EC;}
   .notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:116px;height:24px;background:#111;border-radius:0 0 15px 15px;z-index:5;} [data-theme="dark"] .notch{background:#000;}
   .nav{display:flex;justify-content:space-between;align-items:center;padding:15px 2px 7px;} .nav:not(:has(.date)){padding-top:20px;} .nav:has(.date){padding-top:10px;} .lc .lr{padding-top:5px;padding-bottom:5px;} .lc ~ .sl:has(+ .hl){margin-top:21px;} .nav .ttl{font-size:23px;font-weight:800;letter-spacing:-.03em;} .nav .date{font-size:12px;font-weight:600;color:var(--sec);}
   .nav .right{display:flex;align-items:center;gap:9px;} .av{width:29px;height:29px;border-radius:50%;display:grid;place-items:center;font-size:10.5px;font-weight:700;background:#2FB17022;color:#1f8a52;}
-  .add{width:32px;height:32px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-size:20px;box-shadow:0 4px 12px rgba(52,199,89,.4);}.add{position:relative;overflow:hidden;}.add::before{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 50% 42%,rgba(255,255,255,.5),rgba(255,255,255,0) 62%);opacity:.12;animation:mm-plusbreathe 3s ease-in-out infinite;pointer-events:none;}@keyframes mm-plusbreathe{0%,100%{opacity:.12;transform:scale(.9);}50%{opacity:.75;transform:scale(1.06);}}
+  .add{width:32px;height:32px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-size:20px;box-shadow:0 4px 12px rgba(52,199,89,.4);}.add{animation:mm-plusbreathe 3.2s ease-in-out infinite;will-change:transform;}@keyframes mm-plusbreathe{0%,100%{transform:scale(1);}50%{transform:scale(1.055);}}
   .sck{display:inline-flex;align-items:center;gap:3px;font-size:12px;font-weight:800;color:var(--label);padding:6px 11px;border-radius:999px;white-space:nowrap;border:1.5px solid transparent;background-image:linear-gradient(var(--card),var(--card)),linear-gradient(115deg,#D6A23A,#0FA968,#3FAEC2,#8A7BCB);background-origin:border-box;background-clip:padding-box,border-box;}
   .hero{display:flex;align-items:center;gap:16px;padding:8px 4px 4px;}
   
@@ -5496,7 +5496,7 @@ function renderDnesek(){
   mmFeedState();
   const feed=mmPrehledFeedHtml();
   const dl=czDayName(new Date())+' '+new Date().getDate()+'. '+(new Date().getMonth()+1)+'.';
-  const tpl=`<div class="nav"><div><div class="ttl">Přehled</div><div style="font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--sec);margin-top:1px">${dl}</div></div><div class="right"><div class="av" style="background:linear-gradient(135deg,${meCol}4d,${meCol}12);color:${meCol}">${me?esc(initials(me.jmeno)):'?'}</div><div class="add" onclick="openModal()">＋</div></div></div>
+  const tpl=`<div class="nav"><div><div class="ttl">Přehled</div><div style="font-size:10.5px;line-height:1.2;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--sec);margin-top:-2px">${dl}</div></div><div class="right"><div class="av" style="background:linear-gradient(135deg,${meCol}4d,${meCol}12);color:${meCol}">${me?esc(initials(me.jmeno)):'?'}</div><div class="add" onclick="openModal()">＋</div></div></div>
   <div class="hero" style="padding:8px 13px;gap:12px"><div class="hs"><div style="font-size:15.5px;font-weight:800;letter-spacing:-.02em">${mmGreet()}${me?', '+esc(mmVocative(mmFirst(me.jmeno))):''}</div><div style="font-size:11.5px;font-weight:700;color:var(--sec);margin-top:2px">ø ${fmtNum(avgDen)} · ${dTrend>=0?`<span class="up">▲ ${dTrend} %</span>`:`<span style="color:var(--red)">▼ ${Math.abs(dTrend)} %</span>`} dnes</div><div class="hleg" style="margin-top:2px;font-size:9.5px"><i style="background:var(--green)"></i>${fmtNum(cCvik)} cviky<i style="background:var(--blue)"></i>${fmtNum(cAkt2)} aktivity</div></div><div class="ring" style="width:56px;height:56px;background:${conic}"><div class="h" style="width:44px;height:44px"><div><div class="n" style="font-size:15px">${fmtNum(todayPts)}</div></div></div></div></div>
   <div class="hbm" style="margin-top:10px;cursor:pointer" onclick="mmGo('navyky')"><div class="hi" style="background:#34C75922"><svg class="i"><use href="#i-list"/></svg></div><div class="ht">Návyky dnes<small>${habDone} splněné · ${Math.max(0,habTotal-habDone)} zbývají</small></div><div class="pct" style="display:flex;align-items:center;gap:5px">${habDone}/${habTotal}<span style="color:var(--ter);font-weight:400">›</span></div></div>
   <div class="sl" style="align-items:center"><span>Žebříček</span>${ligaChip}</div>
@@ -5727,7 +5727,7 @@ function mmPrehledEntryRow(e, pl, sub){
 function mmPrehledEvents(fromDs){
   const evs=[]; const today=todayStr();
   const week7=dateToStr(new Date(new Date(today+'T00:00:00').getTime()-6*864e5));
-  const minDs=(fromDs&&fromDs<week7)?fromDs:week7;
+  const minDs=(fromDs&&fromDs>week7)?fromDs:week7;   // udalosti JEN v rozsahu viditelnych zaznamu (uzsi z obou oken)
   const players=state.players.filter(p=>p.aktivni);
   // (a) rekordy cviku
   players.forEach(pl=>{
