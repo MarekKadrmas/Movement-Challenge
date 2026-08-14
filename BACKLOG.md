@@ -59,3 +59,8 @@
 - Admin rezim + Novy zaznam + "Za koho" -> klik na Mara (sebe) VYPNE admin rezim.
 - Ocekavani: vyber sebe = jen prepnuti cile zapisu, admin rezim zustava zapnuty.
 - Faze funkce - doladit spolu s ostatnimi mosty formularu.
+
+## Feature (Marek, 2026-08-14): telesne udaje hrace v profilu
+- Hrac si bude moct zapisovat udaje o sobe: vaha, vyska, obvody (pas, hrudnik, biceps...), atd.
+- Nekde ve svem profilu; casem idealne s historii a grafem vyvoje.
+- Vyzaduje novou DB tabulku (body_metrics) + UI v profilu.
