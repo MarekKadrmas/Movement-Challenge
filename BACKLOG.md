@@ -64,3 +64,10 @@
 - Hrac si bude moct zapisovat udaje o sobe: vaha, vyska, obvody (pas, hrudnik, biceps...), atd.
 - Nekde ve svem profilu; casem idealne s historii a grafem vyvoje.
 - Vyzaduje novou DB tabulku (body_metrics) + UI v profilu.
+
+## Feature (Marek, 2026-08-18): kalendar udalosti + ankety pro partu
+- Sdileny kalendar v aplikaci, kde muzou HRACI vytvaret UDALOSTI (spolecny trenink, lezeni, beh, akce).
+- ANKETY / hlasovani o terminu: navrhnout vice terminu, ostatni odskrtnou kdy muzou -> vidi se, kdy se potka nejvic lidi (styl Doodle).
+- Ucel: planovat spolecne akce a sporty, domlouvat se kdy se potkat.
+- Zvazit: ucast (jdu / nejdu / mozna), pripominka pred akci (notifikace), komentare u udalosti, opakovane akce (kazdy utery lezeni).
+- Vyzaduje DB tabulky (events, event_options, event_votes/attendance) + novou obrazovku nebo tab.
