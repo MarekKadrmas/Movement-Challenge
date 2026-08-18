@@ -71,3 +71,8 @@
 - Ucel: planovat spolecne akce a sporty, domlouvat se kdy se potkat.
 - Zvazit: ucast (jdu / nejdu / mozna), pripominka pred akci (notifikace), komentare u udalosti, opakovane akce (kazdy utery lezeni).
 - Vyzaduje DB tabulky (events, event_options, event_votes/attendance) + novou obrazovku nebo tab.
+- KOMPATIBILITA s Apple/Google kalendarem (Marek 2026-08-18):
+  - Export udalosti do .ics (iCalendar) — tlacitko "Pridat do kalendare" u kazde akce, funguje na iOS i Androidu/Google.
+  - Idealne i odberovy kalendar (webcal:// feed s ICS) — hrac si prihlasi kalendar party a akce se mu doplnuji automaticky vc. zmen.
+  - Zvazit dvoucestnou integraci (Google Calendar API / CalDAV) az v pozdejsi fazi — pro start staci ICS export + feed.
+  - Pozor na casove zony, opakovane akce (RRULE) a UID/SEQUENCE pri zmene akce.
