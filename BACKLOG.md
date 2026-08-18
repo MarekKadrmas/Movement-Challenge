@@ -46,16 +46,16 @@
 ---
 *Pozn.: Toto je živý seznam priorit. Velká vize = vícefázový projekt, ne jednorázová změna — rozdělit na milníky až se k tomu dostaneme.*
 
-## Napad (Marek, 2026-07-20): plusko ma "svitit"
+## ✅ HOTOVO (2026-08-01) — Napad (Marek, 2026-07-20): plusko ma "svitit"
 - Kolecko + (pridani aktivity) by melo nejak svitit / zit.
 - Napad: po obvodu kolecka jezdi svetelna linka s NELINEARNIM pohybem (zrychluje/zpomaluje), aby bylo jasne, ze se pluskem pridava aktivita.
 - Az po dokonceni vzhledu 1:1 (fáze funkce/efekty).
 
-## Backlog (Marek, 2026-07-21): tlacitko Zpet
+## ✅ HOTOVO (2026-07-27, swipe-back zleva + vetsi hitboxy) — Backlog (Marek, 2026-07-21): tlacitko Zpet
 - "Nejde moc dobre dat zpet tlacitko vsude" - zpetna navigace na podobrazovkach je neohrabana/spatne dostupna.
 - Promyslet: vetsi tap-target sipky, konzistentni pozice, pripadne gesto swipe-back.
 
-## Bug (Marek, 2026-07-21) - admin rezim se vypina pri vyberu sebe
+## ✅ OPRAVENO (2026-07-27) — Bug (Marek, 2026-07-21): admin rezim se vypinal pri vyberu sebe
 - Admin rezim + Novy zaznam + "Za koho" -> klik na Mara (sebe) VYPNE admin rezim.
 - Ocekavani: vyber sebe = jen prepnuti cile zapisu, admin rezim zustava zapnuty.
 - Faze funkce - doladit spolu s ostatnimi mosty formularu.
