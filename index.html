@@ -2033,15 +2033,15 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .fcar.on.anim{animation:carOpen .3s cubic-bezier(.55,1.3,.2,1);}
 @keyframes carOpen{from{transform:rotate(0)}to{transform:rotate(180deg)}}
 @keyframes carShut{from{transform:rotate(180deg)}to{transform:rotate(0)}}
-@keyframes fsubIn{from{opacity:0;transform:translateY(-7px)}to{opacity:1;transform:none}}
+@keyframes fsubIn{from{opacity:0;transform:translateY(-8px) scale(.985);}to{opacity:1;transform:none;}}to{opacity:1;transform:none}}
 .mm .deni .frow.fsub{padding-left:35px;background:color-mix(in srgb,var(--track) 26%,transparent);}
 .mm .deni .frow.fsub::after{left:63px!important;}
 .mm .deni .frow.fsub .fav{width:21px;height:21px;font-size:10.46px;}
 .mm .deni .frow.fsub .fmain{font-weight:600;color:var(--label);}
-.mm .deni .fsub.anim{animation:fsubIn .3s cubic-bezier(.55,1.3,.2,1) both;}
+.mm .deni .fsub.anim{animation:fsubIn .34s cubic-bezier(.22,1,.36,1) both;}
 /* Vodici linka v ose avataru rodice. Zadny border-radius — zaobleny konec kazdeho segmentu delal
    na kazde hranici radku zarez a linka pusobila jako carkovana. Zacina POD avatarem hlavicky. */
-.mm .deni .fsub::before,.mm .deni .hlkoms.ksub::before,.mm .deni .frow:not(.fsub):has(+.fsub)::before{content:"";position:absolute;left:23px;top:0;bottom:0;width:1.6px;background:color-mix(in srgb,var(--sec) 26%,transparent);}
+.mm .rxrow{display:inline-flex;align-items:center;gap:3px;margin-left:6px;flex:0 0 auto;}.rxp{display:inline-flex;align-items:center;gap:2px;font-size:11.5px;line-height:1;padding:3px 6px;border-radius:999px;background:var(--track);cursor:pointer;}.rxp i{font-style:normal;font-size:9.5px;font-weight:800;color:var(--sec);}.rxp.mine{background:color-mix(in srgb,var(--green) 18%,transparent);}.rxp.mine i{color:var(--green);}.rxpick{position:absolute;left:14px;right:14px;z-index:30;display:flex;justify-content:space-around;align-items:center;gap:2px;padding:7px 10px;border-radius:999px;background:var(--card);box-shadow:0 10px 26px rgba(0,0,0,.18);opacity:0;transform:translateY(6px) scale(.94);transition:opacity .18s ease,transform .24s cubic-bezier(.34,1.56,.4,1);}.rxpick.on{opacity:1;transform:none;}.rxpick b{font-size:21px;line-height:1;cursor:pointer;padding:3px 5px;border-radius:999px;transition:transform .18s cubic-bezier(.34,1.56,.4,1);}.rxpick b:active{transform:scale(1.35);}.ucompact .fld{margin-bottom:6px;}.ucompact label{margin-bottom:2px;}.ucompact .inp{padding:7px 12px;}.ucompact .fhd{margin-bottom:8px;}.ucompact .colors{gap:7px;}.ucompact .col{width:26px;height:26px;}.ucompact .hbm{padding:7px 12px;margin-top:0;}.ucompact .info{margin-top:5px;padding:7px 11px;}.ucompact .ff .fld{margin-bottom:4px;}.deni .fsub .fav{position:relative;z-index:1;}.deni .fsub::before{content:"";position:absolute;left:23px;top:0;height:50%;width:9px;border-left:1.6px solid color-mix(in srgb,var(--sec) 30%,transparent);border-bottom:1.6px solid color-mix(in srgb,var(--sec) 30%,transparent);border-bottom-left-radius:10px;}.deni .fsub:has(+.fsub)::after,.deni .fsub:has(+.hlkoms.ksub)::after{content:"";position:absolute;left:23px;top:50%;bottom:0;width:1.6px;background:color-mix(in srgb,var(--sec) 30%,transparent);}.deni .hlkoms.ksub::before{content:"";position:absolute;left:23px;top:0;bottom:0;width:1.6px;background:color-mix(in srgb,var(--sec) 30%,transparent);}.deni .frow:not(.fsub):has(+.fsub)::before{content:"";position:absolute;left:23px;top:0;bottom:0;width:1.6px;background:color-mix(in srgb,var(--sec) 30%,transparent);}
 .mm .deni .frow:not(.fsub):has(+.fsub)::before{top:calc(50% + 12px);}
 /* Na hranici tonovaneho bloku zadny oddelovac — barevny schod tam uz jeden je (jinak dvojita, ragged hrana) */
 .mm .deni .frow:not(.fsub):has(+.fsub)::after,.mm .deni .fsub:has(+.frow:not(.fsub))::after,.mm .deni .hlkoms.ksub:has(+.frow:not(.fsub))::after{display:none;}
@@ -2254,7 +2254,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .bmk svg{width:28px;height:28px;}
 .mm /* ＋ tlačítko + spodní lišta */
   .add{box-shadow:0 6px 16px -4px color-mix(in srgb,var(--green) 55%,transparent);}
-.mm .tb a.on{opacity:1;background:color-mix(in srgb,var(--green) 16%,transparent);color:var(--green);}.tbind{position:absolute;left:0;top:6px;width:46px;height:36px;border-radius:999px;background:color-mix(in srgb,var(--green) 16%,transparent);transition:transform .3s cubic-bezier(.55,1.3,.2,1);will-change:transform;pointer-events:none;}.tb:has(.tbind) a.on{background:transparent;}.tb a{transition:color .25s,opacity .25s;}@keyframes mm-tabpop{0%{transform:scale(.82);}55%{transform:scale(1.14);}100%{transform:scale(1);}}
+.mm .tb a.on{opacity:1;background:color-mix(in srgb,var(--green) 16%,transparent);color:var(--green);}.tbind{position:absolute;left:0;top:6px;width:46px;height:36px;border-radius:999px;background:color-mix(in srgb,var(--tbc,var(--green)) 18%,transparent);transition:transform .3s cubic-bezier(.55,1.3,.2,1),background .3s ease;will-change:transform;pointer-events:none;}.tb a.on{color:var(--tbc,var(--green));}.tb:has(.tbind) a.on{background:transparent;}.tb a{transition:color .25s,opacity .25s;}@keyframes mm-tabpop{0%{transform:scale(.82);}55%{transform:scale(1.14);}100%{transform:scale(1);}}
 .mm /* ===== Momentum — detaily,.mm ikonografie & signature ===== */
   .i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.14em;flex:0 0 auto;}
 .mm .sck .i{color:#F0603F;animation:flame 2.4s ease-in-out infinite;transform-origin:center 78%;}
@@ -2531,18 +2531,18 @@ body.mm-full{background:#EDF0EC;padding-bottom:0;}
   .fcar.on.anim{animation:carOpen .3s cubic-bezier(.55,1.3,.2,1);}
   @keyframes carOpen{from{transform:rotate(0)}to{transform:rotate(180deg)}}
   @keyframes carShut{from{transform:rotate(180deg)}to{transform:rotate(0)}}
-  @keyframes fsubIn{from{opacity:0;transform:translateY(-7px)}to{opacity:1;transform:none}}
+  @keyframes fsubIn{from{opacity:0;transform:translateY(-8px) scale(.985);}to{opacity:1;transform:none;}}to{opacity:1;transform:none}}
   .deni .frow.fsub{padding-left:35px;background:color-mix(in srgb,var(--track) 26%,transparent);}
   .deni .frow.fsub::after{left:63px!important;}
   .deni .frow.fsub .fav{width:21px;height:21px;font-size:9.2px;}
   .deni .frow.fsub .fmain{font-weight:600;color:var(--label);}
-  .deni .fsub.anim{animation:fsubIn .3s cubic-bezier(.55,1.3,.2,1) both;}
+  .deni .fsub.anim{animation:fsubIn .34s cubic-bezier(.22,1,.36,1) both;}
   /* Vodicí linka v ose avataru rodiče. Žádný border-radius — zaoblený konec každého segmentu dělal
      na každé hranici řádku zářez a linka působila jako čárkovaná. Začíná POD avatarem hlavičky. */
-  .deni .fsub::before,.deni .hlkoms.ksub::before,.deni .frow:not(.fsub):has(+.fsub)::before{content:"";position:absolute;left:23px;top:0;bottom:0;width:1.6px;background:color-mix(in srgb,var(--sec) 26%,transparent);}
+  .rxrow{display:inline-flex;align-items:center;gap:3px;margin-left:6px;flex:0 0 auto;}.rxp{display:inline-flex;align-items:center;gap:2px;font-size:11.5px;line-height:1;padding:3px 6px;border-radius:999px;background:var(--track);cursor:pointer;}.rxp i{font-style:normal;font-size:9.5px;font-weight:800;color:var(--sec);}.rxp.mine{background:color-mix(in srgb,var(--green) 18%,transparent);}.rxp.mine i{color:var(--green);}.rxpick{position:absolute;left:14px;right:14px;z-index:30;display:flex;justify-content:space-around;align-items:center;gap:2px;padding:7px 10px;border-radius:999px;background:var(--card);box-shadow:0 10px 26px rgba(0,0,0,.18);opacity:0;transform:translateY(6px) scale(.94);transition:opacity .18s ease,transform .24s cubic-bezier(.34,1.56,.4,1);}.rxpick.on{opacity:1;transform:none;}.rxpick b{font-size:21px;line-height:1;cursor:pointer;padding:3px 5px;border-radius:999px;transition:transform .18s cubic-bezier(.34,1.56,.4,1);}.rxpick b:active{transform:scale(1.35);}.ucompact .fld{margin-bottom:6px;}.ucompact label{margin-bottom:2px;}.ucompact .inp{padding:7px 12px;}.ucompact .fhd{margin-bottom:8px;}.ucompact .colors{gap:7px;}.ucompact .col{width:26px;height:26px;}.ucompact .hbm{padding:7px 12px;margin-top:0;}.ucompact .info{margin-top:5px;padding:7px 11px;}.ucompact .ff .fld{margin-bottom:4px;}.deni .fsub .fav{position:relative;z-index:1;}.deni .fsub::before{content:"";position:absolute;left:23px;top:0;height:50%;width:9px;border-left:1.6px solid color-mix(in srgb,var(--sec) 30%,transparent);border-bottom:1.6px solid color-mix(in srgb,var(--sec) 30%,transparent);border-bottom-left-radius:10px;}.deni .fsub:has(+.fsub)::after,.deni .fsub:has(+.hlkoms.ksub)::after{content:"";position:absolute;left:23px;top:50%;bottom:0;width:1.6px;background:color-mix(in srgb,var(--sec) 30%,transparent);}.deni .hlkoms.ksub::before{content:"";position:absolute;left:23px;top:0;bottom:0;width:1.6px;background:color-mix(in srgb,var(--sec) 30%,transparent);}.deni .frow:not(.fsub):has(+.fsub)::before{content:"";position:absolute;left:23px;top:0;bottom:0;width:1.6px;background:color-mix(in srgb,var(--sec) 30%,transparent);}
   .deni .frow:not(.fsub):has(+.fsub)::before{top:calc(50% + 12px);}
   /* Na hranici tónovaného bloku žádný oddělovač — barevný schod tam už jeden je (jinak dvojitá, ragged hrana) */
-  .deni .frow:not(.fsub):has(+.fsub)::after,.deni .fsub:has(+.frow:not(.fsub))::after,.deni .hlkoms.ksub:has(+.frow:not(.fsub))::after{display:none;}
+  .deni .frow:not(.fsub):has(+.fsub)::after,.deni .hlkoms.ksub:has(+.frow:not(.fsub))::after{display:none;}
   .deni .hlkoms{padding:6px 12px 9px 43px;gap:4px;}
   .deni .hlkoms.ksub{padding-left:63px;background:color-mix(in srgb,var(--track) 26%,transparent);}
   .deni .hlkoms.ksub::after{left:63px;}
@@ -2620,7 +2620,7 @@ body.mm-full{background:#EDF0EC;padding-bottom:0;}
   .brandsub{color:var(--docmuted);font-size:15.94px;max-width:640px;margin:2px auto 10px;font-weight:600;}
   /* ＋ tlačítko + spodní lišta */
   .add{box-shadow:0 6px 16px -4px color-mix(in srgb,var(--green) 55%,transparent);}
-  .tb a.on{opacity:1;background:color-mix(in srgb,var(--green) 16%,transparent);color:var(--green);}.tbind{position:absolute;left:0;top:6px;width:46px;height:36px;border-radius:999px;background:color-mix(in srgb,var(--green) 16%,transparent);transition:transform .3s cubic-bezier(.55,1.3,.2,1);will-change:transform;pointer-events:none;}.tb:has(.tbind) a.on{background:transparent;}.tb a{transition:color .25s,opacity .25s;}@keyframes mm-tabpop{0%{transform:scale(.82);}55%{transform:scale(1.14);}100%{transform:scale(1);}}
+  .tb a.on{opacity:1;background:color-mix(in srgb,var(--green) 16%,transparent);color:var(--green);}.tbind{position:absolute;left:0;top:6px;width:46px;height:36px;border-radius:999px;background:color-mix(in srgb,var(--tbc,var(--green)) 18%,transparent);transition:transform .3s cubic-bezier(.55,1.3,.2,1),background .3s ease;will-change:transform;pointer-events:none;}.tb a.on{color:var(--tbc,var(--green));}.tb:has(.tbind) a.on{background:transparent;}.tb a{transition:color .25s,opacity .25s;}@keyframes mm-tabpop{0%{transform:scale(.82);}55%{transform:scale(1.14);}100%{transform:scale(1);}}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;}}
 
   /* ===== Momentum — detaily, ikonografie & signature ===== */
@@ -2786,7 +2786,7 @@ body.mm-full{background:#EDF0EC;padding-bottom:0;}
 
   <nav class="tb" id="mc-tabbar">
   <a class="tb-btn active" data-view="prehled" aria-label="Dnešek"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path fill="currentColor" stroke="none" d="M12 3.2 21 11v8.2a1.8 1.8 0 0 1-1.8 1.8H15v-4.8a3 3 0 0 0-6 0V21H4.8A1.8 1.8 0 0 1 3 19.2V11Z"/></svg></a>
-  <a class="tb-btn" data-view="navyky" aria-label="Návyky"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="4.8" fill="currentColor" stroke="none"/><path d="M8 12.3 10.7 15 16 9.3" stroke="var(--card)" stroke-width="2.1" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+  <a class="tb-btn" data-view="navyky" aria-label="Návyky"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" fill="currentColor" stroke="none"/><path d="M8 12.2 10.8 15 16 9.4" stroke="var(--card)" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
   <a class="tb-btn" data-view="historie" aria-label="Já"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.8" fill="currentColor" stroke="none"/><path fill="currentColor" stroke="none" d="M12 13c-4 0-7 2.7-7 6.2 0 .6.4 1 1.4 1h11.2c1 0 1.4-.4 1.4-1 0-3.5-3-6.2-7-6.2Z"/></svg></a>
 </nav>
 
@@ -5535,6 +5535,7 @@ function mmBarPos(sh, idx, fromIdx){
   if(!sh) return; const tb=sh.querySelector(".tb"); if(!tb) return;
   const ind=tb.querySelector(".tbind"); const links=tb.querySelectorAll("a");
   if(!ind || !links[idx]) return;
+  tb.style.setProperty("--tbc", ["var(--green)","var(--purple)","var(--blue)"][idx]||"var(--green)");   // barva vyberu dle zalozky
   if(fromIdx!=null && links[fromIdx] && fromIdx!==idx){
     ind.style.transition="none"; ind.style.transform="translateX("+links[fromIdx].offsetLeft+"px)";
     void ind.offsetWidth;
@@ -5549,7 +5550,7 @@ function mmChrome(){ const full=state.view==='prehled'||state.view==='hraci'||st
 function mmFirst(n){ return String(n||'').split(' ')[0]; }
 
 function mmBar(a){
-  var IC=['<path fill="currentColor" stroke="none" d="M12 3.2 21 11v8.2a1.8 1.8 0 0 1-1.8 1.8H15v-4.8a3 3 0 0 0-6 0V21H4.8A1.8 1.8 0 0 1 3 19.2V11Z"/>','<rect x="3.5" y="3.5" width="17" height="17" rx="4.8" fill="currentColor" stroke="none"/><path d="M8 12.3 10.7 15 16 9.3" stroke="var(--card)" stroke-width="2.1" fill="none" stroke-linecap="round" stroke-linejoin="round"/>','<circle cx="12" cy="8" r="3.8" fill="currentColor" stroke="none"/><path fill="currentColor" stroke="none" d="M12 13c-4 0-7 2.7-7 6.2 0 .6.4 1 1.4 1h11.2c1 0 1.4-.4 1.4-1 0-3.5-3-6.2-7-6.2Z"/>'];
+  var IC=['<path fill="currentColor" stroke="none" d="M12 3.2 21 11v8.2a1.8 1.8 0 0 1-1.8 1.8H15v-4.8a3 3 0 0 0-6 0V21H4.8A1.8 1.8 0 0 1 3 19.2V11Z"/>','<circle cx="12" cy="12" r="9" fill="currentColor" stroke="none"/><path d="M8 12.2 10.8 15 16 9.4" stroke="var(--card)" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>','<circle cx="12" cy="8" r="3.8" fill="currentColor" stroke="none"/><path fill="currentColor" stroke="none" d="M12 13c-4 0-7 2.7-7 6.2 0 .6.4 1 1.4 1h11.2c1 0 1.4-.4 1.4-1 0-3.5-3-6.2-7-6.2Z"/>'];
   var T=['prehled','navyky','historie'];
   // .tbveil = neprusvitny pruh pod plovoucim barem az k dolni hrane viewportu.
   // Bez nej scrolluje obsah v mezere pod barem (na iPhonu 15 Pro 16.5 pt) — Marek 2026-08-18.
@@ -5627,7 +5628,7 @@ function renderDnesek(){
   const dl=czDayName(new Date())+' '+new Date().getDate()+'. '+(new Date().getMonth()+1)+'.';
   const tpl=`<div class="nav"><div><div class="ttl">Přehled</div><div style="font-size:12.67px;line-height:1.2;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--sec);margin-top:-2px">${dl}</div></div><div class="right"><div class="av" style="background:linear-gradient(135deg,${meCol}4d,${meCol}12);color:${meCol}">${me?esc(initials(me.jmeno)):'?'}</div><div class="add" onclick="openModal()">＋</div></div></div>
   <div class="hero" style="padding:8px 13px;gap:12px"><div class="hs"><div style="font-size:18.71px;font-weight:800;letter-spacing:-.02em">${mmGreet()}${me?', '+esc(mmVocative(mmFirst(me.jmeno))):''}</div><div style="font-size:13.88px;font-weight:700;color:var(--sec);margin-top:2px">ø ${fmtNum(avgDen)} · ${dTrend>=0?`<span class="up">▲ ${dTrend} %</span>`:`<span style="color:var(--red)">▼ ${Math.abs(dTrend)} %</span>`} dnes</div><div class="hleg" style="margin-top:2px;font-size:11.47px"><i style="background:var(--green)"></i>${fmtNum(cCvik)} cviky<i style="background:var(--blue)"></i>${fmtNum(cAkt2)} aktivity</div></div><div class="ring" style="width:56px;height:56px;background:${conic}"><div class="h" style="width:44px;height:44px"><div><div class="n" style="font-size:18.11px">${fmtNum(todayPts)}</div></div></div></div></div>
-  <div class="hbm hbnav2" style="margin-top:10px;cursor:pointer" onclick="mmGo('navyky')"><div class="hi hicheck${habTotal>0&&habDone>=habTotal?' hfull':''}" style="--hp:${habTotal>0?Math.round(Math.min(habDone,habTotal)/habTotal*100):0}%"><svg class="i"><use href="#i-check"/></svg></div><div class="ht">Návyky dnes<span class="hdots">${Array.from({length:habTotal},(_,i)=>'<i'+(i<habDone?' class="on"':'')+'></i>').join('')}</span></div><div class="pct" style="display:flex;align-items:center;gap:5px">${habDone}<span style="color:var(--ter);font-weight:700">/${habTotal}</span><span style="color:var(--ter);font-weight:400">›</span></div></div>
+  <div class="hbm hbnav2" style="margin-top:10px;cursor:pointer" onclick="mmGo('navyky')"><div class="hi hicheck${habTotal>0&&habDone>=habTotal?' hfull':''}" style="--hp:${habTotal>0?Math.round(Math.min(habDone,habTotal)/habTotal*100):0}%"><svg class="i"><use href="#i-check"/></svg></div><div class="ht">Návyky dnes<span class="hdots">${Array.from({length:habTotal},(_,i)=>'<i'+(i<habDone?' class="on"':'')+'></i>').join('')}</span></div><div class="pct" style="display:flex;align-items:baseline;gap:0"><b>${habDone}</b><span style="color:var(--ter);font-weight:700;margin-right:5px">/${habTotal}</span><span style="color:var(--ter);font-weight:400">›</span></div></div>
   <div class="sl" style="align-items:center"><span>Žebříček</span>${ligaChip}</div>
   ${mmPartaSegBar()}
   <div class="lc">${rows||'<div style="padding:20px;text-align:center;color:var(--ter)">Zatím žádné body</div>'}</div>
@@ -5636,7 +5637,7 @@ function renderDnesek(){
   <div class="sl" onclick="mmOpenSub('zaznamy')" style="cursor:pointer;touch-action:manipulation"><span>Dění</span><a style="pointer-events:none">celá historie →</a></div>
   ${feed}
     <div class="hbm" style="margin-top:6px;padding:6px 12px;cursor:pointer" onclick="mmOpenSub('rekordyparty')"><div class="hi" style="background:#E0A23A22;width:27px;height:27px;font-size:16.9px"><svg class="i"><use href="#i-medal"/></svg></div><div class="ht">Rekordy & maximálky všech<small>všichni hráči na jednom místě</small></div><span class="rx" style="color:var(--ter);font-size:19.31px">›</span></div>`;
-  const _mmK=tpl+'|'+(document.documentElement.getAttribute('data-theme')||'light'); if(host._mmTpl===_mmK&&host.shadowRoot){const s=host.shadowRoot.querySelector('.scr'); if(s){const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; s.style.zoom=z; s.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(s,z);} mmDeniApplyFeedState(host.shadowRoot,'prehled'); mmPsegAnim(host.shadowRoot); mmLbarAlign(host.shadowRoot); mmHeatInit(host.shadowRoot); return;} host._mmTpl=_mmK; const sh=host.shadowRoot||host.attachShadow({mode:'open'});
+  const _mmK=tpl+'|'+(document.documentElement.getAttribute('data-theme')||'light'); if(host._mmTpl===_mmK&&host.shadowRoot){const s=host.shadowRoot.querySelector('.scr'); if(s){const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; s.style.zoom=z; s.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(s,z);} mmDeniApplyFeedState(host.shadowRoot,'prehled'); mmDeniBindReakce(host.shadowRoot, host); mmPsegAnim(host.shadowRoot); mmLbarAlign(host.shadowRoot); mmHeatInit(host.shadowRoot); return;} host._mmTpl=_mmK; const sh=host.shadowRoot||host.attachShadow({mode:'open'});
   const tplEl=document.getElementById('mm-tpl'); const sprite=document.getElementById('momentum-sprite');
   sh.innerHTML='';
   if(tplEl) sh.appendChild(tplEl.content.cloneNode(true));
@@ -5650,6 +5651,7 @@ function renderDnesek(){
   sh.appendChild(w);
   const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin=(window.innerWidth>393?'0 auto':'');
   mmDeniApplyFeedState(sh,'prehled');   // po plnem re-renderu obnov rozbaleni/pocty/tecky komentaru ze state.mmFeed
+  mmDeniBindReakce(sh, host);
   mmPsegAnim(sh);
   mmLbarAlign(sh);
   mmHeatInit(sh);
@@ -5869,7 +5871,7 @@ function mmPartaFeedHtml(maxDays){
     byDay[ds].forEach(e=>{
       const pl=state.players.find(p=>p.id===e.player_id); if(!pl) return;
       const col=safeColor(pl.barva);
-      html+=`<div class="frow hlc" data-feedrow="e:${e.id}" style="cursor:pointer" onclick="mmFeedToggle('e:${e.id}','parta')"><div class="fav" style="background:linear-gradient(135deg,${col}4d,${col}12);color:${col}"><svg class="i"><use href="#${mmEntryIcon(e)}"/></svg></div><div class="fmain">${esc(mmFirst(pl.jmeno))} · ${esc(mmEntryLabel(e))}<small>${mmEntryType(e)}</small></div><div class="fpts">+${Math.round(Number(e.body)||0)}</div>${mmFeedCtogHtml('e:'+e.id)}</div>`;
+      html+=`<div class="frow hlc" data-feedrow="e:${e.id}" style="cursor:pointer" onclick="mmFeedToggle('e:${e.id}','parta')"><div class="fav" style="background:linear-gradient(135deg,${col}4d,${col}12);color:${col}">${sub?`<svg class="i"><use href="#${mmEntryIcon(e)}"/></svg>`:esc(initials(pl.jmeno))}</div><div class="fmain">${esc(mmFirst(pl.jmeno))} · ${esc(mmEntryLabel(e))}<small>${mmEntryType(e)}</small></div><div class="fpts">+${Math.round(Number(e.body)||0)}</div>${mmFeedCtogHtml('e:'+e.id)}</div>`;
     });
     html+='</div>';
   });
@@ -5903,6 +5905,86 @@ function mmPrehledCtogHtml(id){
 }
 // Radek zaznamu. sub=true → odsazeny radek pod rozbalenym hracem: jmeno se NEOPAKUJE (je v hlavicce
 // skupiny), zustava jen ikona typu + co delal. animIdx>=0 → prilet s malym stagerem po rozbaleni.
+
+// ============================================================
+//  EMOJI REAKCE na zaznamy (Marek 2026-08-19): podrzeni prstu nebo dvojklik
+//  otevre vyber emoji; reakce se zobrazi jako male pilulky u zaznamu.
+//  Ulozeni zatim in-memory (state.mmFeed.reakce) — DB tabulka az bude.
+// ============================================================
+const MM_RX_EMOJI = ['❤️','💪','🔥','👏','🎉','😮'];
+window.MM_FEED_REACTIONS_TABLE = window.MM_FEED_REACTIONS_TABLE || null;
+function mmRxState(){ const fs=mmFeedState(); if(!fs.reakce) fs.reakce={}; return fs.reakce; }
+function mmRxHtml(id){
+  const r=mmRxState()[id]; if(!r) return '';
+  const me=state.currentPlayerId;
+  const parts=Object.keys(r).filter(e=>r[e]&&r[e].length).map(e=>{
+    const mine=r[e].indexOf(me)>=0;
+    return '<b class="rxp'+(mine?' mine':'')+'" data-rx="'+e+'">'+e+(r[e].length>1?'<i>'+r[e].length+'</i>':'')+'</b>';
+  });
+  return parts.length?'<span class="rxrow">'+parts.join('')+'</span>':'';
+}
+function mmRxToggle(id, emoji){
+  const r=mmRxState(); const me=state.currentPlayerId||'me';
+  const m=r[id]=r[id]||{}; const arr=m[emoji]=m[emoji]||[];
+  const i=arr.indexOf(me);
+  if(i>=0) arr.splice(i,1); else arr.push(me);
+  if(!arr.length) delete m[emoji];
+  if(!Object.keys(m).length) delete r[id];
+  try{ mmRxPersist({card_id:id, player_id:me, emoji:emoji, on:i<0}); }catch(_){}
+  renderDnesek();
+}
+async function mmRxPersist(payload){
+  if(typeof isDemo==='function' && isDemo()) return {local:true};
+  const t=window.MM_FEED_REACTIONS_TABLE;
+  if(!t || typeof db==='undefined' || !db) return {local:true};
+  try{ const r=await db.from(t).upsert(payload); if(r&&r.error) throw r.error; return {ok:true}; }catch(e){ return {error:e}; }
+}
+function mmRxClosePicker(sh){ const p=sh.querySelector('.rxpick'); if(p) p.remove(); }
+function mmRxOpenPicker(sh, row){
+  mmRxClosePicker(sh);
+  const id=row.getAttribute('data-feedrow')||row.getAttribute('data-rxid'); if(!id) return;
+  const scr=sh.querySelector('.scr'); const z=scr?(parseFloat(scr.style.zoom)||1):1;
+  const host=row.closest('.deni')||scr; if(!host) return;
+  const hr=host.getBoundingClientRect(), rr=row.getBoundingClientRect();
+  const el=document.createElement('div');
+  el.className='rxpick';
+  el.innerHTML=MM_RX_EMOJI.map(e=>'<b data-rx="'+e+'">'+e+'</b>').join('');
+  el.style.top=(((rr.top-hr.top)/z)-42)+'px';
+  host.style.position='relative';
+  host.appendChild(el);
+  el.setAttribute('data-for', id);
+  requestAnimationFrame(()=>el.classList.add('on'));
+}
+function mmDeniBindReakce(sh, host){
+  if(!sh || host._mmRxBound) return; host._mmRxBound=true;
+  let t=null, longed=false, lastTap=0, lastRow=null;
+  const rowOf=(e)=>{ const p=e.composedPath?e.composedPath():[]; for(const n of p){ if(n.classList&&n.classList.contains('frow')) return n; } return null; };
+  sh.addEventListener('touchstart', ev=>{
+    const row=rowOf(ev); if(!row) return; longed=false;
+    t=setTimeout(()=>{ longed=true; try{ navigator.vibrate&&navigator.vibrate(12); }catch(_){} mmRxOpenPicker(sh,row); }, 480);
+  }, {passive:true});
+  sh.addEventListener('touchmove', ()=>{ clearTimeout(t); }, {passive:true});
+  sh.addEventListener('touchend', ()=>{ clearTimeout(t); }, {passive:true});
+  sh.addEventListener('click', ev=>{
+    // vyber emoji z pickeru
+    const pick=ev.target.closest && ev.target.closest('.rxpick b');
+    if(pick){ ev.stopPropagation(); const box=pick.closest('.rxpick'); mmRxToggle(box.getAttribute('data-for'), pick.getAttribute('data-rx')); mmRxClosePicker(sh); return; }
+    // klik na existujici pilulku = prepnout moji reakci
+    const pill=ev.target.closest && ev.target.closest('.rxp');
+    if(pill){ ev.stopPropagation(); const row=rowOf(ev); if(row) mmRxToggle(row.getAttribute('data-feedrow')||row.getAttribute('data-rxid'), pill.getAttribute('data-rx')); return; }
+    if(sh.querySelector('.rxpick')){ mmRxClosePicker(sh); ev.stopPropagation(); return; }
+    if(longed){ longed=false; ev.stopPropagation(); return; }   // po podrzeni nespoustet rozbaleni
+    // dvojklik
+    const row=rowOf(ev); if(!row) return;
+    const key=row.getAttribute('data-feedrow')||row.getAttribute('data-rxid');
+    const now=Date.now();
+    if(key && lastRow===key && now-lastTap<420){ ev.stopPropagation(); lastTap=0; lastRow=null;
+      // radek uz mohl byt prekreslen — najdi aktualni podle klice
+      const cur=sh.querySelector('[data-feedrow="'+key+'"],[data-rxid="'+key+'"]')||row;
+      mmRxOpenPicker(sh,cur); return; }
+    lastTap=now; lastRow=key;
+  }, true);
+}
 function mmPrehledEntryRow(e, pl, sub, animIdx, pad){
   const col=safeColor(pl.barva); const key='e:'+e.id;
   const an=(animIdx!=null&&animIdx>=0);
@@ -5910,7 +5992,7 @@ function mmPrehledEntryRow(e, pl, sub, animIdx, pad){
   // vzdy elementove deti (<b>/<span>) — .fmain je flex a holy textovy uzel by neuměl ellipsis
   const main=sub?`<span>${esc(mmEntryLabel(e))}</span>`:`<b>${esc(mmFirst(pl.jmeno))}</b><span>&nbsp;· ${esc(mmEntryLabel(e))}</span>`;
   // fmtNum i tady — skupina uz ho pouziva, bez toho stal ve stejnem sloupci „+4 500" vedle „+1500"
-  return `<div ${attrs} data-feedrow="${key}" onclick="mmFeedToggle('${key}','prehled')"><div class="fav" style="background:linear-gradient(135deg,${col}4d,${col}12);color:${col}"><svg class="i"><use href="#${mmEntryIcon(e)}"/></svg></div><div class="fmain">${main}</div>${mmPrehledCtogHtml(key)}<div class="fpts">+${fmtNum(Math.round(Number(e.body)||0))}</div>${pad?'<span class="fcar fcarx"></span>':''}</div>`;
+  return `<div ${attrs} data-feedrow="${key}" onclick="mmFeedToggle('${key}','prehled')"><div class="fav" style="background:linear-gradient(135deg,${col}4d,${col}12);color:${col}">${sub?`<svg class="i"><use href="#${mmEntryIcon(e)}"/></svg>`:esc(initials(pl.jmeno))}</div><div class="fmain">${main}</div>${mmRxHtml(key)}${mmPrehledCtogHtml(key)}<div class="fpts">+${fmtNum(Math.round(Number(e.body)||0))}</div>${pad?'<span class="fcar fcarx"></span>':''}</div>`;
 }
 // Udalosti feedu: (a) rekord — nejvic opakovani cviku za den (unikatni maximum, stejna logika
 // jako mmHighlightRecord), (b) milniky serie 7/14/30/50/100 dni, (c) zmena v cele tydenniho
@@ -6004,7 +6086,7 @@ function mmPrehledFeedHtml(){
         const kom=g.items.reduce((s,e)=>s+((fs.koms['e:'+e.id]||[]).length),0);
         // souhrnne 💬 jen u SBALENE skupiny — po rozbaleni ma kazdy zaznam vlastni indikator
         const ctog=(!open&&kom)?`<span class="ctog"><svg class="i"><use href="#i-comment"/></svg>${kom}</span>`:'';
-        let h=`<div class="frow hlc" onclick="mmPrehledGroupToggle('${g.key}')"><div class="fav" style="background:linear-gradient(135deg,${col}4d,${col}12);color:${col}">${esc(initials(pl.jmeno))}</div><div class="fmain"><b>${esc(mmFirst(pl.jmeno))}</b><span>&nbsp;· ${g.items.length} ${mmRecordCountLabel(g.items.length)}</span></div>${ctog}<div class="fpts">+${fmtNum(g.sum)}</div><span class="fcar${open?' on':''}${anim?' anim':''}"></span></div>`;
+        let h=`<div class="frow hlc" data-rxid="${g.key}" onclick="mmPrehledGroupToggle('${g.key}')"><div class="fav" style="background:linear-gradient(135deg,${col}4d,${col}12);color:${col}">${esc(initials(pl.jmeno))}</div><div class="fmain"><b>${esc(mmFirst(pl.jmeno))}</b><span>&nbsp;· ${g.items.length} ${mmRecordCountLabel(g.items.length)}</span></div>${mmRxHtml(g.key)}${ctog}<div class="fpts">+${fmtNum(g.sum)}</div><span class="fcar${open?' on':''}${anim?' anim':''}"></span></div>`;
         if(open) h+=g.items.map((e,i)=>mmPrehledEntryRow(e,pl,true,anim?i:-1,true)).join('');
         return h;
       }).join('')+'</div>';
@@ -6928,7 +7010,7 @@ const MM_BP2 = {
  "tvorba4": mmHabitHf(`<div class="fld"><label>Kolikrát za měsíc?</label><div class="inp" data-mmcount><input data-mmhb="habit-freq-cil" type="number" inputmode="numeric" min="1"><span>× za měsíc</span></div></div>`),
  "tvorbad": mmHabitHf(`<div class="fld"><label>Kolikrát za rok?</label><div class="inp" data-mmcount><input data-mmhb="habit-freq-cil" type="number" inputmode="numeric" min="1"><span>× za rok</span></div></div>`),
  "knihovna": `<div class="body" style="padding-top:16px"><div class="fhd"><div class="fttl">Nový návyk</div><span class="fx">×</span></div><div class="inp ph" style="margin-bottom:10px;display:flex;align-items:center;gap:6px"><svg class="i"><use href="#i-search"/></svg><input data-mmhb="habit-search" type="text" placeholder="Hledat návyk…"></div><div class="filt" style="margin-bottom:11px" data-mmcats></div><div data-mmpresets></div><button class="newbtn" data-mmcustom style="margin-top:11px">＋ Vytvořit vlastní návyk</button></div>`,
- "uprava": `<div class="body formb" style="padding-top:16px"><div class="fhd"><div class="fttl">Upravit profil</div><span class="fx">×</span></div><div class="fld"><label>Kdo upravuje *</label><div class="pickrow" data-mmeditors></div></div><div data-mmform><div class="fld"><label>Jméno</label><div class="inp"><input data-mmpe="pe-jmeno" type="text" maxlength="40" placeholder="Jméno hráče"></div></div><div class="fld"><label>Barva avataru</label><div class="colors" data-mmpecolors></div></div><div class="pickrow"><div class="fld" style="flex:1"><label>Váha</label><div class="inp" style="display:flex;align-items:center"><input data-mmpe="pe-vaha" type="number" inputmode="decimal" min="30" max="200" step="0.5" style="flex:1"><span style="color:var(--ter);font-weight:700">kg</span></div></div><div class="fld" style="flex:1"><label>Výška</label><div class="inp" style="display:flex;align-items:center"><input data-mmpe="pe-vyska" type="number" inputmode="numeric" min="100" max="220" style="flex:1"><span style="color:var(--ter);font-weight:700">cm</span></div></div></div><div class="fld"><label>Maximálky (pro výpočet bodů)</label><div class="pickrow" style="margin-bottom:6px"><div class="inp" style="flex:1;display:flex;align-items:center;gap:6px"><span>Shyby</span><input data-mmpe="pe-shyby" type="number" inputmode="numeric" min="0" style="flex:1"></div><div class="inp" style="flex:1;display:flex;align-items:center;gap:6px"><span>Kliky</span><input data-mmpe="pe-kliky" type="number" inputmode="numeric" min="0" style="flex:1"></div></div><div class="pickrow"><div class="inp" style="flex:1;display:flex;align-items:center;gap:6px"><span>Dřep</span><input data-mmpe="pe-drep" type="number" inputmode="decimal" min="0" step="0.5" style="flex:1"></div><div class="inp" style="flex:1;display:flex;align-items:center;gap:6px"><span>Dipy</span><input data-mmpe="pe-dipy" type="number" inputmode="numeric" min="0" style="flex:1"></div></div></div><div class="pickrow" style="flex-wrap:nowrap"><div class="fld" style="flex:1;min-width:0"><label>Max boulder</label><div class="inp" style="display:flex;align-items:center"><select data-mmpesel="pe-boulder" style="flex:1;min-width:0;width:100%"></select><span style="color:var(--ter)">▾</span></div></div><div class="fld" style="flex:1;min-width:0"><label>Max lano</label><div class="inp" style="display:flex;align-items:center"><select data-mmpesel="pe-lano" style="flex:1;min-width:0;width:100%"></select><span style="color:var(--ter)">▾</span></div></div></div><div class="hbm" data-mmhistlink style="margin-top:2px;padding:9px 13px"><div class="hi" style="background:#8B6FE022;width:26px;height:26px;font-size:15.69px"><svg class="i"><use href="#i-clock"/></svg></div><div class="ht">Historie úprav<small>kdo a kdy měnil parametry</small></div><span class="rx" style="color:var(--ter);font-size:19.31px">›</span></div><div class="info" style="margin-top:8px">Změny maximálek se ukládají do historie a admin dostane upozornění.</div></div><div class="ff"><div class="submit">Uložit změny</div></div></div>`,
+ "uprava": `<div class="body formb ucompact" style="padding-top:12px"><div class="fhd"><div class="fttl">Upravit profil</div><span class="fx">×</span></div><div class="fld"><label>Kdo upravuje *</label><div class="pickrow" data-mmeditors></div></div><div data-mmform><div class="fld"><label>Jméno</label><div class="inp"><input data-mmpe="pe-jmeno" type="text" maxlength="40" placeholder="Jméno hráče"></div></div><div class="fld"><label>Barva avataru</label><div class="colors" data-mmpecolors></div></div><div class="pickrow"><div class="fld" style="flex:1"><label>Váha</label><div class="inp" style="display:flex;align-items:center"><input data-mmpe="pe-vaha" type="number" inputmode="decimal" min="30" max="200" step="0.5" style="flex:1"><span style="color:var(--ter);font-weight:700">kg</span></div></div><div class="fld" style="flex:1"><label>Výška</label><div class="inp" style="display:flex;align-items:center"><input data-mmpe="pe-vyska" type="number" inputmode="numeric" min="100" max="220" style="flex:1"><span style="color:var(--ter);font-weight:700">cm</span></div></div></div><div class="fld"><label>Maximálky (pro výpočet bodů)</label><div class="pickrow" style="margin-bottom:6px"><div class="inp" style="flex:1;display:flex;align-items:center;gap:6px"><span>Shyby</span><input data-mmpe="pe-shyby" type="number" inputmode="numeric" min="0" style="flex:1"></div><div class="inp" style="flex:1;display:flex;align-items:center;gap:6px"><span>Kliky</span><input data-mmpe="pe-kliky" type="number" inputmode="numeric" min="0" style="flex:1"></div></div><div class="pickrow"><div class="inp" style="flex:1;display:flex;align-items:center;gap:6px"><span>Dřep</span><input data-mmpe="pe-drep" type="number" inputmode="decimal" min="0" step="0.5" style="flex:1"></div><div class="inp" style="flex:1;display:flex;align-items:center;gap:6px"><span>Dipy</span><input data-mmpe="pe-dipy" type="number" inputmode="numeric" min="0" style="flex:1"></div></div></div><div class="pickrow" style="flex-wrap:nowrap"><div class="fld" style="flex:1;min-width:0"><label>Max boulder</label><div class="inp" style="display:flex;align-items:center"><select data-mmpesel="pe-boulder" style="flex:1;min-width:0;width:100%"></select><span style="color:var(--ter)">▾</span></div></div><div class="fld" style="flex:1;min-width:0"><label>Max lano</label><div class="inp" style="display:flex;align-items:center"><select data-mmpesel="pe-lano" style="flex:1;min-width:0;width:100%"></select><span style="color:var(--ter)">▾</span></div></div></div><div class="hbm" data-mmhistlink style="margin-top:2px;padding:9px 13px"><div class="hi" style="background:#8B6FE022;width:26px;height:26px;font-size:15.69px"><svg class="i"><use href="#i-clock"/></svg></div><div class="ht">Historie úprav<small>kdo a kdy měnil parametry</small></div><span class="rx" style="color:var(--ter);font-size:19.31px">›</span></div><div class="info" style="margin-top:8px">Změny maximálek se ukládají do historie a admin dostane upozornění.</div></div><div class="ff"><div class="submit">Uložit změny</div></div></div>`,
  "historieuprav": `<div class="body" style="padding-top:16px"><div class="fhd" style="margin-bottom:14px"><span class="fx" style="font-size:32.59px">‹</span><div class="fttl" style="flex:1;text-align:center">Historie úprav</div><span style="width:22px"></span></div><div style="margin-top:4px" data-mmaudits></div></div>`,
  "datum": `<div class="dim"></div><div class="sheet"><div class="handle"></div><span class="sheetx">×</span><h3>Vyber datum</h3><div class="dp"><div class="dphdr"><span data-mmnav="-1">‹</span><span data-mmmonth>Červen 2026</span><span data-mmnav="1">›</span></div><div class="dpgrid"><div class="hh">Po</div><div class="hh">Út</div><div class="hh">St</div><div class="hh">Čt</div><div class="hh">Pá</div><div class="hh">So</div><div class="hh">Ne</div></div></div><div class="btn2" style="margin-top:11px"><div class="btng" data-mmtoday>Dnes</div><div class="btng" data-mmdone style="background:var(--green);color:#fff">Hotovo</div></div></div>`
 };
@@ -7508,9 +7590,14 @@ function mmFeedCtogHtml(id, withClick){
   const dot=(fs.nova[id]&&!fs.seen[id])?'<span class="newdot"></span>':'';
   return `<span class="ctog" data-ctog="${id}" data-sig="${koms.length}|${open?1:0}|${dot?1:0}"${withClick?` onclick="mmFeedToggle('${id}')"`:''}><svg class="i"><use href="#i-comment"/></svg>${koms.length?' '+koms.length:''}${open?' ▴':''}${dot}</span>`;
 }
+function mmKomBarva(k){
+  if(k && k.barva) return safeColor(k.barva);
+  const p=(state.players||[]).find(x=>mmFirst(x.jmeno)===k.jmeno || x.jmeno===k.jmeno);
+  return p?safeColor(p.barva):"var(--label)";
+}
 function mmFeedKomListHtml(id){
   const koms=mmFeedState().koms[id]||[];
-  return `<div class="komlist" data-komlist data-n="${koms.length}">${koms.map(k=>`<div class="fdcom"><b>${esc(k.jmeno)}:</b> ${esc(k.text)}${k.ikona?` <svg class="i"><use href="#${k.ikona}"/></svg>`:''}</div>`).join('')}</div>`;
+  return `<div class="komlist" data-komlist data-n="${koms.length}">${koms.map(k=>`<div class="fdcom"><b style="color:${mmKomBarva(k)}">${esc(k.jmeno)}:</b> ${esc(k.text)}${k.ikona?` <svg class="i"><use href="#${k.ikona}"/></svg>`:''}</div>`).join('')}</div>`;
 }
 // Rozbalený blok komentářů: ctx 'feed' → .fdcoms uvnitř karty, ctx 'dnesek' → .hlkoms jako sourozenec POD .hlr řádkem.
 function mmFeedKomsHtml(id, ctx){
@@ -7659,7 +7746,7 @@ function renderSubDen(arg){
     const rows=all.map(e=>{
       if(isParta){
         const pl=state.players.find(x=>x.id===e.player_id); const col=safeColor(pl.barva);
-        return `<div class="frow"><div class="fav" style="background:linear-gradient(135deg,${col}4d,${col}12);color:${col}"><svg class="i"><use href="#${mmEntryIcon(e)}"/></svg></div><div class="fmain">${esc(mmFirst(pl.jmeno))} · ${esc(mmEntryLabel(e))}<small>${mmEntryType(e)}</small></div><div class="fpts">+${Math.round(Number(e.body)||0)}</div></div>`;
+        return `<div class="frow"><div class="fav" style="background:linear-gradient(135deg,${col}4d,${col}12);color:${col}">${sub?`<svg class="i"><use href="#${mmEntryIcon(e)}"/></svg>`:esc(initials(pl.jmeno))}</div><div class="fmain">${esc(mmFirst(pl.jmeno))} · ${esc(mmEntryLabel(e))}<small>${mmEntryType(e)}</small></div><div class="fpts">+${Math.round(Number(e.body)||0)}</div></div>`;
       }
       const [bg,fg]=mmJaEntryColors(e);
       return `<div class="frow"><div class="fav" style="background:${bg}22;color:${fg}"><svg class="i"><use href="#${mmEntryIcon(e)}"/></svg></div><div class="fmain">${esc(mmJaCap(mmEntryLabel(e)))}<small>${mmEntryType(e)}</small></div><div class="fpts">+${Math.round(Number(e.body)||0)}</div></div>`;
@@ -7835,7 +7922,7 @@ function renderSubZaznamy(){
       byDay[ds].forEach(e=>{
         const pl=state.players.find(p=>p.id===e.player_id);
         const col=safeColor(pl.barva);
-        list+=`<div class="frow hlc" data-feedrow="e:${e.id}" style="cursor:pointer" onclick="mmFeedToggle('e:${e.id}','zaznamy')"><div class="fav" style="background:linear-gradient(135deg,${col}4d,${col}12);color:${col}"><svg class="i"><use href="#${mmEntryIcon(e)}"/></svg></div><div class="fmain">${esc(mmFirst(pl.jmeno))} · ${esc(mmEntryLabel(e))}<small>${mmEntryType(e)}</small></div><div class="fpts">+${Math.round(Number(e.body)||0)}</div>${mmFeedCtogHtml('e:'+e.id)}</div>`;
+        list+=`<div class="frow hlc" data-feedrow="e:${e.id}" style="cursor:pointer" onclick="mmFeedToggle('e:${e.id}','zaznamy')"><div class="fav" style="background:linear-gradient(135deg,${col}4d,${col}12);color:${col}">${sub?`<svg class="i"><use href="#${mmEntryIcon(e)}"/></svg>`:esc(initials(pl.jmeno))}</div><div class="fmain">${esc(mmFirst(pl.jmeno))} · ${esc(mmEntryLabel(e))}<small>${mmEntryType(e)}</small></div><div class="fpts">+${Math.round(Number(e.body)||0)}</div>${mmFeedCtogHtml('e:'+e.id)}</div>`;
       });
       list+='</div>';
     });
@@ -8355,7 +8442,7 @@ async function toggleHabitToday(id){
     if (zD !== 'check' && !doneD){ openHabitValue(id); return; }   // meritelny -> sheet Zapis hodnoty
     if (doneD && exD) state.habitLogs = state.habitLogs.filter(l=>l.id!==exD.id);
     else if (!doneD) state.habitLogs.push({ id:'demo-'+Math.random().toString(36).slice(2), habit_id:id, player_id:pidD, datum:selD, hodnota:null });
-    renderNavyky();
+    renderNavyky(); try{ renderDnesek(); }catch(_){}
     return;
   }
   const pid = currentHabitPlayer(); if (!pid) return;
@@ -8452,7 +8539,7 @@ async function saveHabitValue(){
     const existing = habitLogObj(id, pid, sel);
     if (val > 0){ if (existing) existing.hodnota = val; else state.habitLogs.push({ id:'demo-'+Math.random().toString(36).slice(2), habit_id:id, player_id:pid, datum:sel, hodnota:val }); }
     const se = state.statEditCell; closeHabitValue();
-    if (se && state.habitTab === 'stats') renderHabitStats(); else renderNavyky();
+    if (se && state.habitTab === 'stats') renderHabitStats(); else renderNavyky(); try{ renderDnesek(); }catch(_){}
     return;
   }
   const pid = currentHabitPlayer(); const id = state.habitValueId; if (!pid || !id) return;
@@ -8470,7 +8557,7 @@ async function saveHabitValue(){
       if (data && data[0]) state.habitLogs.push(data[0]);
     }
     const se = state.statEditCell; closeHabitValue();
-    if (se && state.habitTab === 'stats') renderHabitStats(); else renderNavyky();
+    if (se && state.habitTab === 'stats') renderHabitStats(); else renderNavyky(); try{ renderDnesek(); }catch(_){}
   } catch(e){ toast('Chyba: ' + e.message, 'error'); }
 }
 async function clearHabitValue(){
@@ -8480,7 +8567,7 @@ async function clearHabitValue(){
     const existing = id ? habitLogObj(id, pid, sel) : null;
     if (existing) state.habitLogs = state.habitLogs.filter(l => l.id !== existing.id);
     const se = state.statEditCell; closeHabitValue();
-    if (se && state.habitTab === 'stats') renderHabitStats(); else renderNavyky();
+    if (se && state.habitTab === 'stats') renderHabitStats(); else renderNavyky(); try{ renderDnesek(); }catch(_){}
     return;
   }
   const pid = currentHabitPlayer(); const id = state.habitValueId; if (!pid || !id) return;
@@ -8489,7 +8576,7 @@ async function clearHabitValue(){
   try {
     if (existing){ const { error } = await db.from('habit_logs').delete().eq('id', existing.id); if (error) throw error; state.habitLogs = state.habitLogs.filter(l => l.id !== existing.id); }
     const se = state.statEditCell; closeHabitValue();
-    if (se && state.habitTab === 'stats') renderHabitStats(); else renderNavyky();
+    if (se && state.habitTab === 'stats') renderHabitStats(); else renderNavyky(); try{ renderDnesek(); }catch(_){}
   } catch(e){ toast('Chyba: ' + e.message, 'error'); }
 }
 // check návyk z dialogu: nastav splněno / nesplněno pro daný den
@@ -8502,7 +8589,7 @@ async function hvSetCheck(done){
     if (done && !existing){ const { data, error } = await db.from('habit_logs').insert({ habit_id: id, player_id: pid, datum: sel, hodnota: null }).select(); if (error) throw error; if (data && data[0]) state.habitLogs.push(data[0]); }
     else if (!done && existing){ const { error } = await db.from('habit_logs').delete().eq('id', existing.id); if (error) throw error; state.habitLogs = state.habitLogs.filter(l => l.id !== existing.id); }
     const se = state.statEditCell; closeHabitValue();
-    if (se && state.habitTab === 'stats') renderHabitStats(); else renderNavyky();
+    if (se && state.habitTab === 'stats') renderHabitStats(); else renderNavyky(); try{ renderDnesek(); }catch(_){}
   } catch(e){ toast('Chyba: ' + e.message, 'error'); }
 }
 
