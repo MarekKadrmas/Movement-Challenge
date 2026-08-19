@@ -6099,7 +6099,7 @@ function mmPrehledEvents(fromDs){
 // Marek 2026-08-19: ZADNE rozbalovani. Kazdy zaznam = vlastni radek; zaznamy jednoho
 // hrace v ramci dne jdou POD SEBOU (blok hrace). Radek nese jen bublinu cviku + nazev.
 // Bublina s iniciálami je jednou na blok (varianta 1/3) nebo na kazdem radku (varianta 2).
-window.MM_FEED_VAR = 1;   // varianta A (Marek): bublina hrace jednou, svisle vycentrovana
+window.MM_FEED_VAR = 2;   // varianta 2 (Marek 2026-08-19): bublina s iniciálami na KAZDEM radku
 function mmPrehledFeedHtml(){
   const all=[...state.cviky,...state.aktivity].filter(e=>e.datum&&state.players.some(p=>p.id===e.player_id))
     .sort((a,b)=>String(b.created_at||b.datum).localeCompare(String(a.created_at||a.datum)));
