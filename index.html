@@ -5812,7 +5812,7 @@ function renderDnesek(){
     const nadPx = pom>1 ? (pom-1)*R : 0;   // stejne meritko jako pod cilem
     const v = Math.round(pom*100);   // pomer bez stropu; nad maximem se sloupec zprahledni
     const rad = 5;   // pevne zaobleni; cele lezi nad ryskou diky posunu MM_SL_NAD_MIN
-    const dnesek=d.ds===today, budouci=MM_UKAZKA_KARTA?false:(d.ds>today);
+    const dnesek=d.ds===today, budouci=d.ds>today;
     return '<div class="hc-d'+(dnesek?' je-dnes':'')+(budouci?' je-pak':'')+(d.b>mCil&&!budouci?' je-nad':'')+'">'
       +'<div class="hc-dsl">'+((d.b>mCil&&!budouci)?'<svg class="hc-mark" preserveAspectRatio="none"><path/></svg>':'')+'<i style="height:'+((d.b>0&&!budouci)?v:0)+'%;border-radius:'+rad+'px '+rad+'px 5px 5px'+((R*pom)>MM_SL_MAX_PX?(()=>{const tot=R*pom; const P=x=>Math.min(100,x/tot*100).toFixed(1);const g='linear-gradient(to top,#000 '+P(MM_SL_MAX_PX-6)+'%,rgba(0,0,0,.55) '+P(MM_SL_MAX_PX+4)+'%,rgba(0,0,0,.22) '+P(MM_SL_MAX_PX+14)+'%,rgba(0,0,0,.22) 100%)';return ';-webkit-mask-image:'+g+';mask-image:'+g;})():'')+'"></i>'+((d.b>0&&!budouci)?'<u>'+fmtNum(d.b)+'</u>':'')+'</div>'
       +'<span>'+_pism[i]+'</span></div>';
@@ -6620,7 +6620,7 @@ const MM_SL_ROZPLYV_DO = 82;     // px ode dna — pod pozdravem uz sloupec neni
 const MM_SL_ROZPLYV_ZLOM = 64;   // px ode dna — tady uz jen slabe prosvita
 const MM_UKAZKA_KARTA = true;
 const MM_UKAZKA_CIL = 150;
-const MM_UKAZKA_DNY = [25, 75, 150, null, 225, 300, 400];   // minimum / pul / cil / dnesek / 1,5x / maximum / nad maximem
+const MM_UKAZKA_DNY = [75, 300, 400, null, 0, 0, 0];   // Po pod cilem / Ut na maximu / St nad maximem / Ct skutecny dnesek
 function mmNejdelsiSerie(pid){
   if(!pid) return 0;
   const dny=[...new Set([...state.cviky,...state.aktivity]
