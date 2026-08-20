@@ -5803,14 +5803,14 @@ function renderDnesek(){
   const mSloupce=_dnyB.map((d,i)=>{
     const pom=d.b/Math.max(1,mCil);
     const R=MM_SL_RAMECEK;
-    const nadPx = pom>1 ? (MM_SL_BEZ_STROPU ? Math.max(MM_SL_NAD_MIN,(pom-1)*R) : Math.min(MM_SL_NAD_MAX, Math.max(MM_SL_NAD_MIN, (pom-1)*R))) : 0;
+    const nadPx = pom>1 ? (MM_SL_NAD_MIN + (pom-1)*R) : 0;   // posun + skutecny prebytek
     const v = pom>1
       ? Math.round((R + nadPx) / R * 100)
       : Math.min(100, Math.max(Math.round(MM_SL_MIN_PX/R*100), Math.round(pom*100)));
-    const rad = nadPx>0 ? Math.min(5, Math.max(1, Math.round(nadPx))) : 5;   // zaobleni nesmi prekryt rysku
-    const dnesek=d.ds===today, budouci=MM_UKAZKA_KARTA?false:(d.ds>today);
+    const rad = 5;   // pevne zaobleni; cele lezi nad ryskou diky posunu MM_SL_NAD_MIN
+    const dnesek=d.ds===today, budouci=d.ds>today;
     return '<div class="hc-d'+(dnesek?' je-dnes':'')+(budouci?' je-pak':'')+(d.b>mCil&&!budouci?' je-nad':'')+'">'
-      +'<div class="hc-dsl">'+'<i style="height:'+((d.b>0&&!budouci)?v:0)+'%;border-radius:'+rad+'px '+rad+'px 5px 5px'+(nadPx>13?';-webkit-mask-image:linear-gradient(to top,#000 '+Math.round((R+nadPx-Math.min(nadPx,26))/(R+nadPx)*100)+'%,transparent 100%);mask-image:linear-gradient(to top,#000 '+Math.round((R+nadPx-Math.min(nadPx,26))/(R+nadPx)*100)+'%,transparent 100%)':'')+'"></i>'+((d.b>mCil&&!budouci)?'<s class="hc-ryska"></s>':'')+((d.b>0&&!budouci)?'<u>'+fmtNum(d.b)+'</u>':'')+'</div>'
+      +'<div class="hc-dsl">'+'<i style="height:'+((d.b>0&&!budouci)?v:0)+'%;border-radius:'+rad+'px '+rad+'px 5px 5px'+((R+nadPx)>MM_SL_ROZPLYV_OD?(()=>{const tot=R+nadPx;const a=(MM_SL_ROZPLYV_OD/tot*100).toFixed(1), b=Math.min(100,MM_SL_ROZPLYV_DO/tot*100).toFixed(1);const g='linear-gradient(to top,#000 '+a+'%,transparent '+b+'%)';return ';-webkit-mask-image:'+g+';mask-image:'+g;})():'')+'"></i>'+((d.b>mCil&&!budouci)?'<s class="hc-ryska"></s>':'')+((d.b>0&&!budouci)?'<u>'+fmtNum(d.b)+'</u>':'')+'</div>'
       +'<span>'+_pism[i]+'</span></div>';
   }).join('');
   const mTrendHtml = todayPts<=0 ? ''
@@ -6606,12 +6606,14 @@ const MM_CIL_MIN=40, MM_CIL_MAX=400;
 // Rozmery sloupcu tydne v horni karte (layout px; ramecek je ctverec 30x30).
 const MM_SL_RAMECEK = 30;   // vyska = sirka rameckem, tedy ctverec
 const MM_SL_MIN_PX  = 11.5; // minimalni vypln — cislo sedi niz, takze staci mensi
-const MM_SL_NAD_MIN = 1;    // nejmensi preteceni nad linku cile (zaobleni se mu prizpusobi)
+const MM_SL_NAD_MIN = 6;    // posun preteceni — cely radius (5 px) musi byt nad linkou cile
 const MM_SL_NAD_MAX = 13;   // nejvetsi preteceni nad linku cile (plati jen kdyz MM_SL_BEZ_STROPU = false)
 const MM_SL_BEZ_STROPU = true;   // true = sloupec roste bez omezeni a nahore se rozplyva
+const MM_SL_ROZPLYV_OD = 43;     // px ode dna sloupce, kde zacina rozplyv (stejne pro vsechny)
+const MM_SL_ROZPLYV_DO = 54;     // px ode dna, kde je sloupec uz zcela pruhledny (spodek textu)
 const MM_UKAZKA_KARTA = true;
 const MM_UKAZKA_CIL = 150;
-const MM_UKAZKA_DNY = [25, 75, 155, null, 190, 300, 450];   // minimum az extrem
+const MM_UKAZKA_DNY = [25, 155, 300, null, 0, 0, 0];   // minimum / tesne nad cilem / hodne nad cilem / dnesek
 function mmNejdelsiSerie(pid){
   if(!pid) return 0;
   const dny=[...new Set([...state.cviky,...state.aktivity]
