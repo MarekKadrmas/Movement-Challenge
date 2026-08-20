@@ -76,3 +76,7 @@
   - Idealne i odberovy kalendar (webcal:// feed s ICS) — hrac si prihlasi kalendar party a akce se mu doplnuji automaticky vc. zmen.
   - Zvazit dvoucestnou integraci (Google Calendar API / CalDAV) az v pozdejsi fazi — pro start staci ICS export + feed.
   - Pozor na casove zony, opakovane akce (RRULE) a UID/SEQUENCE pri zmene akce.
+
+## Backlog (Marek, 2026-08-20): kdo dal reakci
+- U emoji reakce videt, KDO ji dal (jako na Instagramu — tuknuti na pilulku ukaze seznam hracu).
+- Az po dokonceni zakladu reakci.

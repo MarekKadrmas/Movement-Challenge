@@ -34,8 +34,8 @@ html{-webkit-text-size-adjust:100%;}
 .rx-sheet.rx-drag{transition:none;}
 .rx-sheet,.rx-sheet *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
 .rx-sheet input{-webkit-user-select:text;user-select:text;}
-.rx-hlava{padding:0 12px 8px;touch-action:none;}
-.rx-handle{width:36px;height:5px;border-radius:999px;background:var(--sep,#e2e5e1);margin:6px auto 8px;}
+.rx-hlava{padding:0 18px 8px;touch-action:none;}
+.rx-handle{width:36px;height:5px;border-radius:999px;background:var(--sep,#e2e5e1);margin:7px auto 15px;}
 .rx-hled{display:flex;align-items:center;gap:7px;background:var(--track,#EEF0EC);border-radius:12px;height:36px;padding:0 11px;}
 .rx-hled svg{width:16px;height:16px;flex:0 0 auto;fill:none;stroke:var(--ter,#9AA39C);stroke-width:2;stroke-linecap:round;}
 .rx-hled input{flex:1;min-width:0;border:0;outline:0;background:transparent;font:inherit;font-size:17px;line-height:1.2;color:var(--label,#141915);padding:0;}
@@ -43,11 +43,11 @@ html{-webkit-text-size-adjust:100%;}
 .rx-hled .rx-x{width:18px;height:18px;flex:0 0 auto;border-radius:50%;background:var(--ter,#9AA39C);color:var(--card,#fff);font-size:12px;line-height:18px;text-align:center;font-weight:700;cursor:pointer;}
 .rx-body{position:relative;height:316px;max-height:38vh;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:0 10px 8px;scrollbar-width:none;}
 .rx-body::-webkit-scrollbar{display:none;}
-.rx-lbl{display:block;font-size:13px;font-weight:600;letter-spacing:.02em;text-transform:uppercase;color:var(--ter,#9AA39C);padding:11px 4px 5px;}
+.rx-lbl{display:block;font-size:13px;font-weight:600;letter-spacing:.02em;text-transform:uppercase;color:var(--ter,#9AA39C);padding:11px 8px 5px;}
 .rx-grid{display:grid;grid-template-columns:repeat(7,1fr);}
 .rx-grid b{height:49px;display:grid;place-items:center;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;font-size:32px;font-weight:400;line-height:1;border-radius:10px;cursor:pointer;-webkit-tap-highlight-color:transparent;}
 .rx-grid b:active{background:var(--track,#EEF0EC);}
-.rx-katbar{display:flex;justify-content:space-between;align-items:center;padding:5px 11px 1px;border-top:1px solid var(--sep,#E4E7E3);}
+.rx-katbar{display:flex;justify-content:space-between;align-items:center;padding:5px 20px 1px;border-top:1px solid var(--sep,#E4E7E3);}
 .rx-katbar b{width:33px;height:33px;display:grid;place-items:center;border-radius:50%;cursor:pointer;color:var(--sec,#6B756F);opacity:.72;}
 .rx-katbar b svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
 .rx-katbar b.on{background:var(--track,#EEF0EC);color:var(--label,#141915);opacity:1;}
@@ -2095,7 +2095,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .deni .hlkoms.ksub::after{left:63px;}
 .mm .deni .komlist{gap:3px;}
 .mm .deni .fdcom{font-size:12.84px;line-height:1.42;}
-.mm .deni .fdadd{font-size:12.84px;padding:8px 12px;margin-top:2px;}   /* padding drzi tap-target inputu >= 40 pt */
+.mm .deni .fdadd{font-size:12.84px;padding:8px 12px;margin-top:2px;;margin-top:-3px;}   /* padding drzi tap-target inputu >= 40 pt */
 .mm .deni .fempty{padding:19px 14px;text-align:center;font-size:13.88px;font-weight:600;color:var(--ter);}
 .mm .evb{display:flex;align-items:center;gap:7px;width:auto;max-width:none;line-height:1.35;font-size:12.07px;font-weight:700;letter-spacing:-.004em;border:0;border-radius:13px;padding:7px 11px;margin:5px 0 0;text-wrap:pretty;}
 .mm .evb .ee{font-size:14.09px;line-height:1;flex:0 0 auto;}
@@ -2597,7 +2597,7 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
   .deni .hlkoms.ksub::after{left:63px;}
   .deni .komlist{gap:3px;}
   .deni .fdcom{font-size:11.3px;line-height:1.42;}
-  .deni .fdadd{font-size:11.3px;padding:8px 12px;margin-top:2px;}   /* padding drží tap-target inputu >= 40 pt */
+  .deni .fdadd{font-size:11.3px;padding:8px 12px;margin-top:2px;;margin-top:-3px;}   /* padding drží tap-target inputu >= 40 pt */
   .deni .fempty{padding:19px 14px;text-align:center;font-size:12.21px;font-weight:600;color:var(--ter);}
   .evb{display:flex;align-items:center;gap:7px;width:auto;max-width:none;line-height:1.35;font-size:10.62px;font-weight:700;letter-spacing:-.004em;border:0;border-radius:13px;padding:7px 11px;margin:5px 0 0;text-wrap:pretty;}
   .evb .ee{font-size:12.4px;line-height:1;flex:0 0 auto;}
@@ -6077,7 +6077,7 @@ const MM_RX_SADA = [
 const MM_RX_IKONY = {
   cas:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.6"/><path d="M12 6.9v5.3l3.4 2"/></svg>',
   smajl:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.6"/><path d="M8.2 14.1c.9 1.3 2.2 2 3.8 2s2.9-.7 3.8-2"/><circle cx="9.1" cy="9.9" r=".95" fill="currentColor" stroke="none"/><circle cx="14.9" cy="9.9" r=".95" fill="currentColor" stroke="none"/></svg>',
-  zvire:'<svg viewBox="0 0 24 24"><circle cx="12" cy="13.4" r="6.2"/><circle cx="6.2" cy="6.6" r="2.7"/><circle cx="17.8" cy="6.6" r="2.7"/><circle cx="10" cy="12.4" r=".85" fill="currentColor" stroke="none"/><circle cx="14" cy="12.4" r=".85" fill="currentColor" stroke="none"/><path d="M10.9 15.8c.7.6 1.5.6 2.2 0"/></svg>',
+  zvire:'<svg viewBox="0 0 24 24"><circle cx="12" cy="13.2" r="6.9"/><circle cx="5.9" cy="7.4" r="2.9"/><circle cx="18.1" cy="7.4" r="2.9"/><circle cx="9.7" cy="12" r=".85" fill="currentColor" stroke="none"/><circle cx="14.3" cy="12" r=".85" fill="currentColor" stroke="none"/><path d="M12 14.6v.7M10.6 17c.9.7 1.9.7 2.8 0"/></svg>',
   jidlo:'<svg viewBox="0 0 24 24"><path d="M4.2 7.6h12.2v4.7a5 5 0 0 1-5 5H9.2a5 5 0 0 1-5-5V7.6Z"/><path d="M16.4 9h1.7a2.4 2.4 0 0 1 0 4.9h-1.7"/><path d="M3 20.2h17"/></svg>',
   sport:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.6"/><path d="m12 7.5 3.6 2.6-1.4 4.2H9.8L8.4 10.1 12 7.5Z"/><path d="M12 3.4v4.1M4.3 9.5l4.1.6M6.8 18.9l3-4.6M17.2 18.9l-3-4.6M19.7 9.5l-4.1.6"/></svg>',
   cesta:'<svg viewBox="0 0 24 24"><path d="M3.4 16.8v-3.3l1.9-4.6a2 2 0 0 1 1.9-1.2h9.6a2 2 0 0 1 1.9 1.2l1.9 4.6v3.3"/><path d="M4.6 13.4h14.8"/><path d="M3.4 16.8h3.3M17.3 16.8h3.3"/><circle cx="7.4" cy="15.1" r=".9" fill="currentColor" stroke="none"/><circle cx="16.6" cy="15.1" r=".9" fill="currentColor" stroke="none"/></svg>',
@@ -6218,12 +6218,18 @@ function mmRxOpenSheet(){
     const q=mmRxNorm(inp.value.trim());
     cistit.hidden=!inp.value;
     if(!q){ vse.hidden=false; res.hidden=true; nic.hidden=true; body.scrollTop=0; aktivni(0); return; }
-    const slova=q.split(/\s+/).filter(Boolean), vid=[], mam={};
-    idx.forEach(k=>k.items.forEach(it=>{
-      if(mam[it.e]) return;
-      for(let i=0;i<slova.length;i++) if(it.kw.indexOf(slova[i])<0) return;
-      mam[it.e]=1; vid.push(it.e);
-    }));
+    let slova=q.split(/\s+/).filter(Boolean), vid=[], mam={};
+    const najdi=(sl)=>{
+      vid=[]; mam={};
+      idx.forEach(k=>k.items.forEach(it=>{
+        if(mam[it.e]) return;
+        for(let i=0;i<sl.length;i++) if(it.kw.indexOf(sl[i])<0) return;
+        mam[it.e]=1; vid.push(it.e);
+      }));
+    };
+    najdi(slova);
+    // ceske sklonovani: kdyz "srdcem"/"zvire" nic nenajde, zkracuj dotaz (min. 3 znaky)
+    while(!vid.length && slova.some(w=>w.length>3)) najdi(slova=slova.map(w=>w.length>3?w.slice(0,-1):w));
     resGrid.innerHTML=mmRxGrid(vid.slice(0,300));
     vse.hidden=true; res.hidden=!vid.length; nic.hidden=!!vid.length;
     body.scrollTop=0;
