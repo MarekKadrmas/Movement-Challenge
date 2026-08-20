@@ -5922,7 +5922,7 @@ function mmHeatLabelsPos(sh){
   const sc=sh.querySelector('[data-heatscroll]'); const vrstva=sh&&sh.querySelector('[data-hwlabs]');
   if(!sc||!vrstva) return;
   if(!vrstva._mmCache) vrstva._mmCache=[...vrstva.querySelectorAll('b')].map(b=>({b:b,t:b.querySelector('i'),x1:+b.getAttribute('data-x1'),x2:+b.getAttribute('data-x2')}));
-  const L=sc.scrollLeft, R=L+sc.clientWidth, pul=13, okraj=3;
+  const sirka=(sh._mmHeatW||sc.clientWidth); const L=sc.scrollLeft, R=L+sirka, pul=13, okraj=3;
   vrstva._mmCache.forEach(o=>{
     const vl=Math.max(o.x1,L), vr=Math.min(o.x2,R);
     if(vr-vl<=1){ if(o.b.style.opacity!=='0') o.b.style.opacity='0'; return; }   // tyden uplne mimo
@@ -5936,8 +5936,19 @@ function mmHeatLabelsPos(sh){
   });
 }
 function mmHeatLabelsTick(sh){
-  if(sh._mmLabRaf) return;
-  sh._mmLabRaf=requestAnimationFrame(()=>{ sh._mmLabRaf=0; mmHeatLabelsPos(sh); });
+  // Behem rolovani bezi vlastni rAF smycka (kazdy snimek), protoze udalosti 'scroll'
+  // chodi na iOS podstatne rideji nez 60x/s — z toho bylo to "15 fps" skakani.
+  const sc=sh.querySelector('[data-heatscroll]'); if(!sc) return;
+  sh._mmHeatW=sc.clientWidth;
+  sh._mmLoopUntil=Date.now()+200;
+  if(sh._mmLoop) return;
+  sh._mmLoop=true;
+  const krok=()=>{
+    mmHeatLabelsPos(sh);
+    if(Date.now()<sh._mmLoopUntil){ requestAnimationFrame(krok); }
+    else { sh._mmLoop=false; mmHeatUpdateLabel(sh); }   // popisek rozsahu az na konci (cte layout)
+  };
+  requestAnimationFrame(krok);
 }
 function mmHeatUpdateLabel(sh){
   mmHeatLabelsPos(sh);
@@ -5959,7 +5970,7 @@ function mmHeatInit(sh){
   if(!sh) return;
   const sc=sh.querySelector('[data-heatscroll]'); if(!sc) return;
   const go=(k)=>{ if(sc.scrollWidth<=sc.clientWidth){ if(k<15) setTimeout(()=>go(k+1),80); return; } const max=sc.scrollWidth-sc.clientWidth; sc.scrollLeft=(window._mmHeatPx!=null)?Math.min(window._mmHeatPx,max):sc.scrollWidth; mmHeatUpdateLabel(sh); };
-  if(!sc._mmBound){ sc._mmBound=true; sc.addEventListener('scroll', ()=>{ window._mmHeatPx=sc.scrollLeft; mmHeatLabelsTick(sh); mmHeatUpdateLabel(sh); }, {passive:true}); }
+  if(!sc._mmBound){ sc._mmBound=true; sc.addEventListener('scroll', ()=>{ window._mmHeatPx=sc.scrollLeft; mmHeatLabelsTick(sh); }, {passive:true}); }
   go(0);
 }
 function mmPartaHeatMove(dir){ const h=document.getElementById('dnesek-mm'); const sh=h&&h.shadowRoot; if(!sh) return; const sc=sh.querySelector('[data-heatscroll]'); if(!sc) return; const w=sc.querySelector('.hweek'); const bw=(w?w.offsetWidth:105)+MM_HEAT_GAPX; const max=sc.scrollWidth-sc.clientWidth; const idx=Math.round(sc.scrollLeft/bw); const target=Math.max(0, Math.min(max, (idx+(dir===1?-1:1))*bw)); sc.scrollTo({left:target, behavior:'smooth'}); }
