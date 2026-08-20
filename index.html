@@ -2050,7 +2050,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 /* .fmain = flex, aby se pri dlouhem jmenu zkratilo JMENO a dovetek („· 3 zaznamy" / „· beh 5 km")
    prezil — driv ellipsis sezral dovetek cely. Jmeno je fixni (neshrinkuje), ale nikdy nezabere vic
    nez 62 % radku; zbytek dostane dovetek a teprve ten se v nouzi zkracuje. */
-.mm .deni .fmain{font-size:14.48px;font-weight:500;color:var(--sec);letter-spacing:-.005em;display:flex;align-items:baseline;min-width:0;}
+.mm .deni .fmain{font-size:14.48px;font-weight:600;color:color-mix(in srgb,var(--label) 78%,var(--sec));letter-spacing:-.005em;display:flex;align-items:baseline;min-width:0;}
 .mm .deni .fmain>b{flex:0 0 auto;max-width:62%;}
 .mm .deni .fmain>b,.mm .deni .fmain>span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .mm .deni .fmain>span{flex:0 1 auto;}
@@ -2548,7 +2548,7 @@ body.mm-full{background:#EDF0EC;padding-bottom:0;}
   /* .fmain = flex, aby se při dlouhém jménu zkrátilo JMÉNO a dovětek („· 3 záznamy" / „· běh 5 km")
      přežil — dřív ellipsis sežral dovětek celý. Jméno je fixní (nešrinkuje), ale nikdy nezabere víc
      než 62 % řádku; zbytek dostane dovětek a teprve ten se v nouzi zkracuje. */
-  .deni .fmain{font-size:12.74px;font-weight:500;color:var(--sec);letter-spacing:-.005em;display:flex;align-items:baseline;min-width:0;}
+  .deni .fmain{font-size:12.74px;font-weight:600;color:color-mix(in srgb,var(--label) 78%,var(--sec));letter-spacing:-.005em;display:flex;align-items:baseline;min-width:0;}
   .deni .fmain>b{flex:0 0 auto;max-width:62%;}
   .deni .fmain>b,.deni .fmain>span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .deni .fmain>span{flex:0 1 auto;}
