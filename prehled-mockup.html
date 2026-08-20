@@ -1,0 +1,275 @@
+<title>Přehled — úspora místa</title>
+<style>
+:root{
+  --bg:#EFF1ED; --card:#FFFFFF; --label:#141915; --sec:#6B756F; --ter:#9AA39C;
+  --green:#0FA968; --green-svetla:#E4F5EC; --sep:#E2E5E1; --track:#EAEDE8;
+  --fial:#7C5CE0; --stul:#1A1D1C;
+  --zlata:#D4A017; --stribro:#9AA5AD; --bronz:#B06A3B;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--stul);
+  -webkit-text-size-adjust:100%;text-size-adjust:100%;-webkit-user-select:none;user-select:none;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",system-ui,sans-serif;}
+body{display:grid;place-items:center;}
+
+.telefon{position:relative;width:393px;height:852px;max-width:100vw;max-height:100vh;
+  overflow:hidden;background:var(--bg);border-radius:40px;
+  box-shadow:0 30px 70px -20px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.06);}
+@media (max-width:440px),(max-height:880px){
+  .telefon{width:100vw;height:100vh;max-width:none;max-height:none;border-radius:0;box-shadow:none;}}
+.popiska{position:fixed;left:0;right:0;bottom:12px;text-align:center;
+  font:600 11.5px/1.5 inherit;color:#6C7671;}
+@media (max-width:440px),(max-height:880px){.popiska{display:none;}}
+
+.prep{position:absolute;top:6px;left:50%;transform:translateX(-50%);z-index:99;
+  display:flex;flex-direction:column;gap:4px;align-items:center;}
+.prepr{display:flex;gap:4px;background:rgba(0,0,0,.68);border-radius:999px;padding:3px;}
+.prepr button{border:0;background:transparent;color:#fff;font:600 11px/1 inherit;
+  padding:6px 10px;border-radius:999px;cursor:pointer;white-space:nowrap;}
+.prepr button.on{background:#fff;color:#000;}
+.prepr button:focus-visible{outline:2px solid var(--green);outline-offset:2px;}
+
+.obsah{position:absolute;inset:0;padding:44px 18px 0;overflow:hidden;}
+
+/* ---------- SPOLEČNÉ ---------- */
+.ikony{display:flex;gap:8px;align-items:center;flex:0 0 auto;}
+.av{width:34px;height:34px;border-radius:50%;background:var(--green-svetla);color:var(--green);
+  font:800 11.5px/1 inherit;display:grid;place-items:center;}
+.plus{width:38px;height:38px;border-radius:50%;background:var(--green);color:#fff;
+  font:400 24px/1 inherit;display:grid;place-items:center;
+  box-shadow:0 6px 16px -4px rgba(15,169,104,.55);}
+
+/* prstenec s významem */
+.ring{position:relative;width:54px;height:54px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;}
+.ring .drah{position:absolute;inset:0;border-radius:50%;
+  background:conic-gradient(var(--green) 0 var(--pct,100%),var(--track) 0 100%);}
+.ring .h{position:relative;width:43px;height:43px;border-radius:50%;background:var(--card);
+  display:grid;place-items:center;}
+.ring .n{font:900 18px/1 inherit;letter-spacing:-.03em;}
+
+/* ---------- VARIANTA: TEĎ ---------- */
+.ted .hlava{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;}
+.ted h1{font:800 34px/1 inherit;letter-spacing:-.9px;margin:0;color:var(--label);}
+.ted .dat{font:800 13px/1 inherit;letter-spacing:1.5px;color:var(--sec);margin-top:7px;text-transform:uppercase;}
+.ted .hero{background:var(--card);border-radius:20px;padding:12px 14px;display:flex;align-items:center;
+  gap:12px;box-shadow:0 2px 10px -4px rgba(0,0,0,.10);margin-bottom:10px;}
+.ted .hero .l{flex:1;min-width:0;}
+.ted .hero .poz{font:800 18px/1.15 inherit;letter-spacing:-.02em;color:var(--label);}
+.ted .hero .st{font:700 13.5px/1 inherit;color:var(--sec);margin-top:5px;}
+.ted .hero .st .up{color:var(--green);}
+.ted .hero .lg{display:flex;align-items:center;gap:4px;font:700 11.5px/1 inherit;color:var(--sec);margin-top:5px;white-space:nowrap;}
+.ted .hero .lg i{width:7px;height:7px;border-radius:50%;}
+.ted .chiprad{display:flex;align-items:center;gap:8px;margin:14px 0 6px;}
+.ted .chiprad .nad{font:800 12.5px/1 inherit;letter-spacing:1.3px;color:var(--sec);text-transform:uppercase;}
+.ted .liga{margin-left:auto;background:var(--green-svetla);color:var(--green);border-radius:999px;
+  padding:6px 11px;font:800 11.5px/1 inherit;white-space:nowrap;}
+
+/* ---------- VARIANTA A: jedna karta ---------- */
+.va .karta{background:var(--card);border-radius:20px;padding:13px 14px;
+  box-shadow:0 2px 10px -4px rgba(0,0,0,.10);margin-bottom:12px;}
+.va .r1{display:flex;align-items:center;gap:10px;}
+.va .r1 .l{flex:1;min-width:0;}
+.va .poz{font:800 20px/1.1 inherit;letter-spacing:-.35px;color:var(--label);}
+.va .dat{font:700 12.5px/1 inherit;color:var(--ter);margin-top:4px;}
+.va .dat b{color:var(--sec);font-weight:800;}
+
+/* ---------- VARIANTA B: bez karty ---------- */
+.vb .r1{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.vb .r1 .l{flex:1;min-width:0;}
+.vb .poz{font:800 23px/1.1 inherit;letter-spacing:-.5px;color:var(--label);}
+.vb .dat{font:700 12.5px/1 inherit;color:var(--ter);margin-top:5px;}
+.vb .dat b{color:var(--sec);font-weight:800;}
+.vb .ring{width:50px;height:50px;}
+.vb .ring .h{width:40px;height:40px;}
+
+/* ---------- návyky ---------- */
+.nav{background:var(--card);border-radius:18px;padding:10px 13px;display:flex;align-items:center;gap:11px;
+  box-shadow:0 2px 10px -4px rgba(0,0,0,.10);margin-bottom:14px;}
+.nav .kr{width:34px;height:34px;border-radius:50%;
+  background:conic-gradient(var(--fial) 0 40%,#EDE7FC 0 100%);display:grid;place-items:center;}
+.nav .kr i{width:25px;height:25px;border-radius:50%;background:var(--card);display:grid;place-items:center;
+  color:var(--fial);font:800 13px/1 inherit;font-style:normal;}
+.nav .t{flex:1;font:800 15.5px/1 inherit;color:var(--label);}
+.nav .t .dots{display:flex;gap:3px;margin-top:6px;}
+.nav .t .dots i{width:15px;height:4px;border-radius:999px;background:var(--track);}
+.nav .t .dots i.on{background:var(--fial);}
+.nav .p{font:800 15px/1 inherit;color:var(--fial);}
+.nav .p small{color:var(--ter);font-weight:700;}
+
+/* ---------- přepínač: styl 1 (pilulka) ---------- */
+.sw1{background:var(--card);border-radius:999px;padding:3px;display:flex;position:relative;
+  box-shadow:0 2px 10px -4px rgba(0,0,0,.10);height:34px;}
+.sw1 .jez{position:absolute;top:3px;bottom:3px;border-radius:999px;background:var(--green);
+  transition:transform .32s cubic-bezier(.55,1.3,.2,1),width .32s cubic-bezier(.55,1.3,.2,1);}
+.sw1 b{position:relative;flex:1;display:grid;place-items:center;font:800 13.5px/1 inherit;
+  color:var(--sec);cursor:pointer;z-index:1;transition:color .2s;}
+.sw1 b.on{color:#fff;}
+
+/* ---------- přepínač: styl 2 (podtržení) ---------- */
+.sw2{display:flex;gap:20px;position:relative;padding-bottom:8px;border-bottom:1px solid var(--sep);}
+.sw2 b{font:800 15px/1 inherit;color:var(--ter);cursor:pointer;transition:color .2s;}
+.sw2 b.on{color:var(--label);}
+.sw2 .jez{position:absolute;bottom:-1px;height:2.5px;border-radius:2px;background:var(--green);
+  transition:transform .32s cubic-bezier(.55,1.3,.2,1),width .32s cubic-bezier(.55,1.3,.2,1);}
+
+.odpocet{font:700 11.5px/1 inherit;color:var(--ter);margin:7px 0 0;display:flex;align-items:center;gap:5px;}
+.odpocet b{color:var(--green);font-weight:800;}
+
+/* ---------- žebříček ---------- */
+.zebr{background:var(--card);border-radius:20px;margin-top:11px;overflow:hidden;
+  box-shadow:0 2px 10px -4px rgba(0,0,0,.10);}
+.zr{display:flex;align-items:center;gap:9px;padding:9px 12px;position:relative;}
+.zr+.zr{border-top:1px solid var(--sep);}
+.zr.ja{background:var(--green-svetla);}
+.zr .p{width:23px;height:23px;border-radius:50%;font:800 11.5px/1 inherit;display:grid;place-items:center;
+  color:#fff;flex:0 0 auto;}
+.zr .p.n{background:transparent;color:var(--ter);}
+.zr .av2{width:27px;height:27px;border-radius:50%;font:800 10px/1 inherit;display:grid;place-items:center;flex:0 0 auto;}
+.zr .jm{flex:1;font:700 15px/1 inherit;color:var(--label);}
+.zr .ob{font:700 11.5px/1 inherit;color:var(--ter);margin-right:8px;white-space:nowrap;}
+.zr .bd{font:800 16px/1 inherit;color:var(--label);font-variant-numeric:tabular-nums;}
+.zr .lin{position:absolute;left:74px;right:12px;bottom:4px;height:2.5px;border-radius:2px;background:var(--track);
+  display:flex;justify-content:flex-end;overflow:hidden;}
+.zr .lin i{display:block;height:100%;border-radius:2px;}
+
+.mereni{position:absolute;left:0;right:0;bottom:0;padding:7px 0 9px;text-align:center;
+  background:linear-gradient(to top,var(--bg) 65%,transparent);
+  font:700 11.5px/1.4 inherit;color:var(--sec);}
+.mereni b{color:var(--green);}
+</style>
+
+<div class="telefon">
+  <div class="prep">
+    <div class="prepr">
+      <button id="v0" onclick="setVar(0)">Teď</button>
+      <button id="v1" class="on" onclick="setVar(1)">Varianta A</button>
+      <button id="v2" onclick="setVar(2)">Varianta B</button>
+    </div>
+    <div class="prepr" id="swprep">
+      <button id="s1" class="on" onclick="setSw(1)">Přepínač pilulka</button>
+      <button id="s2" onclick="setSw(2)">Přepínač podtržení</button>
+    </div>
+  </div>
+
+  <div class="obsah" id="obsah"></div>
+  <div class="mereni" id="mereni"></div>
+</div>
+
+<div class="popiska">iPhone 15 Pro · 393 × 852 — na telefonu se roztáhne přes celý displej</div>
+
+<script>
+let V=1, SW=1, obdobi=0;
+const OBDOBI=['Týden','Měsíc','Celkem'];
+const ODPOCTY=['zbývá 4 dny','zbývá 11 dní',''];
+const HRACI=[
+  {jm:'Káťa',  i:'KÁ', b:640, ob:'ø 6,2', c:'#E8A33D', poradi:1},
+  {jm:'Martin',i:'MA', b:585, ob:'ø 5,1', c:'#E05C5C', poradi:2},
+  {jm:'Mára',  i:'MÁ', b:520, ob:'ø 4,8', c:'#0FA968', poradi:3, ja:true},
+  {jm:'Janča', i:'JA', b:450, ob:'ø 5,4', c:'#3DBBC4', poradi:4},
+  {jm:'Péťa',  i:'PÉ', b:390, ob:'ø 4,4', c:'#8C6BE8', poradi:5},
+];
+const BARVA_P=['','var(--zlata)','var(--stribro)','var(--bronz)'];
+
+function ikony(){ return '<div class="ikony"><span class="av">MÁ</span><span class="plus">＋</span></div>'; }
+function ring(pct,cislo,tridy){
+  return `<div class="ring ${tridy||''}" style="--pct:${pct}%"><div class="drah"></div>
+    <div class="h"><span class="n">${cislo}</span></div></div>`;
+}
+function prepinac(){
+  const sirka=SW===1?`calc((100% - 6px)/3)`:null;
+  if(SW===1){
+    return `<div class="sw1"><i class="jez" style="width:${sirka};transform:translateX(calc(${obdobi} * 100%))"></i>`
+      +OBDOBI.map((o,i)=>`<b class="${i===obdobi?'on':''}" onclick="setObdobi(${i})">${o}</b>`).join('')+`</div>`;
+  }
+  return `<div class="sw2">`+OBDOBI.map((o,i)=>`<b class="${i===obdobi?'on':''}" onclick="setObdobi(${i})">${o}</b>`).join('')
+    +`<i class="jez" id="jez2"></i></div>`;
+}
+function odpocet(){ return ODPOCTY[obdobi]?`<div class="odpocet">⚡ Týdenní soutěž · <b>${ODPOCTY[obdobi]}</b></div>`:''; }
+function navyky(){
+  return `<div class="nav"><span class="kr"><i>✓</i></span>
+    <span class="t">Návyky dnes<span class="dots"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></span></span>
+    <span class="p">2<small>/5</small> ›</span></div>`;
+}
+function zebricek(){
+  const max=Math.max(...HRACI.map(h=>h.b));
+  return `<div class="zebr">`+HRACI.map(h=>`
+    <div class="zr ${h.ja?'ja':''}">
+      <span class="p ${h.poradi>3?'n':''}" style="${h.poradi<=3?'background:'+BARVA_P[h.poradi]:''}">${h.poradi}</span>
+      <span class="av2" style="background:${h.c}22;color:${h.c}">${h.i}</span>
+      <span class="jm">${h.jm}${h.ja?' (ty)':''}</span>
+      <span class="ob">${h.ob}</span>
+      <span class="bd">${h.b}</span>
+      <span class="lin"><i style="width:${Math.round(h.b/max*100)}%;background:${h.c}"></i></span>
+    </div>`).join('')+`</div>`;
+}
+
+function vykresli(){
+  const O=document.getElementById('obsah');
+  document.getElementById('swprep').style.opacity=V===0?.3:1;
+  document.getElementById('swprep').style.pointerEvents=V===0?'none':'auto';
+
+  if(V===0){
+    O.className='obsah ted';
+    O.innerHTML=`
+      <div class="hlava"><div><h1>Přehled</h1><div class="dat">Čtvrtek 20. 8.</div></div>${ikony()}</div>
+      <div class="hero"><div class="l">
+        <div class="poz">Dobré poledne, Máro</div>
+        <div class="st">ø 80 · <span class="up">▲ 15 %</span> dnes</div>
+        <div class="lg"><i style="background:var(--green)"></i>3 aktivity<i style="background:#3B82F6;margin-left:6px"></i>505 b týden</div>
+      </div>${ring(100,92)}</div>
+      ${navyky()}
+      <div class="chiprad"><span class="nad">Žebříček</span>
+        <span class="liga">⚡ Týdenní soutěž · zbývá 4 dny</span></div>
+      <div class="sw1" style="margin-top:4px;height:43px"><i class="jez" style="width:calc((100% - 6px)/3);transform:translateX(0)"></i>
+        <b class="on">Týden</b><b>Měsíc</b><b>Celkem</b></div>
+      ${zebricek()}`;
+  } else if(V===1){
+    O.className='obsah va';
+    O.innerHTML=`
+      <div class="karta"><div class="r1">
+        <div class="l"><div class="poz">Dobré poledne, Máro</div>
+          <div class="dat">čtvrtek 20. 8. · <b>3 aktivity</b> · <b>505 b</b> tento týden</div></div>
+        ${ring(115,92)}${ikony()}
+      </div></div>
+      ${navyky()}
+      ${prepinac()}${odpocet()}
+      ${zebricek()}`;
+  } else {
+    O.className='obsah vb';
+    O.innerHTML=`
+      <div class="r1">
+        <div class="l"><div class="poz">Dobré poledne, Máro</div>
+          <div class="dat">čtvrtek 20. 8. · <b>3 aktivity</b> · <b>505 b</b> tento týden</div></div>
+        ${ring(115,92)}${ikony()}
+      </div>
+      ${navyky()}
+      ${prepinac()}${odpocet()}
+      ${zebricek()}`;
+  }
+  if(SW===2&&V>0) requestAnimationFrame(posunJez2);
+  requestAnimationFrame(zmer);
+}
+function posunJez2(){
+  const sw=document.querySelector('.sw2'); if(!sw) return;
+  const b=sw.querySelectorAll('b')[obdobi], j=document.getElementById('jez2');
+  if(!b||!j) return;
+  j.style.width=b.offsetWidth+'px';
+  j.style.transform='translateX('+b.offsetLeft+'px)';
+}
+function zmer(){
+  const prvni=document.querySelector('.zr');
+  if(!prvni) return;
+  const y=Math.round(prvni.getBoundingClientRect().top);
+  const pct=Math.round(y/852*100);
+  const el=document.getElementById('mereni');
+  const zaklad=406;
+  const usetreno=zaklad-y;
+  el.innerHTML=V===0
+    ? `první hráč začíná na <b>${y} px</b> · to je <b>${pct} %</b> displeje nad ním`
+    : `první hráč začíná na <b>${y} px</b> · <b>${pct} %</b> displeje &nbsp;·&nbsp; ušetřeno <b>${usetreno} px</b> proti dnešku`;
+}
+function setVar(v){ V=v; ['v0','v1','v2'].forEach((id,i)=>document.getElementById(id).classList.toggle('on',i===v)); vykresli(); }
+function setSw(s){ SW=s; ['s1','s2'].forEach((id,i)=>document.getElementById(id).classList.toggle('on',i+1===s)); vykresli(); }
+function setObdobi(i){ obdobi=i; vykresli(); }
+vykresli();
+</script>
