@@ -1934,13 +1934,11 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .hcard .hc-tr.dn{color:var(--red,#E05C5C);}
 .mm .hcard .hc-tyden{display:flex;gap:6px;margin-top:11px;padding-top:13px;}
 .mm .hcard .hc-d{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
-.mm .hcard .hc-dsl{position:relative;width:100%;height:30px;border-radius:5px;background:var(--track);}
+.mm .hcard .hc-dsl{position:relative;width:100%;height:25px;border-radius:5px;background:var(--track);}
 .mm .hcard .hc-dsl i{position:absolute;left:0;right:0;bottom:0;display:block;border-radius:5px;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);transition:height .5s cubic-bezier(.22,1,.36,1);}
 .mm .hcard .hc-ryska{position:absolute;left:4px;right:4px;top:0;height:1.2px;border-radius:2px;background:rgba(255,255,255,.55);z-index:3;pointer-events:none;}
 .mm .hcard .hc-d.je-dnes span{color:var(--green);font-weight:900;}
-.mm .hcard .hc-d em{font-style:normal;font-size:9.66px;font-weight:800;line-height:1;letter-spacing:-.02em;color:var(--label);font-variant-numeric:tabular-nums;}
-.mm .hcard .hc-d.je-pak em{color:var(--ter);font-weight:700;}
-.mm .hcard .hc-d.je-dnes em{color:var(--green);}
+.mm .hcard .hc-dsl u{position:absolute;left:0;right:0;bottom:1px;text-align:center;text-decoration:none;font-size:9.06px;font-weight:800;line-height:1;letter-spacing:-.02em;color:#fff;font-variant-numeric:tabular-nums;pointer-events:none;z-index:4;text-shadow:0 1px 2px rgba(0,0,0,.42);}
 .mm 
 .mm .hcard .hc-d span{font-size:9.66px;font-weight:800;color:var(--ter);line-height:1;}
 .mm .hcard .hc-d.je-dnes .hc-dsl i{background:linear-gradient(180deg,color-mix(in srgb,var(--green) 82%,#fff) 0%,color-mix(in srgb,var(--green) 88%,#000) 82%);}
@@ -2551,13 +2549,11 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .hcard .hc-tr.dn{color:var(--red,#E05C5C);}
 .hcard .hc-tyden{display:flex;gap:6px;margin-top:11px;padding-top:13px;}
 .hcard .hc-d{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
-.hcard .hc-dsl{position:relative;width:100%;height:30px;border-radius:5px;background:var(--track);}
+.hcard .hc-dsl{position:relative;width:100%;height:25px;border-radius:5px;background:var(--track);}
 .hcard .hc-dsl i{position:absolute;left:0;right:0;bottom:0;display:block;border-radius:5px;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);transition:height .5s cubic-bezier(.22,1,.36,1);}
 .hcard .hc-ryska{position:absolute;left:4px;right:4px;top:0;height:1.2px;border-radius:2px;background:rgba(255,255,255,.55);z-index:3;pointer-events:none;}
 .hcard .hc-d.je-dnes span{color:var(--green);font-weight:900;}
-.hcard .hc-d em{font-style:normal;font-size:9.66px;font-weight:800;line-height:1;letter-spacing:-.02em;color:var(--label);font-variant-numeric:tabular-nums;}
-.hcard .hc-d.je-pak em{color:var(--ter);font-weight:700;}
-.hcard .hc-d.je-dnes em{color:var(--green);}
+.hcard .hc-dsl u{position:absolute;left:0;right:0;bottom:1px;text-align:center;text-decoration:none;font-size:9.06px;font-weight:800;line-height:1;letter-spacing:-.02em;color:#fff;font-variant-numeric:tabular-nums;pointer-events:none;z-index:4;text-shadow:0 1px 2px rgba(0,0,0,.42);}
 
 .hcard .hc-d span{font-size:9.66px;font-weight:800;color:var(--ter);line-height:1;}
 .hcard .hc-d.je-dnes .hc-dsl i{background:linear-gradient(180deg,color-mix(in srgb,var(--green) 82%,#fff) 0%,color-mix(in srgb,var(--green) 88%,#000) 82%);}
@@ -5808,13 +5804,12 @@ function renderDnesek(){
     const pom=d.b/Math.max(1,mCil);
     const R=MM_SL_RAMECEK;
     const nadPx = pom>1 ? (pom-1)*R : 0;   // stejne meritko jako pod cilem
-    const v = Math.round(pom*100);   // poctive v celem rozsahu, zadne minimum
+    const v = Math.min(Math.round(MM_SL_MAX_PX/R*100), Math.round(pom*100));   // pomer, strop na maximalni vysce
     const rad = 5;   // pevne zaobleni; cele lezi nad ryskou diky posunu MM_SL_NAD_MIN
     const dnesek=d.ds===today, budouci=MM_UKAZKA_KARTA?false:(d.ds>today);
     return '<div class="hc-d'+(dnesek?' je-dnes':'')+(budouci?' je-pak':'')+(d.b>mCil&&!budouci?' je-nad':'')+'">'
-      +'<div class="hc-dsl">'+'<i style="height:'+((d.b>0&&!budouci)?v:0)+'%;border-radius:'+rad+'px '+rad+'px 5px 5px'+((R+nadPx)>MM_SL_ROZPLYV_OD?(()=>{const tot=R+nadPx; const P=x=>Math.min(100,x/tot*100).toFixed(1);const g='linear-gradient(to top,#000 '+P(MM_SL_ROZPLYV_OD)+'%,rgba(0,0,0,.30) '+P(MM_SL_ROZPLYV_ZLOM)+'%,rgba(0,0,0,.14) '+P(MM_SL_ROZPLYV_DO)+'%,rgba(0,0,0,.14) 100%)';return ';-webkit-mask-image:'+g+';mask-image:'+g;})():'')+'"></i>'+((d.b>mCil&&!budouci)?'<s class="hc-ryska"></s>':'')+'</div>'
-      +'<span>'+_pism[i]+'</span>'
-      +'<em>'+((d.b>0&&!budouci)?fmtNum(d.b):'–')+'</em></div>';
+      +'<div class="hc-dsl">'+'<i style="height:'+((d.b>0&&!budouci)?v:0)+'%;border-radius:'+rad+'px '+rad+'px 5px 5px'+((R+nadPx)>MM_SL_ROZPLYV_OD?(()=>{const tot=R+nadPx; const P=x=>Math.min(100,x/tot*100).toFixed(1);const g='linear-gradient(to top,#000 '+P(MM_SL_ROZPLYV_OD)+'%,rgba(0,0,0,.30) '+P(MM_SL_ROZPLYV_ZLOM)+'%,rgba(0,0,0,.14) '+P(MM_SL_ROZPLYV_DO)+'%,rgba(0,0,0,.14) 100%)';return ';-webkit-mask-image:'+g+';mask-image:'+g;})():'')+'"></i>'+((d.b>mCil&&!budouci)?'<s class="hc-ryska"></s>':'')+((d.b>0&&!budouci)?'<u>'+fmtNum(d.b)+'</u>':'')+'</div>'
+      +'<span>'+_pism[i]+'</span></div>';
   }).join('');
   const mTrendHtml = todayPts<=0 ? ''
     : (mPct>=100 ? '<span class="hc-tr up">▲ '+(mPct-100)+' %</span>'
@@ -6607,7 +6602,8 @@ const MM_CIL_MIN=40, MM_CIL_MAX=400;
 // s minimalnimi dny. Jen zobrazeni, do DB se nic nezapisuje. Vypnout: false.
 
 // Rozmery sloupcu tydne v horni karte (layout px; ramecek je ctverec 30x30).
-const MM_SL_RAMECEK = 30;   // vyska = sirka rameckem, tedy ctverec
+const MM_SL_RAMECEK = 25;   // ramecek = cil; vyska volena tak, aby 2x cil vyslo na maximum
+const MM_SL_MAX_PX  = 50;   // nejvyssi mozny sloupec — konci 4 px pod textovym radkem
 // minimum vysky uz neni potreba — cislo je pod sloupcem, ne v nem
 // posun nad cilem uz neni potreba — nejmensi krok (25 b) dela pri cili 150 presne 5 px = radius
 
