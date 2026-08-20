@@ -1935,13 +1935,13 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .hcard .hc-tyden{display:flex;gap:6px;margin-top:11px;padding-top:13px;}
 .mm .hcard .hc-d{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
 .mm .hcard .hc-dsl{position:relative;width:100%;height:30px;border-radius:5px;background:var(--track);}
-.mm .hcard .hc-dsl i{position:absolute;left:0;right:0;bottom:0;display:block;border-radius:5px;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 78%,#fff),var(--green));transition:height .5s cubic-bezier(.22,1,.36,1);}
+.mm .hcard .hc-dsl i{position:absolute;left:0;right:0;bottom:0;display:block;border-radius:5px;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);transition:height .5s cubic-bezier(.22,1,.36,1);}
 .mm .hcard .hc-ryska{position:absolute;left:4px;right:4px;top:0;height:1.2px;border-radius:2px;background:rgba(255,255,255,.55);z-index:3;pointer-events:none;}
 .mm .hcard .hc-d.je-dnes span{color:var(--green);font-weight:900;}
 .mm .hcard .hc-dsl u{position:absolute;left:0;right:0;bottom:1px;text-align:center;text-decoration:none;font-size:9.06px;font-weight:800;line-height:1;letter-spacing:-.02em;color:#fff;font-variant-numeric:tabular-nums;pointer-events:none;z-index:4;}
 .mm 
 .mm .hcard .hc-d span{font-size:9.66px;font-weight:800;color:var(--ter);line-height:1;}
-.mm .hcard .hc-d.je-dnes .hc-dsl i{background:linear-gradient(180deg,var(--green),color-mix(in srgb,var(--green) 82%,#000));}
+.mm .hcard .hc-d.je-dnes .hc-dsl i{background:linear-gradient(180deg,color-mix(in srgb,var(--green) 82%,#fff) 0%,color-mix(in srgb,var(--green) 88%,#000) 82%);}
 .mm 
 .mm .hcard .hc-d.je-pak .hc-dsl{background:color-mix(in srgb,var(--track) 55%,transparent);}
 .mm .kruh{display:flex;flex-direction:column;align-items:center;gap:2px;flex:0 0 auto;}
@@ -2550,13 +2550,13 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .hcard .hc-tyden{display:flex;gap:6px;margin-top:11px;padding-top:13px;}
 .hcard .hc-d{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
 .hcard .hc-dsl{position:relative;width:100%;height:30px;border-radius:5px;background:var(--track);}
-.hcard .hc-dsl i{position:absolute;left:0;right:0;bottom:0;display:block;border-radius:5px;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 78%,#fff),var(--green));transition:height .5s cubic-bezier(.22,1,.36,1);}
+.hcard .hc-dsl i{position:absolute;left:0;right:0;bottom:0;display:block;border-radius:5px;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);transition:height .5s cubic-bezier(.22,1,.36,1);}
 .hcard .hc-ryska{position:absolute;left:4px;right:4px;top:0;height:1.2px;border-radius:2px;background:rgba(255,255,255,.55);z-index:3;pointer-events:none;}
 .hcard .hc-d.je-dnes span{color:var(--green);font-weight:900;}
 .hcard .hc-dsl u{position:absolute;left:0;right:0;bottom:1px;text-align:center;text-decoration:none;font-size:9.06px;font-weight:800;line-height:1;letter-spacing:-.02em;color:#fff;font-variant-numeric:tabular-nums;pointer-events:none;z-index:4;}
 
 .hcard .hc-d span{font-size:9.66px;font-weight:800;color:var(--ter);line-height:1;}
-.hcard .hc-d.je-dnes .hc-dsl i{background:linear-gradient(180deg,var(--green),color-mix(in srgb,var(--green) 82%,#000));}
+.hcard .hc-d.je-dnes .hc-dsl i{background:linear-gradient(180deg,color-mix(in srgb,var(--green) 82%,#fff) 0%,color-mix(in srgb,var(--green) 88%,#000) 82%);}
 
 .hcard .hc-d.je-pak .hc-dsl{background:color-mix(in srgb,var(--track) 55%,transparent);}
 .kruh{display:flex;flex-direction:column;align-items:center;gap:2px;flex:0 0 auto;}
@@ -5803,10 +5803,10 @@ function renderDnesek(){
   const mSloupce=_dnyB.map((d,i)=>{
     const pom=d.b/Math.max(1,mCil);
     const R=MM_SL_RAMECEK;
-    const nadPx = pom>1 ? (MM_SL_NAD_MIN + (pom-1)*MM_SL_NAD_SKALA) : 0;   // posun + prebytek v meritku stropu
+    const nadPx = pom>1 ? (pom-1)*R : 0;   // stejne meritko jako pod cilem
     const v = pom>1
-      ? Math.round((R + nadPx) / R * 100)
-      : Math.min(100, Math.max(Math.round(MM_SL_MIN_PX/R*100), Math.round(pom*100)));
+      ? Math.round(pom*100)
+      : Math.max(Math.round(MM_SL_MIN_PX/R*100), Math.round(pom*100));
     const rad = 5;   // pevne zaobleni; cele lezi nad ryskou diky posunu MM_SL_NAD_MIN
     const dnesek=d.ds===today, budouci=MM_UKAZKA_KARTA?false:(d.ds>today);
     return '<div class="hc-d'+(dnesek?' je-dnes':'')+(budouci?' je-pak':'')+(d.b>mCil&&!budouci?' je-nad':'')+'">'
@@ -6606,17 +6606,16 @@ const MM_CIL_MIN=40, MM_CIL_MAX=400;
 // Rozmery sloupcu tydne v horni karte (layout px; ramecek je ctverec 30x30).
 const MM_SL_RAMECEK = 30;   // vyska = sirka rameckem, tedy ctverec
 const MM_SL_MIN_PX  = 11.5; // minimalni vypln — cislo sedi niz, takze staci mensi
-const MM_SL_NAD_MIN = 6;    // posun preteceni — cely radius (5 px) musi byt nad linkou cile
-const MM_SL_NAD_SKALA = 14; // px za kazdych 100 % cile navic; 2x cil (realny denni strop ~300 b)
-                            // pak vyjde na 20 px nad rameckem, tedy tesne pod zacatek rozplyvu
-const MM_SL_NAD_MAX = 13;   // nejvetsi preteceni nad linku cile (plati jen kdyz MM_SL_BEZ_STROPU = false)
-const MM_SL_BEZ_STROPU = true;   // true = sloupec roste bez omezeni a nahore se rozplyva
+// posun nad cilem uz neni potreba — nejmensi krok (25 b) dela pri cili 150 presne 5 px = radius
+
+
+
 const MM_SL_ROZPLYV_OD = 54;     // px ode dna — az tam, kde zacina textovy radek
 const MM_SL_ROZPLYV_DO = 82;     // px ode dna — pod pozdravem uz sloupec neni videt vubec
 const MM_SL_ROZPLYV_ZLOM = 62;   // px ode dna — tady uz je skoro pruhledny (pres radek s body)
 const MM_UKAZKA_KARTA = true;
 const MM_UKAZKA_CIL = 150;
-const MM_UKAZKA_DNY = [25, 75, 150, null, 190, 250, 300];   // minimum / pul cile / presne cil / dnesek / nad / vyrazne nad / strop
+const MM_UKAZKA_DNY = [25, 75, 150, null, 225, 300, 350];   // minimum / pul cile / cil / dnesek / 1,5x / 2x / nad text
 function mmNejdelsiSerie(pid){
   if(!pid) return 0;
   const dny=[...new Set([...state.cviky,...state.aktivity]
