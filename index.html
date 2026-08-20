@@ -5770,7 +5770,8 @@ function renderDnesek(){
   const ent=id=>[...state.cviky.filter(c=>c.player_id===id),...state.aktivity.filter(a=>a.player_id===id)];
   const today=todayStr();
   // Maly kruh = DNESEK: cislo = dnesni body, segmenty = dnesni kategorie (stejna data jako drive, kompaktni layout)
-  const todayPts=me?sumRoundedBody(ent(me.id).filter(e=>e.datum===today)):0;
+  let todayPts=me?sumRoundedBody(ent(me.id).filter(e=>e.datum===today)):0;
+  if(MM_UKAZKA_KARTA){ const _i=(new Date(today+'T00:00:00').getDay()+6)%7; if(MM_UKAZKA_DNY[_i]!=null) todayPts=MM_UKAZKA_DNY[_i]; }
   const tydenPts=me?sumRoundedBody(ent(me.id).filter(e=>e.datum>=dateToStr(wk.start)&&e.datum<=dateToStr(wk.end))):0;
   let cCvik=0,cAkt=0,cStr=0;
   if(me){ cCvik=sumRoundedBody(state.cviky.filter(c=>c.player_id===me.id&&c.datum===today));
@@ -5834,7 +5835,7 @@ function renderDnesek(){
   const rows=board.map((p,i)=>{
     const isMe=me&&p.id===me.id; const col=safeColor(p.barva);
     const d=p.total-myTotal; const gap=isMe?'<small class="gap" style="color:var(--green)">ty</small>':`<small class="gap">${d>0?'+':(d<0?'−':'')}${Math.abs(d)}</small>`; const pct=Math.max(4,Math.round(((p.total||0)/Math.max(1,(board[0]&&board[0].total)||0))*100));
-    return `<div class="lr${i===0?' one':''}${isMe?' me':''}" style="cursor:pointer" onclick="mmOpenSub('profil','${p.id}')"><div class="lrk">${i+1}</div><div class="lav" style="background:linear-gradient(135deg,${col}4d,${col}12);color:${col}">${esc(initials(p.jmeno))}</div><div class="lnm"><span class="lnmt">${esc(p.jmeno)}</span>${mmSerieChip(p.id)}${i===0?'<svg class="i"><use href="#i-crown"/></svg>':''}${mmTrofBadge(p.id)}</div><div class="lpt">${gap}<b class="lv">${fmtNum(p.total)}</b></div><div class="lbar"><i style="width:${pct}%;background:${col}"></i></div></div>`;
+    return `<div class="lr${i===0?' one':''}${isMe?' me':''}" style="cursor:pointer" onclick="mmOpenSub('profil','${p.id}')"><div class="lrk">${i+1}</div><div class="lav" style="background:linear-gradient(135deg,${col}4d,${col}12);color:${col}">${esc(initials(p.jmeno))}</div><div class="lnm"><span class="lnmt">${esc(p.jmeno)}</span>${mmSerieChip(p.id)}${i===0?'<svg class="i"><use href="#i-crown"/></svg>':''}</div><div class="lpt">${gap}<b class="lv">${fmtNum(p.total)}</b></div><div class="lbar"><i style="width:${pct}%;background:${col}"></i></div></div>`;
   }).join('');
   // Liga chip: N = dni do nedele VCETNE; tap prepne Obdobi=Tyden; pri aktivnim Tydnu zvyrazneny
   const today0=new Date(); today0.setHours(0,0,0,0);
@@ -6618,9 +6619,9 @@ const MM_SL_MAX_PX  = 50;   // nejvyssi mozny sloupec — konci 4 px pod textovy
 // rozplyv zacina presne na MM_SL_MAX_PX — do maxima je sloupec uplne plny
 const MM_SL_ROZPLYV_DO = 82;     // px ode dna — pod pozdravem uz sloupec neni videt vubec
 const MM_SL_ROZPLYV_ZLOM = 64;   // px ode dna — tady uz jen slabe prosvita
-const MM_UKAZKA_KARTA = false;
-const MM_UKAZKA_CIL = 150;
-const MM_UKAZKA_DNY = [75, 300, 400, null, 0, 0, 0];   // Po pod cilem / Ut na maximu / St nad maximem / Ct skutecny dnesek
+const MM_UKAZKA_KARTA = true;
+const MM_UKAZKA_CIL = 75;    // realny cil v nove skale (nasobek 25)
+const MM_UKAZKA_DNY = [50, 150, 25, 100, 0, 0, 0];   // Po-Ne; vse nasobky 25, Ct = dnesek
 function mmNejdelsiSerie(pid){
   if(!pid) return 0;
   const dny=[...new Set([...state.cviky,...state.aktivity]
@@ -6688,7 +6689,6 @@ function mmZnackyCile(sh){
   });
 }
 function mmSerieChip(pid){
-  if((state.totalPeriod||'week')!=='week') return '';   // u mesice a celkem maji prednost trofeje
   const s=computeStreak(pid);
   if(!s) return '';
   return '<span class="lser"><svg class="i"><use href="#i-flame"/></svg>'+s+'</span>';
@@ -6876,7 +6876,7 @@ function renderParta(){
   const rows=board.map((p,i)=>{
     const isMe=me&&p.id===me.id; const col=safeColor(p.barva);
     const d=p.total-myTotal; const gap=isMe?'<small class="gap" style="color:var(--green)">ty</small>':`<small class="gap">${d>0?'+':(d<0?'−':'')}${Math.abs(d)}</small>`; const pct=Math.max(4,Math.round(((p.total||0)/Math.max(1,(board[0]&&board[0].total)||0))*100));
-    return `<div class="lr${i===0?' one':''}${isMe?' me':''}" style="cursor:pointer" onclick="mmOpenSub('profil','${p.id}')"><div class="lrk">${i+1}</div><div class="lav" style="background:linear-gradient(135deg,${col}4d,${col}12);color:${col}">${esc(initials(p.jmeno))}</div><div class="lnm"><span class="lnmt">${esc(p.jmeno)}</span>${mmSerieChip(p.id)}${i===0?'<svg class="i"><use href="#i-crown"/></svg>':''}${mmTrofBadge(p.id)}</div><div class="lpt">${gap}<b class="lv">${fmtNum(p.total)}</b></div><div class="lbar"><i style="width:${pct}%;background:${col}"></i></div></div>`;
+    return `<div class="lr${i===0?' one':''}${isMe?' me':''}" style="cursor:pointer" onclick="mmOpenSub('profil','${p.id}')"><div class="lrk">${i+1}</div><div class="lav" style="background:linear-gradient(135deg,${col}4d,${col}12);color:${col}">${esc(initials(p.jmeno))}</div><div class="lnm"><span class="lnmt">${esc(p.jmeno)}</span>${mmSerieChip(p.id)}${i===0?'<svg class="i"><use href="#i-crown"/></svg>':''}</div><div class="lpt">${gap}<b class="lv">${fmtNum(p.total)}</b></div><div class="lbar"><i style="width:${pct}%;background:${col}"></i></div></div>`;
   }).join('');
 
   // Heatmapa party
