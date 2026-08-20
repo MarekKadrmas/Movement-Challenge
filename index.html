@@ -1923,6 +1923,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .hcard .hc-lab{font-size:9.66px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--ter);padding-bottom:3px;}
 .mm .hcard .hc-serie{display:inline-flex;align-items:center;gap:3px;font-size:10.62px;font-weight:800;color:var(--orange,#E8A33D);background:color-mix(in srgb,var(--orange,#E8A33D) 13%,transparent);border-radius:999px;padding:3px 7px;margin-bottom:1px;white-space:nowrap;}
 .mm .hcard .hc-serie .i{width:11px;height:11px;}
+.mm .hcard .hc-serie em{font-style:normal;font-weight:700;font-size:9.66px;color:color-mix(in srgb,var(--orange,#E8A33D) 72%,var(--sec));margin-left:4px;padding-left:5px;border-left:1px solid color-mix(in srgb,var(--orange,#E8A33D) 30%,transparent);}
 .mm .hcard .hc-r{margin-left:auto;display:flex;align-items:baseline;gap:7px;white-space:nowrap;}
 .mm .hcard .hc-num{font-size:22.93px;font-weight:900;letter-spacing:-.04em;line-height:1;color:var(--label);font-family:var(--font-display);}
 .mm .hcard .hc-cil{font-size:12.07px;font-weight:800;color:var(--ter);}
@@ -2530,6 +2531,7 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .hcard .hc-lab{font-size:9.66px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--ter);padding-bottom:3px;}
 .hcard .hc-serie{display:inline-flex;align-items:center;gap:3px;font-size:10.62px;font-weight:800;color:var(--orange,#E8A33D);background:color-mix(in srgb,var(--orange,#E8A33D) 13%,transparent);border-radius:999px;padding:3px 7px;margin-bottom:1px;white-space:nowrap;}
 .hcard .hc-serie .i{width:11px;height:11px;}
+.hcard .hc-serie em{font-style:normal;font-weight:700;font-size:9.66px;color:color-mix(in srgb,var(--orange,#E8A33D) 72%,var(--sec));margin-left:4px;padding-left:5px;border-left:1px solid color-mix(in srgb,var(--orange,#E8A33D) 30%,transparent);}
 .hcard .hc-r{margin-left:auto;display:flex;align-items:baseline;gap:7px;white-space:nowrap;}
 .hcard .hc-num{font-size:22.93px;font-weight:900;letter-spacing:-.04em;line-height:1;color:var(--label);font-family:var(--font-display);}
 .hcard .hc-cil{font-size:12.07px;font-weight:800;color:var(--ter);}
@@ -5770,6 +5772,7 @@ function renderDnesek(){
 
   // --- horni karta: vse o tomhle tydnu ---
   const mSerie = me?computeStreak(me.id):0;
+  const mSerieRek = me?mmNejdelsiSerie(me.id):0;
   // denni cil a odstup od nej
   const mCil = me?mmDenniCil(me.id):MM_CIL_MIN;
   const mPct = mCil>0?Math.round(todayPts/mCil*100):0;
@@ -5780,10 +5783,10 @@ function renderDnesek(){
     for(let i=0;i<7;i++){ const ds=dateToStr(new Date(s.getTime()+i*864e5));
       _dnyB.push({ds, b: me?sumRoundedBody(state.cviky.filter(c=>c.player_id===me.id&&c.datum===ds))
                         +sumRoundedBody(state.aktivity.filter(x=>x.player_id===me.id&&x.datum===ds)):0}); } }
-  const _maxD=Math.max(mCil, ..._dnyB.map(d=>d.b), 1);
+  // plny sloupecek = splneny denni cil
   const _pism=['P','Ú','S','Č','P','S','N'];
   const mSloupce=_dnyB.map((d,i)=>{
-    const v=Math.max(3, Math.round(d.b/_maxD*100));
+    const v=Math.min(100, Math.max(6, Math.round(d.b/Math.max(1,mCil)*100)));
     const dnesek=d.ds===today, budouci=d.ds>today;
     return '<div class="hc-d'+(dnesek?' je-dnes':'')+(budouci?' je-pak':'')+'">'
       +'<div class="hc-dsl"><i style="height:'+((d.b>0&&!budouci)?v:0)+'%"></i></div>'
@@ -5791,7 +5794,7 @@ function renderDnesek(){
   }).join('');
   const mTrendHtml = todayPts<=0 ? ''
     : (mPct>=100 ? '<span class="hc-tr up">▲ '+(mPct-100)+' %</span>'
-                 : '<span class="hc-tr dn">▼ '+(100-mPct)+' %</span>');
+                 : '<span class="hc-tr dn">chybí '+fmtNum(Math.max(1,mCil-todayPts))+' b</span>');
   // aktivity za tenhle tyden
   const _tydZ = me?[...state.cviky,...state.aktivity]
       .filter(e=>e.player_id===me.id&&e.datum>=wk.from&&e.datum<=wk.to):[];
@@ -5838,7 +5841,7 @@ function renderDnesek(){
     const dnu=Math.max(1,Math.ceil((konecM-_d)/864e5));
     odpocetHtml='<div class="odpocet">📅 Měsíční soutěž · <b>zbývá '+dnu+' '+streakLabel(dnu)+'</b></div>';
   }
-  const tpl=`<div class="hcard"><div class="hc-hd"><span class="hc-poz">${mmGreet()}${me?', '+esc(mmVocative(mmFirst(me.jmeno))):''}</span><span class="hc-dat">${dlKratke}</span></div><div class="hc-top">${mSerie>0?'<span class="hc-serie"><svg class="i"><use href="#i-flame"/></svg>'+mSerie+'</span>':''}<span class="hc-r">${mTrendHtml}<span class="hc-num">${fmtNum(todayPts)}</span><span class="hc-cil">z ${fmtNum(mCil)} b dnes</span></span></div><div class="hc-tyden">${mSloupce}</div></div>
+  const tpl=`<div class="hcard"><div class="hc-hd"><span class="hc-poz">${mmGreet()}${me?', '+esc(mmVocative(mmFirst(me.jmeno))):''}</span><span class="hc-dat">${dlKratke}</span></div><div class="hc-top">${mSerie>0?'<span class="hc-serie"><svg class="i"><use href="#i-flame"/></svg>'+mSerie+(mSerieRek>mSerie?'<em>rekord '+mSerieRek+'</em>':'')+'</span>':''}<span class="hc-r">${mTrendHtml}<span class="hc-num">${fmtNum(todayPts)}</span><span class="hc-cil">z ${fmtNum(mCil)} b dnes</span></span></div><div class="hc-tyden">${mSloupce}</div></div>
   <div class="hbm hbnav2" style="margin-top:10px;cursor:pointer" onclick="mmGo('navyky')"><div class="hi hicheck${habTotal>0&&habDone>=habTotal?' hfull':''}" style="--hp:${habTotal>0?Math.round(Math.min(habDone,habTotal)/habTotal*100):0}%"><svg class="i"><use href="#i-check"/></svg></div><div class="ht">Návyky dnes<span class="hdots">${Array.from({length:habTotal},(_,i)=>'<i'+(i<habDone?' class="on"':'')+'></i>').join('')}</span></div><div class="pct" style="display:flex;align-items:baseline;gap:0"><b>${habDone}</b><span style="color:var(--ter);font-weight:700;margin-left:1.5px;margin-right:7px">/${habTotal}</span><span style="color:var(--ter);font-weight:400">›</span></div></div>
   ${mmPartaSegBar()}${odpocetHtml}
   <div class="lc">${rows||'<div style="padding:20px;text-align:center;color:var(--ter)">Zatím žádné body</div>'}</div>
@@ -6573,6 +6576,20 @@ const MM_AKUZATIV={'Mára':'Máru','Káťa':'Káťu','Péťa':'Péťu','Janča':
 // aby se necil nehybal ze dne na den. Mezi mesici smi vyrust max o 25 % a klesnout max o 10 %
 // — diky tomu se cil nezhrouti po jednom slabsim mesici, ale ani se nezlehci tim, ze clovek vynecha.
 const MM_CIL_MIN=40, MM_CIL_MAX=400;
+
+// Nejdelsi serie za celou historii — aby aktualni serie mela s cim se merit.
+function mmNejdelsiSerie(pid){
+  if(!pid) return 0;
+  const dny=[...new Set([...state.cviky,...state.aktivity]
+    .filter(e=>e.player_id===pid&&e.datum).map(e=>e.datum))].sort();
+  let nej=0, cur=0, pred=null;
+  dny.forEach(ds=>{
+    if(pred){ const r=(new Date(ds+'T00:00:00')-new Date(pred+'T00:00:00'))/864e5; cur = r===1 ? cur+1 : 1; }
+    else cur=1;
+    if(cur>nej) nej=cur; pred=ds;
+  });
+  return nej;
+}
 function mmDenniCil(pid){
   if(!pid) return MM_CIL_MIN;
   const mes=todayStr().slice(0,7);
