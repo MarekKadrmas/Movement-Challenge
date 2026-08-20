@@ -1,0 +1,205 @@
+<title>Nový záznam 2.0</title>
+<style>
+:root{
+  --bg:#EFF1ED; --card:#FFFFFF; --label:#141915; --sec:#6B756F; --ter:#9AA39C;
+  --green:#12A05E; --green-tm:#0C8A4F; --sep:#E2E5E1; --track:#EAEDE8;
+  --fialova:#7C5CE0; --modra:#3B82F6; --stul:#1A1D1C;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--stul);
+  -webkit-text-size-adjust:100%;text-size-adjust:100%;-webkit-user-select:none;user-select:none;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",system-ui,sans-serif;}
+body{display:grid;place-items:center;}
+input{-webkit-user-select:text;user-select:text;}
+
+.telefon{position:relative;width:393px;height:852px;max-width:100vw;max-height:100vh;
+  overflow:hidden;background:var(--bg);border-radius:40px;
+  box-shadow:0 30px 70px -20px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.06);
+  display:flex;flex-direction:column;}
+@media (max-width:440px),(max-height:880px){
+  .telefon{width:100vw;height:100vh;max-width:none;max-height:none;border-radius:0;box-shadow:none;}}
+.popiska{position:fixed;left:0;right:0;bottom:14px;text-align:center;
+  font:600 11.5px/1.5 -apple-system,system-ui,sans-serif;color:#6C7671;}
+@media (max-width:440px),(max-height:880px){.popiska{display:none;}}
+
+/* přepínač variant */
+.prep{position:absolute;top:8px;left:50%;transform:translateX(-50%);z-index:99;display:flex;gap:5px;
+  background:rgba(0,0,0,.66);border-radius:999px;padding:4px;}
+.prep button{border:0;background:transparent;color:#fff;font:600 11.5px/1 inherit;
+  padding:7px 11px;border-radius:999px;cursor:pointer;}
+.prep button.on{background:#fff;color:#000;}
+.prep button:focus-visible{outline:2px solid var(--green);outline-offset:2px;}
+
+/* obsah */
+.telo{flex:1;overflow-y:auto;padding:52px 20px 0;scrollbar-width:none;}
+.telo::-webkit-scrollbar{display:none;}
+h1{font-size:29px;font-weight:800;letter-spacing:-.6px;margin:0 0 16px;color:var(--label);
+  display:flex;align-items:center;justify-content:space-between;}
+h1 .x{font-size:22px;color:var(--ter);font-weight:400;}
+.lbl{font-size:13.5px;font-weight:700;color:var(--sec);margin:16px 0 7px;}
+.lbl .hint{font-weight:600;color:var(--ter);font-size:12.5px;}
+
+.chips{display:flex;flex-wrap:wrap;gap:7px;}
+.chip{background:var(--card);border:0;border-radius:999px;padding:10px 15px;font:700 14.5px/1 inherit;
+  color:var(--label);cursor:pointer;display:flex;align-items:center;gap:6px;}
+.chip.on{background:var(--green);color:#fff;}
+.chip.pridat{background:transparent;border:1.5px dashed var(--sep);color:var(--sec);}
+
+.pole{background:var(--card);border:0;border-radius:14px;height:48px;width:100%;padding:0 15px;
+  font:600 16px/1 inherit;color:var(--label);outline:0;}
+.pole::placeholder{color:var(--ter);font-weight:500;}
+
+/* obtížnost 1–10 */
+.obt{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;}
+.obt button{background:var(--card);border:0;border-radius:12px;height:44px;
+  font:800 16px/1 inherit;color:var(--label);cursor:pointer;transition:transform .12s;}
+.obt button.on{background:var(--green);color:#fff;transform:scale(1.04);}
+.obt button:focus-visible{outline:2px solid var(--green);outline-offset:2px;}
+.obtpopis{background:var(--card);border-radius:14px;padding:12px 15px;margin-top:8px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.obtpopis .t{font-size:14px;line-height:1.35;color:var(--sec);font-weight:600;}
+.obtpopis .t b{color:var(--label);display:block;font-size:15px;margin-bottom:1px;}
+.obtpopis .b{font:800 19px/1 inherit;color:var(--green);white-space:nowrap;}
+.podnadpis{font-size:12.5px;color:var(--ter);font-weight:600;line-height:1.45;margin-top:7px;}
+
+/* rozpis pod aktivitou */
+.rozpis{background:var(--card);border-radius:16px;margin-top:9px;overflow:hidden;}
+.rozpis .hlava{display:flex;align-items:center;gap:9px;padding:14px 15px;cursor:pointer;}
+.rozpis .hlava .ic{width:26px;height:26px;border-radius:8px;background:var(--track);
+  display:grid;place-items:center;font-size:14px;flex:0 0 auto;}
+.rozpis .hlava .tx{flex:1;font:700 15px/1.25 inherit;color:var(--label);}
+.rozpis .hlava .tx small{display:block;font:600 12.5px/1.3 inherit;color:var(--ter);margin-top:1px;}
+.rozpis .hlava .sip{color:var(--ter);font-size:15px;transition:transform .2s;}
+.rozpis.open .hlava .sip{transform:rotate(90deg);}
+.rozpis .obsah{display:none;border-top:1px solid var(--sep);padding:12px 15px 14px;}
+.rozpis.open .obsah{display:block;}
+
+.serie{display:grid;grid-template-columns:1fr 58px 66px 28px;gap:7px;align-items:center;margin-bottom:7px;}
+.serie .nm{font:700 14.5px/1 inherit;color:var(--label);}
+.serie input{background:var(--track);border:0;border-radius:9px;height:36px;width:100%;
+  text-align:center;font:700 14.5px/1 inherit;color:var(--label);outline:0;}
+.serie .del{color:var(--ter);font-size:16px;text-align:center;cursor:pointer;}
+.serie .hd{font:700 10.5px/1 inherit;color:var(--ter);text-transform:uppercase;letter-spacing:.05em;text-align:center;}
+.pridatr{background:transparent;border:1.5px dashed var(--sep);border-radius:10px;height:38px;width:100%;
+  color:var(--sec);font:700 13.5px/1 inherit;cursor:pointer;margin-top:3px;}
+.pr{display:inline-flex;align-items:center;gap:4px;background:#FEF3C7;color:#92400E;
+  border-radius:999px;padding:3px 8px;font:800 11px/1 inherit;margin-left:6px;}
+
+/* spodek */
+.spodek{flex:0 0 auto;padding:12px 20px 20px;background:linear-gradient(to top,var(--bg) 72%,transparent);}
+.souhrn{background:var(--card);border:1.5px solid var(--green);border-radius:14px;
+  display:flex;align-items:center;justify-content:space-between;padding:13px 16px;margin-bottom:10px;}
+.souhrn .t{font:700 14.5px/1 inherit;color:var(--sec);}
+.souhrn .b{font:800 22px/1 inherit;color:var(--green);}
+.zapsat{width:100%;height:52px;border:0;border-radius:999px;background:var(--green);
+  color:#fff;font:800 17px/1 inherit;cursor:pointer;}
+.zapsat:focus-visible{outline:2px solid #fff;outline-offset:-4px;}
+.datum{display:flex;align-items:center;gap:9px;background:var(--card);border-radius:14px;
+  padding:0 15px;height:48px;font:700 15px/1 inherit;color:var(--label);}
+.datum .sip{margin-left:auto;color:var(--ter);font-size:12px;}
+</style>
+
+<div class="telefon">
+  <div class="prep">
+    <button id="t1" class="on" onclick="varianta(0)">Aktivita</button>
+    <button id="t2" onclick="varianta(1)">+ cviky</button>
+    <button id="t3" onclick="varianta(2)">+ lezení</button>
+  </div>
+
+  <div class="telo">
+    <h1>Nový záznam <span class="x">✕</span></h1>
+
+    <div class="lbl">Co jsi dělal</div>
+    <div class="chips" id="typy"></div>
+    <input class="pole" style="margin-top:8px" id="nazev" placeholder="…nebo napiš vlastní">
+
+    <div class="lbl">Jak těžké to pro tebe dnes bylo <span class="hint">· 1–10</span></div>
+    <div class="obt" id="obt1"></div>
+    <div class="obt" id="obt2" style="margin-top:6px"></div>
+    <div class="obtpopis">
+      <div class="t"><b id="op-nadpis">Běžný trénink</b><span id="op-text">odedřel jsem to, ale zvládl bych víc</span></div>
+      <div class="b" id="op-body">+175 b</div>
+    </div>
+    <div class="podnadpis">Hodnotíš vůči sobě, ne vůči ostatním. Stejný trénink může být pro každého jinak těžký — a to je v pořádku.</div>
+
+    <div id="rozpisy"></div>
+
+    <div class="lbl">Datum</div>
+    <div class="datum">📅 Dnes · čt 20. 8. <span class="sip">▾</span></div>
+    <div style="height:14px"></div>
+  </div>
+
+  <div class="spodek">
+    <div class="souhrn"><span class="t">Získáš za zápis</span><span class="b" id="celkem">+175 b</span></div>
+    <button class="zapsat">Zapsat</button>
+  </div>
+</div>
+
+<div class="popiska">iPhone 15 Pro · 393 × 852 — na telefonu se roztáhne přes celý displej</div>
+
+<script>
+const TYPY=['Gym','Běh','Squash','Procházka','Workout','Kolo','Boulder','Tenis'];
+const POPISY={
+  1:['Drobnost','pár shybů cestou kolem hrazdy'],
+  2:['Rozhýbání','krátká procházka, protažení'],
+  3:['Lehké','půlhodinová procházka, výklus'],
+  4:['Svižné','svižná chůze, lehké kolo'],
+  5:['Průměrný trénink','odešel jsem s tím, že to bylo fajn'],
+  6:['Solidní','zabral jsem si'],
+  7:['Běžný trénink','odedřel jsem to, ale zvládl bych víc'],
+  8:['Těžké','jeden z těžších tréninků za měsíc'],
+  9:['Hodně těžké','byl jsem na hraně'],
+  10:['Výjimečný den','závod, celodenní túra v horách'],
+};
+let stupen=7, var_=0;
+
+function vykresli(){
+  document.getElementById('typy').innerHTML=TYPY.map((t,i)=>
+    `<button class="chip${i===(var_===2?6:0)?' on':''}">${t}</button>`).join('')
+    +'<button class="chip pridat">+ vlastní</button>';
+
+  const btn=(n)=>`<button class="${n===stupen?'on':''}" onclick="setStupen(${n})">${n}</button>`;
+  document.getElementById('obt1').innerHTML=[1,2,3,4,5].map(btn).join('');
+  document.getElementById('obt2').innerHTML=[6,7,8,9,10].map(btn).join('');
+
+  const [nad,txt]=POPISY[stupen];
+  document.getElementById('op-nadpis').textContent=nad;
+  document.getElementById('op-text').textContent=txt;
+  document.getElementById('op-body').textContent='+'+(stupen*25)+' b';
+  document.getElementById('celkem').textContent='+'+(stupen*25)+' b';
+
+  const R=document.getElementById('rozpisy');
+  if(var_===0){
+    R.innerHTML=blok('💪','Rozepsat cviky','nepovinné — pro rekordy a statistiky',false,'')
+               +blok('🧗','Rozepsat cesty','nepovinné — pro rekordy a grafy',false,'');
+  } else if(var_===1){
+    R.innerHTML=blok('💪','Cviky','3 série · nebodují se, jdou do rekordů',true,`
+      <div class="serie"><span></span><span class="hd">Opak.</span><span class="hd">Váha</span><span></span></div>
+      <div class="serie"><span class="nm">Shyby<span class="pr">★ rekord 21</span></span>
+        <input value="21"><input value="0"><span class="del">✕</span></div>
+      <div class="serie"><span class="nm">Shyby</span><input value="17"><input value="0"><span class="del">✕</span></div>
+      <div class="serie"><span class="nm">Dipy</span><input value="12"><input value="10"><span class="del">✕</span></div>
+      <button class="pridatr">+ přidat sérii</button>`);
+  } else {
+    R.innerHTML=blok('🧗','Cesty','4 přelezy · nejtěžší 6C',true,`
+      <div class="serie" style="grid-template-columns:1fr 76px 66px 28px"><span></span><span class="hd">Obtížnost</span><span class="hd">Styl</span><span></span></div>
+      <div class="serie" style="grid-template-columns:1fr 76px 66px 28px"><span class="nm">Cesta 1</span><input value="6C"><input value="RP"><span class="del">✕</span></div>
+      <div class="serie" style="grid-template-columns:1fr 76px 66px 28px"><span class="nm">Cesta 2<span class="pr">★ osobák</span></span><input value="6C"><input value="OS"><span class="del">✕</span></div>
+      <div class="serie" style="grid-template-columns:1fr 76px 66px 28px"><span class="nm">Cesta 3</span><input value="6A+"><input value="Flash"><span class="del">✕</span></div>
+      <button class="pridatr">+ přidat cestu</button>`);
+  }
+}
+function blok(ik,nadpis,pod,otevreno,obsah){
+  return `<div class="rozpis${otevreno?' open':''}"><div class="hlava" onclick="this.parentNode.classList.toggle('open')">
+    <span class="ic">${ik}</span><span class="tx">${nadpis}<small>${pod}</small></span><span class="sip">›</span></div>
+    <div class="obsah">${obsah}</div></div>`;
+}
+function setStupen(n){ stupen=n; vykresli(); }
+function varianta(v){
+  var_=v; stupen=[7,7,6][v];
+  ['t1','t2','t3'].forEach((id,i)=>document.getElementById(id).classList.toggle('on',i===v));
+  document.getElementById('nazev').value='';
+  vykresli();
+}
+vykresli();
+</script>
