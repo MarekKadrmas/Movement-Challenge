@@ -6134,6 +6134,10 @@ async function mmRxPersist(payload){
 }
 let mmRxCil=null;
 function mmRxZavri(){
+  const s0=document.getElementById('rx-sheet');
+  if(s0){ try{ s0._mmVVoff&&s0._mmVVoff(); }catch(_){} }
+  if(s0){ try{ unlockBodyScroll(); }catch(_){} }
+  try{ const ae=document.activeElement; if(ae&&ae.blur) ae.blur(); }catch(_){}
   ['rx-bar','rx-sheet','rx-back'].forEach(id=>{
     const el=document.getElementById(id); if(!el) return;
     if(el._mmVv && window.visualViewport){ window.visualViewport.removeEventListener('resize', el._mmVv); window.visualViewport.removeEventListener('scroll', el._mmVv); el._mmVv=null; }
@@ -6197,6 +6201,21 @@ function mmRxStatHtml(){
   if(MM_RX_STAT==null) MM_RX_STAT=mmRxIndex().map((k,i)=>mmRxSekceHtml(k.n, mmRxGrid(k.items.map(x=>x.e)), i+1)).join('');
   return MM_RX_STAT;
 }
+function mmRxKlavesnice(s){
+  // iOS pri otevreni klavesnice odroluje stranku a fixni panel ujede mimo displej.
+  // Drzime ho nad klavesnici podle visualViewport a omezime vysku seznamu.
+  const vv=window.visualViewport; if(!vv||!s) return;
+  const uprav=()=>{
+    const kb=Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+    s.style.bottom=kb+'px';
+    const body=s.querySelector('.rx-body');
+    if(body) body.style.maxHeight=Math.max(120, Math.min(Math.round(vv.height*0.45), Math.round(vv.height-170)))+'px';
+    if(kb>0) window.scrollTo(0,0);
+  };
+  vv.addEventListener('resize', uprav); vv.addEventListener('scroll', uprav);
+  s._mmVVoff=()=>{ vv.removeEventListener('resize',uprav); vv.removeEventListener('scroll',uprav); };
+  uprav();
+}
 function mmRxOpenSheet(){
   const cil=mmRxCil;
   const bar=document.getElementById('rx-bar'); if(bar){ bar.classList.remove('on'); setTimeout(()=>bar.remove(),200); }
@@ -6221,6 +6240,8 @@ function mmRxOpenSheet(){
     +'<div class="rx-katbar">'+ikony.map((ik,i)=>'<b data-kat="'+i+'"'+(i===0?' class="on"':'')+'>'+(MM_RX_IKONY[ik]||'')+'</b>').join('')+'</div>';
   document.body.appendChild(s);
   mmRxCil=cil;
+  try{ lockBodyScroll(); }catch(_){}
+  mmRxKlavesnice(s);
   s._mmOpened=Date.now();
   requestAnimationFrame(()=>s.classList.add('on'));
   // stejna 320ms prodleva jako u rychle listy — dojezd prstu po podrzeni nic neproklikne
