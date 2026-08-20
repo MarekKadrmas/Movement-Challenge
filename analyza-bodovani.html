@@ -258,8 +258,106 @@ li::marker{color:var(--faint);}
 
 <section class="col stack" id="doporuceni">
   <div class="eyebrow">Doporučení</div>
-  <h2>Návrh se dokončuje</h2>
-  <p class="note">Tuhle sekci doplní finální návrh systému.</p>
+  <h2>Body = minuty × náročnost</h2>
+  <p>Jedna změna opraví většinu toho výše: <strong>zahodit sebehodnocenou úroveň 1–5 a nahradit ji minutami</strong>. Náročnost se nevolí — vyplývá z typu pohybu. Procházka 1,0 · turistika 1,5 · gym, kolo, boulder 2,0 · běh, squash 2,5 · HIIT, závod 3,0. Třicet minut chůze je 30 bodů, hodina v posilovně 120, tři čtvrtě hodiny běhu 112. Řádově tam, kde jsou čísla dnes, takže partě se nepřevrátí svět.</p>
+  <p>Zapisování se tím nezkomplikuje: jedno pole za jedno. Minuty víš, kdežto „byla to trojka, nebo čtyřka?" musíš vymýšlet.</p>
+</section>
+
+<div class="col">
+<div class="slab stack">
+  <div class="finding">
+    <span class="tag ok">Opravuje díru 1</span>
+    <h3>Rozepisování přestane dávat body</h3>
+    <p>Tři záznamy „Gym-push / pull / legs" po 20 minutách jsou <span class="hl">stejných 120 bodů jako jeden šedesátiminutový</span>, protože se sčítají minuty, ne záznamy. U cviků se úsilí sčítá lineárně a mocnina se aplikuje až na součet, takže 10 × 5 shybů dá totéž co 3 × 17.</p>
+  </div>
+  <div class="finding">
+    <span class="tag ok">Opravuje díru 2</span>
+    <h3>Zvednuté maximum tě nesrazí</h3>
+    <p>Maximum se <span class="hl">zmrazí a přepočítá vždy 1. v měsíci</span>. Když se v průběhu měsíce zlepšíš, je to čistý zisk — laťka se posune až od prvního.</p>
+  </div>
+  <div class="finding">
+    <span class="tag ok">Opravuje díru 3</span>
+    <h3>Gym se nezapočítá dvakrát</h3>
+    <p>Když je ve stejný den zapsaná posilovna jako aktivita <em>a</em> cviky z ní, počítá se <code>větší + 30 % z menšího</code>. Ne čisté maximum — to by nutilo trénink štěpit do dvou dnů. K tomu <strong>denní strop 250 bodů</strong>, jeden a tvrdý.</p>
+  </div>
+  <div class="finding">
+    <span class="tag ok">Opravuje díru 4</span>
+    <h3>Cviky přestanou být privilegovaná měna</h3>
+    <p>Nová kalibrace: <code>40 × E<sup>0,65</sup></code>, kde E je objem vůči vlastnímu maximu. Tři tvrdé série ≈ 40 minut posilovny. Wilks koeficient <span class="hl">zmizí</span> — u cviku měřeného vůči vlastnímu maximu žádná genderová ani váhová nevýhoda nevzniká a Wilks navrch je dvojitý handicap. Kompenzaci obstará osobní cíl.</p>
+  </div>
+</div>
+</div>
+
+<section class="col stack">
+  <div class="eyebrow">A struktura kolem toho</div>
+  <h2>Týden se resetuje, sezóna odpouští</h2>
+  <p>Za každý aktivní den (min. 40 bodů) je v neděli 30 bodů, maximálně za pět dní. Za splnění vlastního týdenního cíle 150 bodů. <strong>Sezónní tabulka sečte týdny a dva nejhorší škrtne</strong> — kdo měl chřipku nebo dovolenou, není odepsaný. Vedle toho běží druhá tabulka, <strong>Liga formy</strong>: kolikrát jsi splnil svoje. Tam se hraje o pravidelnost, ne o sílu, a Lukášovi stačí dva tréninky týdně, aby byl ve hře.</p>
+  <p>Osobní cíl je <strong>pevný na celý měsíc</strong> a viditelný, ne skrytý klouzavý průměr. Cíl, který roste s tebou každý týden, je past — zlepšíš se, laťka povyroste, jsi zase na začátku. To je přesně ta perverzní motivace, kterou opravujeme u maxim.</p>
+</section>
+
+<section class="col stack">
+  <div class="eyebrow">Ověřeno na datech</div>
+  <h2>Co to udělá se žebříčkem</h2>
+  <p>Přepočítal jsem všech 445 záznamů podle navrženého systému. Minuty jsou odvozené z dnešních úrovní (L1 = 30 min … L5 = 90 min), takže je to odhad — ale je to odhad ze skutečných dat, ne z hlavy.</p>
+</section>
+
+<div class="col">
+<div class="slab">
+  <div class="scroll">
+  <table>
+    <thead><tr><th>Hráč</th><th>Dnes</th><th>Podíl</th><th>Nově</th><th>Podíl</th><th>Změna</th><th>Pořadí</th><th>Splněných cílů</th></tr></thead>
+    <tbody>
+      <tr class="hi"><td class="name">Natálka</td><td>10 048</td><td>0,87</td><td>15 815</td><td>1,00</td><td>+15 %</td><td>1. (2.)</td><td>14 / 15</td></tr>
+      <tr class="hi"><td class="name">Mára</td><td>11 592</td><td>1,00</td><td>14 649</td><td>0,93</td><td>−7 %</td><td>2. (1.)</td><td>13 / 15</td></tr>
+      <tr><td class="name">Péťa</td><td>3 985</td><td>0,34</td><td>7 394</td><td>0,47</td><td>+36 %</td><td>3. (3.)</td><td>8 / 15</td></tr>
+      <tr><td class="name">Káťa</td><td>3 421</td><td>0,30</td><td>5 923</td><td>0,37</td><td>+27 %</td><td>4. (4.)</td><td>5 / 15</td></tr>
+      <tr><td class="name">Martin</td><td>1 770</td><td>0,15</td><td>2 979</td><td>0,19</td><td>+23 %</td><td>5. (5.)</td><td>4 / 15</td></tr>
+      <tr><td class="name">Lukáš</td><td>667</td><td>0,06</td><td>1 270</td><td>0,08</td><td>+40 %</td><td>6. (6.)</td><td>2 / 15</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="cap">Rozestup 1. a 3. místa klesne z 2,91× na 2,14×, prvního a čtvrtého z 3,39× na 2,67×, prvního a posledního ze 17,4× na 12,5×. Komprese je skutečná, ale mírnější, než sliboval původní návrh (tvrdil 2,20× pro čtvrté místo).</p>
+</div>
+</div>
+
+<section class="col stack">
+  <div class="eyebrow">Dvě věci, které musíš vědět předem</div>
+  <h2>Systém má dva vedlejší účinky</h2>
+</section>
+
+<div class="col">
+<div class="slab stack">
+  <div class="finding">
+    <span class="tag">Změna na špici</span>
+    <h3>Natálka by tě předběhla</h3>
+    <p>Ne o moc — 15 815 proti 14 649 — ale předběhla. Důvod je věcný: má <span class="hl">77 aktivních dní proti tvým 64</span>. Dnes to nevidíš, protože tvoje shyby (2 689 opakování, polovina tvého skóre) rozdíl přebijí. Jakmile se objem zastropuje a začnou se odměňovat aktivní dny, projeví se, že chodí cvičit častěji.</p>
+    <p class="cap">Není to chyba systému — je to ta spravedlnost, o kterou jsi žádal. Ale je lepší to vědět předem, než po nasazení.</p>
+  </div>
+  <div class="finding">
+    <span class="tag">Vada návrhu</span>
+    <h3>Osobní cíl trestá nepravidelné</h3>
+    <p>Cíl se odvozuje z mediánu tvých posledních čtyř týdnů. Káťa trénuje zřídka, ale tvrdě — medián jí vyšel vysoko, cíl 350, a splnila ho jen <span class="hl">5× z 15</span>. Martin s cílem 250 splnil 4×, přestože je aktivní míň. Kdo jede nárazově, dostane vyšší laťku než kdo jede vlažně a pravidelně.</p>
+    <p class="cap">Návrh: cíl počítat z <em>počtu aktivních dní</em>, ne z objemu bodů. Odměňuje to pravidelnost, což je celý smysl té druhé tabulky.</p>
+  </div>
+</div>
+</div>
+
+<section class="col stack">
+  <h2>Máťovu nulu nespraví žádný vzorec</h2>
+  <p>Za 96 dní nezapsal nic. Ne kvůli Wilksovi — appku prostě neotevřel. V sedmičlenné partě na tohle fungují tři věci a všechny jsou levnější než přepis bodování: <strong>nedělní shrnutí do skupinového chatu</strong>, <strong>projekce v appce</strong> ve stylu „tři svižné procházky po 45 minutách = splněný cíl" místo propasti čtrnácti tisíc bodů, a <strong>tlačítko postrč kamaráda</strong>, aby push přišel od člověka, ne od systému.</p>
+  <p>Kdyby ses měl rozhodovat, co nasadit dřív, nasaď tohle. Má to na „motivovat všechny něco dělat" větší dopad než celý zbytek téhle analýzy.</p>
+</section>
+
+<section class="col stack">
+  <div class="eyebrow">Pořadí prací</div>
+  <h2>Čtyři kroky</h2>
+  <ul>
+    <li><strong>Minuty × koeficient</strong>, sloučení gymu s cviky, denní strop 250. Opraví díry 1, 3, 4 a subjektivní úrovně. Půl dne.</li>
+    <li><strong>Zmrazená maxima</strong> a rozdělení dřepu na kilogramy a opakování (dnes se míchají a je to zdroj chyb). Hráč o tom nemusí vědět. Dvě hodiny.</li>
+    <li><strong>Týdenní karta</strong> s osobním cílem, bonus za aktivní dny, škrtnutí dvou nejhorších týdnů. Den.</li>
+    <li><strong>Liga formy, vítěz formy, nedělní zpráva.</strong> To je ta část, kvůli které to celé děláš. Půl dne.</li>
+  </ul>
+  <p class="note" style="margin-top:8px">Historii nepřepisovat. Uzavřít těch 96 dní jako Sezóna 1 se starým žebříčkem a nový systém spustit od nejbližšího pondělí — nikomu se body neberou. Přepočtená historie se použije jen na dvě věci: ukázat „jak by to dopadlo" a nakalibrovat první cíle, aby nikdo nezačínal na paušálních 250.</p>
 </section>
 
 </div>

@@ -6214,11 +6214,14 @@ function mmRxKlavesnice(s){
 
   const uprav=()=>{
     if(!s.classList.contains('hledani')) return;
-    const celkem = vv ? vv.height + (vv.offsetTop||0) : window.innerHeight;
-    let kb = vv ? Math.max(0, window.innerHeight - vv.height - (vv.offsetTop||0)) : 0;
-    if(kb < 120) kb = s._mmKbOdhad;                 // iOS v PWA viewport casto nezmensi
-    const top = Math.round((vv? (vv.offsetTop||0) : 0) + HORNI);
-    const vyska = Math.max(180, Math.round((vv? vv.height : window.innerHeight) - HORNI - kb + (vv? 0 : 0)));
+    // POZOR: kdyz iOS klavesnici zohledni, vv.height UZ JE vyska nad klavesnici.
+    // Odecitat ji jeste jednou = panel spadne na tretinu (chyba z 20. 8.).
+    const kbReal = vv ? Math.max(0, window.innerHeight - vv.height - (vv.offsetTop||0)) : 0;
+    const dostupna = (vv && kbReal >= 120)
+      ? vv.height                                   // viewport se zmensil -> uz je to spravna vyska
+      : window.innerHeight - s._mmKbOdhad;          // nezmensil se (iOS PWA) -> odecti odhad
+    const top = Math.round((vv ? (vv.offsetTop||0) : 0) + HORNI);
+    const vyska = Math.max(180, Math.round(dostupna - HORNI));
     s.style.bottom='auto';
     s.style.top=top+'px';
     s.style.height=vyska+'px';
