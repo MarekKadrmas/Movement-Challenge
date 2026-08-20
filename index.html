@@ -1934,12 +1934,15 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .hcard .hc-d{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;}
 .mm .hcard .hc-dsl{position:relative;width:100%;height:24px;border-radius:7px;background:var(--track);}
 .mm .hcard .hc-dsl i{position:absolute;left:0;right:0;bottom:0;display:block;border-radius:7px;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 78%,#fff),var(--green));transition:height .5s cubic-bezier(.22,1,.36,1);}
+.mm .hcard .hc-dsl::before{content:"";position:absolute;left:1px;right:1px;top:0;height:2px;border-radius:2px;z-index:2;pointer-events:none;background:repeating-linear-gradient(90deg,color-mix(in srgb,var(--sec) 42%,transparent) 0 4px,transparent 4px 7px);}
+.mm .hcard .hc-d.je-pak .hc-dsl::before{opacity:.45;}
+.mm .hcard .hc-d.je-dnes span{color:var(--green);font-weight:900;}
 .mm .hcard .hc-dsl u{position:absolute;left:0;right:0;top:2px;bottom:auto;text-align:center;text-decoration:none;font-size:9.06px;font-weight:800;line-height:1;letter-spacing:-.02em;color:var(--sec);font-variant-numeric:tabular-nums;pointer-events:none;}
 .mm .hcard .hc-dsl u.uvnitr{color:#fff;top:auto;bottom:2px;}
 .mm .hcard .hc-d.je-nad .hc-dsl i{background:linear-gradient(180deg,color-mix(in srgb,var(--green) 55%,#fff),var(--green));box-shadow:0 -1px 0 0 var(--card);}
 .mm .hcard .hc-d span{font-size:9.66px;font-weight:800;color:var(--ter);line-height:1;}
 .mm .hcard .hc-d.je-dnes .hc-dsl i{background:linear-gradient(180deg,var(--green),color-mix(in srgb,var(--green) 82%,#000));}
-.mm .hcard .hc-d.je-dnes span{color:var(--green);}
+.mm 
 .mm .hcard .hc-d.je-pak .hc-dsl{background:color-mix(in srgb,var(--track) 55%,transparent);}
 .mm .kruh{display:flex;flex-direction:column;align-items:center;gap:2px;flex:0 0 auto;}
 .mm .kruh .pop{font-size:9.66px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--ter);line-height:1;}
@@ -2545,12 +2548,15 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .hcard .hc-d{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;}
 .hcard .hc-dsl{position:relative;width:100%;height:24px;border-radius:7px;background:var(--track);}
 .hcard .hc-dsl i{position:absolute;left:0;right:0;bottom:0;display:block;border-radius:7px;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 78%,#fff),var(--green));transition:height .5s cubic-bezier(.22,1,.36,1);}
+.hcard .hc-dsl::before{content:"";position:absolute;left:1px;right:1px;top:0;height:2px;border-radius:2px;z-index:2;pointer-events:none;background:repeating-linear-gradient(90deg,color-mix(in srgb,var(--sec) 42%,transparent) 0 4px,transparent 4px 7px);}
+.hcard .hc-d.je-pak .hc-dsl::before{opacity:.45;}
+.hcard .hc-d.je-dnes span{color:var(--green);font-weight:900;}
 .hcard .hc-dsl u{position:absolute;left:0;right:0;top:2px;bottom:auto;text-align:center;text-decoration:none;font-size:9.06px;font-weight:800;line-height:1;letter-spacing:-.02em;color:var(--sec);font-variant-numeric:tabular-nums;pointer-events:none;}
 .hcard .hc-dsl u.uvnitr{color:#fff;top:auto;bottom:2px;}
 .hcard .hc-d.je-nad .hc-dsl i{background:linear-gradient(180deg,color-mix(in srgb,var(--green) 55%,#fff),var(--green));box-shadow:0 -1px 0 0 var(--card);}
 .hcard .hc-d span{font-size:9.66px;font-weight:800;color:var(--ter);line-height:1;}
 .hcard .hc-d.je-dnes .hc-dsl i{background:linear-gradient(180deg,var(--green),color-mix(in srgb,var(--green) 82%,#000));}
-.hcard .hc-d.je-dnes span{color:var(--green);}
+
 .hcard .hc-d.je-pak .hc-dsl{background:color-mix(in srgb,var(--track) 55%,transparent);}
 .kruh{display:flex;flex-direction:column;align-items:center;gap:2px;flex:0 0 auto;}
 .kruh .pop{font-size:9.66px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--ter);line-height:1;}
@@ -5847,7 +5853,7 @@ function renderDnesek(){
     const dnu=Math.max(1,Math.ceil((konecM-_d)/864e5));
     odpocetHtml='<div class="odpocet">📅 Měsíční soutěž · <b>zbývá '+dnu+' '+streakLabel(dnu)+'</b></div>';
   }
-  const tpl=`<div class="hcard"><div class="hc-hd"><span class="hc-poz">${mmGreet()}${me?', '+esc(mmVocative(mmFirst(me.jmeno))):''}</span><span class="hc-dat">${dlKratke}</span></div><div class="hc-top">${mSerie>0?'<span class="hc-serie"><svg class="i"><use href="#i-flame"/></svg>'+mSerie+(mSerieRek>mSerie?'<em>rekord '+mSerieRek+'</em>':'')+'</span>':''}<span class="hc-r">${mTrendHtml}<span class="hc-num">${fmtNum(todayPts)}</span><span class="hc-cil">z ${fmtNum(mCil)} b dnes</span></span></div><div class="hc-tyden">${mSloupce}</div></div>
+  const tpl=`<div class="hcard"><div class="hc-hd"><span class="hc-poz">${mmGreet()}${me?', '+esc(mmVocative(mmFirst(me.jmeno))):''}</span><span class="hc-dat">${dlKratke}</span></div><div class="hc-top">${mSerie>0?'<span class="hc-serie"><svg class="i"><use href="#i-flame"/></svg>'+mSerie+(mSerieRek>mSerie?'<em>rekord '+mSerieRek+'</em>':(mSerie>0?'<em>tvůj rekord</em>':''))+'</span>':''}<span class="hc-r">${mTrendHtml}<span class="hc-num">${fmtNum(todayPts)}</span><span class="hc-cil">z ${fmtNum(mCil)} b dnes</span></span></div><div class="hc-tyden">${mSloupce}</div></div>
   <div class="hbm hbnav2" style="margin-top:10px;cursor:pointer" onclick="mmGo('navyky')"><div class="hi hicheck${habTotal>0&&habDone>=habTotal?' hfull':''}" style="--hp:${habTotal>0?Math.round(Math.min(habDone,habTotal)/habTotal*100):0}%"><svg class="i"><use href="#i-check"/></svg></div><div class="ht">Návyky dnes<span class="hdots">${Array.from({length:habTotal},(_,i)=>'<i'+(i<habDone?' class="on"':'')+'></i>').join('')}</span></div><div class="pct" style="display:flex;align-items:baseline;gap:0"><b>${habDone}</b><span style="color:var(--ter);font-weight:700;margin-left:1.5px;margin-right:7px">/${habTotal}</span><span style="color:var(--ter);font-weight:400">›</span></div></div>
   ${mmPartaSegBar()}${odpocetHtml}
   <div class="lc">${rows||'<div style="padding:20px;text-align:center;color:var(--ter)">Zatím žádné body</div>'}</div>
