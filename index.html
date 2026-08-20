@@ -1911,6 +1911,23 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .trofb .i{width:10px;height:10px;}
 .mm .trofb.trofb-m{background:color-mix(in srgb,var(--purple,#7C5CE0) 15%,transparent);color:var(--purple,#7C5CE0);}
 .mm .trofb.trofb-b{background:var(--track);color:var(--sec);font-weight:700;}
+
+.mm .hcard{display:flex;align-items:center;gap:13px;background:var(--card);border-radius:18px;
+.mm   box-shadow:var(--shadow);padding:11px 14px;margin-bottom:10px;}
+.mm .hcard .kruh{gap:4px;}
+.mm .hcard .ring2{width:54px;height:54px;}
+.mm .hcard .ring2 .h{width:43px;height:43px;font-size:16.9px;display:flex;align-items:baseline;justify-content:center;gap:0;}
+.mm .hcard .ring2 .h i{font-style:normal;font-size:11.5px;font-weight:800;color:var(--ter);}
+.mm .hcard .fakta{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px;}
+.mm .hcard .fr{display:flex;align-items:center;gap:5px;font-size:11.47px;font-weight:700;
+.mm   color:var(--sec);line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.mm .hcard .fr b{color:var(--label);font-weight:800;}
+.mm .hcard .fr1{font-size:13.28px;}
+.mm .hcard .fr .i{width:12px;height:12px;flex:0 0 auto;color:var(--orange,#E8A33D);}
+.mm .hcard .dnesst{margin-left:auto;padding:2px 7px;border-radius:999px;font-size:9.66px;
+.mm   font-weight:800;letter-spacing:0;flex:0 0 auto;}
+.mm .hcard .dnesst.ok{background:color-mix(in srgb,var(--green) 13%,transparent);color:var(--green);}
+.mm .hcard .dnesst.ne{background:var(--track);color:var(--ter);}
 .mm .kruh{display:flex;flex-direction:column;align-items:center;gap:2px;flex:0 0 auto;}
 .mm .kruh .pop{font-size:9.66px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--ter);line-height:1;}
 .mm .nav2{display:flex;align-items:center;gap:9px;padding:15px 2px 11px;}
@@ -2492,6 +2509,23 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .trofb .i{width:10px;height:10px;}
 .trofb.trofb-m{background:color-mix(in srgb,var(--purple,#7C5CE0) 15%,transparent);color:var(--purple,#7C5CE0);}
 .trofb.trofb-b{background:var(--track);color:var(--sec);font-weight:700;}
+
+.hcard{display:flex;align-items:center;gap:13px;background:var(--card);border-radius:18px;
+  box-shadow:var(--shadow);padding:11px 14px;margin-bottom:10px;}
+.hcard .kruh{gap:4px;}
+.hcard .ring2{width:54px;height:54px;}
+.hcard .ring2 .h{width:43px;height:43px;font-size:16.9px;display:flex;align-items:baseline;justify-content:center;gap:0;}
+.hcard .ring2 .h i{font-style:normal;font-size:11.5px;font-weight:800;color:var(--ter);}
+.hcard .fakta{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px;}
+.hcard .fr{display:flex;align-items:center;gap:5px;font-size:11.47px;font-weight:700;
+  color:var(--sec);line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.hcard .fr b{color:var(--label);font-weight:800;}
+.hcard .fr1{font-size:13.28px;}
+.hcard .fr .i{width:12px;height:12px;flex:0 0 auto;color:var(--orange,#E8A33D);}
+.hcard .dnesst{margin-left:auto;padding:2px 7px;border-radius:999px;font-size:9.66px;
+  font-weight:800;letter-spacing:0;flex:0 0 auto;}
+.hcard .dnesst.ok{background:color-mix(in srgb,var(--green) 13%,transparent);color:var(--green);}
+.hcard .dnesst.ne{background:var(--track);color:var(--ter);}
 .kruh{display:flex;flex-direction:column;align-items:center;gap:2px;flex:0 0 auto;}
 .kruh .pop{font-size:9.66px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--ter);line-height:1;}
 .nav2{display:flex;align-items:center;gap:9px;padding:15px 2px 11px;}
@@ -5714,6 +5748,24 @@ function renderDnesek(){
     s4=sumRoundedBody(es4); es4.forEach(e=>d4.add(e.datum)); }
   const avgDen=d4.size?Math.round(s4/d4.size):0;
   const dTrend=avgDen>0?Math.round((todayPts-avgDen)/avgDen*100):0;
+
+  // --- horni karta: vse o tomhle tydnu ---
+  const mSerie = me?computeStreak(me.id):0;
+  const _tw=(pid)=>sumRoundedBody(state.cviky.filter(c=>c.player_id===pid&&c.datum>=wk.from&&c.datum<=wk.to))
+                  +sumRoundedBody(state.aktivity.filter(x=>x.player_id===pid&&x.datum>=wk.from&&x.datum<=wk.to));
+  const tydZebr=state.players.filter(p=>p.aktivni).map(p=>({id:p.id,jmeno:p.jmeno,b:_tw(p.id)}))
+                  .sort((x,y)=>y.b-x.b);
+  const mIdx=me?tydZebr.findIndex(x=>x.id===me.id):-1;
+  const mMisto=mIdx>=0?mIdx+1:0;
+  // aktivni dny v tomhle tydnu (kolecko)
+  const mDnyT=me?new Set([...state.cviky,...state.aktivity]
+      .filter(e=>e.player_id===me.id&&e.datum>=wk.from&&e.datum<=wk.to).map(e=>e.datum)).size:0;
+  const mDnyPct=Math.round(mDnyT/7*100);
+  const mDnesOk=me?[...state.cviky,...state.aktivity].some(e=>e.player_id===me.id&&e.datum===today):false;
+  let mRozdil='';
+  if(mIdx===0 && tydZebr.length>1) mRozdil='vedeš o <b>'+fmtNum(tydZebr[0].b-tydZebr[1].b)+' b</b>';
+  else if(mIdx>0){ const nad=tydZebr[mIdx-1];
+    mRozdil='chybí <b>'+fmtNum(nad.b-tydZebr[mIdx].b)+' b</b> na '+esc(mmAkuzativ(mmFirst(nad.jmeno))); }
   const habTotal=state.habits.length;
   const habDone=new Set(state.habitLogs.filter(l=>l.datum===today).map(l=>l.habit_id)).size;
   // Zebricek — respektuje filtry Obdobi/Kategorie (mmPartaBoard, prevzato z renderParta)
@@ -5755,7 +5807,8 @@ function renderDnesek(){
     const dnu=Math.max(1,Math.ceil((konecM-_d)/864e5));
     odpocetHtml='<div class="odpocet">📅 Měsíční soutěž · <b>zbývá '+dnu+' '+streakLabel(dnu)+'</b></div>';
   }
-  const tpl=`<div class="nav2"><div class="l"><div class="poz">${mmGreet()}${me?', '+esc(mmVocative(mmFirst(me.jmeno))):''}</div><div class="dat">${dlKratke} · tento týden <b>${fmtNum(tydenPts)} b</b></div></div><div class="kruh"><div class="ring2" style="--pct:${ringPct}%"><div class="h">${fmtNum(todayPts)}</div></div><span class="pop">dnes</span></div><div class="add" onclick="openModal()">＋</div></div>
+  const tpl=`<div class="nav2"><div class="l"><div class="poz">${mmGreet()}${me?', '+esc(mmVocative(mmFirst(me.jmeno))):''}</div><div class="dat">${dlKratke}</div></div><div class="add" onclick="openModal()">＋</div></div>
+  <div class="hcard"><div class="kruh"><div class="ring2" style="--pct:${mDnyPct}%"><div class="h">${mDnyT}<i>/7</i></div></div><span class="pop">aktivní dny</span></div><div class="fakta"><div class="fr fr1"><b>${mMisto?mMisto+". místo":"–"}</b> tento týden</div><div class="fr">${fmtNum(tydenPts)} b${mRozdil?" · "+mRozdil:""}</div><div class="fr fr3"><svg class="i"><use href="#i-flame"/></svg>${mSerie>0?"<b>"+mSerie+"</b> "+(mSerie===1?"den":(mSerie>=2&&mSerie<=4?"dny":"dní"))+" v řadě":"série přerušená"}<span class="dnesst ${mDnesOk?'ok':'ne'}">${mDnesOk?"dnes zapsáno":"dnes ještě nic"}</span></div></div></div>
   <div class="hbm hbnav2" style="margin-top:10px;cursor:pointer" onclick="mmGo('navyky')"><div class="hi hicheck${habTotal>0&&habDone>=habTotal?' hfull':''}" style="--hp:${habTotal>0?Math.round(Math.min(habDone,habTotal)/habTotal*100):0}%"><svg class="i"><use href="#i-check"/></svg></div><div class="ht">Návyky dnes<span class="hdots">${Array.from({length:habTotal},(_,i)=>'<i'+(i<habDone?' class="on"':'')+'></i>').join('')}</span></div><div class="pct" style="display:flex;align-items:baseline;gap:0"><b>${habDone}</b><span style="color:var(--ter);font-weight:700;margin-left:1.5px;margin-right:7px">/${habTotal}</span><span style="color:var(--ter);font-weight:400">›</span></div></div>
   ${mmPartaSegBar()}${odpocetHtml}
   <div class="lc">${rows||'<div style="padding:20px;text-align:center;color:var(--ter)">Zatím žádné body</div>'}</div>
@@ -6480,6 +6533,18 @@ function mmPrehledEntryRow(e, pl, sAvatarem){
 //  Tyden  — nic (tyden prave bezi)
 //  Mesic  — vyhrane tydny v tomhle mesici
 //  Celkem — vyhrane tydny celkem + vyhrane mesice
+
+// 4. pad jmena — "chybi 5 b na Peťu". Stejny princip jako mmVocative (5. pad).
+const MM_AKUZATIV={'Mára':'Máru','Káťa':'Káťu','Péťa':'Péťu','Janča':'Janču','Natálka':'Natálku',
+  'Martin':'Martina','Matěj':'Matěje','Marek':'Marka','Lukáš':'Lukáše','Máťa':'Máťu'};
+function mmAkuzativ(j){
+  const n=String(j||'').trim(); if(!n) return n;
+  if(MM_AKUZATIV[n]) return MM_AKUZATIV[n];
+  if(/[aá]$/.test(n)) return n.slice(0,-1)+'u';
+  if(/j$/.test(n))    return n.slice(0,-1)+'je';
+  if(/[šžčřs]$/.test(n)) return n+'e';
+  return n+'a';
+}
 function mmTrofBadge(pid){
   // Uzky odznak: jen ikona + cislo, aby zbylo misto na cele jmeno.
   //  Tyden  — nic (tyden prave bezi)
