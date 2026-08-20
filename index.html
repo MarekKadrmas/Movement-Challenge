@@ -5808,9 +5808,9 @@ function renderDnesek(){
       ? Math.round((R + nadPx) / R * 100)
       : Math.min(100, Math.max(Math.round(MM_SL_MIN_PX/R*100), Math.round(pom*100)));
     const rad = 5;   // pevne zaobleni; cele lezi nad ryskou diky posunu MM_SL_NAD_MIN
-    const dnesek=d.ds===today, budouci=d.ds>today;
+    const dnesek=d.ds===today, budouci=MM_UKAZKA_KARTA?false:(d.ds>today);
     return '<div class="hc-d'+(dnesek?' je-dnes':'')+(budouci?' je-pak':'')+(d.b>mCil&&!budouci?' je-nad':'')+'">'
-      +'<div class="hc-dsl">'+'<i style="height:'+((d.b>0&&!budouci)?v:0)+'%;border-radius:'+rad+'px '+rad+'px 5px 5px'+((R+nadPx)>MM_SL_ROZPLYV_OD?(()=>{const tot=R+nadPx;const a=(MM_SL_ROZPLYV_OD/tot*100).toFixed(1), b=Math.min(100,MM_SL_ROZPLYV_DO/tot*100).toFixed(1);const g='linear-gradient(to top,#000 '+a+'%,transparent '+b+'%)';return ';-webkit-mask-image:'+g+';mask-image:'+g;})():'')+'"></i>'+((d.b>mCil&&!budouci)?'<s class="hc-ryska"></s>':'')+((d.b>0&&!budouci)?'<u>'+fmtNum(d.b)+'</u>':'')+'</div>'
+      +'<div class="hc-dsl">'+'<i style="height:'+((d.b>0&&!budouci)?v:0)+'%;border-radius:'+rad+'px '+rad+'px 5px 5px'+((R+nadPx)>MM_SL_ROZPLYV_OD?(()=>{const tot=R+nadPx; const P=x=>Math.min(100,x/tot*100).toFixed(1);const g='linear-gradient(to top,#000 '+P(MM_SL_ROZPLYV_OD)+'%,rgba(0,0,0,.22) '+P(MM_SL_ROZPLYV_ZLOM)+'%,transparent '+P(MM_SL_ROZPLYV_DO)+'%)';return ';-webkit-mask-image:'+g+';mask-image:'+g;})():'')+'"></i>'+((d.b>mCil&&!budouci)?'<s class="hc-ryska"></s>':'')+((d.b>0&&!budouci)?'<u>'+fmtNum(d.b)+'</u>':'')+'</div>'
       +'<span>'+_pism[i]+'</span></div>';
   }).join('');
   const mTrendHtml = todayPts<=0 ? ''
@@ -6611,11 +6611,12 @@ const MM_SL_NAD_SKALA = 14; // px za kazdych 100 % cile navic; 2x cil (realny de
                             // pak vyjde na 20 px nad rameckem, tedy tesne pod zacatek rozplyvu
 const MM_SL_NAD_MAX = 13;   // nejvetsi preteceni nad linku cile (plati jen kdyz MM_SL_BEZ_STROPU = false)
 const MM_SL_BEZ_STROPU = true;   // true = sloupec roste bez omezeni a nahore se rozplyva
-const MM_SL_ROZPLYV_OD = 44;     // px ode dna sloupce, kde zacina rozplyv (stejne pro vsechny)
-const MM_SL_ROZPLYV_DO = 54;     // px ode dna, kde je sloupec uz zcela pruhledny (spodek textu)
+const MM_SL_ROZPLYV_OD = 54;     // px ode dna — az tam, kde zacina textovy radek
+const MM_SL_ROZPLYV_DO = 82;     // px ode dna — pod pozdravem uz sloupec neni videt vubec
+const MM_SL_ROZPLYV_ZLOM = 62;   // px ode dna — tady uz je skoro pruhledny (pres radek s body)
 const MM_UKAZKA_KARTA = true;
 const MM_UKAZKA_CIL = 150;
-const MM_UKAZKA_DNY = [25, 155, 300, null, 0, 0, 0];   // minimum / tesne nad cilem / realny strop / dnesek
+const MM_UKAZKA_DNY = [25, 75, 150, null, 190, 250, 300];   // minimum / pul cile / presne cil / dnesek / nad / vyrazne nad / strop
 function mmNejdelsiSerie(pid){
   if(!pid) return 0;
   const dny=[...new Set([...state.cviky,...state.aktivity]
