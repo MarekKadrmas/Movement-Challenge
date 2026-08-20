@@ -1903,6 +1903,9 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .sck{display:inline-flex;align-items:center;gap:3px;font-size:14.48px;font-weight:800;color:var(--label);padding:6px 11px;border-radius:999px;white-space:nowrap;border:1.5px solid transparent;background-image:linear-gradient(var(--card),var(--card)),linear-gradient(115deg,#D6A23A,#0FA968,#3FAEC2,#8A7BCB);background-origin:border-box;background-clip:padding-box,border-box;}
 .mm .hero{display:flex;align-items:center;gap:16px;padding:8px 4px 4px;}
 
+
+.mm .kruh{display:flex;flex-direction:column;align-items:center;gap:2px;flex:0 0 auto;}
+.mm .kruh .pop{font-size:9.66px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--ter);line-height:1;}
 .mm .nav2{display:flex;align-items:center;gap:9px;padding:15px 2px 11px;}
 .mm .nav2 .l{flex:1;min-width:0;}
 .mm .nav2 .poz{font-size:18.71px;font-weight:800;letter-spacing:-.02em;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -2474,6 +2477,9 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
   .hero{display:flex;align-items:center;gap:16px;padding:8px 4px 4px;}
   
 
+
+.kruh{display:flex;flex-direction:column;align-items:center;gap:2px;flex:0 0 auto;}
+.kruh .pop{font-size:9.66px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--ter);line-height:1;}
 .nav2{display:flex;align-items:center;gap:9px;padding:15px 2px 11px;}
 .nav2 .l{flex:1;min-width:0;}
 .nav2 .poz{font-size:18.71px;font-weight:800;letter-spacing:-.02em;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -5734,7 +5740,7 @@ function renderDnesek(){
     const dnu=Math.max(1,Math.ceil((konecM-_d)/864e5));
     odpocetHtml='<div class="odpocet">📅 Měsíční soutěž · <b>zbývá '+dnu+' '+streakLabel(dnu)+'</b></div>';
   }
-  const tpl=`<div class="nav2"><div class="l"><div class="poz">${mmGreet()}${me?', '+esc(mmVocative(mmFirst(me.jmeno))):''}</div><div class="dat">${dlKratke} · <b>${nAktDnes} ${slovoAkt}</b> · <b>${fmtNum(tydenPts)} b</b></div></div><div class="ring2" style="--pct:${ringPct}%"><div class="h">${fmtNum(todayPts)}</div></div><div class="add" onclick="openModal()">＋</div></div>
+  const tpl=`<div class="nav2"><div class="l"><div class="poz">${mmGreet()}${me?', '+esc(mmVocative(mmFirst(me.jmeno))):''}</div><div class="dat">${dlKratke} · tento týden <b>${fmtNum(tydenPts)} b</b></div></div><div class="kruh"><div class="ring2" style="--pct:${ringPct}%"><div class="h">${fmtNum(todayPts)}</div></div><span class="pop">dnes</span></div><div class="add" onclick="openModal()">＋</div></div>
   <div class="hbm hbnav2" style="margin-top:10px;cursor:pointer" onclick="mmGo('navyky')"><div class="hi hicheck${habTotal>0&&habDone>=habTotal?' hfull':''}" style="--hp:${habTotal>0?Math.round(Math.min(habDone,habTotal)/habTotal*100):0}%"><svg class="i"><use href="#i-check"/></svg></div><div class="ht">Návyky dnes<span class="hdots">${Array.from({length:habTotal},(_,i)=>'<i'+(i<habDone?' class="on"':'')+'></i>').join('')}</span></div><div class="pct" style="display:flex;align-items:baseline;gap:0"><b>${habDone}</b><span style="color:var(--ter);font-weight:700;margin-left:1.5px;margin-right:7px">/${habTotal}</span><span style="color:var(--ter);font-weight:400">›</span></div></div>
   ${mmPartaSegBar()}${odpocetHtml}
   <div class="lc">${rows||'<div style="padding:20px;text-align:center;color:var(--ter)">Zatím žádné body</div>'}</div>
