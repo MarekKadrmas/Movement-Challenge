@@ -5804,11 +5804,11 @@ function renderDnesek(){
     const pom=d.b/Math.max(1,mCil);
     const R=MM_SL_RAMECEK;
     const nadPx = pom>1 ? (pom-1)*R : 0;   // stejne meritko jako pod cilem
-    const v = Math.min(Math.round(MM_SL_MAX_PX/R*100), Math.round(pom*100));   // pomer, strop na maximalni vysce
+    const v = Math.round(pom*100);   // pomer bez stropu; nad maximem se sloupec zprahledni
     const rad = 5;   // pevne zaobleni; cele lezi nad ryskou diky posunu MM_SL_NAD_MIN
     const dnesek=d.ds===today, budouci=MM_UKAZKA_KARTA?false:(d.ds>today);
     return '<div class="hc-d'+(dnesek?' je-dnes':'')+(budouci?' je-pak':'')+(d.b>mCil&&!budouci?' je-nad':'')+'">'
-      +'<div class="hc-dsl">'+'<i style="height:'+((d.b>0&&!budouci)?v:0)+'%;border-radius:'+rad+'px '+rad+'px 5px 5px'+((R+nadPx)>MM_SL_ROZPLYV_OD?(()=>{const tot=R+nadPx; const P=x=>Math.min(100,x/tot*100).toFixed(1);const g='linear-gradient(to top,#000 '+P(MM_SL_ROZPLYV_OD)+'%,rgba(0,0,0,.30) '+P(MM_SL_ROZPLYV_ZLOM)+'%,rgba(0,0,0,.14) '+P(MM_SL_ROZPLYV_DO)+'%,rgba(0,0,0,.14) 100%)';return ';-webkit-mask-image:'+g+';mask-image:'+g;})():'')+'"></i>'+((d.b>mCil&&!budouci)?'<s class="hc-ryska"></s>':'')+((d.b>0&&!budouci)?'<u>'+fmtNum(d.b)+'</u>':'')+'</div>'
+      +'<div class="hc-dsl">'+'<i style="height:'+((d.b>0&&!budouci)?v:0)+'%;border-radius:'+rad+'px '+rad+'px 5px 5px'+((R*pom)>MM_SL_MAX_PX?(()=>{const tot=R*pom; const P=x=>Math.min(100,x/tot*100).toFixed(1);const g='linear-gradient(to top,#000 '+P(MM_SL_MAX_PX)+'%,rgba(0,0,0,.32) '+P(MM_SL_ROZPLYV_ZLOM)+'%,rgba(0,0,0,.14) '+P(MM_SL_ROZPLYV_DO)+'%,rgba(0,0,0,.14) 100%)';return ';-webkit-mask-image:'+g+';mask-image:'+g;})():'')+'"></i>'+((d.b>mCil&&!budouci)?'<s class="hc-ryska"></s>':'')+((d.b>0&&!budouci)?'<u>'+fmtNum(d.b)+'</u>':'')+'</div>'
       +'<span>'+_pism[i]+'</span></div>';
   }).join('');
   const mTrendHtml = todayPts<=0 ? ''
@@ -6609,12 +6609,12 @@ const MM_SL_MAX_PX  = 50;   // nejvyssi mozny sloupec — konci 4 px pod textovy
 
 
 
-const MM_SL_ROZPLYV_OD = 46;     // px ode dna — zacina o kus driv, nez sloupec doleze k textu
+// rozplyv zacina presne na MM_SL_MAX_PX — do maxima je sloupec uplne plny
 const MM_SL_ROZPLYV_DO = 82;     // px ode dna — pod pozdravem uz sloupec neni videt vubec
-const MM_SL_ROZPLYV_ZLOM = 62;   // px ode dna — tady uz je skoro pruhledny (pres radek s body)
+const MM_SL_ROZPLYV_ZLOM = 64;   // px ode dna — tady uz jen slabe prosvita
 const MM_UKAZKA_KARTA = true;
 const MM_UKAZKA_CIL = 150;
-const MM_UKAZKA_DNY = [25, 75, 150, null, 225, 300, 350];   // minimum / pul cile / cil / dnesek / 1,5x / 2x / nad text
+const MM_UKAZKA_DNY = [25, 75, 150, null, 225, 300, 400];   // minimum / pul / cil / dnesek / 1,5x / maximum / nad maximem
 function mmNejdelsiSerie(pid){
   if(!pid) return 0;
   const dny=[...new Set([...state.cviky,...state.aktivity]
