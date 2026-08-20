@@ -5580,6 +5580,19 @@ function mmWeek(){ const a=new Date(); a.setHours(0,0,0,0); const day=a.getDay()
 const MM_TAB_IDX={prehled:0,navyky:1,historie:2};
 function mmBarHost(v){ return document.getElementById({prehled:"dnesek-mm",navyky:"navyky-mm",historie:"ja-mm"}[v]); }
 // Klouzava pilulka aktivni zalozky (Marek 2026-07-27): indikator prijede z pozice predchozi zalozky.
+function mmBarSnap(sh, idx){
+  // po prekresleni obrazovky (napr. po pridani reakce) sedel jezdec na vychozi pozici
+  // a teprve pak skocil na spravnou -> problikla zalozka Prehled. Nasadime ho hned a bez animace.
+  if(!sh) return; const tb=sh.querySelector('.tb'); if(!tb) return;
+  const ind=tb.querySelector('.tbind'); const links=tb.querySelectorAll('a');
+  if(!ind || !links[idx]) return;
+  const p=ind.style.transition; ind.style.transition='none';
+  tb.style.setProperty('--tbc', ['var(--green)','var(--purple)','var(--blue)'][idx]||'var(--green)');
+  const akt=links[idx];
+  ind.style.width=akt.offsetWidth+'px'; ind.style.height=akt.offsetHeight+'px'; ind.style.top=akt.offsetTop+'px';
+  ind.style.transform='translateX('+akt.offsetLeft+'px)';
+  void ind.offsetWidth; ind.style.transition=p||'';
+}
 function mmBarPos(sh, idx, fromIdx){
   if(!sh) return; const tb=sh.querySelector(".tb"); if(!tb) return;
   const ind=tb.querySelector(".tbind"); const links=tb.querySelectorAll("a");
@@ -5695,7 +5708,7 @@ function renderDnesek(){
   <div class="sl" onclick="mmOpenSub('zaznamy')" style="cursor:pointer;touch-action:manipulation"><span>Dění</span><a style="pointer-events:none">celá historie →</a></div>
   ${feed}
     <div class="hbm" style="margin-top:6px;padding:6px 12px;cursor:pointer" onclick="mmOpenSub('rekordyparty')"><div class="hi" style="background:#E0A23A22;width:27px;height:27px;font-size:16.9px"><svg class="i"><use href="#i-medal"/></svg></div><div class="ht">Rekordy & maximálky všech<small>všichni hráči na jednom místě</small></div><span class="rx" style="color:var(--ter);font-size:19.31px">›</span></div>`;
-  const _mmK=tpl+'|'+(document.documentElement.getAttribute('data-theme')||'light'); if(host._mmTpl===_mmK&&host.shadowRoot){const s=host.shadowRoot.querySelector('.scr'); if(s){const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; s.style.zoom=z; s.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(s,z);} mmDeniApplyFeedState(host.shadowRoot,'prehled'); mmDeniBindReakce(host.shadowRoot, host); mmPsegAnim(host.shadowRoot); mmLbarAlign(host.shadowRoot); mmHeatInit(host.shadowRoot); return;} host._mmTpl=_mmK; const sh=host.shadowRoot||host.attachShadow({mode:'open'});
+  const _mmK=tpl+'|'+(document.documentElement.getAttribute('data-theme')||'light'); if(host._mmTpl===_mmK&&host.shadowRoot){const s=host.shadowRoot.querySelector('.scr'); if(s){const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; s.style.zoom=z; s.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(s,z);} mmDeniApplyFeedState(host.shadowRoot,'prehled'); mmBarSnap(host.shadowRoot,0); mmDeniBindReakce(host.shadowRoot, host); mmPsegAnim(host.shadowRoot); mmLbarAlign(host.shadowRoot); mmHeatInit(host.shadowRoot); return;} host._mmTpl=_mmK; const sh=host.shadowRoot||host.attachShadow({mode:'open'});
   const tplEl=document.getElementById('mm-tpl'); const sprite=document.getElementById('momentum-sprite');
   sh.innerHTML='';
   if(tplEl) sh.appendChild(tplEl.content.cloneNode(true));
@@ -5708,7 +5721,7 @@ function renderDnesek(){
   const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(0)}</div>`;
   sh.appendChild(w);
   const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin=(window.innerWidth>393?'0 auto':'');
-  mmDeniApplyFeedState(sh,'prehled');   // po plnem re-renderu obnov rozbaleni/pocty/tecky komentaru ze state.mmFeed
+  mmDeniApplyFeedState(sh,'prehled'); mmBarSnap(sh,0);   // po plnem re-renderu obnov rozbaleni/pocty/tecky komentaru ze state.mmFeed
   mmDeniBindReakce(sh, host);
   mmPsegAnim(sh);
   mmLbarAlign(sh);
@@ -6135,6 +6148,8 @@ function mmRxOpenPicker(sh, row){
   try{ const s=window.getSelection&&window.getSelection(); if(s&&s.removeAllRanges) s.removeAllRanges(); }catch(_){}
   const rr=row.getBoundingClientRect();
   const back=document.createElement('div'); back.id='rx-back'; back.className='rx-back tich';
+  back.style.pointerEvents='none';        // BEZ toho by "dojezdovy" klik po zvednuti prstu (iOS ho
+                                          // posila hned po touchend) trefil pozadi a listu zase zavrel
   const bar=document.createElement('div'); bar.id='rx-bar'; bar.className='rx-bar';
   bar.innerHTML=MM_RX_RYCHLE.map(e=>'<b data-rx="'+e+'">'+e+'</b>').join('')+'<b class="rx-plus" data-vic>＋</b>';
   document.body.appendChild(back); document.body.appendChild(bar);
@@ -6144,7 +6159,12 @@ function mmRxOpenPicker(sh, row){
   bar.style.top=Math.round(top)+'px';
   bar._mmOpened=Date.now();
   requestAnimationFrame(()=>{ back.classList.add('on'); bar.classList.add('on'); });
-  setTimeout(()=>{ bar.style.pointerEvents='auto'; back.style.pointerEvents='auto'; }, 320);
+  // lista zacne reagovat 320 ms po otevreni, a kdyz prst jeste drzi, tak az 260 ms po jeho zvednuti
+  const povol=()=>{ if(bar.isConnected){ bar.style.pointerEvents='auto'; back.style.pointerEvents='auto'; } };
+  let tOd=setTimeout(povol, 320);
+  const poUvolneni=()=>{ clearTimeout(tOd); tOd=setTimeout(povol, 260); };
+  document.addEventListener('touchend', poUvolneni, {once:true, passive:true});
+  document.addEventListener('mouseup', poUvolneni, {once:true});
   back.addEventListener('click', mmRxZavri);
   bar.addEventListener('click', ev=>{
     const t=ev.target.closest('b'); if(!t) return;
@@ -6675,7 +6695,7 @@ function renderNavykyMM(){
     <button class="newbtn" onclick="openHabitModal()">＋ Nový návyk</button>`;
   }
   const tpl=nav+body;
-  const _mmK=tpl+'|'+(document.documentElement.getAttribute('data-theme')||'light'); if(host._mmTpl===_mmK&&host.shadowRoot){const s=host.shadowRoot.querySelector('.scr'); if(s){const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; s.style.zoom=z; s.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(s,z);} return;} host._mmTpl=_mmK; const sh=host.shadowRoot||host.attachShadow({mode:'open'});
+  const _mmK=tpl+'|'+(document.documentElement.getAttribute('data-theme')||'light'); if(host._mmTpl===_mmK&&host.shadowRoot){const s=host.shadowRoot.querySelector('.scr'); if(s){const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; s.style.zoom=z; s.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(s,z);} mmBarSnap(host.shadowRoot,1); return;} host._mmTpl=_mmK; const sh=host.shadowRoot||host.attachShadow({mode:'open'});
   const tplEl=document.getElementById('mm-tpl'); const sprite=document.getElementById('momentum-sprite');
   sh.innerHTML='';
   if(tplEl) sh.appendChild(tplEl.content.cloneNode(true));
@@ -6685,7 +6705,7 @@ function renderNavykyMM(){
   if(sprite) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(1)}</div>`;
   sh.appendChild(w);
-  const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin=(window.innerWidth>393?'0 auto':'');
+  const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin=(window.innerWidth>393?'0 auto':''); mmBarSnap(sh,1);
   requestAnimationFrame(()=>mmBarPos(sh, MM_TAB_IDX[state.view]));   // usadit indikator spodniho baru i po re-renderu bez navigace
 }
 
@@ -6802,7 +6822,7 @@ function renderJaMM(){
   ${feed.hasMore?'<button class="loadmore" onclick="mmJaLoadMoreFeed()">Načíst starší ↓</button>':''}
   <div class="sl"><span>Nastavení</span></div>
   <div class="hl"><div class="hlr"><span class="ic"><svg class="i"><use href="#i-shield"/></svg></span><div>Admin režim<small style="display:block;font-size:12.67px;color:var(--sec);font-weight:600">zapisovat a upravovat za druhé</small></div><div class="sw ${adminOn?'on':''}" onclick="toggleAdminActive()"><i></i></div></div><div class="hlr" onclick="mmOpenSub('pozvat')"><span class="ic"><svg class="i"><use href="#i-users"/></svg></span><div>Pozvat kamaráda<small style="display:block;font-size:12.67px;color:var(--sec);font-weight:600">vytvoř profil + párovací kód</small></div><span class="rx" style="color:var(--ter);font-size:19.31px">›</span></div><div class="hlr" onclick="mmOpenSub('cile')"><span class="ic"><svg class="i"><use href="#i-target"/></svg></span><div>Cíle & ochrana série</div><span class="rx" style="color:var(--ter);font-size:19.31px">›</span></div><div class="hlr" onclick="openPlayerEdit('${me?me.id:''}')"><span class="ic"><svg class="i"><use href="#i-edit"/></svg></span><div>Upravit profil</div><span class="rx" style="color:var(--ter);font-size:19.31px">›</span></div><div class="hlr" onclick="mmOpenSub('bodovani')"><span class="ic"><svg class="i"><use href="#i-calc"/></svg></span><div>Jak se boduje</div><span class="rx" style="color:var(--ter);font-size:19.31px">›</span></div><div class="hlr" onclick="mmOpenSub('notifikace')"><span class="ic"><svg class="i"><use href="#i-bell"/></svg></span><div>Notifikace</div><span class="rx" style="color:var(--ter);font-size:19.31px">›</span></div><div class="hlr" onclick="logoutPlayer()"><span class="ic"><svg class="i"><use href="#i-logout"/></svg></span><div>Odhlásit se</div><span class="rx" style="color:var(--ter);font-size:19.31px">›</span></div></div>`;
-  const _mmK=tpl+'|'+(document.documentElement.getAttribute('data-theme')||'light'); if(host._mmTpl===_mmK&&host.shadowRoot){const s=host.shadowRoot.querySelector('.scr'); if(s){const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; s.style.zoom=z; s.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(s,z);} return;} host._mmTpl=_mmK; const sh=host.shadowRoot||host.attachShadow({mode:'open'});
+  const _mmK=tpl+'|'+(document.documentElement.getAttribute('data-theme')||'light'); if(host._mmTpl===_mmK&&host.shadowRoot){const s=host.shadowRoot.querySelector('.scr'); if(s){const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; s.style.zoom=z; s.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(s,z);} mmBarSnap(host.shadowRoot,2); return;} host._mmTpl=_mmK; const sh=host.shadowRoot||host.attachShadow({mode:'open'});
   const tplEl=document.getElementById('mm-tpl'); const sprite=document.getElementById('momentum-sprite');
   sh.innerHTML='';
   if(tplEl) sh.appendChild(tplEl.content.cloneNode(true));
@@ -6812,7 +6832,7 @@ function renderJaMM(){
   if(sprite) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(2)}</div>`;
   sh.appendChild(w);
-  const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin=(window.innerWidth>393?'0 auto':'');
+  const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin=(window.innerWidth>393?'0 auto':''); mmBarSnap(sh,2);
   requestAnimationFrame(()=>mmBarPos(sh, MM_TAB_IDX[state.view]));   // usadit indikator spodniho baru i po re-renderu bez navigace
 }
 
@@ -6889,7 +6909,7 @@ function mmMountSub(host, tpl, barIdx){
   if(sprite) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(barIdx)}</div>`;
   sh.appendChild(w);
-  const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin=(window.innerWidth>393?'0 auto':''); mmBarPos(sh, barIdx, null);
+  const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin=(window.innerWidth>393?'0 auto':''); mmBarSnap(sh, barIdx);
 }
 
 
