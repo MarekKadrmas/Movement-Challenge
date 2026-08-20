@@ -2848,9 +2848,9 @@ body.mm-full{background:#EDF0EC;padding-bottom:0;}
 
       <!-- Period tabs: Celkova historie / Tyden / Mesic (Celkova jako prvni = default) -->
       <div class="period-tabs">
-        <button type="button" class="period-tab active" data-period="all" onclick="setLeaderboardPeriod('all')">Celková historie</button>
-        <button type="button" class="period-tab" data-period="week" onclick="setLeaderboardPeriod('week')">Týden</button>
+        <button type="button" class="period-tab active" data-period="week" onclick="setLeaderboardPeriod('week')">Týden</button>
         <button type="button" class="period-tab" data-period="month" onclick="setLeaderboardPeriod('month')">Měsíc</button>
+        <button type="button" class="period-tab" data-period="all" onclick="setLeaderboardPeriod('all')">Celková historie</button>
       </div>
 
       <!-- Period navigation (jen pro week/month, schované pro 'all') -->
@@ -5810,7 +5810,7 @@ function mmPartaBoard(){
 }
 function mmPartaPeriodLabel(){ return {all:'Celkem',week:'Týden',month:'Měsíc'}[state.totalPeriod||'all']||'Celkem'; }
 function mmPartaCategoryLabel(){ return {all:'Dohromady',cvik:'Cviky',aktivita:'Aktivity',stretching:'Stretching'}[state.totalCategory||'all']||'Dohromady'; }
-const MM_PSEG={period:{opts:["all","week","month"],labels:["Celkem","Týden","Měsíc"]},cat:{opts:["all","cvik","aktivita"],labels:["Vše","Cviky","Aktivity"]}};
+const MM_PSEG={period:{opts:["week","month","all"],labels:["Týden","Měsíc","Celkem"]},cat:{opts:["all","cvik","aktivita"],labels:["Vše","Cviky","Aktivity"]}};
 function mmPartaSegIdx(kind){ if(kind==="period") return Math.max(0,MM_PSEG.period.opts.indexOf(state.totalPeriod||"all")); let c=state.totalCategory||"all"; if(c==="stretching") c="all"; return Math.max(0,MM_PSEG.cat.opts.indexOf(c)); }
 function mmPartaSegBar(){ const seg=(kind,extra)=>{ const d=MM_PSEG[kind]; const idx=mmPartaSegIdx(kind); return '<div class="pseg'+(extra||"")+'" data-pseg="'+kind+'"><i class="psegt" style="transform:translateX('+(idx*100)+'%)"></i>'+d.opts.map((o,i)=>'<b class="'+(i===idx?"on":"")+'" onclick="mmPartaSeg(\''+kind+'\',\''+o+'\')">'+d.labels[i]+'</b>').join("")+'</div>'; }; return '<div class="pcbar">'+seg("period")+'</div>'; }
 function mmPartaSeg(kind,val){ window._psegPrev={period:mmPartaSegIdx("period"),cat:mmPartaSegIdx("cat")}; if(kind==="period") setLeaderboardPeriod(val); else setTotalCategory(val); renderDnesek(); }   // Marek 2026-08: filtry ziji na Prehledu
