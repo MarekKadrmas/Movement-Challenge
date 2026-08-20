@@ -1939,7 +1939,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .hcard .hc-dsl{position:relative;width:100%;height:25px;border-radius:5px;background:var(--track);}
 .mm .hcard .hc-dsl i{position:absolute;left:0;right:0;bottom:0;display:block;border-radius:5px;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);transition:height .5s cubic-bezier(.22,1,.36,1);}
 .mm .hcard .hc-mark{position:absolute;left:0;right:0;top:0;height:7px;z-index:3;pointer-events:none;overflow:visible;}
-.mm .hcard .hc-mark path{fill:none;stroke:rgba(255,255,255,.82);stroke-width:1;stroke-linecap:butt;}
+.mm .hcard .hc-mark path{fill:none;stroke:rgba(255,255,255,.7);stroke-width:1;stroke-linecap:round;}
 .mm .hcard .hc-d.je-dnes span{color:var(--green);font-weight:900;}
 .mm .hcard .hc-dsl u{position:absolute;left:0;right:0;bottom:1px;text-align:center;text-decoration:none;font-size:9.06px;font-weight:800;line-height:1;letter-spacing:-.02em;color:#fff;font-variant-numeric:tabular-nums;pointer-events:none;z-index:4;text-shadow:0 1px 2px rgba(0,0,0,.42);}
 .mm 
@@ -2557,7 +2557,7 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .hcard .hc-dsl{position:relative;width:100%;height:25px;border-radius:5px;background:var(--track);}
 .hcard .hc-dsl i{position:absolute;left:0;right:0;bottom:0;display:block;border-radius:5px;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);transition:height .5s cubic-bezier(.22,1,.36,1);}
 .hcard .hc-mark{position:absolute;left:0;right:0;top:0;height:7px;z-index:3;pointer-events:none;overflow:visible;}
-.hcard .hc-mark path{fill:none;stroke:rgba(255,255,255,.82);stroke-width:1;stroke-linecap:butt;}
+.hcard .hc-mark path{fill:none;stroke:rgba(255,255,255,.7);stroke-width:1;stroke-linecap:round;}
 .hcard .hc-d.je-dnes span{color:var(--green);font-weight:900;}
 .hcard .hc-dsl u{position:absolute;left:0;right:0;bottom:1px;text-align:center;text-decoration:none;font-size:9.06px;font-weight:800;line-height:1;letter-spacing:-.02em;color:#fff;font-variant-numeric:tabular-nums;pointer-events:none;z-index:4;text-shadow:0 1px 2px rgba(0,0,0,.42);}
 
@@ -6684,10 +6684,7 @@ function mmZnackyCile(sh){
     const path=svg.querySelector('path'); if(!path) return;
     path.setAttribute('d','M0.5 '+h+' V'+(0.5+r)+' A'+r+' '+r+' 0 0 1 '+(0.5+r)+' 0.5 H'+(w-0.5-r)
       +' A'+r+' '+r+' 0 0 1 '+(w-0.5)+' '+(0.5+r)+' V'+h);
-    const L=path.getTotalLength();
-    const n=Math.max(3, Math.round((L/3+1)/2));      // pocet carek; cil je carka ~3 px
-    const d=L/(2*n-1);                                // carka i mezera stejne dlouhe, na obou koncich carka
-    path.style.strokeDasharray=d.toFixed(3)+' '+d.toFixed(3);
+    path.style.strokeDasharray='';   // plna cara — carkovani se pri zoomu 1,258 vyhlazuje nesymetricky
   });
 }
 function mmSerieChip(pid){
