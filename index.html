@@ -5797,8 +5797,8 @@ function renderDnesek(){
   const mSloupce=_dnyB.map((d,i)=>{
     const pom=d.b/Math.max(1,mCil);
     const v = pom>1
-      ? Math.min(154, Math.max(125, Math.round(pom*100)))   // nad cilem: cely radius (6 px) musi byt nad ryskou
-      : Math.min(100, Math.max(45, Math.round(pom*100)));   // pod cilem: min 45 %, aby se cislo veslo dovnitr
+      ? Math.round((24 + 6 + Math.min(7, (pom-1)*24)) / 24 * 100)   // nad cilem: 6 px (radius) + skutecny prebytek, strop 13 px
+      : Math.min(100, Math.max(55, Math.round(pom*100)));           // pod cilem: min 55 %, aby mel cislo stejnou mezeru nahore i dole
     const dnesek=d.ds===today, budouci=d.ds>today;
     return '<div class="hc-d'+(dnesek?' je-dnes':'')+(budouci?' je-pak':'')+(d.b>mCil&&!budouci?' je-nad':'')+'">'
       +'<div class="hc-dsl">'+'<i style="height:'+((d.b>0&&!budouci)?v:0)+'%"></i>'+((d.b>mCil&&!budouci)?'<s class="hc-ryska"></s>':'')+((d.b>0&&!budouci)?'<u>'+fmtNum(d.b)+'</u>':'')+'</div>'
