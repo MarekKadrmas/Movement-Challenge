@@ -1912,20 +1912,24 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .trofb.trofb-m{background:color-mix(in srgb,var(--purple,#7C5CE0) 15%,transparent);color:var(--purple,#7C5CE0);}
 .mm .trofb.trofb-b{background:var(--track);color:var(--sec);font-weight:700;}
 
-.mm .hcard{display:flex;align-items:center;gap:13px;background:var(--card);border-radius:18px;box-shadow:var(--shadow);padding:11px 14px;margin-bottom:10px;}
-.mm .hcard .kruh{gap:4px;}
-.mm .hcard .ring2{width:54px;height:54px;}
-.mm .hcard .ring2 .h{width:43px;height:43px;font-size:16.9px;display:flex;align-items:baseline;justify-content:center;gap:0;}
-.mm .hcard .fakta{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px;}
-.mm .hcard .fr{display:flex;align-items:center;gap:5px;font-size:11.47px;font-weight:700;color:var(--sec);line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.mm .hcard .fr b{color:var(--label);font-weight:800;}
-.mm .hcard .fr1{font-size:13.28px;}
-.mm .hcard .fr .i{width:12px;height:12px;flex:0 0 auto;color:var(--orange,#E8A33D);}
-.mm .hcard .fr .sipka{font-size:10px;line-height:1;}
-.mm .hcard .fr.up{color:var(--green);}
-.mm .hcard .fr.up b{color:var(--green);}
-.mm .hcard .fr.dn{color:var(--red,#E05C5C);}
-.mm .hcard .fr.dn b{color:var(--red,#E05C5C);}
+.mm .hcard{background:var(--card);border-radius:18px;box-shadow:var(--shadow);padding:12px 15px 11px;margin-bottom:10px;}
+.mm .hcard .hc-top{display:flex;align-items:flex-end;gap:9px;}
+.mm .hcard .hc-lab{font-size:9.66px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--ter);padding-bottom:3px;}
+.mm .hcard .hc-serie{display:inline-flex;align-items:center;gap:3px;font-size:10.62px;font-weight:800;color:var(--orange,#E8A33D);background:color-mix(in srgb,var(--orange,#E8A33D) 13%,transparent);border-radius:999px;padding:3px 7px;margin-bottom:1px;white-space:nowrap;}
+.mm .hcard .hc-serie .i{width:11px;height:11px;}
+.mm .hcard .hc-r{margin-left:auto;display:flex;align-items:baseline;gap:7px;white-space:nowrap;}
+.mm .hcard .hc-num{font-size:22.93px;font-weight:900;letter-spacing:-.04em;line-height:1;color:var(--label);font-family:var(--font-display);}
+.mm .hcard .hc-cil{font-size:12.07px;font-weight:800;color:var(--ter);}
+.mm .hcard .hc-tr{font-size:11.47px;font-weight:800;}
+.mm .hcard .hc-tr.up{color:var(--green);}
+.mm .hcard .hc-tr.dn{color:var(--red,#E05C5C);}
+.mm .hcard .hc-bar{height:7px;border-radius:999px;background:var(--track);margin:9px 0 0;overflow:hidden;}
+.mm .hcard .hc-bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,color-mix(in srgb,var(--green) 70%,#fff),var(--green));transition:width .5s cubic-bezier(.22,1,.36,1);}
+.mm .hcard .hc-row{display:flex;align-items:center;margin-top:10px;padding-top:9px;border-top:1px solid var(--sep);}
+.mm .hcard .hc-rl{font-size:9.66px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--ter);flex:1;min-width:0;}
+.mm .hcard .hc-c{text-align:right;padding-left:20px;white-space:nowrap;}
+.mm .hcard .hc-val{font-size:16.9px;font-weight:900;letter-spacing:-.03em;line-height:1;color:var(--label);font-family:var(--font-display);}
+.mm .hcard .hc-key{font-size:9.66px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--ter);margin-top:4px;}
 .mm .kruh{display:flex;flex-direction:column;align-items:center;gap:2px;flex:0 0 auto;}
 .mm .kruh .pop{font-size:9.66px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--ter);line-height:1;}
 .mm .nav2{display:flex;align-items:center;gap:9px;padding:15px 2px 11px;}
@@ -2508,20 +2512,24 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .trofb.trofb-m{background:color-mix(in srgb,var(--purple,#7C5CE0) 15%,transparent);color:var(--purple,#7C5CE0);}
 .trofb.trofb-b{background:var(--track);color:var(--sec);font-weight:700;}
 
-.hcard{display:flex;align-items:center;gap:13px;background:var(--card);border-radius:18px;box-shadow:var(--shadow);padding:11px 14px;margin-bottom:10px;}
-.hcard .kruh{gap:4px;}
-.hcard .ring2{width:54px;height:54px;}
-.hcard .ring2 .h{width:43px;height:43px;font-size:16.9px;display:flex;align-items:baseline;justify-content:center;gap:0;}
-.hcard .fakta{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px;}
-.hcard .fr{display:flex;align-items:center;gap:5px;font-size:11.47px;font-weight:700;color:var(--sec);line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.hcard .fr b{color:var(--label);font-weight:800;}
-.hcard .fr1{font-size:13.28px;}
-.hcard .fr .i{width:12px;height:12px;flex:0 0 auto;color:var(--orange,#E8A33D);}
-.hcard .fr .sipka{font-size:10px;line-height:1;}
-.hcard .fr.up{color:var(--green);}
-.hcard .fr.up b{color:var(--green);}
-.hcard .fr.dn{color:var(--red,#E05C5C);}
-.hcard .fr.dn b{color:var(--red,#E05C5C);}
+.hcard{background:var(--card);border-radius:18px;box-shadow:var(--shadow);padding:12px 15px 11px;margin-bottom:10px;}
+.hcard .hc-top{display:flex;align-items:flex-end;gap:9px;}
+.hcard .hc-lab{font-size:9.66px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--ter);padding-bottom:3px;}
+.hcard .hc-serie{display:inline-flex;align-items:center;gap:3px;font-size:10.62px;font-weight:800;color:var(--orange,#E8A33D);background:color-mix(in srgb,var(--orange,#E8A33D) 13%,transparent);border-radius:999px;padding:3px 7px;margin-bottom:1px;white-space:nowrap;}
+.hcard .hc-serie .i{width:11px;height:11px;}
+.hcard .hc-r{margin-left:auto;display:flex;align-items:baseline;gap:7px;white-space:nowrap;}
+.hcard .hc-num{font-size:22.93px;font-weight:900;letter-spacing:-.04em;line-height:1;color:var(--label);font-family:var(--font-display);}
+.hcard .hc-cil{font-size:12.07px;font-weight:800;color:var(--ter);}
+.hcard .hc-tr{font-size:11.47px;font-weight:800;}
+.hcard .hc-tr.up{color:var(--green);}
+.hcard .hc-tr.dn{color:var(--red,#E05C5C);}
+.hcard .hc-bar{height:7px;border-radius:999px;background:var(--track);margin:9px 0 0;overflow:hidden;}
+.hcard .hc-bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,color-mix(in srgb,var(--green) 70%,#fff),var(--green));transition:width .5s cubic-bezier(.22,1,.36,1);}
+.hcard .hc-row{display:flex;align-items:center;margin-top:10px;padding-top:9px;border-top:1px solid var(--sep);}
+.hcard .hc-rl{font-size:9.66px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--ter);flex:1;min-width:0;}
+.hcard .hc-c{text-align:right;padding-left:20px;white-space:nowrap;}
+.hcard .hc-val{font-size:16.9px;font-weight:900;letter-spacing:-.03em;line-height:1;color:var(--label);font-family:var(--font-display);}
+.hcard .hc-key{font-size:9.66px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--ter);margin-top:4px;}
 .kruh{display:flex;flex-direction:column;align-items:center;gap:2px;flex:0 0 auto;}
 .kruh .pop{font-size:9.66px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--ter);line-height:1;}
 .nav2{display:flex;align-items:center;gap:9px;padding:15px 2px 11px;}
@@ -5751,11 +5759,9 @@ function renderDnesek(){
   const mCil = me?mmDenniCil(me.id):MM_CIL_MIN;
   const mPct = mCil>0?Math.round(todayPts/mCil*100):0;
   const mCilPct = Math.max(0,Math.min(100,mPct));
-  const mCilRadek = todayPts<=0
-    ? '<div class="fr">dnes zatím <b>0 b</b> · cíl '+fmtNum(mCil)+' b</div>'
-    : (mPct>=100
-        ? '<div class="fr up"><span class="sipka">▲</span><b>'+(mPct-100)+' %</b> nad cíl '+fmtNum(mCil)+' b</div>'
-        : '<div class="fr dn"><span class="sipka">▼</span><b>'+(100-mPct)+' %</b> pod cíl '+fmtNum(mCil)+' b</div>');
+  const mTrendHtml = todayPts<=0 ? ''
+    : (mPct>=100 ? '<span class="hc-tr up">▲ '+(mPct-100)+' %</span>'
+                 : '<span class="hc-tr dn">▼ '+(100-mPct)+' %</span>');
   // aktivity za tenhle tyden
   const mAktT = me?[...state.cviky,...state.aktivity]
       .filter(e=>e.player_id===me.id&&e.datum>=wk.from&&e.datum<=wk.to).length:0;
@@ -5801,7 +5807,7 @@ function renderDnesek(){
     odpocetHtml='<div class="odpocet">📅 Měsíční soutěž · <b>zbývá '+dnu+' '+streakLabel(dnu)+'</b></div>';
   }
   const tpl=`<div class="nav2"><div class="l"><div class="poz">${mmGreet()}${me?', '+esc(mmVocative(mmFirst(me.jmeno))):''}</div><div class="dat">${dlKratke}</div></div><div class="add" onclick="openModal()">＋</div></div>
-  <div class="hcard"><div class="kruh"><div class="ring2" style="--pct:${mCilPct}%"><div class="h">${fmtNum(todayPts)}</div></div><span class="pop">dnes</span></div><div class="fakta">${mCilRadek}<div class="fr fr1"><b>${fmtNum(tydenPts)} b</b> · <b>${mAktT}</b> ${mAktT===1?"aktivita":(mAktT>=2&&mAktT<=4?"aktivity":"aktivit")} tento týden</div><div class="fr fr3"><svg class="i"><use href="#i-flame"/></svg>${mSerie>0?"<b>"+mSerie+"</b> "+(mSerie===1?"den":(mSerie>=2&&mSerie<=4?"dny":"dní"))+" v řadě":"série přerušená"}</div></div></div>
+  <div class="hcard"><div class="hc-top"><span class="hc-lab">Dnes</span>${mSerie>0?'<span class="hc-serie"><svg class="i"><use href="#i-flame"/></svg>'+mSerie+'</span>':''}<span class="hc-r">${mTrendHtml}<span class="hc-num">${fmtNum(todayPts)}</span><span class="hc-cil">z ${fmtNum(mCil)} b</span></span></div><div class="hc-bar"><i style="width:${mCilPct}%"></i></div><div class="hc-row"><span class="hc-rl">Tento týden</span><div class="hc-c"><div class="hc-val">${mAktT}</div><div class="hc-key">${mAktT===1?"aktivita":(mAktT>=2&&mAktT<=4?"aktivity":"aktivit")}</div></div><div class="hc-c"><div class="hc-val">${fmtNum(tydenPts)}</div><div class="hc-key">bodů</div></div></div></div>
   <div class="hbm hbnav2" style="margin-top:10px;cursor:pointer" onclick="mmGo('navyky')"><div class="hi hicheck${habTotal>0&&habDone>=habTotal?' hfull':''}" style="--hp:${habTotal>0?Math.round(Math.min(habDone,habTotal)/habTotal*100):0}%"><svg class="i"><use href="#i-check"/></svg></div><div class="ht">Návyky dnes<span class="hdots">${Array.from({length:habTotal},(_,i)=>'<i'+(i<habDone?' class="on"':'')+'></i>').join('')}</span></div><div class="pct" style="display:flex;align-items:baseline;gap:0"><b>${habDone}</b><span style="color:var(--ter);font-weight:700;margin-left:1.5px;margin-right:7px">/${habTotal}</span><span style="color:var(--ter);font-weight:400">›</span></div></div>
   ${mmPartaSegBar()}${odpocetHtml}
   <div class="lc">${rows||'<div style="padding:20px;text-align:center;color:var(--ter)">Zatím žádné body</div>'}</div>
