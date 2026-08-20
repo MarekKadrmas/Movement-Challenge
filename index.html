@@ -21,40 +21,49 @@
    mensi text nez Marek na iPhonu a pretekani se neprojevi. Testuj pres tools/browser/_tmp/ios-emul.js
    (koeficient 1.207) — merici harness je tools/browser/_tmp/verify.js. */ html{overscroll-behavior:none;}body{overscroll-behavior:none;}
 html{-webkit-text-size-adjust:100%;}
-/* Emoji bottom sheet — vyjizdi zespodu jako klavesnice (Marek 2026-08-19) */
+/* ===== EMOJI PANEL — 1:1 se systemovou iOS klavesnici (Marek 2026-08-20) =====
+   Miry odmerene z referencniho screenshotu iPhonu 15 Pro (1179 px / 393 pt):
+   7 sloupcu, rozteč 53 px, glyf 32 px, radek 49 px, hledani 36 px vysoke,
+   spodni lista kategorii 9 ikon s roztecí 40 px, nadpisy sekci 13 px VELKA sedá.
+   Text v teto appce je kalibrovany (font-size x 1.207) => px = to, co je videt na iPhonu. */
 .rx-back{position:fixed;inset:0;background:rgba(0,0,0,.28);opacity:0;transition:opacity .26s ease;z-index:9998;}
 .rx-back.on{opacity:1;}
-.rx-sheet{position:fixed;left:0;right:0;bottom:0;z-index:9999;background:var(--card,#fff);border-radius:22px 22px 0 0;box-shadow:0 -10px 34px rgba(0,0,0,.20);transform:translateY(102%);transition:transform .3s cubic-bezier(.22,1,.36,1);padding:0 0 calc(10px + env(safe-area-inset-bottom));}
+.rx-back.tich{background:transparent;}
+.rx-sheet{position:fixed;left:0;right:0;bottom:0;z-index:9999;background:var(--card,#fff);border-radius:20px 20px 0 0;box-shadow:0 -10px 34px rgba(0,0,0,.18);transform:translateY(102%);transition:transform .32s cubic-bezier(.22,1,.36,1);padding-bottom:calc(4px + env(safe-area-inset-bottom));will-change:transform;}
 .rx-sheet.on{transform:none;}
-.rx-handle{width:38px;height:4px;border-radius:999px;background:var(--sep,#e2e5e1);margin:8px auto 4px;}
-.rx-tabs{display:flex;gap:4px;overflow-x:auto;padding:4px 12px 8px;scrollbar-width:none;}
-.rx-tabs::-webkit-scrollbar{display:none;}
-.rx-tabs b{flex:0 0 auto;font-size:12px;font-weight:700;color:var(--sec,#6B756F);background:var(--track,#EEF0EC);padding:5px 11px;border-radius:999px;cursor:pointer;}
-.rx-tabs b.on{background:var(--green,#0FA968);color:#fff;}
-.rx-body{max-height:44vh;overflow-y:auto;padding:0 12px;scrollbar-width:none;}
+.rx-sheet.rx-drag{transition:none;}
+.rx-sheet,.rx-sheet *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
+.rx-sheet input{-webkit-user-select:text;user-select:text;}
+.rx-hlava{padding:0 12px 8px;touch-action:none;}
+.rx-handle{width:36px;height:5px;border-radius:999px;background:var(--sep,#e2e5e1);margin:6px auto 8px;}
+.rx-hled{display:flex;align-items:center;gap:7px;background:var(--track,#EEF0EC);border-radius:12px;height:36px;padding:0 11px;}
+.rx-hled svg{width:16px;height:16px;flex:0 0 auto;fill:none;stroke:var(--ter,#9AA39C);stroke-width:2;stroke-linecap:round;}
+.rx-hled input{flex:1;min-width:0;border:0;outline:0;background:transparent;font:inherit;font-size:17px;line-height:1.2;color:var(--label,#141915);padding:0;}
+.rx-hled input::placeholder{color:var(--ter,#9AA39C);opacity:1;}
+.rx-hled .rx-x{width:18px;height:18px;flex:0 0 auto;border-radius:50%;background:var(--ter,#9AA39C);color:var(--card,#fff);font-size:12px;line-height:18px;text-align:center;font-weight:700;cursor:pointer;}
+.rx-body{position:relative;height:316px;max-height:38vh;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:0 10px 8px;scrollbar-width:none;}
 .rx-body::-webkit-scrollbar{display:none;}
-.rx-lbl{display:block;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ter,#9AA39C);margin:8px 2px 4px;}
-.rx-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:2px;}
-.rx-grid b{font-size:26px;line-height:1;text-align:center;padding:6px 0;border-radius:12px;cursor:pointer;-webkit-tap-highlight-color:transparent;}
-.rx-grid b:active{transform:scale(1.25);background:var(--track,#EEF0EC);}
+.rx-lbl{display:block;font-size:13px;font-weight:600;letter-spacing:.02em;text-transform:uppercase;color:var(--ter,#9AA39C);padding:11px 4px 5px;}
+.rx-grid{display:grid;grid-template-columns:repeat(7,1fr);}
+.rx-grid b{height:49px;display:grid;place-items:center;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;font-size:32px;font-weight:400;line-height:1;border-radius:10px;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.rx-grid b:active{background:var(--track,#EEF0EC);}
+.rx-katbar{display:flex;justify-content:space-between;align-items:center;padding:5px 11px 1px;border-top:1px solid var(--sep,#E4E7E3);}
+.rx-katbar b{width:33px;height:33px;display:grid;place-items:center;border-radius:50%;cursor:pointer;color:var(--sec,#6B756F);opacity:.72;}
+.rx-katbar b svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
+.rx-katbar b.on{background:var(--track,#EEF0EC);color:var(--label,#141915);opacity:1;}
+.rx-nic{padding:34px 12px;text-align:center;color:var(--sec,#6B756F);font-size:15px;}
 
 /* Reakce — rychla lista u zaznamu (WhatsApp styl) */
 .rx-bar{position:fixed;left:50%;transform:translateX(-50%) translateY(8px) scale(.92);z-index:9999;display:flex;align-items:center;gap:2px;padding:6px 8px;border-radius:999px;background:var(--card,#fff);box-shadow:0 10px 30px rgba(0,0,0,.20);opacity:0;transition:opacity .2s ease,transform .26s cubic-bezier(.34,1.56,.4,1);pointer-events:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
 .rx-bar.on{opacity:1;transform:translateX(-50%) translateY(0) scale(1);}
-.rx-bar b{font-size:27px;line-height:1;padding:2px 4px;border-radius:999px;cursor:pointer;}
+.rx-bar b{font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;font-size:27px;line-height:1;padding:2px 4px;border-radius:999px;cursor:pointer;}
 .rx-bar b:active{transform:scale(1.3);}
-.rx-bar .rx-plus{font-size:20px;font-weight:800;color:var(--sec,#6B756F);background:var(--track,#EEF0EC);width:34px;height:34px;display:grid;place-items:center;border-radius:50%;margin-left:2px;}
-/* Reakce — plny vyber */
-.rx-back.tich{background:transparent;}
-.rx-sheet,.rx-sheet *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
-.rx-sheet input{-webkit-user-select:text;user-select:text;}
-.rx-hled{padding:2px 12px 8px;}
-.rx-hled input{width:100%;box-sizing:border-box;border:0;outline:0;background:var(--track,#EEF0EC);border-radius:999px;padding:9px 14px;font:inherit;font-size:15px;color:var(--label,#141915);}
-.rx-katbar{display:flex;justify-content:space-around;align-items:center;padding:6px 10px 2px;border-top:1px solid var(--sep,#E4E7E3);}
-.rx-katbar b{font-size:19px;line-height:1;padding:5px 8px;border-radius:999px;cursor:pointer;opacity:.55;}
-.rx-katbar b.on{opacity:1;background:var(--track,#EEF0EC);}
-.rx-nic{padding:24px 12px;text-align:center;color:var(--sec,#6B756F);font-size:14px;}
+.rx-bar .rx-plus{font-family:inherit;font-size:20px;font-weight:800;color:var(--sec,#6B756F);background:var(--track,#EEF0EC);width:34px;height:34px;display:grid;place-items:center;border-radius:50%;margin-left:2px;}
 .mm-sub,.modal,.rx-body,.rx-sheet{overscroll-behavior:contain;}
+
+/* Marek 2026-08-20: pri podrzeni prstu (reakce) iOS oznacoval celou stranku */
+*{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
+input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-select:text;}
 </style>
 <!-- F46: Nove logo E3 (per-player barvy: ruzova / fialova / zelena bars) -->
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2048%2048'%3E%3Cdefs%3E%3ClinearGradient%20id%3D'g'%20x1%3D'0'%20y1%3D'0'%20x2%3D'1'%20y2%3D'1'%3E%3Cstop%20offset%3D'0'%20stop-color%3D'%23D3A03A'%2F%3E%3Cstop%20offset%3D'.3'%20stop-color%3D'%230FA968'%2F%3E%3Cstop%20offset%3D'.55'%20stop-color%3D'%232C97D6'%2F%3E%3Cstop%20offset%3D'.78'%20stop-color%3D'%237C6BD8'%2F%3E%3Cstop%20offset%3D'1'%20stop-color%3D'%23EF6B4C'%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D'48'%20height%3D'48'%20rx%3D'13'%20fill%3D'url(%23g)'%2F%3E%3Ccircle%20cx%3D'24'%20cy%3D'24'%20r%3D'14'%20stroke%3D'rgba(255%2C255%2C255%2C.4)'%20stroke-width%3D'5'%20fill%3D'none'%2F%3E%3Cpath%20d%3D'M24%2010a14%2014%200%201%201-12.1%2021'%20stroke%3D'%23fff'%20stroke-width%3D'5'%20stroke-linecap%3D'round'%20fill%3D'none'%2F%3E%3Ccircle%20cx%3D'24'%20cy%3D'10'%20r%3D'3.6'%20fill%3D'%23fff'%2F%3E%3C%2Fsvg%3E">
@@ -1981,7 +1990,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .donut{width:62px;height:62px;border-radius:50%;margin:0 auto;background:conic-gradient(var(--green) 0 45%,var(--blue) 45% 72%,var(--orange) 72% 88%,var(--purple) 88% 100%);display:grid;place-items:center;}
 .mm .donut .dh{width:38px;height:38px;border-radius:50%;background:var(--card);}
 .mm .heatcard{background:var(--card);box-shadow:var(--shadow);border-radius:22px;padding:12px;}
-.mm .heathb{display:flex;gap:5px;position:relative;}.heathb::before,.heathb::after{content:"";position:absolute;top:0;height:13px;width:15px;pointer-events:none;z-index:3;}.heathb::before{left:43px;background:linear-gradient(90deg,var(--card) 45%,transparent);}.heathb::after{right:0;background:linear-gradient(270deg,var(--card) 45%,transparent);} .hnamescol{display:flex;flex-direction:column;gap:4px;flex:0 0 38px;padding-top:15px;} .hnamescol b{height:12px;line-height:12px;font-size:10.86px;font-weight:700;color:var(--sec);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;} .heatscroll{display:flex;gap:2px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;flex:0 0 208px;max-width:208px;} .heatscroll::-webkit-scrollbar{display:none;} .hweek{flex:0 0 auto;display:flex;flex-direction:column;gap:3px;scroll-snap-align:start;scroll-snap-stop:always;}.hwcells{display:grid;grid-auto-rows:12px;gap:4px 2px;}.hwlabs2{position:absolute;left:0;top:0;height:12px;pointer-events:none;}.hwlabs2 b{position:absolute;top:0;height:12px;display:flex;align-items:flex-start;justify-content:center;line-height:12px;}.hwlabs2 b i{position:sticky;left:5px;right:5px;display:block;font-style:normal;font-size:8.5px;line-height:12px;font-weight:800;letter-spacing:.02em;color:var(--ter);white-space:nowrap;will-change:transform;}.heatscroll{position:relative;}.hweek{padding-top:15px;}.hwlabs b{font-size:8.5px;line-height:1;font-weight:800;letter-spacing:.02em;color:var(--ter);white-space:nowrap;text-align:center;}.hwlabs i{background:none!important;}.hwcells{position:relative;}.hwcells .hdiv{position:absolute;top:0;bottom:0;width:1px;background:color-mix(in srgb,var(--sec) 20%,transparent);border-radius:0;} .hweek i{border-radius:3px;background:var(--track);} .hwlast{scroll-snap-align:end;} .heatrow{display:grid;grid-template-columns:38px 1fr;align-items:center;gap:8px;margin-bottom:5px;}
+.mm .heathb{display:flex;gap:5px;position:relative;} .hnamescol{display:flex;flex-direction:column;gap:4px;flex:0 0 38px;padding-top:15px;} .hnamescol b{height:12px;line-height:12px;font-size:10.86px;font-weight:700;color:var(--sec);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;} .heatscroll{display:flex;gap:2px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;flex:0 0 208px;max-width:208px;} .heatscroll::-webkit-scrollbar{display:none;} .hweek{flex:0 0 auto;display:flex;flex-direction:column;gap:3px;scroll-snap-align:start;scroll-snap-stop:always;}.hwcells{display:grid;grid-auto-rows:12px;gap:4px 2px;}.hwlabs2{position:absolute;left:0;top:0;height:12px;pointer-events:none;}.hwlabs2 b{position:absolute;top:0;height:12px;display:flex;align-items:flex-start;justify-content:center;line-height:12px;}.hwlabs2 b i{position:sticky;left:5px;right:5px;display:block;font-style:normal;font-size:8.5px;line-height:12px;font-weight:800;letter-spacing:.02em;color:var(--ter);white-space:nowrap;will-change:transform;}.heatscroll{position:relative;}.hweek{padding-top:15px;}.hwlabs b{font-size:8.5px;line-height:1;font-weight:800;letter-spacing:.02em;color:var(--ter);white-space:nowrap;text-align:center;}.hwlabs i{background:none!important;}.hwcells{position:relative;}.hwcells .hdiv{position:absolute;top:0;bottom:0;width:1px;background:color-mix(in srgb,var(--sec) 20%,transparent);border-radius:0;} .hweek i{border-radius:3px;background:var(--track);} .hwlast{scroll-snap-align:end;} .heatrow{display:grid;grid-template-columns:38px 1fr;align-items:center;gap:8px;margin-bottom:5px;}
 .mm .heatrow .hll{font-size:10.86px;line-height:1;font-weight:700;color:var(--sec);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .mm .hcells{display:grid;grid-template-columns:repeat(18,1fr);gap:2px;}
 .mm .hcells i{aspect-ratio:1;border-radius:2px;background:var(--track);}
@@ -2406,6 +2415,10 @@ body.mm-full{background:#EDF0EC;padding-bottom:0;}
 <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></symbol>
 </svg>
 <template id="mm-tpl"><style>
+/* Marek 2026-08-20: pri podrzeni prstu (reakce) iOS oznacoval celou stranku */
+*{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
+input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-select:text;}
+
   :host{--g1:#E4F0E9;--bg:#EDF0EC;--card:#FFFFFF;--label:#141A16;--sec:#69736D;--ter:#A6AEA8;--sep:rgba(18,26,22,.07);
     --green:#0FA968;--blue:#2C97D6;--orange:#E3A93C;--purple:#7C6BD8;--gold:#D3A03A;--track:#E6EAE4;
     --shadow:0 1px 2px rgba(18,26,22,.04),0 10px 24px -12px rgba(18,26,22,.14);--bar:rgba(255,255,255,.72);
@@ -2478,7 +2491,7 @@ body.mm-full{background:#EDF0EC;padding-bottom:0;}
   .charts{display:flex;gap:8px;} .chart{flex:1;background:var(--card);box-shadow:var(--shadow);border-radius:18px;padding:12px;} .chart .ct{font-size:10.62px;font-weight:700;color:var(--sec);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;}
   .dleg{margin-top:9px;display:flex;flex-direction:column;gap:4px;} .dleg span{display:flex;align-items:center;gap:6px;font-size:10.62px;font-weight:600;color:var(--sec);} .dleg i{width:8px;height:8px;border-radius:2px;flex:0 0 auto;} .ccap{margin-top:7px;font-size:10.09px;font-weight:600;color:var(--ter);text-align:center;}
   .donut{width:62px;height:62px;border-radius:50%;margin:0 auto;background:conic-gradient(var(--green) 0 45%,var(--blue) 45% 72%,var(--orange) 72% 88%,var(--purple) 88% 100%);display:grid;place-items:center;} .donut .dh{width:38px;height:38px;border-radius:50%;background:var(--card);}
-  .heatcard{background:var(--card);box-shadow:var(--shadow);border-radius:22px;padding:12px;} .heathb{display:flex;gap:5px;position:relative;}.heathb::before,.heathb::after{content:"";position:absolute;top:0;height:13px;width:15px;pointer-events:none;z-index:3;}.heathb::before{left:43px;background:linear-gradient(90deg,var(--card) 45%,transparent);}.heathb::after{right:0;background:linear-gradient(270deg,var(--card) 45%,transparent);} .hnamescol{display:flex;flex-direction:column;gap:4px;flex:0 0 38px;padding-top:15px;} .hnamescol b{height:12px;line-height:12px;font-size:9.56px;font-weight:700;color:var(--sec);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;} .heatscroll{display:flex;gap:2px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;flex:0 0 208px;max-width:208px;} .heatscroll::-webkit-scrollbar{display:none;} .hweek{flex:0 0 auto;display:flex;flex-direction:column;gap:3px;scroll-snap-align:start;scroll-snap-stop:always;}.hwcells{display:grid;grid-auto-rows:12px;gap:4px 2px;}.hwlabs2{position:absolute;left:0;top:0;height:12px;pointer-events:none;}.hwlabs2 b{position:absolute;top:0;height:12px;display:flex;align-items:flex-start;justify-content:center;line-height:12px;}.hwlabs2 b i{position:sticky;left:5px;right:5px;display:block;font-style:normal;font-size:8.5px;line-height:12px;font-weight:800;letter-spacing:.02em;color:var(--ter);white-space:nowrap;will-change:transform;}.heatscroll{position:relative;}.hweek{padding-top:15px;}.hwlabs b{font-size:8.5px;line-height:1;font-weight:800;letter-spacing:.02em;color:var(--ter);white-space:nowrap;text-align:center;}.hwlabs i{background:none!important;}.hwcells{position:relative;}.hwcells .hdiv{position:absolute;top:0;bottom:0;width:1px;background:color-mix(in srgb,var(--sec) 20%,transparent);border-radius:0;} .hweek i{border-radius:3px;background:var(--track);} .hwlast{scroll-snap-align:end;} .heatrow{display:grid;grid-template-columns:38px 1fr;align-items:center;gap:8px;margin-bottom:5px;} .heatrow .hll{font-size:9.56px;line-height:1;font-weight:700;color:var(--sec);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;} .hcells{display:grid;grid-template-columns:repeat(18,1fr);gap:2px;} .hcells i{aspect-ratio:1;border-radius:2px;background:var(--track);}
+  .heatcard{background:var(--card);box-shadow:var(--shadow);border-radius:22px;padding:12px;} .heathb{display:flex;gap:5px;position:relative;} .hnamescol{display:flex;flex-direction:column;gap:4px;flex:0 0 38px;padding-top:15px;} .hnamescol b{height:12px;line-height:12px;font-size:9.56px;font-weight:700;color:var(--sec);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;} .heatscroll{display:flex;gap:2px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;flex:0 0 208px;max-width:208px;} .heatscroll::-webkit-scrollbar{display:none;} .hweek{flex:0 0 auto;display:flex;flex-direction:column;gap:3px;scroll-snap-align:start;scroll-snap-stop:always;}.hwcells{display:grid;grid-auto-rows:12px;gap:4px 2px;}.hwlabs2{position:absolute;left:0;top:0;height:12px;pointer-events:none;}.hwlabs2 b{position:absolute;top:0;height:12px;display:flex;align-items:flex-start;justify-content:center;line-height:12px;}.hwlabs2 b i{position:sticky;left:5px;right:5px;display:block;font-style:normal;font-size:8.5px;line-height:12px;font-weight:800;letter-spacing:.02em;color:var(--ter);white-space:nowrap;will-change:transform;}.heatscroll{position:relative;}.hweek{padding-top:15px;}.hwlabs b{font-size:8.5px;line-height:1;font-weight:800;letter-spacing:.02em;color:var(--ter);white-space:nowrap;text-align:center;}.hwlabs i{background:none!important;}.hwcells{position:relative;}.hwcells .hdiv{position:absolute;top:0;bottom:0;width:1px;background:color-mix(in srgb,var(--sec) 20%,transparent);border-radius:0;} .hweek i{border-radius:3px;background:var(--track);} .hwlast{scroll-snap-align:end;} .heatrow{display:grid;grid-template-columns:38px 1fr;align-items:center;gap:8px;margin-bottom:5px;} .heatrow .hll{font-size:9.56px;line-height:1;font-weight:700;color:var(--sec);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;} .hcells{display:grid;grid-template-columns:repeat(18,1fr);gap:2px;} .hcells i{aspect-ratio:1;border-radius:2px;background:var(--track);}
   .mh{display:grid;grid-template-columns:repeat(15,1fr);gap:3px;} .mh i{aspect-ratio:1;border-radius:2px;background:var(--track);}
   .wks{display:flex;gap:4px;margin-bottom:10px;justify-content:space-between;} .wks span{width:32px;height:32px;display:grid;place-items:center;font-size:11.69px;font-weight:700;border-radius:50%;background:var(--card);box-shadow:var(--shadow);color:var(--sec);} .wks span.on{background:var(--green);color:#fff;} .wks span.done{color:var(--green);}
   .hbnav{display:flex;align-items:center;gap:7px;margin-bottom:9px;} .hbarr{width:22px;height:22px;display:grid;place-items:center;background:color-mix(in srgb,var(--green) 12%,transparent);border-radius:50%;font-size:12.74px;color:var(--green);cursor:pointer;font-weight:800;} .hbrange{font-size:11.69px;font-weight:800;color:var(--label);} .hbtoday{margin-left:auto;background:var(--green);color:#fff;border-radius:999px;padding:4px 10px;font-size:11.15px;font-weight:800;box-shadow:0 2px 7px color-mix(in srgb,var(--green) 40%,transparent);cursor:pointer;}
@@ -5914,7 +5927,7 @@ function mmPartaHeatHtml(){
     const gridCols='grid-template-columns:'+gridTpl;
     blocks+='<div class="hweek'+(last?' hwlast':'')+'" data-w0="'+days[0]+'" data-w6="'+days[days.length-1]+'"><div class="hwcells" style="'+gridCols+'" data-w0="'+days[0]+'" data-w6="'+days[days.length-1]+'">'+cells+divs+'</div></div>';
   });
-  const labely='<div class="hwlabs2" data-hwlabs>'+useky.map(u=>'<b data-x1="'+u.x1+'" data-x2="'+u.x2+'" style="left:'+(u.x1-13)+'px;width:'+((u.x2-u.x1)+26)+'px"><i>W'+u.w+'</i></b>').join('')+'</div>';
+  const labely='<div class="hwlabs2" data-hwlabs>'+useky.map(u=>'<b data-x1="'+u.x1+'" data-x2="'+u.x2+'" style="left:'+(u.x1-18)+'px;width:'+((u.x2-u.x1)+36)+'px"><i>W'+u.w+'</i></b>').join('')+'</div>';
   return '<div class="heathb">'+names+'<div class="heatscroll" data-heatscroll>'+blocks+labely+'</div></div>';
 }
 function mmHeatFmt(ds){ const d=new Date(ds+'T00:00:00'); return d.getDate()+'. '+(d.getMonth()+1)+'.'; }
@@ -6046,20 +6059,40 @@ async function mmRxPersist(payload){
   try{ const r=await db.from(t).upsert(payload); if(r&&r.error) throw r.error; return {ok:true}; }catch(e){ return {error:e}; }
 }
 function mmRxZavri(){ const p=sh.querySelector('.rxpick'); if(p) p.remove(); }
-const MM_RX_KAT = [
-  ['Smajlíci','😀', ['😀','😃','😄','😁','😆','😅','🤣','😂','🙂','🙃','😉','😊','😍','🥰','😘','😗','😎','🤩','🥳','🤪','😜','🤔','🤨','😐','😑','😴','🥱','😌','😔','😢','😭','😤','😠','😱','🥶','🥵','🤯','😵','🫠','🫡','🤗','🤭','🤫','😬','🙄','😮','😯','😲']],
-  ['Gesta','👍', ['👍','👎','👌','✌️','🤞','🤙','👋','🙏','💪','👏','🙌','🤝','☝️','✋','🖐️','🤟','✊','👊','🫶','🤲','🫰','🤌']],
-  ['Sport','🏃', ['🏃','🚴','🏊','🧗','⛰️','🏋️','🤸','🧘','⚽','🏀','🎾','🏐','🏈','🥊','🛹','⛷️','🏂','🚵','🥾','🏅','🥇','🥈','🥉','🏆','🎽','⏱️','🎯','🩹','💥','⚡']],
-  ['Jídlo','🍎', ['🍎','🍌','🍇','🍓','🥑','🥦','🥕','🍗','🥩','🍳','🍕','🍔','🌮','🍜','🍫','🍪','🍺','🍷','🥛','☕','🧃','💧','🥤','🧊']],
-  ['Zvířata','🐶', ['🐶','🐱','🦊','🐻','🐼','🦁','🐯','🐨','🐮','🐷','🐸','🐵','🦄','🐝','🦋','🐢','🐬','🦈','🦖','🐐','🦍','🦥']],
-  ['Ostatní','✨', ['❤️','🧡','💛','💚','💙','💜','🖤','🔥','✨','⭐','🌟','💯','🎉','🎊','👑','🚀','🌞','🌧️','❄️','🌈','🌙','💤','🧠','🦾','📸','🎵','🗿','💀','🫀','🍀']]
+// ---- Emoji sada: kategorie, poradi i ceske nazvy presne jako na ceskem iPhonu ----
+// Format polozky: [nazev, klic ikony, "emoji klicova slova|emoji klicova slova|..."]
+// Klicova slova jsou bez diakritiky (hledani normalizuje dotaz stejne).
+// Zdroj + kontrola podpory glyfu: tools/browser/_tmp/emoji-data.js + emoji-verify.js
+const MM_RX_SADA = [
+  ["Smajlíci a lidé","smajl","😀 usmev smich radost stastny|😃 usmev radost otevrena pusa|😄 usmev smich oci|😁 usmev zuby zar|😆 smich prizmourene rehot|😅 smich pot uleva|🤣 rehot valim se smichy|😂 smich slzy brecim smichy|🙂 usmev lehky mile|🙃 vzhuru nohama ironie|🫠 rozteceny tavim horko|😉 mrknuti flirt|😊 usmev stydlivy mile|😇 andel svatozar hodny|🥰 zamilovany srdicka laska|😍 zamilovany oci srdce laska|🤩 hvezdy nadseni wow|😘 polibek pusa laska|😗 pusa polibek|☺️ usmev spokojeny|😚 pusa zavrene oci|😙 pusa usmev|🥲 dojeti slza usmev|😋 mnam chut jazyk dobrota|😛 jazyk vyplazeny|😜 mrknuti jazyk sranda|🤪 blaznivy sileny|😝 jazyk zavrene oci|🤑 penize dolar bohaty|🤗 objeti obejmuti|🤭 hihi ruka pusa|🫢 prekvapeni ruka pusa|🫣 kouknu prsty stud|🤫 pst ticho|🤔 premysleni premyslim otazka|🫡 salut pozdrav rozkaz|🤐 zip mlceni tajemstvi|🤨 pochybnosti oboci|😐 neutralni bez vyrazu|😑 bez vyrazu otraveny|😶 bez ust ticho|🫥 teckovany zmizel|😏 uskleb sebevedomi|😒 otraveny naster|🙄 prevraceni oci|😬 grimasa trapno|🤥 lez pinokio|😌 uleva klid spokojenost|😔 smutek zklamani|😪 ospaly unaveny|🤤 slintam chut|😴 spanek chrapu unava|😷 rouska nemoc|🤒 teplomer nemoc horecka|🤕 obvaz zraneni|🤢 nevolno hnus|🤮 zvraceni blit|🤧 kychnuti ryma|🥵 horko vedro upal|🥶 zima mraz zmrzly|🥴 opily motani|😵 vyrazeny mdloba|🤯 vybuch hlavy sok|🤠 kovboj klobouk|🥳 oslava party narozeniny|🥸 prevlek knir bryle|😎 cool bryle slunecni|🤓 nerd bryle|🧐 monokl zkoumani|😕 zmateny|🫤 nejiste kriva pusa|😟 starosti obavy|🙁 nespokojeny|☹️ zamraceny|😮 prekvapeni wow ohromeni|😯 udiv|😲 sok prekvapeni|😳 zarudnuti stud trapno|🥺 prosicka prosim oci|🥹 dojeti slzy stesti|😦 zdeseni|😧 uzas|😨 strach|😰 uzkost pot strach|😥 zklamani uleva|😢 plac slza smutek|😭 brecim plac slzy|😱 hruza jek strach|😖 zmateni trapeni|😣 vytrvalost namaha|😞 zklamani smutek|😓 pot smutek drina|😩 unava vycerpani|😫 unava dost|🥱 zivani unava nuda|😤 vztek para nos odhodlani|😡 vztek zlost naprdnuty|😠 zlost naprdnuty|🤬 nadavky sprosta slova|😈 certik zlomyslny|👿 cert zly|💀 lebka smrt mrtvy|☠️ lebka hnaty jed|💩 hovno hovinko|🤡 klaun|👹 obr demon|👺 skritek zly|👻 duch strasidlo|👽 mimozemstan ufo|👾 videohra prisera|🤖 robot|😺 kocka usmev|😸 kocka smich|😹 kocka slzy smich|😻 kocka laska srdce|😼 kocka uskleb|😽 kocka pusa|🙀 kocka sok|😿 kocka plac|😾 kocka vztek|🙈 opice oci nevidim|🙉 opice usi neslysim|🙊 opice pusa nerikam|💋 pusa polibek rtenka|💌 dopis laska|💘 sipka srdce amor|💝 srdce darek stuha|💖 srdce trpytive|💗 srdce rostouci|💓 srdce tluk|💞 srdce tocici|💕 dve srdce laska|💟 srdce ozdoba|❣️ srdce vykricnik|💔 zlomene srdce|❤️ srdce cervene laska|🧡 srdce oranzove|💛 srdce zlute|💚 srdce zelene|💙 srdce modre|💜 srdce fialove|🤎 srdce hnede|🖤 srdce cerne|🤍 srdce bile|💯 sto procent stovka maximum|💢 vztek zila|💥 vybuch rana bum|💫 hvezdicky zavrat|💦 kapky pot voda|💨 fouk spech dym|🕳️ dira|💬 bublina zprava chat|💭 myslenka bublina|💤 spanek chrapani zzz|👋 ahoj mavani cau|🤚 ruka zvednuta|🖐️ dlan prsty|✋ dlan stop pet|🖖 vulkan pozdrav|🫱 ruka doprava|🫲 ruka doleva|🫳 dlan dolu|🫴 dlan nahoru|👌 ok super|🤌 prsty italsky|🤏 spetka malo|✌️ vitezstvi mir dva|🤞 drzim palce stesti|🫰 prsty srdce penize|🤟 miluji te|🤘 rohy rock|🤙 zavolej|👈 ukazuje vlevo|👉 ukazuje vpravo|👆 ukazuje nahoru|👇 ukazuje dolu|☝️ prst nahoru pozor|🫵 ukazuje na tebe|👍 palec nahoru super souhlas|👎 palec dolu spatne nesouhlas|✊ pest sila|👊 pest rana pesticka|🤛 pest vlevo|🤜 pest vpravo|👏 potlesk tleskani bravo|🙌 ruce nahoru hura|🫶 srdce z rukou laska|👐 otevrene dlane|🤲 dlane prosba|🤝 podani ruky dohoda|🙏 prosim diky modlitba|✍️ psani ruka tuzka|💅 nehty lak|🤳 selfie|💪 sval biceps sila posilovna|🦾 proteza ruka|🦿 proteza noha|🦵 noha stehno|🦶 chodidlo noha|👂 ucho|🦻 sluchadlo|👃 nos|🧠 mozek|🫀 srdce organ|🫁 plice|🦷 zub|🦴 kost|👀 oci koukam|👁️ oko|👅 jazyk|👄 usta rty|🫦 rty kousani|👶 miminko dite|🧒 dite|👦 kluk chlapec|👧 holka divka|🧑 clovek osoba|👱 blondyn blondynka|👨 muz chlap|🧔 vousac plnovous|👩 zena|🧓 senior|👴 dedecek stary|👵 babicka stara|🙍 mracici clovek|🙎 nadurdeny|🙅 ne zakaz gesto|🙆 ok gesto|💁 informace ruka|🙋 hlasi se ruka|🧏 neslysici|🙇 poklona omluva|🤦 facepalm dlan celo|🤷 pokrceni ramen nevim|👮 policista policie|🕵️ detektiv|💂 garda vojak|🥷 ninja|👷 delnik stavbar|🤴 princ|👸 princezna|👳 turban|👲 cepice|🧕 satek|🤵 smoking svatba|👰 nevesta zavoj|🤰 tehotna|🤱 kojeni|👼 andilek|🎅 santa vanoce|🤶 pani santova vanoce|🦸 superhrdina hrdina|🦹 zlocinec|🧙 kouzelnik carodej|🧚 vila|🧛 upir|🧜 morska panna|🧝 elf|🧞 dzin|🧟 zombie|💆 masaz|💇 strihani vlasu kadernik|🚶 chuze chodec|🧍 stani stoji|🧎 kleceni|🏃 beh bezec sport|💃 tanec zena|🕺 tanec muz|🕴️ muz oblek levituje|👯 tanecnice|🧖 sauna|🧗 lezeni skala horolezec|🤺 serm|🏇 dostih kun|⛷️ lyze lyzar|🏂 snowboard|🏌️ golf|🏄 surf|🚣 veslovani lod|🏊 plavani bazen|⛹️ basketbal driblink|🏋️ cinka posilovna zvedani|🚴 kolo cyklista|🚵 horske kolo|🤸 kotrmelec gymnastika|🤼 zapas|🤽 vodni polo|🤾 hazena|🤹 zonglovani|🧘 joga meditace klid|🛀 vana koupel|🛌 postel spanek|👭 kamaradky|👫 par dvojice|👬 kamaradi|💏 polibek par|💑 zamilovany par|👪 rodina|🗣️ mluvici hlava rec|👤 silueta osoba|👥 siluety lide|🫂 objeti lide|👣 stopy nohy"],
+  ["Zvířata a příroda","zvire","🐶 pes stene hafan|🐱 kocka kote micka|🐭 mys|🐹 krecek|🐰 kralik zajic|🦊 liska|🐻 medved|🐼 panda|🐨 koala|🐯 tygr|🦁 lev|🐮 krava|🐷 prase prasatko|🐽 rypak prase|🐸 zaba|🐵 opice|🐒 opice|🐔 slepice|🐧 tucnak|🐦 ptak|🐤 kure ptace|🐣 vylihnuti kure|🐥 kure|🦆 kachna|🦅 orel|🦉 sova|🦇 netopyr|🐺 vlk|🐗 divocak|🐴 kun|🦄 jednorozec|🐝 vcela|🪲 brouk|🐛 housenka|🦋 motyl|🐌 slimak|🐞 beruska|🐜 mravenec|🪰 moucha|🪱 zizala|🦟 komar|🦗 cvrcek|🕷️ pavouk|🕸️ pavucina|🦂 stir|🐢 zelva|🐍 had|🦎 jesterka|🦖 dinosaurus trex|🦕 dinosaurus|🐙 chobotnice|🦑 olihen|🦐 kreveta|🦞 humr|🦀 krab|🐡 ryba ctverzubec|🐠 rybka tropicka|🐟 ryba|🐬 delfin|🐳 velryba|🐋 velryba|🦈 zralok|🐊 krokodyl|🐅 tygr|🐆 leopard|🦓 zebra|🦍 gorila|🦧 orangutan|🐘 slon|🦛 hroch|🦏 nosorozec|🐪 velbloud|🐫 velbloud|🦒 zirafa|🦘 klokan|🐃 buvol|🐂 byk|🐄 krava|🐎 kun|🐖 prase|🐏 beran|🐑 ovce|🦙 lama|🐐 koza|🦌 jelen|🐕 pes|🐩 pudl|🦮 vodici pes|🐈 kocka|🪶 pero ptaci|🐓 kohout|🦃 krocan|🦤 dodo|🦚 pav|🦜 papousek|🦢 labut|🦩 plamenak|🕊️ holubice mir|🐇 kralik|🦝 myval|🦨 skunk|🦡 jezevec|🦫 bobr|🦦 vydra|🦥 lenochod|🐁 mys|🐀 potkan krysa|🐿️ veverka|🦔 jezek|🐾 tlapky stopy|🐉 drak|🐲 drak hlava|🌵 kaktus|🎄 stromek vanoce|🌲 jehlicnan strom|🌳 strom listnaty|🌴 palma|🪵 kmen drevo poleno|🌱 sazenice klicek|🌿 bylina listy|☘️ trojlistek jetel|🍀 ctyrlistek stesti|🎍 bambus|🪴 kvetinac rostlina|🍃 listy vitr|🍂 listi podzim|🍁 javorovy list|🍄 houba|🐚 musle|🪨 kamen|🌾 klasy obili|💐 kytice|🌷 tulipan|🌹 ruze|🥀 uvadla kvetina|🌺 ibisek kvet|🌸 sakura kvet|🌼 kvetina sedmikraska|🌻 slunecnice|🌞 slunce oblicej|🌝 mesic oblicej|🌛 mesic srpek|🌜 mesic srpek|🌚 novoluni mesic|🌕 uplnek mesic|🌙 mesic srpek noc|🌎 zeme planeta amerika|🌍 zeme svet evropa|🌏 zeme asie|🪐 planeta saturn|⭐ hvezda|🌟 hvezda zarici|✨ trpytky jiskry kouzlo|⚡ blesk energie|☄️ kometa|🔥 ohen plamen zapal|🌪️ tornado|🌈 duha|☀️ slunce jasno|⛅ polojasno|☁️ mrak oblacno|🌦️ prehanky|🌧️ dest|⛈️ bourka|🌨️ snezeni|❄️ snehova vlocka zima|☃️ snehulak|⛄ snehulak zima|🌬️ vitr fouka|💧 kapka voda|☔ dest destnik|🌊 vlna more voda"],
+  ["Jídlo a pití","jidlo","🍏 jablko zelene|🍎 jablko cervene|🍐 hruska|🍊 pomeranc mandarinka|🍋 citron|🍌 banan|🍉 meloun|🍇 hrozny vino|🍓 jahoda|🫐 boruvky|🍈 meloun cukrovy|🍒 tresne|🍑 broskev|🥭 mango|🍍 ananas|🥥 kokos|🥝 kiwi|🍅 rajce|🍆 lilek|🥑 avokado|🥦 brokolice|🥬 salat listy|🥒 okurka|🌶️ chilli paprika|🫑 paprika|🌽 kukurice|🥕 mrkev|🫒 oliva|🧄 cesnek|🧅 cibule|🥔 brambora|🍠 batat|🥐 croissant|🥯 bagel|🍞 chleba|🥖 bageta|🥨 preclik|🧀 syr|🥚 vejce|🍳 vajicka smazena|🧈 maslo|🥞 palacinky liva|🧇 vafle|🥓 slanina|🥩 steak maso|🍗 stehno kure|🍖 maso kost|🌭 hotdog parek|🍔 burger hamburger|🍟 hranolky|🍕 pizza|🫓 placka lavas|🥪 sendvic|🥙 kebab pita|🧆 falafel|🌮 taco|🌯 burrito|🥗 salat zelenina|🥘 panev jidlo|🫕 fondue|🥫 konzerva|🍝 spagety testoviny|🍜 polevka nudle ramen|🍲 polevka hrnec|🍛 kari ryze|🍣 sushi|🍱 bento box|🥟 knedlicky gyoza|🦪 ustrice|🍤 kreveta smazena|🍙 ryzova kulicka|🍚 ryze|🍥 narutomaki|🥠 stesticko susenka|🍢 spiz oden|🍡 dango|🍧 tristene ledova trista|🍨 zmrzlina pohar|🍦 zmrzlina kornout|🥧 kolac pie|🧁 muffin cupcake|🍰 dort kousek|🎂 dort narozeniny|🍮 pudink|🍭 lizatko|🍬 bonbon|🍫 cokolada|🍿 popcorn|🍩 donut kobliha|🍪 susenka|🌰 kastan|🥜 arasidy orisky|🍯 med|🥛 mleko|🍼 lahev kojenecka|🫖 konvice caj|☕ kava|🍵 caj zeleny|🧃 dzus krabicka|🥤 kelimek napoj|🧋 bubble tea|🍶 sake|🍺 pivo|🍻 pivo prípitek|🥂 pripitek sampanske|🍷 vino|🥃 whisky|🍸 koktejl|🍹 drink tropicky|🧉 mate|🍾 sampanske otevirani|🧊 led kostka|🥄 lzicka|🍴 pribor vidlicka nuz|🍽️ talir pribor|🥣 miska cerealie|🥡 krabicka jidlo sebou|🥢 hulky|🧂 sul"],
+  ["Aktivita","sport","⚽ fotbal mic|🏀 basketbal mic|🏈 americky fotbal|⚾ baseball|🥎 softball|🎾 tenis|🏐 volejbal|🏉 rugby|🥏 frisbee|🎱 kulecnik|🪀 jojo|🏓 stolni tenis pingpong|🏸 badminton|🏒 hokej|🏑 pozemni hokej|🥍 lakros|🏏 kriket|🪃 bumerang|🥅 branka|⛳ golf jamka|🪁 drak papirovy|🏹 luk sipy|🎣 rybareni|🤿 potapeni|🥊 box rukavice|🥋 judo kimono|🎽 dres beh|🛹 skateboard|🛼 koleckove brusle|🛷 sane|⛸️ brusle led|🥌 curling|🎿 lyze|🪂 padak|🏆 pohar vitezstvi trofej|🥇 zlata medaile prvni|🥈 stribrna medaile druhy|🥉 bronzova medaile treti|🏅 medaile|🎖️ vyznamenani|🏵️ rozeta|🎗️ stuha|🎫 vstupenka|🎟️ listek|🎪 cirkus stan|🎭 divadlo masky|🩰 balet spicky|🎨 malovani paleta|🎬 film klapka|🎤 mikrofon zpev|🎧 sluchatka hudba|🎼 noty|🎹 klavir klavesy|🥁 bubny|🎷 saxofon|🎺 trubka|🪗 harmonika|🎸 kytara|🪕 banjo|🎻 housle|🎲 kostka hra|♟️ sachy pesec|🎯 terc sipky cil|🎳 bowling|🎮 hra ovladac|🎰 automat vyherni|🧩 puzzle|🎊 konfety oslava|🎉 party oslava hura|🎈 balonek|🎇 ohnostroj jiskry|🎆 ohnostroj|🧨 petarda"],
+  ["Cestování a místa","cesta","🚗 auto|🚕 taxi|🚙 suv auto|🚌 autobus|🚎 trolejbus|🏎️ zavodni auto formule|🚓 policejni auto|🚑 sanitka|🚒 hasici auto|🚐 dodavka|🛻 pickup|🚚 nakladak|🚛 kamion|🚜 traktor|🦽 vozik invalidni|🦼 vozik motorovy|🛴 kolobezka|🚲 kolo bicykl|🛵 skutr|🏍️ motorka|🛺 tuktuk|🚨 majak siréna|🚔 policie auto|🚍 autobus|🚘 auto|🚖 taxi|🚡 lanovka kabinka|🚠 lanovka|🚟 lanovka zavesna|🚃 vagon|🚋 tramvaj|🚞 horska draha vlak|🚝 jednokolejka|🚄 rychlik vlak|🚅 rychlovlak|🚈 vlak mestsky|🚂 lokomotiva parni|🚆 vlak|🚇 metro|🚊 tramvaj|🚉 nadrazi stanice|✈️ letadlo let|🛫 vzlet letadlo|🛬 pristani letadlo|🛩️ letadlo male|💺 sedadlo|🛰️ satelit|🚀 raketa start|🛸 ufo talir|🚁 vrtulnik helikoptera|🛶 kanoe|⛵ plachetnice|🚤 motorovy clun|🛥️ jachta|🛳️ zaoceanska lod|⛴️ trajekt|🚢 lod|⚓ kotva|⛽ benzinka|🚧 uzavirka stavba|🚦 semafor|🚥 semafor|🚏 zastavka|🗺️ mapa|🗿 socha moai|🗽 socha svobody|🗼 vez tokio|🏰 zamek hrad|🏯 hrad japonsky|🏟️ stadion|🎡 ruske kolo|🎢 horska draha|🎠 kolotoc|⛲ fontana|⛱️ slunecnik plaz|🏖️ plaz more|🏝️ ostrov|🏜️ poust|🌋 sopka|⛰️ hora|🏔️ hora snih vrchol|🗻 fudzi hora|🏕️ kemp taboreni|⛺ stan|🛖 chyse|🏠 dum|🏡 dum zahrada|🏘️ domy|🏚️ oprychly dum|🏗️ stavba jerab|🏭 tovarna|🏢 kancelar budova|🏬 obchodni dum|🏣 posta japonska|🏤 posta|🏥 nemocnice|🏦 banka|🏨 hotel|🏪 vecerka obchod|🏫 skola|💒 svatba kostel|🏛️ muzeum sloupy|⛪ kostel|🕌 mesita|🕍 synagoga|🛕 chram hinduisticky|🕋 kaaba|⛩️ torii svatyne|🛤️ koleje|🛣️ dalnice silnice|🎑 mesic obrad|🏞️ park priroda|🌅 vychod slunce|🌄 vychod slunce hory|🌠 padajici hvezda|🌇 zapad slunce mesto|🌆 mesto vecer|🏙️ mesto panorama|🌃 mesto noc|🌌 mlecna draha noc|🌉 most noc|🌁 mlha"],
+  ["Objekty","objekt","⌚ hodinky|📱 mobil telefon|💻 notebook laptop|⌨️ klavesnice|🖥️ pocitac monitor|🖨️ tiskarna|🖱️ mys pocitacova|💽 disk minidisc|💾 disketa ulozit|💿 cd disk|📀 dvd|📼 videokazeta|📷 fotoaparat foto|📸 blesk foto|📹 kamera|🎥 kamera film|📽️ promitacka|📞 telefon sluchatko|☎️ telefon|📟 pager|📠 fax|📺 televize|📻 radio|🎙️ mikrofon studio|⏱️ stopky|⏲️ minutka casovac|⏰ budik|🕰️ hodiny|⌛ presypaci hodiny|⏳ presypaci hodiny cas|📡 antena satelit|🔋 baterie|🔌 zastrcka zasuvka|💡 zarovka napad|🔦 baterka svitilna|🕯️ svicka|🧯 hasici pristroj|🛢️ sud ropa|💸 penize letici|💵 dolar bankovka|💴 jen bankovka|💶 euro bankovka|💷 libra bankovka|💰 pytel penez|💳 karta platebni|💎 diamant|⚖️ vahy spravedlnost|🪜 zebrik|🧰 naradi kufrik|🔧 klic francak|🔨 kladivo|⚒️ kladiva naradi|🛠️ naradi|⛏️ krumpac|🔩 sroub matka|⚙️ ozubene kolo nastaveni|🧱 cihly zed|⛓️ retez|🧲 magnet|💣 bomba|🪓 sekera|🔪 nuz|🗡️ mec dyka|⚔️ mece souboj|🛡️ stit|⚰️ rakev|🪦 hrob nahrobek|🏺 amfora nadoba|🔮 kristalova koule vestba|📿 ruzenec koralky|🧿 amulet oko|💈 holic|⚗️ destilace chemie|🔭 dalekohled hvezdy|🔬 mikroskop|🩹 naplast|🩺 stetoskop|💊 prasek lek|💉 injekce|🩸 krev|🧬 dna|🦠 bakterie virus|🧫 petriho miska|🧪 zkumavka|🌡️ teplomer|🧹 kostete uklid|🧺 kos pradlo|🧻 papir toaletni|🚽 zachod|🚿 sprcha|🛁 vana|🧼 mydlo|🪥 kartacek zuby|🪒 zilet holeni|🧽 houba mycka|🧴 lahvicka krem|🛎️ zvonek recepce|🔑 klic|🗝️ klic stary|🚪 dvere|🪑 zidle|🛋️ pohovka gauc|🛏️ postel|🧸 medvidek plysak|🖼️ obraz ramecek|🛍️ tasky nakup|🛒 vozik nakupni|🎁 darek|🎀 masle|🪄 kouzelna hulka|🪅 pinata|📩 obalka sipka|📨 dopis prichozi|📧 email|📮 postovni schranka|📦 balik krabice|🏷️ stitek cenovka|📜 svitek listina|📃 papir dokument|📄 dokument list|📑 zalozky dokument|📊 graf sloupcovy|📈 graf rust nahoru|📉 graf pokles dolu|🗒️ blok poznamky|🗓️ kalendar|📆 kalendar|📅 kalendar datum|🗑️ kos odpadky|📋 schranka clipboard|📁 slozka|📂 slozka otevrena|🗂️ registr slozky|🗞️ noviny|📰 noviny zpravy|📓 sesit|📔 zapisnik|📒 ucetni kniha|📕 kniha cervena|📗 kniha zelena|📘 kniha modra|📙 kniha oranzova|📚 knihy|📖 kniha otevrena cteni|🔖 zalozka|🔗 odkaz link|📎 sponka|📐 trojuhelnik pravitko|📏 pravitko|🧮 pocitadlo abakus|📌 pripinacek|📍 spendlik mapa misto|✂️ nuzky|🖊️ pero|🖋️ plnici pero|✒️ hrot pero|🖌️ stetec|🖍️ pastelka|📝 poznamka psani|✏️ tuzka|🔍 lupa hledani|🔎 lupa|🔒 zamek zamceno|🔓 zamek odemceno|👓 bryle|🕶️ slunecni bryle|🥽 bryle ochranne|🥼 plast laboratorni|🦺 vesta reflexni|👔 kravata|👕 tricko|👖 dziny kalhoty|🧣 sala|🧤 rukavice|🧥 kabat bunda|🧦 ponozky|👗 saty|👘 kimono|🥻 sari|🩱 plavky|🩲 plavky slipy|🩳 kratasy sortky|👙 bikiny|👚 halenka|👛 penezenka|👜 kabelka|👝 psanicko|🎒 batoh|🩴 zabky sandaly|👞 boty panske|👟 tenisky bota sport|🥾 pohorky boty|🥿 balerinky|👠 lodicky podpatky|👡 sandaly|👢 kozacky|👑 koruna kral|👒 klobouk damsky|🎩 cylindr klobouk|🎓 promoce cepice|🧢 ksiltovka|⛑️ helma prilba|💄 rtenka|💍 prsten|💼 kufrik aktovka"],
+  ["Symboly","symbol","🏧 bankomat|🚮 kos odpadky znacka|🚰 pitna voda|♿ vozik bezbarierovy|🚹 muzi wc|🚺 zeny wc|🚻 toalety wc|🚼 miminko|🚾 wc|🛂 pasova kontrola|🛃 celnice|🛄 zavazadla|🛅 uschovna|⚠️ pozor varovani|🚸 deti prechod|⛔ zakaz vjezdu|🚫 zakaz|🚭 zakaz koureni|🔞 osmnact zakaz|☢️ radiace|☣️ biohazard|⬆️ sipka nahoru|↗️ sipka vpravo nahoru|➡️ sipka vpravo|↘️ sipka vpravo dolu|⬇️ sipka dolu|↙️ sipka vlevo dolu|⬅️ sipka vlevo|↖️ sipka vlevo nahoru|↕️ sipka nahoru dolu|↔️ sipka vlevo vpravo|↩️ sipka zpet|↪️ sipka vpred|🔃 obnovit kolecko|🔄 obnovit sipky|🔙 zpet back|🔝 nahoru top|🛐 modlitebna|⚛️ atom|🕉️ om|✡️ david hvezda|☸️ dharma kolo|☯️ jin jang|✝️ kriz|☪️ pulmesic|☮️ mir|🔯 hvezda sest|♈ beran znameni|♉ byk znameni|♊ blizenci znameni|♋ rak znameni|♌ lev znameni|♍ panna znameni|♎ vahy znameni|♏ stir znameni|♐ strelec znameni|♑ kozoroh znameni|♒ vodnar znameni|♓ ryby znameni|🔀 nahodne prehravani|🔁 opakovat|🔂 opakovat jednou|▶️ prehrat|⏩ vpred rychle|⏭️ dalsi|◀️ zpet prehravani|⏪ zpatky rychle|⏮️ predchozi|⏫ nahoru rychle|⏬ dolu rychle|⏸️ pauza|⏹️ stop|⏺️ nahravani rec|⏏️ vysunout|🔅 jas nizky|🔆 jas vysoky|📶 signal|📳 vibrace|📴 vypnuty telefon|♀️ zena symbol|♂️ muz symbol|✖️ krizek nasobeni|➕ plus scitani|➖ minus odcitani|➗ deleni|♾️ nekonecno|‼️ vykricniky|⁉️ otaznik vykricnik|❓ otaznik|❔ otaznik bily|❕ vykricnik bily|❗ vykricnik|〰️ vlnovka|💱 smenarna kurz|💲 dolar|⚕️ medicina had|♻️ recyklace|⚜️ lilie|🔱 trojzubec|📛 jmenovka|🔰 zacatecnik|⭕ krouzek|✅ zeleny fajfka hotovo|☑️ zaskrtnuto|✔️ fajfka|❌ krizek chyba|❎ krizek zeleny|➰ smycka|➿ smycka dvojita|〽️ znacka|✳️ hvezdicka|✴️ hvezda osmicipa|❇️ jiskra|©️ copyright|®️ registrovano|™️ ochranna znamka|#️⃣ mrizka hashtag|*️⃣ hvezdicka klavesa|0️⃣ nula|1️⃣ jednicka jedna|2️⃣ dvojka dva|3️⃣ trojka tri|4️⃣ ctyrka ctyri|5️⃣ petka pet|6️⃣ sestka sest|7️⃣ sedmicka sedm|8️⃣ osmicka osm|9️⃣ devitka devet|🔟 deset|🔠 velka pismena|🔡 mala pismena|🔢 cisla|🔣 symboly|🔤 abeceda pismena|🆎 ab krevni skupina|🆑 cl|🆒 cool|🆓 free zdarma|ℹ️ informace|🆔 id|🆕 nove new|🆖 ng|🆗 ok|🆘 sos pomoc|🆙 up nahoru|🆚 versus vs|🔴 kolecko cervene|🟠 kolecko oranzove|🟡 kolecko zlute|🟢 kolecko zelene|🔵 kolecko modre|🟣 kolecko fialove|🟤 kolecko hnede|⚫ kolecko cerne|⚪ kolecko bile|🟥 ctverec cerveny|🟧 ctverec oranzovy|🟨 ctverec zluty|🟩 ctverec zeleny|🟦 ctverec modry|🟪 ctverec fialovy|🟫 ctverec hnedy|⬛ ctverec cerny|⬜ ctverec bily|🔶 kosoctverec oranzovy|🔷 kosoctverec modry|🔸 kosoctverec maly oranzovy|🔹 kosoctverec maly modry|🔺 trojuhelnik cerveny|🔻 trojuhelnik dolu|💠 diamant kytka|🔘 prepinac tlacitko|🔳 ctverec bily ram|🔲 ctverec cerny ram"],
+  ["Vlajky","vlajka","🏁 cil vlajka zavod|🚩 vlajka cervena|🏳️ vlajka bila|🏴 vlajka cerna|🇨🇿 cesko ceska republika|🇸🇰 slovensko|🇵🇱 polsko|🇦🇹 rakousko|🇩🇪 nemecko|🇭🇺 madarsko|🇬🇧 velka britanie anglie|🇺🇸 usa amerika|🇫🇷 francie|🇮🇹 italie|🇪🇸 spanelsko|🇵🇹 portugalsko|🇳🇱 nizozemsko holandsko|🇧🇪 belgie|🇨🇭 svycarsko|🇸🇪 svedsko|🇳🇴 norsko|🇩🇰 dansko|🇫🇮 finsko|🇮🇪 irsko|🇬🇷 recko|🇭🇷 chorvatsko|🇸🇮 slovinsko|🇷🇸 srbsko|🇷🇴 rumunsko|🇧🇬 bulharsko|🇺🇦 ukrajina|🇹🇷 turecko|🇨🇦 kanada|🇲🇽 mexiko|🇧🇷 brazilie|🇦🇷 argentina|🇯🇵 japonsko|🇨🇳 cina|🇰🇷 korea|🇮🇳 indie|🇦🇺 australie|🇳🇿 novy zeland|🇿🇦 jizni afrika|🇪🇬 egypt|🇮🇱 izrael|🇦🇪 emiraty|🇹🇭 thajsko|🇻🇳 vietnam|🇮🇩 indonesie|🇪🇺 evropska unie"]
 ];
+// Ikony spodni listy — obrysove (styl SF Symbols jako na iOS), ne emoji.
+const MM_RX_IKONY = {
+  cas:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.6"/><path d="M12 6.9v5.3l3.4 2"/></svg>',
+  smajl:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.6"/><path d="M8.2 14.1c.9 1.3 2.2 2 3.8 2s2.9-.7 3.8-2"/><circle cx="9.1" cy="9.9" r=".95" fill="currentColor" stroke="none"/><circle cx="14.9" cy="9.9" r=".95" fill="currentColor" stroke="none"/></svg>',
+  zvire:'<svg viewBox="0 0 24 24"><circle cx="12" cy="13.4" r="6.2"/><circle cx="6.2" cy="6.6" r="2.7"/><circle cx="17.8" cy="6.6" r="2.7"/><circle cx="10" cy="12.4" r=".85" fill="currentColor" stroke="none"/><circle cx="14" cy="12.4" r=".85" fill="currentColor" stroke="none"/><path d="M10.9 15.8c.7.6 1.5.6 2.2 0"/></svg>',
+  jidlo:'<svg viewBox="0 0 24 24"><path d="M4.2 7.6h12.2v4.7a5 5 0 0 1-5 5H9.2a5 5 0 0 1-5-5V7.6Z"/><path d="M16.4 9h1.7a2.4 2.4 0 0 1 0 4.9h-1.7"/><path d="M3 20.2h17"/></svg>',
+  sport:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.6"/><path d="m12 7.5 3.6 2.6-1.4 4.2H9.8L8.4 10.1 12 7.5Z"/><path d="M12 3.4v4.1M4.3 9.5l4.1.6M6.8 18.9l3-4.6M17.2 18.9l-3-4.6M19.7 9.5l-4.1.6"/></svg>',
+  cesta:'<svg viewBox="0 0 24 24"><path d="M3.4 16.8v-3.3l1.9-4.6a2 2 0 0 1 1.9-1.2h9.6a2 2 0 0 1 1.9 1.2l1.9 4.6v3.3"/><path d="M4.6 13.4h14.8"/><path d="M3.4 16.8h3.3M17.3 16.8h3.3"/><circle cx="7.4" cy="15.1" r=".9" fill="currentColor" stroke="none"/><circle cx="16.6" cy="15.1" r=".9" fill="currentColor" stroke="none"/></svg>',
+  objekt:'<svg viewBox="0 0 24 24"><path d="M12 3.6a6 6 0 0 1 3.7 10.7c-.6.5-.9 1.1-.9 1.8H9.2c0-.7-.3-1.3-.9-1.8A6 6 0 0 1 12 3.6Z"/><path d="M9.6 18.1h4.8M10.6 20.6h2.8"/></svg>',
+  symbol:'<svg viewBox="0 0 24 24"><rect x="3.6" y="3.6" width="16.8" height="16.8" rx="3.8"/><path d="M10.2 7.4 8.9 16.6M15.4 7.4l-1.3 9.2M7.5 10.6h9.3M6.9 13.7h9.3"/></svg>',
+  vlajka:'<svg viewBox="0 0 24 24"><path d="M6.2 20.6V3.9"/><path d="M6.2 5h11l-2 3.5 2 3.5h-11"/></svg>'
+};
 const MM_RX_RYCHLE = ['❤️','💪','🔥','👏','😂','😮','🎉'];
+// nabidka v "Casto pouzivane", dokud uzivatel nic nepouzil (2 radky jako na iOS)
+const MM_RX_VYCHOZI = ['❤️','😂','👍','🔥','💪','🙏','👏','😍','🎉','😮','🥳','😅','🫶','😊'];
 window.MM_FEED_REACTIONS_TABLE = window.MM_FEED_REACTIONS_TABLE || null;
 function mmRxState(){ const fs=mmFeedState(); if(!fs.reakce) fs.reakce={}; return fs.reakce; }
 function mmRxCasto(){ try{ return JSON.parse(localStorage.getItem('mc_rx_casto')||'[]'); }catch(_){ return []; } }
 function mmRxZapisCasto(e){
-  try{ let l=mmRxCasto().filter(x=>x!==e); l.unshift(e); localStorage.setItem('mc_rx_casto', JSON.stringify(l.slice(0,16))); }catch(_){}
+  try{ let l=mmRxCasto().filter(x=>x!==e); l.unshift(e); localStorage.setItem('mc_rx_casto', JSON.stringify(l.slice(0,21))); }catch(_){}
 }
 function mmRxHtml(id){
   const r=mmRxState()[id]; if(!r) return '';
@@ -6088,13 +6121,18 @@ async function mmRxPersist(payload){
 }
 let mmRxCil=null;
 function mmRxZavri(){
-  ['rx-bar','rx-sheet','rx-back'].forEach(id=>{ const el=document.getElementById(id); if(el){ el.classList.remove('on'); setTimeout(()=>el.remove(), 240); } });
+  ['rx-bar','rx-sheet','rx-back'].forEach(id=>{
+    const el=document.getElementById(id); if(!el) return;
+    if(el._mmVv && window.visualViewport){ window.visualViewport.removeEventListener('resize', el._mmVv); window.visualViewport.removeEventListener('scroll', el._mmVv); el._mmVv=null; }
+    el.classList.remove('on'); el.style.pointerEvents='none'; setTimeout(()=>el.remove(), 260);
+  });
   mmRxCil=null;
 }
 // 1) RYCHLA LISTA u zaznamu (jako WhatsApp)
 function mmRxOpenPicker(sh, row){
   const id=row.getAttribute('data-feedrow')||row.getAttribute('data-rxid'); if(!id) return;
   mmRxZavri(); mmRxCil=id;
+  try{ const s=window.getSelection&&window.getSelection(); if(s&&s.removeAllRanges) s.removeAllRanges(); }catch(_){}
   const rr=row.getBoundingClientRect();
   const back=document.createElement('div'); back.id='rx-back'; back.className='rx-back tich';
   const bar=document.createElement('div'); bar.id='rx-bar'; bar.className='rx-bar';
@@ -6114,52 +6152,148 @@ function mmRxOpenPicker(sh, row){
     const e=t.getAttribute('data-rx'); const cil=mmRxCil; mmRxZavri(); if(cil) mmRxToggle(cil, e);
   });
 }
-// 2) PLNY VYBER (＋) — sheet s hledanim, castymi a kategoriemi
+// 2) PLNY VYBER (＋) — panel emoji jako systemova iOS klavesnice
+//    (kategorie v poradi iOS, 7 sloupcu, hledani podle ceskych klicovych slov,
+//     skok na kategorii, aktivni ikona podle rolovani, tazeni dolu zavira)
+function mmRxNorm(s){ return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
+let MM_RX_IDX=null;
+function mmRxIndex(){
+  if(MM_RX_IDX) return MM_RX_IDX;
+  MM_RX_IDX=MM_RX_SADA.map(k=>{
+    const nn=mmRxNorm(k[0]);
+    return {n:k[0], ik:k[1], items:String(k[2]).split('|').filter(Boolean).map(r=>{
+      const i=r.indexOf(' ');
+      return {e:(i<0?r:r.slice(0,i)), kw:(i<0?'':mmRxNorm(r.slice(i+1)))+' '+nn};
+    })};
+  });
+  return MM_RX_IDX;
+}
+function mmRxGrid(list){ let h=''; for(let i=0;i<list.length;i++) h+='<b data-rx="'+list[i]+'">'+list[i]+'</b>'; return h; }
+function mmRxSekceHtml(nazev,vnitrek,idx){
+  return '<div class="rx-sec" data-sec="'+idx+'"><span class="rx-lbl">'+nazev+'</span><div class="rx-grid">'+vnitrek+'</div></div>';
+}
+let MM_RX_STAT=null;   // 8 pevnych kategorii — HTML se poskláda jen jednou za relaci
+function mmRxStatHtml(){
+  if(MM_RX_STAT==null) MM_RX_STAT=mmRxIndex().map((k,i)=>mmRxSekceHtml(k.n, mmRxGrid(k.items.map(x=>x.e)), i+1)).join('');
+  return MM_RX_STAT;
+}
 function mmRxOpenSheet(){
   const cil=mmRxCil;
   const bar=document.getElementById('rx-bar'); if(bar){ bar.classList.remove('on'); setTimeout(()=>bar.remove(),200); }
   let back=document.getElementById('rx-back');
   if(!back){ back=document.createElement('div'); back.id='rx-back'; back.className='rx-back'; document.body.appendChild(back); }
-  back.classList.remove('tich'); back.classList.add('on'); back.style.pointerEvents='auto';
+  back.classList.remove('tich'); back.classList.add('on'); back.style.pointerEvents='none';
+  const idx=mmRxIndex();
   const casto=mmRxCasto();
-  const s=document.createElement('div'); s.id='rx-sheet'; s.className='rx-sheet';
-  const sekce=(nazev,list,idx)=>'<div class="rx-sec" data-sec="'+idx+'"><span class="rx-lbl">'+nazev+'</span><div class="rx-grid">'
-    +list.map(e=>'<b data-rx="'+e+'">'+e+'</b>').join('')+'</div></div>';
-  s.innerHTML='<div class="rx-handle"></div>'
-    +'<div class="rx-hled"><input type="text" placeholder="Hledat emoji…" data-hledat></div>'
+  const prvni=(casto.length?casto:MM_RX_VYCHOZI).slice(0,21);
+  const s=document.createElement('div'); s.id='rx-sheet'; s.className='rx-sheet'; s.style.pointerEvents='none';
+  const ikony=['cas'].concat(idx.map(k=>k.ik));
+  s.innerHTML=
+     '<div class="rx-hlava"><div class="rx-handle"></div>'
+      +'<div class="rx-hled"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.3"/><path d="m15.2 15.2 4.3 4.3"/></svg>'
+      +'<input type="text" placeholder="Hledat" data-hledat autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false">'
+      +'<b class="rx-x" data-cistit hidden>✕</b></div></div>'
     +'<div class="rx-body">'
-      +(casto.length?sekce('Naposledy použité',casto,-1):'')
-      +MM_RX_KAT.map((k,i)=>sekce(k[0],k[2],i)).join('')
-      +'<div class="rx-nic" hidden>Nic nenalezeno</div>'
+      +'<div class="rx-vse">'+mmRxSekceHtml('Často používané', mmRxGrid(prvni), 0)+mmRxStatHtml()+'</div>'
+      +'<div class="rx-res" hidden><div class="rx-grid"></div></div>'
+      +'<div class="rx-nic" hidden>Žádné emoji</div>'
     +'</div>'
-    +'<div class="rx-katbar">'+MM_RX_KAT.map((k,i)=>'<b data-kat="'+i+'">'+k[1]+'</b>').join('')+'</div>';
+    +'<div class="rx-katbar">'+ikony.map((ik,i)=>'<b data-kat="'+i+'"'+(i===0?' class="on"':'')+'>'+(MM_RX_IKONY[ik]||'')+'</b>').join('')+'</div>';
   document.body.appendChild(s);
   mmRxCil=cil;
-  requestAnimationFrame(()=>s.classList.add('on'));
   s._mmOpened=Date.now();
+  requestAnimationFrame(()=>s.classList.add('on'));
+  // stejna 320ms prodleva jako u rychle listy — dojezd prstu po podrzeni nic neproklikne
+  setTimeout(()=>{ s.style.pointerEvents='auto'; back.style.pointerEvents='auto'; }, 320);
   back.onclick=mmRxZavri;
+
+  const body=s.querySelector('.rx-body'), vse=s.querySelector('.rx-vse'),
+        res=s.querySelector('.rx-res'), resGrid=res.querySelector('.rx-grid'),
+        nic=s.querySelector('.rx-nic'), inp=s.querySelector('[data-hledat]'),
+        cistit=s.querySelector('[data-cistit]'), katby=[].slice.call(s.querySelectorAll('.rx-katbar b'));
+  const aktivni=(i)=>katby.forEach((b,j)=>b.classList.toggle('on', j===i));
+  let zamek=0;   // po skoku na kategorii kratce nepretahuj aktivni ikonu podle rolovani
+
+  function mmRxHledej(){
+    const q=mmRxNorm(inp.value.trim());
+    cistit.hidden=!inp.value;
+    if(!q){ vse.hidden=false; res.hidden=true; nic.hidden=true; body.scrollTop=0; aktivni(0); return; }
+    const slova=q.split(/\s+/).filter(Boolean), vid=[], mam={};
+    idx.forEach(k=>k.items.forEach(it=>{
+      if(mam[it.e]) return;
+      for(let i=0;i<slova.length;i++) if(it.kw.indexOf(slova[i])<0) return;
+      mam[it.e]=1; vid.push(it.e);
+    }));
+    resGrid.innerHTML=mmRxGrid(vid.slice(0,300));
+    vse.hidden=true; res.hidden=!vid.length; nic.hidden=!!vid.length;
+    body.scrollTop=0;
+  }
+  inp.addEventListener('input', mmRxHledej);
+
   s.addEventListener('click', ev=>{
+    if(s._mmTahano){ s._mmTahano=false; return; }          // po tazeni neber klik
     const t=ev.target.closest('b'); if(!t) return;
+    if(t.hasAttribute('data-cistit')){ inp.value=''; mmRxHledej(); inp.focus(); return; }
     if(t.hasAttribute('data-kat')){
-      const sec=s.querySelector('.rx-sec[data-sec="'+t.getAttribute('data-kat')+'"]');
-      s.querySelectorAll('.rx-katbar b').forEach(x=>x.classList.toggle('on', x===t));
-      if(sec) s.querySelector('.rx-body').scrollTo({top:sec.offsetTop-4, behavior:'smooth'});
+      const i=+t.getAttribute('data-kat');
+      if(inp.value){ inp.value=''; mmRxHledej(); }
+      const sec=vse.querySelector('.rx-sec[data-sec="'+i+'"]');
+      aktivni(i); zamek=Date.now()+700;
+      if(sec) body.scrollTo({top:Math.max(0, sec.offsetTop-6), behavior:'smooth'});
       return;
     }
     const e=t.getAttribute('data-rx'); if(!e) return;
     const c=mmRxCil; mmRxZavri(); if(c) mmRxToggle(c, e);
   });
-  const inp=s.querySelector('[data-hledat]');
-  inp.addEventListener('input', ()=>{
-    const q=inp.value.trim().toLowerCase();
-    let vid=0;
-    s.querySelectorAll('.rx-sec').forEach(sec=>{
-      const nazev=(sec.querySelector('.rx-lbl').textContent||'').toLowerCase();
-      const shoda=!q || nazev.indexOf(q)>=0;
-      sec.hidden=!shoda; if(shoda) vid++;
-    });
-    s.querySelector('.rx-nic').hidden=(vid>0);
-  });
+
+  // aktivni ikona se meni podle toho, kde prave jsi (jako na iOS)
+  body.addEventListener('scroll', ()=>{
+    if(!res.hidden || Date.now()<zamek) return;
+    const y=body.scrollTop+10, secs=vse.children; let a=0;
+    for(let i=0;i<secs.length;i++){ if(secs[i].offsetTop<=y) a=i; else break; }
+    aktivni(a);
+  }, {passive:true});
+
+  // iOS: kdyz na hledani vyjede systemova klavesnice, posun panel nad ni
+  const vv=window.visualViewport;
+  if(vv){
+    const posun=()=>{ const d=Math.max(0, Math.round(window.innerHeight-(vv.height+vv.offsetTop))); s.style.bottom=d?d+'px':''; };
+    s._mmVv=posun; vv.addEventListener('resize', posun); vv.addEventListener('scroll', posun);
+  }
+  mmRxTazeni(s, body);
+}
+// tazeni dolu zavira panel — za uchyt/hlavicku vzdy, z mrizky kdyz je rolovani uplne nahore
+function mmRxTazeni(s, body){
+  const hlava=s.querySelector('.rx-hlava');
+  let y0=0, dy=0, drzi=false, tahne=false, shora=false;
+  const start=(ev, zHlavy)=>{
+    const p=(ev.touches&&ev.touches[0])||ev;
+    y0=p.clientY; dy=0; drzi=true; tahne=false; s._mmTahano=false;
+    shora=!!zHlavy || body.scrollTop<=0;
+  };
+  const move=(ev)=>{
+    if(!drzi) return;
+    const p=(ev.touches&&ev.touches[0])||ev; dy=p.clientY-y0;
+    if(!tahne){ if(dy<=6 || !shora) return; tahne=true; s._mmTahano=true; s.classList.add('rx-drag'); }
+    s.style.transform='translateY('+Math.max(0,dy)+'px)';
+    if(ev.cancelable) ev.preventDefault();
+  };
+  const end=()=>{
+    if(!drzi) return; drzi=false;
+    s.classList.remove('rx-drag'); s.style.transform='';
+    if(tahne && dy>70){ try{ const a=document.activeElement; a&&a.blur&&a.blur(); }catch(_){} mmRxZavri(); }
+    tahne=false;
+  };
+  hlava.addEventListener('touchstart', ev=>start(ev,true), {passive:true});
+  body.addEventListener('touchstart', ev=>start(ev,false), {passive:true});
+  s.addEventListener('touchmove', move, {passive:false});
+  s.addEventListener('touchend', end, {passive:true});
+  s.addEventListener('touchcancel', end, {passive:true});
+  hlava.addEventListener('mousedown', ev=>start(ev,true));
+  body.addEventListener('mousedown', ev=>start(ev,false));
+  s.addEventListener('mousemove', move);
+  s.addEventListener('mouseup', end);
+  s.addEventListener('mouseleave', end);
 }
 function mmDeniBindReakce(sh, host){
   if(!sh || host._mmRxBound) return; host._mmRxBound=true;
