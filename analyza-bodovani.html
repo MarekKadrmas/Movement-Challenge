@@ -1,0 +1,265 @@
+<title>Bodování Movement Challenge</title>
+<style>
+:root{
+  --paper:#F7F8F6; --slab:#EFF2EE; --ink:#141A18; --muted:#66716D; --faint:#8B958F;
+  --line:#DDE3DD; --accent:#0E7C57; --accent-soft:#0e7c571a; --warn:#A8431E; --warn-soft:#a8431e14;
+  --ok:#0E7C57;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0F1413; --slab:#161D1B; --ink:#E6EDE9; --muted:#93A09B; --faint:#6F7C77;
+    --line:#232C29; --accent:#3FD693; --accent-soft:#3fd6931f; --warn:#E8845A; --warn-soft:#e8845a1a;
+    --ok:#3FD693;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0F1413; --slab:#161D1B; --ink:#E6EDE9; --muted:#93A09B; --faint:#6F7C77;
+  --line:#232C29; --accent:#3FD693; --accent-soft:#3fd6931f; --warn:#E8845A; --warn-soft:#e8845a1a;
+  --ok:#3FD693;
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:"Charter","Bitstream Charter","Iowan Old Style","Cambria",Georgia,serif;
+  font-size:17px; line-height:1.62; margin:0;
+  padding:0 20px 96px;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1000px; margin:0 auto;}
+.col{max-width:640px; margin-left:auto; margin-right:auto;}
+
+/* ---- typografie ---- */
+h1,h2,h3{font-weight:600; text-wrap:balance; margin:0;}
+h1{font-size:clamp(30px,5.2vw,46px); line-height:1.1; letter-spacing:-.018em;}
+h2{font-size:clamp(21px,3vw,26px); line-height:1.2; letter-spacing:-.012em;}
+h3{font-size:18px; line-height:1.3;}
+p{margin:0;}
+strong{font-weight:600}
+em{font-style:italic}
+
+.mono,.eyebrow,table,.num,.tag,.bignum,code{
+  font-family:"Cascadia Mono","SF Mono","Menlo","Consolas",ui-monospace,monospace;
+  font-variant-numeric:tabular-nums;
+}
+.eyebrow{
+  font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--faint); font-weight:600;
+}
+code{font-size:.88em; background:var(--slab); padding:.12em .38em; border-radius:3px;}
+
+/* ---- rytmus ---- */
+header{padding:72px 0 0;}
+section{padding-top:60px;}
+.stack{display:flex; flex-direction:column; gap:20px;}
+.stack-tight{display:flex; flex-direction:column; gap:12px;}
+.rule{height:1px; background:var(--line); border:0; margin:0;}
+
+/* ---- verdikt ---- */
+.verdict{
+  background:var(--slab); border-left:3px solid var(--accent);
+  padding:28px 30px; margin-top:34px;
+  display:flex; flex-direction:column; gap:14px;
+}
+.bignum{font-size:clamp(44px,9vw,72px); line-height:.92; font-weight:600; letter-spacing:-.04em; color:var(--accent);}
+.verdict .lead{font-size:19px; line-height:1.5;}
+
+/* ---- datové bloky ---- */
+.slab{
+  background:var(--slab); padding:26px 28px; margin-top:26px;
+  display:flex; flex-direction:column; gap:16px;
+}
+.scroll{overflow-x:auto; margin:0 -28px; padding:0 28px;}
+table{width:100%; border-collapse:collapse; font-size:13.5px; line-height:1.45;}
+th{
+  text-align:right; font-weight:600; font-size:10.5px; letter-spacing:.09em;
+  text-transform:uppercase; color:var(--faint); padding:0 0 9px 18px;
+  border-bottom:1px solid var(--line); white-space:nowrap;
+}
+th:first-child,td:first-child{text-align:left; padding-left:0;}
+td{padding:9px 0 9px 18px; text-align:right; border-bottom:1px solid var(--line); white-space:nowrap;}
+tr:last-child td{border-bottom:0;}
+tbody tr.hi td{color:var(--accent); font-weight:600;}
+td.name{font-family:"Charter","Bitstream Charter","Cambria",Georgia,serif; font-size:15px;}
+.cap{font-size:12.5px; color:var(--muted); line-height:1.5;}
+
+/* ---- pruhový graf ---- */
+.bars{display:flex; flex-direction:column; gap:9px;}
+.bar{display:grid; grid-template-columns:74px 1fr 62px; align-items:center; gap:12px; font-size:13px;}
+.bar .lab{font-family:"Charter",Georgia,serif; font-size:14.5px;}
+.bar .track{height:9px; background:var(--line); position:relative;}
+.bar .fill{height:100%; background:var(--accent); display:block;}
+.bar .fill.dim{background:var(--faint);}
+.bar .v{text-align:right; color:var(--muted); font-size:12.5px;}
+
+/* ---- nálezy ---- */
+.finding{
+  display:flex; flex-direction:column; gap:9px;
+  padding:22px 0; border-top:1px solid var(--line);
+}
+.finding:first-of-type{border-top:0; padding-top:6px;}
+.tag{
+  align-self:flex-start; font-size:10px; letter-spacing:.1em; text-transform:uppercase;
+  font-weight:600; padding:3px 8px; border-radius:2px;
+  background:var(--warn-soft); color:var(--warn);
+}
+.tag.ok{background:var(--accent-soft); color:var(--ok);}
+.finding p{color:var(--muted); font-size:15.5px;}
+.finding p .hl{color:var(--ink); font-weight:600;}
+
+.lede{font-size:19px; line-height:1.55; color:var(--muted);}
+.note{font-size:14px; color:var(--muted); line-height:1.55;}
+
+ul{margin:0; padding-left:1.15em;}
+li{margin-bottom:7px;}
+li::marker{color:var(--faint);}
+
+@media (max-width:560px){
+  body{font-size:16px; padding:0 16px 72px;}
+  .slab,.verdict{padding:20px 18px; margin-left:-18px; margin-right:-18px;}
+  .scroll{margin:0 -18px; padding:0 18px;}
+  .bar{grid-template-columns:64px 1fr 54px; gap:9px;}
+}
+</style>
+
+<div class="wrap">
+
+<header class="col stack">
+  <div class="eyebrow">Movement Challenge · analýza · 20. srpna 2026</div>
+  <h1>Žebříček neměří výkon.<br>Měří, jak často zapisuješ.</h1>
+  <p class="lede">Rozbor bodovacího systému na 445 reálných záznamech šesti hráčů za 96 dní — co systém doopravdy odměňuje, kde se dá obejít, a co s tím.</p>
+</header>
+
+<div class="col">
+<div class="verdict">
+  <div class="eyebrow">Korelace počtu záznamů a celkových bodů</div>
+  <div class="bignum">0,998</div>
+  <p class="lead">Chceš-li vědět, kolik má kdo bodů, stačí spočítat jeho záznamy a vynásobit sedmdesáti. Wilks koeficient, exponenty, objemové faktory — celá ta matematika se navzájem vyruší a vyjde z ní <strong>skoro konstantních 68–88 bodů za záznam</strong> bez ohledu na to, kdo jsi a co jsi udělal.</p>
+</div>
+</div>
+
+<section class="col stack">
+  <div class="eyebrow">Důkaz</div>
+  <h2>Rozdíl v bodech je 17×. Rozdíl v kvalitě záznamu 1,3×.</h2>
+  <p>Kdyby systém měřil výkon, lidé by se lišili v tom, kolik dostanou <em>za jeden zápis</em>. Neliší. Káťa má nejhodnotnější záznamy v partě — a je čtvrtá. Mára je v kvalitě záznamu čtvrtý — a vede o 1 500 bodů.</p>
+</section>
+
+<div class="col">
+<div class="slab">
+  <div class="scroll">
+  <table>
+    <thead><tr><th>Hráč</th><th>Body</th><th>Záznamů</th><th>Aktivních dnů</th><th>Bodů / záznam</th><th>Pořadí dle kvality</th></tr></thead>
+    <tbody>
+      <tr class="hi"><td class="name">Mára</td><td>11 592</td><td>169</td><td>84</td><td>69</td><td>4.</td></tr>
+      <tr><td class="name">Natálka</td><td>10 048</td><td>148</td><td>79</td><td>68</td><td>6.</td></tr>
+      <tr><td class="name">Péťa</td><td>3 985</td><td>55</td><td>45</td><td>72</td><td>3.</td></tr>
+      <tr class="hi"><td class="name">Káťa</td><td>3 421</td><td>39</td><td>28</td><td>88</td><td>1.</td></tr>
+      <tr><td class="name">Martin</td><td>1 770</td><td>26</td><td>15</td><td>68</td><td>5.</td></tr>
+      <tr><td class="name">Lukáš</td><td>667</td><td>8</td><td>6</td><td>83</td><td>2.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="cap">Máťa nezapsal za celé období nic, proto v tabulce chybí. Korelace mezi počtem záznamů a body je 0,998; mezi aktivními dny a body 0,984.</p>
+</div>
+</div>
+
+<section class="col stack">
+  <div class="eyebrow">Tři díry</div>
+  <h2>Co se dá v systému obejít</h2>
+  <p>Tohle nejsou hypotézy — všechno je spočítané ze současných vzorců v appce.</p>
+</section>
+
+<div class="col">
+<div class="slab stack">
+  <div class="finding">
+    <span class="tag">Dělení záznamů</span>
+    <h3>Stejná práce, 2,5× víc bodů</h3>
+    <p>Protože se mocnina <code>^0,55</code> aplikuje na každý záznam zvlášť, vyplatí se jeden trénink rozsekat na drobné. <span class="hl">Sto shybů zapsaných najednou dá 136 bodů. Stejných sto shybů po pěti dá 336 bodů.</span></p>
+    <div class="bars" style="margin-top:6px">
+      <div class="bar"><span class="lab mono">1 × 100</span><span class="track"><span class="fill dim" style="width:40%"></span></span><span class="v">136 b</span></div>
+      <div class="bar"><span class="lab mono">4 × 25</span><span class="track"><span class="fill dim" style="width:75%"></span></span><span class="v">253 b</span></div>
+      <div class="bar"><span class="lab mono">10 × 10</span><span class="track"><span class="fill" style="width:97%"></span></span><span class="v">325 b</span></div>
+      <div class="bar"><span class="lab mono">20 × 5</span><span class="track"><span class="fill" style="width:100%"></span></span><span class="v">336 b</span></div>
+    </div>
+    <p class="cap">Totéž platí pro aktivity, kde je to ještě jednodušší: jeden „Gym“ na úrovni 3 je 100 bodů, rozepsaný na „Gym-push“, „Gym-pull“ a „Gym-legs“ je 300 bodů. V datech se to už děje — Natálka má 21 dní, kdy je zapsaná posilovna jako aktivita <em>a zároveň</em> cviky z téhož tréninku zvlášť.</p>
+  </div>
+
+  <div class="finding">
+    <span class="tag">Trest za zlepšení</span>
+    <h3>Zvedneš si maximum, přijdeš o body</h3>
+    <p>Body za cviky se počítají jako podíl tvého osobního maxima. Když se zlepšíš a maximum poctivě přepíšeš, <span class="hl">za úplně stejný výkon dostaneš míň</span>. Mára by za svých sto shybů dostal při maximu 21 celkem 136 bodů, ale při maximu 25 už jen 123.</p>
+    <p class="cap">Systém tedy odměňuje, když svoje maximum nepřiznáš — přesný opak toho, o co v appce jde.</p>
+  </div>
+
+  <div class="finding">
+    <span class="tag">Úroveň si volíš sám</span>
+    <h3>Náročnost 1–5 je čestné prohlášení</h3>
+    <p>Aktivity se bodují plošně podle úrovně, kterou zadá sám hráč: 30 / 60 / 100 / 150 / 220 bodů. Nic to nekontroluje — ani čas, ani kilometry. Běh má sice pole na kilometry, ale <span class="hl">do bodů se vůbec nepromítají</span>.</p>
+    <p class="cap">Následek: Mára má 30× úroveň 1, převážně procházky, což je 1 040 bodů. Natálka má 49× úroveň 1 za 1 744 bodů. Káťa naopak volí skoro vždy trojku a výš. Nikdo přitom nelže — jen každý měří jinak.</p>
+  </div>
+</div>
+</div>
+
+<section class="col stack">
+  <div class="eyebrow">Co naopak funguje</div>
+  <h2>Přepočet na osobní maximum je v pořádku</h2>
+  <p>Stojí za to říct i to, co je dobře, protože se to při přestavbě nesmí zahodit. Wilks koeficient a poměřování s vlastním maximem <em>fungují</em> a fungují správným směrem — začátečník dostane za stejný počet opakování násobně víc než pokročilý.</p>
+</section>
+
+<div class="col">
+<div class="slab">
+  <div class="eyebrow">Body za 20 shybů podle hráče</div>
+  <div class="bars">
+    <div class="bar"><span class="lab">Káťa</span><span class="track"><span class="fill" style="width:100%"></span></span><span class="v">155 b</span></div>
+    <div class="bar"><span class="lab">Natálka</span><span class="track"><span class="fill" style="width:76%"></span></span><span class="v">117 b</span></div>
+    <div class="bar"><span class="lab">Máťa</span><span class="track"><span class="fill" style="width:73%"></span></span><span class="v">113 b</span></div>
+    <div class="bar"><span class="lab">Péťa</span><span class="track"><span class="fill dim" style="width:50%"></span></span><span class="v">77 b</span></div>
+    <div class="bar"><span class="lab">Martin</span><span class="track"><span class="fill dim" style="width:39%"></span></span><span class="v">61 b</span></div>
+    <div class="bar"><span class="lab">Mára</span><span class="track"><span class="fill dim" style="width:36%"></span></span><span class="v">56 b</span></div>
+  </div>
+  <p class="cap">Tahle část systému je spravedlivá — jen ji nikdo nevidí, protože ji přebíjí prostý součet záznamů. A pro hráče je nesrozumitelná: nikdo v partě netuší, co je Wilks koeficient.</p>
+</div>
+</div>
+
+<section class="col stack">
+  <div class="eyebrow">Simulace</div>
+  <h2>Stropy a bonusy za sérii pořadím nehnou</h2>
+  <p>Přepočítal jsem všech 445 záznamů dvanácti různými způsoby — denní strop, týdenní strop, bonus za sérii, body za pořadí v týdnu, procento splněných týdnů, osobní cíle. <strong>Pořadí zůstalo skoro ve všech případech identické.</strong></p>
+</section>
+
+<div class="col">
+<div class="slab">
+  <div class="scroll">
+  <table>
+    <thead><tr><th>Systém</th><th>Mára</th><th>Natálka</th><th>Péťa</th><th>Káťa</th><th>Martin</th><th>Lukáš</th><th>Rozevření</th></tr></thead>
+    <tbody>
+      <tr><td class="name">Dnes (součet)</td><td>1.</td><td>2.</td><td>3.</td><td>4.</td><td>5.</td><td>6.</td><td>17,4×</td></tr>
+      <tr><td class="name">Denní strop 150</td><td>1.</td><td>2.</td><td>3.</td><td>4.</td><td>5.</td><td>6.</td><td>15,0×</td></tr>
+      <tr><td class="name">Týdenní strop 500</td><td>1.</td><td>2.</td><td>3.</td><td>4.</td><td>5.</td><td>6.</td><td>10,4×</td></tr>
+      <tr><td class="name">Strop + série</td><td>1.</td><td>2.</td><td>3.</td><td>4.</td><td>5.</td><td>6.</td><td>18,5×</td></tr>
+      <tr><td class="name">Body za pořadí v týdnu</td><td>1.</td><td>2.</td><td>3.</td><td>4.</td><td>5.</td><td>6.</td><td>19,7×</td></tr>
+      <tr><td class="name">Splněné týdny (%)</td><td>1.</td><td>2.</td><td>3.</td><td>4.</td><td>5.</td><td>6.</td><td>7,2×</td></tr>
+      <tr><td class="name">Osobní cíl (%)</td><td>2.</td><td>1.</td><td>3.</td><td>4.</td><td>5.</td><td>6.</td><td>5,6×</td></tr>
+      <tr class="hi"><td class="name">Průměr na aktivní den</td><td>1.</td><td>2.</td><td>6.</td><td>3.</td><td>4.</td><td>5.</td><td>1,6×</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="cap">„Rozevření“ = poměr prvního a posledního místa. Jediné dva systémy, které pořadím skutečně zamíchají, jsou ty, které přestanou sčítat a začnou průměrovat.</p>
+</div>
+</div>
+
+<section class="col stack">
+  <h2>Proč to tak vychází</h2>
+  <p>Protože rozdíl mezi Márou a Lukášem <em>není nespravedlnost</em>. Mára se hýbal 84 dní z 96, Lukáš 6. Žádný vzorec z toho nemůže udělat remízu — a ani by neměl.</p>
+  <p>Skutečná nespravedlnost je jinde a je trojí: <strong>kdo cvičí cviky, hraje jinou hru</strong> (cviky jsou 40 % všech bodů v partě, ale Káťa z nich má 13 % a Péťa 23 %); <strong>kdo píše podrobněji, dostane víc za totéž</strong>; a <strong>kdo tři měsíce chyběl, nemá se kam vrátit</strong>, protože kumulativní žebříček od května se dohnat nedá.</p>
+</section>
+
+<hr class="rule col" style="margin-top:56px">
+
+<section class="col stack" id="doporuceni">
+  <div class="eyebrow">Doporučení</div>
+  <h2>Návrh se dokončuje</h2>
+  <p class="note">Tuhle sekci doplní finální návrh systému.</p>
+</section>
+
+</div>

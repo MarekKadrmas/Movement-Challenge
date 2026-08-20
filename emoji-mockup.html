@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Emoji panel — mockup</title>
+<style>
+:root{
+  /* iOS systémové barvy odměřené z fotky systémové klávesnice */
+  --panel:#F2F2F6;       /* podklad panelu = SVĚTLE ŠEDÝ */
+  --pole:#FFFFFF;        /* hledací pole = BÍLÉ */
+  --kbd:#D1D5DB;         /* podklad klávesnice */
+  --kbd-key:#FFFFFF;
+  --kbd-key2:#ADB3BD;
+  --sep:rgba(0,0,0,.10);
+  --sec:#8A8A8E;
+  --panel-vyska:455px;   /* panel = od 64px shora po horní hranu klávesnice */
+  --kbd-vyska:335px;     /* výška iOS CZ klávesnice včetně spodní lišty */
+  --katbar:44px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",system-ui,sans-serif;}
+
+/* ---------- pozadí = zatemněná appka ---------- */
+.pozadi{position:fixed;inset:0;background:#0B0F0E;}
+.pozadi .app{position:absolute;inset:0;padding:56px 20px;color:#fff;filter:blur(0px);}
+.pozadi .app h1{font-size:34px;font-weight:800;letter-spacing:-.5px;margin:0;}
+.pozadi .app .dat{font-size:13px;font-weight:800;letter-spacing:1.4px;color:#8A9490;margin-top:2px;}
+.pozadi .app .rada{display:flex;align-items:center;gap:10px;margin-top:22px;padding:12px 0;border-top:1px solid #1B211F;}
+.pozadi .app .bub{width:30px;height:30px;border-radius:50%;background:#1E5B3F;color:#7EE2AC;
+  font-size:11px;font-weight:800;display:grid;place-items:center;}
+.pozadi .app .jm{flex:1;font-size:15px;font-weight:600;}
+.pozadi .app .bd{font-size:15px;font-weight:800;color:#3FD693;}
+.stin{position:fixed;inset:0;background:rgba(0,0,0,.32);}
+
+/* ---------- panel ---------- */
+.panel{
+  position:fixed;left:0;right:0;top:64px;
+  height:var(--panel-vyska);
+  background:var(--panel);
+  border-radius:14px 14px 0 0;
+  display:flex;flex-direction:column;
+  overflow:hidden;
+  box-shadow:0 -12px 40px rgba(0,0,0,.22);
+  transition:top .26s cubic-bezier(.32,.72,0,1), height .26s cubic-bezier(.32,.72,0,1);
+}
+/* stav BEZ klávesnice: panel je nižší a sedí dole */
+body:not(.psani) .panel{ top:auto;bottom:0;height:430px;padding-bottom:env(safe-area-inset-bottom); }
+
+.uchyt{height:18px;display:grid;place-items:center;flex:0 0 auto;}
+.uchyt i{width:36px;height:5px;border-radius:3px;background:#C6C6CC;display:block;}
+body.psani .uchyt{display:none;}
+
+.hled{flex:0 0 auto;padding:6px 14px 10px;}
+body.psani .hled{padding-top:calc(6px + env(safe-area-inset-top));}
+.pole{
+  display:flex;align-items:center;gap:8px;
+  background:var(--pole);                     /* BÍLÉ pole na šedém panelu */
+  border-radius:11px;height:40px;padding:0 11px;
+}
+.pole svg{width:17px;height:17px;fill:none;stroke:var(--sec);stroke-width:2.2;flex:0 0 auto;}
+.pole input{
+  border:0;outline:0;background:transparent;flex:1;min-width:0;
+  font-size:17px;font-family:inherit;color:#000;
+}
+.pole input::placeholder{color:var(--sec);}
+.pole .x{width:20px;height:20px;border-radius:50%;background:#C6C6CC;display:none;place-items:center;flex:0 0 auto;
+  color:#fff;font-size:13px;line-height:1;font-weight:700;}
+body.psani .pole .x{display:grid;}
+
+/* mřížka emoji — jediná část, která scrolluje */
+.telo{flex:1 1 auto;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 10px 6px;min-height:0;}
+.nadpis{font-size:12.5px;font-weight:700;letter-spacing:.4px;color:var(--sec);
+  text-transform:uppercase;padding:8px 5px 4px;}
+.mrizka{display:grid;grid-template-columns:repeat(7,1fr);}
+.mrizka button{border:0;background:none;font-size:31px;line-height:1;padding:7px 0;cursor:pointer;
+  font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;}
+
+/* lišta kategorií — vždy na SPODNÍ hraně panelu, tj. přesně nad klávesnicí */
+.katbar{
+  flex:0 0 auto;height:var(--katbar);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 14px;border-top:1px solid var(--sep);background:var(--panel);
+}
+.katbar button{border:0;background:none;padding:0;width:30px;height:30px;border-radius:50%;
+  display:grid;place-items:center;cursor:pointer;}
+.katbar button svg{width:19px;height:19px;fill:none;stroke:#8A8A8E;stroke-width:1.7;}
+.katbar button.on{background:#DCDCE1;}
+.katbar button.on svg{stroke:#1C1C1E;}
+
+/* ---------- falešná klávesnice ---------- */
+.kbd{
+  position:fixed;left:0;right:0;bottom:0;height:var(--kbd-vyska);
+  background:var(--kbd);display:flex;flex-direction:column;
+  transform:translateY(100%);transition:transform .26s cubic-bezier(.32,.72,0,1);
+  padding-bottom:env(safe-area-inset-bottom);
+}
+body.psani .kbd{transform:translateY(0);}
+.kbd .navrhy{height:44px;display:flex;align-items:center;justify-content:space-around;
+  border-bottom:1px solid rgba(0,0,0,.06);font-size:16px;color:#1C1C1E;}
+.kbd .navrhy span{flex:1;text-align:center;}
+.kbd .navrhy span+span{border-left:1px solid rgba(0,0,0,.12);}
+.kbd .rada{display:flex;gap:6px;justify-content:center;padding:5px 3px;}
+.kbd .k{
+  flex:1;height:42px;background:var(--kbd-key);border-radius:5px;
+  display:grid;place-items:center;font-size:22px;color:#000;font-style:normal;
+  box-shadow:0 1px 0 rgba(0,0,0,.28);
+}
+.kbd .k.tm{background:var(--kbd-key2);font-size:15px;}
+.kbd .k.mez{flex:5;}
+.kbd .k.w15{flex:1.5;}
+.kbd .spodek{display:flex;align-items:center;justify-content:space-between;padding:6px 18px 2px;
+  font-size:20px;color:#1C1C1E;}
+
+/* ---------- přepínač mockupu ---------- */
+.prep{
+  position:fixed;top:calc(8px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);
+  z-index:99;display:flex;gap:6px;background:rgba(0,0,0,.62);backdrop-filter:blur(12px);
+  border-radius:999px;padding:4px;
+}
+.prep button{border:0;background:transparent;color:#fff;font:600 12px/1 -apple-system,system-ui,sans-serif;
+  padding:8px 13px;border-radius:999px;cursor:pointer;}
+.prep button.on{background:#fff;color:#000;}
+body.psani .prep{opacity:.25;}
+</style>
+</head>
+<body>
+
+<div class="pozadi">
+  <div class="app">
+    <h1>Přehled</h1>
+    <div class="dat">ČTVRTEK 20. 8.</div>
+    <div class="rada"><span class="bub">MÁ</span><span class="jm">Mára</span><span class="bd">11 592</span></div>
+    <div class="rada"><span class="bub">NA</span><span class="jm">Natálka</span><span class="bd">10 048</span></div>
+    <div class="rada"><span class="bub">PÉ</span><span class="jm">Péťa</span><span class="bd">3 985</span></div>
+    <div class="rada"><span class="bub">KÁ</span><span class="jm">Káťa</span><span class="bd">3 421</span></div>
+  </div>
+</div>
+<div class="stin"></div>
+
+<div class="prep">
+  <button id="b1" class="on" onclick="stav(0)">Panel</button>
+  <button id="b2" onclick="stav(1)">Hledání + klávesnice</button>
+</div>
+
+<div class="panel">
+  <div class="uchyt"><i></i></div>
+
+  <div class="hled">
+    <div class="pole">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 21 21"/></svg>
+      <input id="vstup" placeholder="Hledat" readonly onclick="stav(1)">
+      <span class="x" onclick="stav(0)">✕</span>
+    </div>
+  </div>
+
+  <div class="telo" id="telo"></div>
+
+  <div class="katbar">
+    <button class="on"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></button>
+    <button><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.5a4.5 4.5 0 0 0 7 0M9 9.5h.01M15 9.5h.01"/></svg></button>
+    <button><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="6"/><circle cx="6.5" cy="7" r="2.6"/><circle cx="17.5" cy="7" r="2.6"/></svg></button>
+    <button><svg viewBox="0 0 24 24"><path d="M4 9h12v6a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V9zM16 10h2a2.5 2.5 0 0 1 0 5h-2"/></svg></button>
+    <button><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="m12 7 3.5 2.5-1.3 4h-4.4l-1.3-4L12 7z"/></svg></button>
+    <button><svg viewBox="0 0 24 24"><path d="M4 15h16v-3l-1.6-4H5.6L4 12v3zM7 15v2M17 15v2"/></svg></button>
+    <button><svg viewBox="0 0 24 24"><path d="M9.5 17h5M10 20h4M12 3a6 6 0 0 1 3.5 10.9V15h-7v-1.1A6 6 0 0 1 12 3z"/></svg></button>
+    <button><svg viewBox="0 0 24 24"><path d="M5 9h14M5 15h14M10 4 8 20M16 4l-2 16"/></svg></button>
+    <button><svg viewBox="0 0 24 24"><path d="M6 3v18M6 4h11l-2.5 4L17 12H6"/></svg></button>
+  </div>
+</div>
+
+<div class="kbd">
+  <div class="navrhy"><span>srdce</span><span>Srdce</span><span>srdcem</span></div>
+  <div class="rada"><i class="k">q</i><i class="k">w</i><i class="k">e</i><i class="k">r</i><i class="k">t</i><i class="k">z</i><i class="k">u</i><i class="k">i</i><i class="k">o</i><i class="k">p</i></div>
+  <div class="rada" style="padding-left:16px;padding-right:16px"><i class="k">a</i><i class="k">s</i><i class="k">d</i><i class="k">f</i><i class="k">g</i><i class="k">h</i><i class="k">j</i><i class="k">k</i><i class="k">l</i><i class="k">´</i></div>
+  <div class="rada"><i class="k tm w15">⇧</i><i class="k">y</i><i class="k">x</i><i class="k">c</i><i class="k">v</i><i class="k">b</i><i class="k">n</i><i class="k">m</i><i class="k">ˇ</i><i class="k tm w15">⌫</i></div>
+  <div class="rada"><i class="k tm w15">123</i><i class="k">☺</i><i class="k mez"></i><i class="k tm" style="flex:2.2">⏎</i></div>
+  <div class="spodek"><span>🌐</span><span>🎤</span></div>
+</div>
+
+<script>
+const CASTO=['😮','😂','💵'];
+const SMAJLICI=['😀','😃','😄','😁','😆','😅','🤣','😂','🙂','🙃','🫠','😉','😊','😇','🥰','😍','🤩','😘','😗','😚','😙','🥲','😋','😛','😜','🤪','😝','🤑','🤗','🤭','🫢','🫣','🤫','🤔','🫡','🤐','🤨','😐','😑','😶','🫥','😏','😒','🙄','😬','😮‍💨','🤥','😌','😔','😪','🤤','😴','😷','🤒','🤕','🤢','🤮','🤧','🥵','🥶','🥴','😵','🤯','🤠','🥳','🥸','😎','🤓','🧐'];
+const SRDCE=['😍','😻','💘','💝','💖','💗','💓','💞','💕','💟','❣️','💔','❤️','🧡','💛','💚','💙','💜','🤎','🖤','🤍','🫰','🫶','🫀'];
+
+function vykresli(hledani){
+  const t=document.getElementById('telo');
+  if(hledani){
+    t.innerHTML='<div class="mrizka">'+SRDCE.map(e=>`<button>${e}</button>`).join('')+'</div>';
+  }else{
+    t.innerHTML='<div class="nadpis">Často používané</div><div class="mrizka">'
+      +CASTO.map(e=>`<button>${e}</button>`).join('')+'</div>'
+      +'<div class="nadpis">Smajlíci a lidé</div><div class="mrizka">'
+      +SMAJLICI.map(e=>`<button>${e}</button>`).join('')+'</div>';
+  }
+  t.scrollTop=0;
+}
+function stav(psani){
+  document.body.classList.toggle('psani', !!psani);
+  document.getElementById('vstup').value = psani ? 'srdce' : '';
+  document.getElementById('b1').classList.toggle('on', !psani);
+  document.getElementById('b2').classList.toggle('on', !!psani);
+  vykresli(psani);
+}
+stav(0);
+</script>
+</body>
+</html>

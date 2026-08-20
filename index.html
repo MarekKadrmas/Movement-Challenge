@@ -47,7 +47,7 @@ html{-webkit-text-size-adjust:100%;}
 .rx-grid{display:grid;grid-template-columns:repeat(7,1fr);}
 .rx-grid b{height:49px;display:grid;place-items:center;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;font-size:32px;font-weight:400;line-height:1;border-radius:10px;cursor:pointer;-webkit-tap-highlight-color:transparent;}
 .rx-grid b:active{background:var(--track,#EEF0EC);}
-.rx-sheet.hledani{top:0;bottom:0;border-radius:0;padding-bottom:0;}.rx-sheet.hledani .rx-handle{display:none;}.rx-sheet.hledani .rx-hled{padding-top:calc(8px + env(safe-area-inset-top));}.rx-sheet.hledani .rx-body{max-height:none;flex:1;padding-bottom:56vh;}.rx-sheet.hledani .rx-katbar{display:none;}.rx-sheet{display:flex;flex-direction:column;}.rx-katbar{display:flex;justify-content:space-between;align-items:center;padding:5px 20px 1px;border-top:1px solid var(--sep,#E4E7E3);}
+.rx-katbar{display:flex;justify-content:space-between;align-items:center;padding:5px 20px 1px;border-top:1px solid var(--sep,#E4E7E3);}
 .rx-katbar b{width:33px;height:33px;display:grid;place-items:center;border-radius:50%;cursor:pointer;color:var(--sec,#6B756F);opacity:.72;}
 .rx-katbar b svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
 .rx-katbar b.on{background:var(--track,#EEF0EC);color:var(--label,#141915);opacity:1;}
@@ -6202,16 +6202,26 @@ function mmRxStatHtml(){
   return MM_RX_STAT;
 }
 function mmRxKlavesnice(s){
-  // Marek 2026-08-20: zadne dopocitavani vysky klavesnice (na iOS v PWA se visualViewport
-  // nemusi zmensit a vznikala mezera). Pri psani se panel roztahne pres celou vysku —
-  // klavesnice najede PRES nej, seznam ma dole rezervu, takze se k emoji dorolluje.
-  if(!s) return;
-  const inp=s.querySelector('[data-hledat]'); if(!inp) return;
-  const zapni=()=>{ s.classList.add('hledani'); s.style.top=''; s.style.bottom=''; };
-  const vypni=()=>{ s.classList.remove('hledani'); };
-  inp.addEventListener('focus', zapni);
-  inp.addEventListener('blur', ()=>{ setTimeout(()=>{ if(document.activeElement!==inp) vypni(); }, 60); });
-  s._mmVVoff=()=>{ inp.removeEventListener('focus', zapni); };
+  // iOS: pri otevrene klavesnici se fixni prvek nechova spolehlive (bottom pocitany z vysky
+  // klavesnice nechaval mezeru). Panel proto kotvime PRESNE na spodni hranu viditelne plochy
+  // (visualViewport): top = offsetTop + height - vyska panelu.
+  const vv=window.visualViewport; if(!vv||!s) return;
+  const body=s.querySelector('.rx-body');
+  const uprav=()=>{
+    const dostupna=vv.height;
+    if(body){
+      const zbytek=s.offsetHeight-(body.offsetHeight||0);            // uchyt + hledani + lista kategorii
+      const max=Math.max(110, Math.round(dostupna-zbytek-8));
+      body.style.maxHeight=max+'px';
+    }
+    const h=s.offsetHeight;
+    s.style.bottom='auto';
+    s.style.top=Math.max(0, Math.round(vv.offsetTop+vv.height-h))+'px';
+  };
+  vv.addEventListener('resize', uprav); vv.addEventListener('scroll', uprav);
+  s._mmVVoff=()=>{ vv.removeEventListener('resize',uprav); vv.removeEventListener('scroll',uprav); };
+  requestAnimationFrame(uprav);
+  setTimeout(uprav,120); setTimeout(uprav,320);   // klavesnice najizdi postupne
 }
 function mmRxOpenSheet(){
   const cil=mmRxCil;
