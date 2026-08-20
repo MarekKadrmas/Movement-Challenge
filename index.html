@@ -1938,11 +1938,8 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .hcard .hc-d{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
 .mm .hcard .hc-dsl{position:relative;width:100%;height:25px;border-radius:5px;background:var(--track);}
 .mm .hcard .hc-dsl i{position:absolute;left:0;right:0;bottom:0;display:block;border-radius:5px;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);transition:height .5s cubic-bezier(.22,1,.36,1);}
-.mm .hcard .hc-mark{position:absolute;left:0;right:0;top:0;height:5px;z-index:3;pointer-events:none;}
-.mm .hcard .hc-mark b{position:absolute;top:0;bottom:0;width:50%;border-top:1px solid rgba(255,255,255,.8);border-left:1px solid rgba(255,255,255,.8);border-radius:5px 0 0 0;
-.mm   -webkit-mask-image:repeating-linear-gradient(90deg,#000 0 3px,transparent 3px 6px);mask-image:repeating-linear-gradient(90deg,#000 0 3px,transparent 3px 6px);}
-.mm .hcard .hc-mark b:first-child{left:0;}
-.mm .hcard .hc-mark b:last-child{right:0;transform:scaleX(-1);}
+.mm .hcard .hc-mark{position:absolute;left:0;right:0;top:0;height:7px;z-index:3;pointer-events:none;overflow:visible;}
+.mm .hcard .hc-mark path{fill:none;stroke:rgba(255,255,255,.82);stroke-width:1;stroke-linecap:butt;}
 .mm .hcard .hc-d.je-dnes span{color:var(--green);font-weight:900;}
 .mm .hcard .hc-dsl u{position:absolute;left:0;right:0;bottom:1px;text-align:center;text-decoration:none;font-size:9.06px;font-weight:800;line-height:1;letter-spacing:-.02em;color:#fff;font-variant-numeric:tabular-nums;pointer-events:none;z-index:4;text-shadow:0 1px 2px rgba(0,0,0,.42);}
 .mm 
@@ -2109,7 +2106,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .recday{font-size:13.28px;font-weight:800;color:var(--sec);margin:10px 2px 5px;}
 /* DĚNÍ na Přehledu (2026-08-18 redesign) — druhá, .mm-prefixovaná kopie stejných pravidel
    (font-size = template × 1,1366; geometrie shodná). Aktivní kopie je v <template id="mm-tpl">. */
-.mm .fday{display:flex;align-items:center;gap:8px;margin:12px 3px 5px;}
+.mm .fday{display:flex;align-items:center;gap:8px;margin:7px 3px 5px;}
 .mm .fday span{font-size:11.3px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--ter);white-space:nowrap;flex:0 0 auto;}
 .mm .fday i{flex:1 1 auto;height:1px;background:var(--sep);border-radius:1px;}
 .mm .deni>.fday:first-child{margin-top:1px;}
@@ -2559,11 +2556,8 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .hcard .hc-d{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
 .hcard .hc-dsl{position:relative;width:100%;height:25px;border-radius:5px;background:var(--track);}
 .hcard .hc-dsl i{position:absolute;left:0;right:0;bottom:0;display:block;border-radius:5px;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);transition:height .5s cubic-bezier(.22,1,.36,1);}
-.hcard .hc-mark{position:absolute;left:0;right:0;top:0;height:5px;z-index:3;pointer-events:none;}
-.hcard .hc-mark b{position:absolute;top:0;bottom:0;width:50%;border-top:1px solid rgba(255,255,255,.8);border-left:1px solid rgba(255,255,255,.8);border-radius:5px 0 0 0;
-  -webkit-mask-image:repeating-linear-gradient(90deg,#000 0 3px,transparent 3px 6px);mask-image:repeating-linear-gradient(90deg,#000 0 3px,transparent 3px 6px);}
-.hcard .hc-mark b:first-child{left:0;}
-.hcard .hc-mark b:last-child{right:0;transform:scaleX(-1);}
+.hcard .hc-mark{position:absolute;left:0;right:0;top:0;height:7px;z-index:3;pointer-events:none;overflow:visible;}
+.hcard .hc-mark path{fill:none;stroke:rgba(255,255,255,.82);stroke-width:1;stroke-linecap:butt;}
 .hcard .hc-d.je-dnes span{color:var(--green);font-weight:900;}
 .hcard .hc-dsl u{position:absolute;left:0;right:0;bottom:1px;text-align:center;text-decoration:none;font-size:9.06px;font-weight:800;line-height:1;letter-spacing:-.02em;color:#fff;font-variant-numeric:tabular-nums;pointer-events:none;z-index:4;text-shadow:0 1px 2px rgba(0,0,0,.42);}
 
@@ -2671,7 +2665,7 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
      Den = jemný uppercase oddělovač s linkou (.fday), řádek = avatar · Jméno tučně + co dělal
      normální vahou · body zeleně · 💬 jen když komentáře jsou. Sbalený den = „· N záznamů"
      stejnou gramatikou jako záznam + rotující šipka (.fcar). Události = tónované pilulky dle typu. */
-  .fday{display:flex;align-items:center;gap:8px;margin:12px 3px 5px;}
+  .fday{display:flex;align-items:center;gap:8px;margin:7px 3px 5px;}
   .fday span{font-size:9.94px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--ter);white-space:nowrap;flex:0 0 auto;}
   .fday i{flex:1 1 auto;height:1px;background:var(--sep);border-radius:1px;}
   .deni>.fday:first-child{margin-top:1px;}
@@ -5820,7 +5814,7 @@ function renderDnesek(){
     const rad = 5;   // pevne zaobleni; cele lezi nad ryskou diky posunu MM_SL_NAD_MIN
     const dnesek=d.ds===today, budouci=MM_UKAZKA_KARTA?false:(d.ds>today);
     return '<div class="hc-d'+(dnesek?' je-dnes':'')+(budouci?' je-pak':'')+(d.b>mCil&&!budouci?' je-nad':'')+'">'
-      +'<div class="hc-dsl">'+((d.b>mCil&&!budouci)?'<s class="hc-mark"><b></b><b></b></s>':'')+'<i style="height:'+((d.b>0&&!budouci)?v:0)+'%;border-radius:'+rad+'px '+rad+'px 5px 5px'+((R*pom)>MM_SL_MAX_PX?(()=>{const tot=R*pom; const P=x=>Math.min(100,x/tot*100).toFixed(1);const g='linear-gradient(to top,#000 '+P(MM_SL_MAX_PX-8)+'%,rgba(0,0,0,.16) '+P(MM_SL_MAX_PX+2)+'%,rgba(0,0,0,.06) '+P(MM_SL_MAX_PX+10)+'%,rgba(0,0,0,.06) 100%)';return ';-webkit-mask-image:'+g+';mask-image:'+g;})():'')+'"></i>'+((d.b>0&&!budouci)?'<u>'+fmtNum(d.b)+'</u>':'')+'</div>'
+      +'<div class="hc-dsl">'+((d.b>mCil&&!budouci)?'<svg class="hc-mark" preserveAspectRatio="none"><path/></svg>':'')+'<i style="height:'+((d.b>0&&!budouci)?v:0)+'%;border-radius:'+rad+'px '+rad+'px 5px 5px'+((R*pom)>MM_SL_MAX_PX?(()=>{const tot=R*pom; const P=x=>Math.min(100,x/tot*100).toFixed(1);const g='linear-gradient(to top,#000 '+P(MM_SL_MAX_PX-6)+'%,rgba(0,0,0,.55) '+P(MM_SL_MAX_PX+4)+'%,rgba(0,0,0,.22) '+P(MM_SL_MAX_PX+14)+'%,rgba(0,0,0,.22) 100%)';return ';-webkit-mask-image:'+g+';mask-image:'+g;})():'')+'"></i>'+((d.b>0&&!budouci)?'<u>'+fmtNum(d.b)+'</u>':'')+'</div>'
       +'<span>'+_pism[i]+'</span></div>';
   }).join('');
   const mTrendHtml = todayPts<=0 ? ''
@@ -5881,7 +5875,7 @@ function renderDnesek(){
   <div class="sl" onclick="mmOpenSub('zaznamy')" style="cursor:pointer;touch-action:manipulation"><span>Dění</span><a style="pointer-events:none">celá historie →</a></div>
   ${feed}
     <div class="hbm" style="margin-top:6px;padding:6px 12px;cursor:pointer" onclick="mmOpenSub('rekordyparty')"><div class="hi" style="background:#E0A23A22;width:27px;height:27px;font-size:16.9px"><svg class="i"><use href="#i-medal"/></svg></div><div class="ht">Rekordy & maximálky všech<small>všichni hráči na jednom místě</small></div><span class="rx" style="color:var(--ter);font-size:19.31px">›</span></div>`;
-  const _mmK=tpl+'|'+(document.documentElement.getAttribute('data-theme')||'light'); if(host._mmTpl===_mmK&&host.shadowRoot){const s=host.shadowRoot.querySelector('.scr'); if(s){const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; s.style.zoom=z; s.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(s,z);} mmDeniApplyFeedState(host.shadowRoot,'prehled'); mmBarSnap(host.shadowRoot,0); mmDeniBindReakce(host.shadowRoot, host); mmPsegAnim(host.shadowRoot); mmLbarAlign(host.shadowRoot); mmHeatInit(host.shadowRoot); return;} host._mmTpl=_mmK; const sh=host.shadowRoot||host.attachShadow({mode:'open'});
+  const _mmK=tpl+'|'+(document.documentElement.getAttribute('data-theme')||'light'); if(host._mmTpl===_mmK&&host.shadowRoot){const s=host.shadowRoot.querySelector('.scr'); if(s){const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; s.style.zoom=z; s.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(s,z);} mmDeniApplyFeedState(host.shadowRoot,'prehled'); mmBarSnap(host.shadowRoot,0); mmZnackyCile(host.shadowRoot); mmDeniBindReakce(host.shadowRoot, host); mmPsegAnim(host.shadowRoot); mmLbarAlign(host.shadowRoot); mmHeatInit(host.shadowRoot); return;} host._mmTpl=_mmK; const sh=host.shadowRoot||host.attachShadow({mode:'open'});
   const tplEl=document.getElementById('mm-tpl'); const sprite=document.getElementById('momentum-sprite');
   sh.innerHTML='';
   if(tplEl) sh.appendChild(tplEl.content.cloneNode(true));
@@ -5894,7 +5888,7 @@ function renderDnesek(){
   const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(0)}</div>`;
   sh.appendChild(w);
   const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin=(window.innerWidth>393?'0 auto':'');
-  mmDeniApplyFeedState(sh,'prehled'); mmBarSnap(sh,0);   // po plnem re-renderu obnov rozbaleni/pocty/tecky komentaru ze state.mmFeed
+  mmDeniApplyFeedState(sh,'prehled'); mmBarSnap(sh,0); mmZnackyCile(sh);   // po plnem re-renderu obnov rozbaleni/pocty/tecky komentaru ze state.mmFeed
   mmDeniBindReakce(sh, host);
   mmPsegAnim(sh);
   mmLbarAlign(sh);
@@ -6674,6 +6668,26 @@ function mmAkuzativ(j){
 }
 
 // Serie hrace v zebricku — maly plamenek s cislem. Nulova serie se nezobrazuje.
+
+// Znacka cile: cesta se dopocitava az po layoutu, protoze potrebuje skutecnou sirku sloupce.
+// Delka carky se voli tak, aby na cestu vysel cely pocet carek a mezer — pak jsou vsechny stejne.
+function mmZnackyCile(sh){
+  if(!sh) return;
+  sh.querySelectorAll('.hc-mark').forEach(svg=>{
+    const box=svg.parentElement; if(!box) return;
+    const w=box.clientWidth, h=7, r=5;
+    if(!w) return;
+    svg.setAttribute('viewBox','0 0 '+w+' '+h);
+    svg.setAttribute('width',w); svg.setAttribute('height',h);
+    const path=svg.querySelector('path'); if(!path) return;
+    path.setAttribute('d','M0.5 '+h+' V'+(0.5+r)+' A'+r+' '+r+' 0 0 1 '+(0.5+r)+' 0.5 H'+(w-0.5-r)
+      +' A'+r+' '+r+' 0 0 1 '+(w-0.5)+' '+(0.5+r)+' V'+h);
+    const L=path.getTotalLength();
+    const n=Math.max(3, Math.round((L/3+1)/2));      // pocet carek; cil je carka ~3 px
+    const d=L/(2*n-1);                                // carka i mezera stejne dlouhe, na obou koncich carka
+    path.style.strokeDasharray=d.toFixed(3)+' '+d.toFixed(3);
+  });
+}
 function mmSerieChip(pid){
   if((state.totalPeriod||'week')!=='week') return '';   // u mesice a celkem maji prednost trofeje
   const s=computeStreak(pid);
