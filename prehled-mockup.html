@@ -29,7 +29,7 @@ body{display:grid;place-items:center;}
 .prepr button.on{background:#fff;color:#000;}
 .prepr button:focus-visible{outline:2px solid var(--green);outline-offset:2px;}
 
-.obsah{position:absolute;inset:0;padding:44px 18px 0;overflow:hidden;}
+.obsah{position:absolute;inset:0;padding:84px 18px 0;overflow:hidden;}
 
 /* ---------- SPOLEČNÉ ---------- */
 .ikony{display:flex;gap:8px;align-items:center;flex:0 0 auto;}
@@ -68,6 +68,8 @@ body{display:grid;place-items:center;}
 .va .karta{background:var(--card);border-radius:20px;padding:13px 14px;
   box-shadow:0 2px 10px -4px rgba(0,0,0,.10);margin-bottom:12px;}
 .va .r1{display:flex;align-items:center;gap:10px;}
+.va .poz,.vb .poz{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.va .dat,.vb .dat{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .va .r1 .l{flex:1;min-width:0;}
 .va .poz{font:800 20px/1.1 inherit;letter-spacing:-.35px;color:var(--label);}
 .va .dat{font:700 12.5px/1 inherit;color:var(--ter);margin-top:4px;}
@@ -228,8 +230,8 @@ function vykresli(){
     O.innerHTML=`
       <div class="karta"><div class="r1">
         <div class="l"><div class="poz">Dobré poledne, Máro</div>
-          <div class="dat">čtvrtek 20. 8. · <b>3 aktivity</b> · <b>505 b</b> tento týden</div></div>
-        ${ring(115,92)}${ikony()}
+          <div class="dat">čt 20. 8. · <b>3 aktivity</b> · <b>505 b</b></div></div>
+        ${ring(115,92)}<span class="plus">＋</span>
       </div></div>
       ${navyky()}
       ${prepinac()}${odpocet()}
@@ -239,8 +241,8 @@ function vykresli(){
     O.innerHTML=`
       <div class="r1">
         <div class="l"><div class="poz">Dobré poledne, Máro</div>
-          <div class="dat">čtvrtek 20. 8. · <b>3 aktivity</b> · <b>505 b</b> tento týden</div></div>
-        ${ring(115,92)}${ikony()}
+          <div class="dat">čt 20. 8. · <b>3 aktivity</b> · <b>505 b</b></div></div>
+        ${ring(115,92)}<span class="plus">＋</span>
       </div>
       ${navyky()}
       ${prepinac()}${odpocet()}
@@ -259,7 +261,8 @@ function posunJez2(){
 function zmer(){
   const prvni=document.querySelector('.zr');
   if(!prvni) return;
-  const y=Math.round(prvni.getBoundingClientRect().top);
+  // prepinac mockupu zabira 40 px navic proti skutecne appce — odecist, at cisla sedi s realitou
+  const y=Math.round(prvni.getBoundingClientRect().top)-40;
   const pct=Math.round(y/852*100);
   const el=document.getElementById('mereni');
   const zaklad=406;
