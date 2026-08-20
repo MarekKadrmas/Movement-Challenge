@@ -1938,8 +1938,8 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .hcard .hc-d{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
 .mm .hcard .hc-dsl{position:relative;width:100%;height:25px;border-radius:5px;background:var(--track);}
 .mm .hcard .hc-dsl i{position:absolute;left:0;right:0;bottom:0;display:block;border-radius:5px;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);transition:height .5s cubic-bezier(.22,1,.36,1);}
-.mm .hcard .hc-mark{position:absolute;left:0;right:0;top:0;height:7px;z-index:3;pointer-events:none;overflow:visible;}
-.mm .hcard .hc-mark path{fill:none;stroke:rgba(255,255,255,.7);stroke-width:1;stroke-linecap:round;}
+.mm .hcard .hc-mark{position:absolute;left:0;right:0;top:0;height:11px;z-index:3;pointer-events:none;overflow:visible;-webkit-mask-image:linear-gradient(to bottom,#000 0 42%,transparent 100%);mask-image:linear-gradient(to bottom,#000 0 42%,transparent 100%);}
+.mm .hcard .hc-mark path{fill:none;stroke:rgba(255,255,255,.55);stroke-width:0.85;stroke-linecap:round;}
 .mm .hcard .hc-d.je-dnes span{color:var(--green);font-weight:900;}
 .mm .hcard .hc-dsl u{position:absolute;left:0;right:0;bottom:1px;text-align:center;text-decoration:none;font-size:9.06px;font-weight:800;line-height:1;letter-spacing:-.02em;color:#fff;font-variant-numeric:tabular-nums;pointer-events:none;z-index:4;text-shadow:0 1px 2px rgba(0,0,0,.42);}
 .mm 
@@ -2556,8 +2556,8 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .hcard .hc-d{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
 .hcard .hc-dsl{position:relative;width:100%;height:25px;border-radius:5px;background:var(--track);}
 .hcard .hc-dsl i{position:absolute;left:0;right:0;bottom:0;display:block;border-radius:5px;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);transition:height .5s cubic-bezier(.22,1,.36,1);}
-.hcard .hc-mark{position:absolute;left:0;right:0;top:0;height:7px;z-index:3;pointer-events:none;overflow:visible;}
-.hcard .hc-mark path{fill:none;stroke:rgba(255,255,255,.7);stroke-width:1;stroke-linecap:round;}
+.hcard .hc-mark{position:absolute;left:0;right:0;top:0;height:11px;z-index:3;pointer-events:none;overflow:visible;-webkit-mask-image:linear-gradient(to bottom,#000 0 42%,transparent 100%);mask-image:linear-gradient(to bottom,#000 0 42%,transparent 100%);}
+.hcard .hc-mark path{fill:none;stroke:rgba(255,255,255,.55);stroke-width:0.85;stroke-linecap:round;}
 .hcard .hc-d.je-dnes span{color:var(--green);font-weight:900;}
 .hcard .hc-dsl u{position:absolute;left:0;right:0;bottom:1px;text-align:center;text-decoration:none;font-size:9.06px;font-weight:800;line-height:1;letter-spacing:-.02em;color:#fff;font-variant-numeric:tabular-nums;pointer-events:none;z-index:4;text-shadow:0 1px 2px rgba(0,0,0,.42);}
 
@@ -6677,7 +6677,7 @@ function mmZnackyCile(sh){
   const zoom=(scr&&parseFloat(scr.style.zoom))||1;
   sh.querySelectorAll('.hc-mark').forEach(svg=>{
     const box=svg.parentElement; if(!box) return;
-    const w=box.getBoundingClientRect().width/zoom, h=7, r=5;   // desetinna sirka, ne zaokrouhleny clientWidth
+    const w=box.getBoundingClientRect().width/zoom, h=11, r=5;   // desetinna sirka, ne zaokrouhleny clientWidth
     if(!w) return;
     svg.removeAttribute('width'); svg.removeAttribute('height');
     svg.setAttribute('viewBox','0 0 '+w.toFixed(3)+' '+h);
