@@ -6136,7 +6136,7 @@ let mmRxCil=null;
 function mmRxZavri(){
   const s0=document.getElementById('rx-sheet');
   if(s0){ try{ s0._mmVVoff&&s0._mmVVoff(); }catch(_){} }
-  if(s0){ try{ unlockBodyScroll(); }catch(_){} }
+  if(s0){ s0.style.top=''; s0.style.bottom=''; try{ unlockBodyScroll(); }catch(_){} }
   try{ const ae=document.activeElement; if(ae&&ae.blur) ae.blur(); }catch(_){}
   ['rx-bar','rx-sheet','rx-back'].forEach(id=>{
     const el=document.getElementById(id); if(!el) return;
@@ -6202,19 +6202,26 @@ function mmRxStatHtml(){
   return MM_RX_STAT;
 }
 function mmRxKlavesnice(s){
-  // iOS pri otevreni klavesnice odroluje stranku a fixni panel ujede mimo displej.
-  // Drzime ho nad klavesnici podle visualViewport a omezime vysku seznamu.
+  // iOS: pri otevrene klavesnici se fixni prvek nechova spolehlive (bottom pocitany z vysky
+  // klavesnice nechaval mezeru). Panel proto kotvime PRESNE na spodni hranu viditelne plochy
+  // (visualViewport): top = offsetTop + height - vyska panelu.
   const vv=window.visualViewport; if(!vv||!s) return;
+  const body=s.querySelector('.rx-body');
   const uprav=()=>{
-    const kb=Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
-    s.style.bottom=kb+'px';
-    const body=s.querySelector('.rx-body');
-    if(body) body.style.maxHeight=Math.max(120, Math.min(Math.round(vv.height*0.45), Math.round(vv.height-170)))+'px';
-    if(kb>0) window.scrollTo(0,0);
+    const dostupna=vv.height;
+    if(body){
+      const zbytek=s.offsetHeight-(body.offsetHeight||0);            // uchyt + hledani + lista kategorii
+      const max=Math.max(110, Math.round(dostupna-zbytek-8));
+      body.style.maxHeight=max+'px';
+    }
+    const h=s.offsetHeight;
+    s.style.bottom='auto';
+    s.style.top=Math.max(0, Math.round(vv.offsetTop+vv.height-h))+'px';
   };
   vv.addEventListener('resize', uprav); vv.addEventListener('scroll', uprav);
   s._mmVVoff=()=>{ vv.removeEventListener('resize',uprav); vv.removeEventListener('scroll',uprav); };
-  uprav();
+  requestAnimationFrame(uprav);
+  setTimeout(uprav,120); setTimeout(uprav,320);   // klavesnice najizdi postupne
 }
 function mmRxOpenSheet(){
   const cil=mmRxCil;
