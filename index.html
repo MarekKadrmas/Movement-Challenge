@@ -2211,6 +2211,37 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .cvgrades::-webkit-scrollbar{display:none;}
 .mm .cvg{flex:0 0 auto;border:0;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:6px 11px;font:inherit;font-size:11.6px;font-weight:700;color:var(--label);cursor:pointer;}
 .mm .cvpocet{font-style:normal;font-weight:700;color:var(--ter);}
+
+.mm .znobl{flex:0 0 auto;border:0;background:transparent;padding:0 0 0 6px;cursor:pointer;display:flex;align-items:center;}
+.mm .znobl .i{width:15px;height:15px;color:var(--ter);}
+.mm .znobl.on .i{color:var(--green);}
+.mm .znvys{margin-top:7px;display:flex;flex-direction:column;gap:5px;}
+.mm .znvys[hidden]{display:none;}
+.mm .znnav{display:flex;gap:4px;overflow-x:auto;padding-bottom:3px;scrollbar-width:none;}
+.mm .znnav::-webkit-scrollbar{display:none;}
+.mm .znnav .znchip{flex:0 0 auto;}
+.mm .znak{display:flex;align-items:center;gap:7px;width:100%;border:0;background:var(--card);box-shadow:var(--shadow);border-radius:14px;height:38px;padding:0 14px;font:inherit;font-size:12.74px;font-weight:700;color:var(--label);cursor:pointer;text-align:left;}
+.mm .znak .i{width:14px;height:14px;color:var(--ter);flex:0 0 auto;}
+.mm .znak.znprim{background:var(--green);color:#fff;box-shadow:0 5px 14px -5px color-mix(in srgb,var(--green) 60%,transparent);}
+.mm .znak.znprim .i{color:#fff;}
+.mm .znprazdno{font-size:11.6px;font-weight:600;color:var(--ter);align-self:center;padding-right:6px;}
+.mm .znpar{display:inline-flex;align-items:center;gap:2px;}
+.mm .znsrdce{border:0;background:transparent;padding:0 2px;cursor:pointer;display:flex;align-items:center;}
+.mm .znsrdce .i{width:12px;height:12px;color:var(--ter);opacity:.45;}
+.mm .znsrdce.on .i{color:var(--green);opacity:1;}
+.mm .nvov{position:absolute;inset:0;background:rgba(12,18,14,.34);display:flex;align-items:center;justify-content:center;padding:16px;z-index:9;}
+.mm .nvov[hidden]{display:none;}
+.mm .nvbox{width:100%;background:var(--bg);border-radius:22px;padding:16px;box-shadow:0 20px 44px -14px rgba(0,0,0,.4);max-height:100%;overflow-y:auto;}
+.mm .nvttl{font-size:18.11px;font-weight:800;letter-spacing:-.02em;margin-bottom:10px;}
+.mm .nvbox .znlbl{display:block;margin:11px 2px 6px;font-size:13.28px;font-weight:700;color:var(--sec);}
+.mm .nvbox .znlbl:first-of-type{margin-top:0;}
+.mm .nvch{display:flex;flex-wrap:wrap;gap:4px;}
+.mm .nvik,.mm .znik{border:0;background:var(--card);box-shadow:var(--shadow);border-radius:11px;width:34px;height:32px;display:grid;place-items:center;cursor:pointer;}
+.mm .znik .i{width:15px;height:15px;color:var(--sec);}
+.mm .znik.on{background:var(--green);}
+.mm .znik.on .i{color:#fff;}
+.mm .nvb{display:flex;gap:7px;margin-top:15px;}
+.mm .nvb .znak{width:auto;flex:1;justify-content:center;text-align:center;}
 .mm .znrada[hidden],.znvse[hidden],.znkat[hidden]{display:none;}
 .znrada{display:flex;flex-wrap:nowrap;gap:5px;overflow-x:auto;overflow-y:hidden;margin-top:7px;padding-bottom:3px;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
 .mm .znrada::-webkit-scrollbar{display:none;}
@@ -2731,6 +2762,36 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .cvgrades::-webkit-scrollbar{display:none;}
 .cvg{flex:0 0 auto;border:0;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:6px 11px;font:inherit;font-size:11.6px;font-weight:700;color:var(--label);cursor:pointer;}
 .cvpocet{font-style:normal;font-weight:700;color:var(--ter);}
+.znobl{flex:0 0 auto;border:0;background:transparent;padding:0 0 0 6px;cursor:pointer;display:flex;align-items:center;}
+.znobl .i{width:15px;height:15px;color:var(--ter);}
+.znobl.on .i{color:var(--green);}
+.znvys{margin-top:7px;display:flex;flex-direction:column;gap:5px;}
+.znvys[hidden]{display:none;}
+.znnav{display:flex;gap:4px;overflow-x:auto;padding-bottom:3px;scrollbar-width:none;}
+.znnav::-webkit-scrollbar{display:none;}
+.znnav .znchip{flex:0 0 auto;}
+.znak{display:flex;align-items:center;gap:7px;width:100%;border:0;background:var(--card);box-shadow:var(--shadow);border-radius:14px;height:38px;padding:0 14px;font:inherit;font-size:12.74px;font-weight:700;color:var(--label);cursor:pointer;text-align:left;}
+.znak .i{width:14px;height:14px;color:var(--ter);flex:0 0 auto;}
+.znak.znprim{background:var(--green);color:#fff;box-shadow:0 5px 14px -5px color-mix(in srgb,var(--green) 60%,transparent);}
+.znak.znprim .i{color:#fff;}
+.znprazdno{font-size:11.6px;font-weight:600;color:var(--ter);align-self:center;padding-right:6px;}
+.znpar{display:inline-flex;align-items:center;gap:2px;}
+.znsrdce{border:0;background:transparent;padding:0 2px;cursor:pointer;display:flex;align-items:center;}
+.znsrdce .i{width:12px;height:12px;color:var(--ter);opacity:.45;}
+.znsrdce.on .i{color:var(--green);opacity:1;}
+.nvov{position:absolute;inset:0;background:rgba(12,18,14,.34);display:flex;align-items:center;justify-content:center;padding:16px;z-index:9;}
+.nvov[hidden]{display:none;}
+.nvbox{width:100%;background:var(--bg);border-radius:22px;padding:16px;box-shadow:0 20px 44px -14px rgba(0,0,0,.4);max-height:100%;overflow-y:auto;}
+.nvttl{font-size:18.11px;font-weight:800;letter-spacing:-.02em;margin-bottom:10px;}
+.nvbox .znlbl{display:block;margin:11px 2px 6px;font-size:11.69px;font-weight:700;color:var(--sec);}
+.nvbox .znlbl:first-of-type{margin-top:0;}
+.nvch{display:flex;flex-wrap:wrap;gap:4px;}
+.nvik,.znik{border:0;background:var(--card);box-shadow:var(--shadow);border-radius:11px;width:34px;height:32px;display:grid;place-items:center;cursor:pointer;}
+.znik .i{width:15px;height:15px;color:var(--sec);}
+.znik.on{background:var(--green);}
+.znik.on .i{color:#fff;}
+.nvb{display:flex;gap:7px;margin-top:15px;}
+.nvb .znak{width:auto;flex:1;justify-content:center;text-align:center;}
 .znrada[hidden],.znvse[hidden],.znkat[hidden]{display:none;}
 .znrada{display:flex;flex-wrap:nowrap;gap:5px;overflow-x:auto;overflow-y:hidden;margin-top:7px;padding-bottom:3px;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
 .znrada::-webkit-scrollbar{display:none;}
@@ -7726,14 +7787,35 @@ function mmEsc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').r
 function mmAktKlic(co){ return 'mm_'+co+'_'+(state.selectedPlayer||state.currentPlayerId||'x'); }
 function mmAktCti(co){ try{ return JSON.parse(localStorage.getItem(mmAktKlic(co))); }catch(_){ return null; } }
 function mmAktPis(co,v){ try{ localStorage.setItem(mmAktKlic(co), JSON.stringify(v)); }catch(_){} }
-function mmAktVlastni(){ const v=mmAktCti('vlastni'); return Array.isArray(v)?v:[]; }
+function mmAktVlastni(){
+  const v = mmAktCti('vlastni'); if(!Array.isArray(v)) return [];
+  // zpetna kompatibilita: driv se ukladal jen nazev
+  return v.map(x => (typeof x === 'string') ? {n:x, k:'Moje', i:'i-sprout', dopl:null} : x);
+}
 function mmAktPouziti(){ const v=mmAktCti('pouziti'); return (v&&typeof v==='object')?v:{}; }
 function mmAktPocitej(nazev){ if(!nazev) return; const p=mmAktPouziti(); p[nazev]=(p[nazev]||0)+1; mmAktPis('pouziti',p); }
-function mmAktPridejVlastni(nazev){ const v=mmAktVlastni(); if(!v.includes(nazev)){ v.push(nazev); mmAktPis('vlastni',v); } }
-function mmAktSmazVlastni(nazev){ mmAktPis('vlastni', mmAktVlastni().filter(x=>x!==nazev)); }
-// Nejcastejsi prvni, zbytek v zakladnim poradi (Array.sort je stabilni).
+function mmAktPridejVlastni(akt){
+  const a = (typeof akt === 'string') ? {n:akt, k:'Moje', i:'i-sprout', dopl:null} : akt;
+  const v = mmAktVlastni();
+  if(!v.some(x=>x.n===a.n)){ v.push(a); mmAktPis('vlastni', v); }
+  mmOblibenaPridej(a.n);   // vlastni aktivita rovnou mezi oblibene
+  return a;
+}
+function mmAktSmazVlastni(nazev){
+  mmAktPis('vlastni', mmAktVlastni().filter(x=>x.n!==nazev));
+  mmAktPis('oblibene', mmOblibene().filter(x=>x!==nazev));
+}
+// ---- Oblibene ----
+function mmOblibene(){ const v=mmAktCti('oblibene'); return Array.isArray(v)?v:[]; }
+function mmJeOblibena(n){ return mmOblibene().indexOf(n)>=0; }
+function mmOblibenaPridej(n){ const v=mmOblibene(); if(v.indexOf(n)<0){ v.push(n); mmAktPis('oblibene',v); } }
+function mmOblibenaPrepni(n){
+  const v=mmOblibene(); const i=v.indexOf(n);
+  if(i<0) v.push(n); else v.splice(i,1);
+  mmAktPis('oblibene', v);
+}
 function mmAktSeznam(){
-  const moje = mmAktVlastni().map(n=>({n:n, k:'Moje', i:'i-sprout', dopl:null, moje:true}));
+  const moje = mmAktVlastni().map(x=>Object.assign({}, x, {moje:true}));
   const p = mmAktPouziti();
   return MM_AKTIVITY.concat(moje).slice().sort((x,y)=>(p[y.n]||0)-(p[x.n]||0));
 }
@@ -7772,9 +7854,13 @@ function mmZapisAktivita(sh){
   blok.className = 'fld zn';
   blok.innerHTML =
      '<div class="znhled"><svg class="i"><use href="#i-search"/></svg>'
-    +'<input type="text" placeholder="Hledat aktivitu…" autocomplete="off" spellcheck="false"></div>'
+    +'<input type="text" placeholder="Hledat aktivitu…" autocomplete="off" spellcheck="false">'
+    +'<button type="button" class="znobl" title="Oblíbené"><svg class="i"><use href="#i-heart"/></svg></button></div>'
     +'<div class="znrada"></div>'
     +'<div class="znvse" hidden><div class="znkat"></div><div class="znmr"></div></div>'
+    +'<div class="znvys" hidden><div class="znnav"></div>'
+      +'<button type="button" class="znak znprim" data-akce="vytvorit"><svg class="i"><use href="#i-sprout"/></svg>Vytvořit novou aktivitu</button>'
+      +'<button type="button" class="znak" data-akce="jednou"><svg class="i"><use href="#i-note"/></svg>Zapsat bez uložení</button></div>'
     +'<div class="zndopl"></div>';
   stare.replaceWith(blok);
 
@@ -7783,6 +7869,10 @@ function mmZapisAktivita(sh){
   const vse  = blok.querySelector('.znvse');
   const kat  = blok.querySelector('.znkat');
   const mr   = blok.querySelector('.znmr');
+  const vys  = blok.querySelector('.znvys');
+  const nav  = blok.querySelector('.znnav');
+  const hvezda = blok.querySelector('.znobl');
+  let jenOblibene = false;
   let katAktivni = MM_KATEGORIE[0];
   const dopl = blok.querySelector('.zndopl');
   const nastavNazev = v => { const el=document.getElementById('aktivita-nazev'); if(el) el.value=v; };
@@ -7896,8 +7986,12 @@ function mmZapisAktivita(sh){
     +'<svg class="i"><use href="#'+(x.i||'i-sprout')+'"/></svg>'+mmEsc(x.n)+'</button>';
   const akce = (kod,ikona,text) => '<button type="button" class="znchip znakce" data-akce="'+kod+'">'
     +'<svg class="i"><use href="#'+ikona+'"/></svg>'+text+'</button>';
-
+  const tlac = (kod,ikona,text,prim) => '<button type="button" class="znak'+(prim?' znprim':'')+'" data-akce="'+kod+'">'
+    +'<svg class="i"><use href="#'+ikona+'"/></svg>'+mmEsc(text)+'</button>';
   const smazTl = x => x.moje ? '<button type="button" class="znsmaz" data-smaz="'+mmEsc(x.n)+'" title="Smazat">×</button>' : '';
+  const srdce = x => '<button type="button" class="znsrdce'+(mmJeOblibena(x.n)?' on':'')+'" data-obl="'+mmEsc(x.n)+'" title="Oblíbené">'
+    +'<svg class="i"><use href="#i-heart"/></svg></button>';
+
   function zapoj(box){
     box.querySelectorAll('.znchip[data-n]').forEach(c=>c.addEventListener('click',()=>{
       const n = c.getAttribute('data-n');
@@ -7905,50 +7999,51 @@ function mmZapisAktivita(sh){
     }));
     box.querySelectorAll('[data-akce]').forEach(c=>c.addEventListener('click',()=>{
       const k = c.getAttribute('data-akce');
+      const text = hled.value.trim();
       if(k==='vse'){ rozbaleno = !rozbaleno; vykresli(); }
       else if(k==='jednou'){
-        const nazev = hled.value.trim(); if(!nazev) return;
-        vyber({n:mmVelkePismeno(nazev), i:'i-note', dopl:null, jednou:true});   // jen pro tenhle zapis
+        if(!text) return;
+        vyber({n:mmVelkePismeno(text), i:'i-note', dopl:null, jednou:true});   // jen pro tenhle zapis
       }
-      else if(k==='ulozit'){
-        const nazev = hled.value.trim(); if(!nazev) return;
-        const ul = mmVelkePismeno(nazev);
-        mmAktPridejVlastni(ul); hled.value=''; vyber({n:ul, k:'Moje', i:'i-sprout', dopl:null, moje:true});
-      }
+      else if(k==='vytvorit'){ if(text) oknoNove(mmVelkePismeno(text)); }
     }));
-    box.querySelectorAll('[data-smaz]').forEach(c=>c.addEventListener('click',(e)=>{
+    box.querySelectorAll('[data-smaz]').forEach(c=>c.addEventListener('click',e=>{
       e.stopPropagation(); mmAktSmazVlastni(c.getAttribute('data-smaz')); vykresli();
+    }));
+    box.querySelectorAll('[data-obl]').forEach(c=>c.addEventListener('click',e=>{
+      e.stopPropagation(); mmOblibenaPrepni(c.getAttribute('data-obl')); vykresli();
     }));
     box.querySelectorAll('[data-k]').forEach(c=>c.addEventListener('click',()=>{
       katAktivni = c.getAttribute('data-k'); vykresli();
     }));
   }
+
   function vykresli(doStredu){
     const q = mmAktNorm(hled.value.trim());
     const text = hled.value.trim();
     const seznam = mmAktSeznam();
+    hvezda.classList.toggle('on', jenOblibene);
     if(q){
-      // Hledani: vysledky v mrizce, aby byly videt vsechny najednou (v rade by se schovaly).
-      rada.hidden = true; vse.hidden = false; kat.hidden = true; kat.innerHTML = '';
+      // Psani = tri jasne oddelene radky: podobne / vytvorit / zapsat bez ulozeni.
+      rada.hidden = true; vse.hidden = true; vys.hidden = false;
       let shody = seznam.filter(x=>mmAktNorm(x.n).includes(q));
       if(!shody.length){
         // Cely text nesedi — zkusit jednotliva slova, at je co nabidnout („beh v lese" -> Beh).
         const slova = q.split(/[^a-z0-9]+/).filter(s=>s.length>2);
         shody = seznam.filter(x=>slova.some(s=>mmAktNorm(x.n).includes(s)));
       }
-      let html = shody.map(x=>chip(x)+smazTl(x)).join('');
-      if(!seznam.some(x=>mmAktNorm(x.n)===q)){
-        // Popis JEN pro tenhle zapis vs. ulozeni mezi moje aktivity — dve ruzne veci.
-        html += akce('jednou','i-note','Zapsat jako „'+mmEsc(mmVelkePismeno(text))+'"').replace('znakce','znakce znprim')
-             +  akce('ulozit','i-sprout','Uložit mezi moje');
-      }
-      mr.innerHTML = html;
+      const t = mmVelkePismeno(text);
+      vys.innerHTML = (shody.length ? '<div class="znnav">'+shody.slice(0,10).map(chip).join('')+'</div>' : '')
+        + tlac('vytvorit','i-sprout','Vytvořit novou aktivitu', true)
+        + tlac('jednou','i-note','Zapsat „'+t+'" bez uložení', false);
+      zapoj(vys);
     } else {
+      vys.hidden = true; vys.innerHTML = '';
       rada.hidden = false;
-      const radaSez = seznam.slice(0, MM_RADA_POCET);
-      if(vybrana && !radaSez.some(x=>x.n===vybrana.n)) radaSez.unshift(vybrana);
-      rada.innerHTML = radaSez.map(chip).join('')
-                     + akce('vse','i-list', rozbaleno ? 'Skrýt' : 'Vše');
+      let radaSez = jenOblibene ? seznam.filter(x=>mmJeOblibena(x.n)) : seznam.slice(0, MM_RADA_POCET);
+      if(vybrana && !radaSez.some(x=>x.n===vybrana.n)) radaSez = [vybrana].concat(radaSez);
+      rada.innerHTML = (radaSez.length ? radaSez.map(chip).join('') : '<span class="znprazdno">Zatím nemáš oblíbené — přidej je srdíčkem v seznamu</span>')
+        + akce('vse','i-list', rozbaleno ? 'Skrýt' : 'Vše');
       vse.hidden = !rozbaleno;
       if(rozbaleno){
         kat.hidden = false;
@@ -7957,13 +8052,55 @@ function mmZapisAktivita(sh){
         if(kats.indexOf(katAktivni)<0) katAktivni = kats[0];
         kat.innerHTML = kats.map(k=>'<button type="button" class="znk'+(k===katAktivni?' on':'')
           +'" data-k="'+mmEsc(k)+'">'+mmEsc(k)+'</button>').join('');
-        mr.innerHTML = seznam.filter(x=>x.k===katAktivni).map(x=>chip(x)+smazTl(x)).join('');
+        mr.innerHTML = seznam.filter(x=>x.k===katAktivni).map(x=>'<span class="znpar">'+chip(x)+srdce(x)+smazTl(x)+'</span>').join('');
       } else { kat.innerHTML=''; mr.innerHTML=''; }
+      zapoj(rada); zapoj(kat); zapoj(mr);
+      if(doStredu){ const on = rada.querySelector('.znchip.on'); if(on && on.scrollIntoView) on.scrollIntoView({block:'nearest', inline:'center'}); }
     }
-    zapoj(rada); zapoj(kat); zapoj(mr);
-    if(doStredu){ const on = rada.querySelector('.znchip.on'); if(on && on.scrollIntoView) on.scrollIntoView({block:'nearest', inline:'center'}); }
+  }
+
+  // ---- Okno "Vytvorit novou aktivitu" ----
+  const MM_DOPL_VOLBY = [['Nic','',''],['Kilometry','km','i-shoe'],['Km a tempo','beh','i-run'],
+    ['Metry','metry','i-swim'],['Cviky','cviky','i-pushup'],['Cesty','cesty','i-boulder']];
+  const MM_IKONY = ['i-sprout','i-pushup','i-pullup','i-squat','i-dips','i-run','i-shoe','i-bike',
+    'i-swim','i-water','i-snow','i-bolt','i-boulder','i-climb','i-stretch','i-heart','i-target','i-flame'];
+  function oknoNove(nazev){
+    let ov = body.querySelector('.nvov');
+    if(!ov){
+      ov = document.createElement('div'); ov.className='nvov';
+      ov.innerHTML = '<div class="nvbox"><div class="nvttl">Nová aktivita</div>'
+        +'<label class="znlbl">Název</label><div class="znhled"><input class="nvn" type="text" autocomplete="off"></div>'
+        +'<label class="znlbl">Kategorie</label><div class="nvch nvk"></div>'
+        +'<label class="znlbl">Co se u ní doplňuje</label><div class="nvch nvd"></div>'
+        +'<label class="znlbl">Ikona</label><div class="nvch nvi"></div>'
+        +'<div class="nvb"><button type="button" class="znak" data-nv="zrus">Zrušit</button>'
+        +'<button type="button" class="znak znprim" data-nv="uloz">Uložit</button></div></div>';
+      body.appendChild(ov);
+    }
+    let kt = 'Moje', dp = '', ik = 'i-sprout';
+    const nn = ov.querySelector('.nvn'); nn.value = nazev || '';
+    const prekresli = ()=>{
+      ov.querySelector('.nvk').innerHTML = MM_KATEGORIE.map(k=>'<button type="button" class="znchip'+(k===kt?' on':'')+'" data-nvk="'+mmEsc(k)+'">'+mmEsc(k)+'</button>').join('');
+      ov.querySelector('.nvd').innerHTML = MM_DOPL_VOLBY.map(d=>'<button type="button" class="znchip'+(d[1]===dp?' on':'')+'" data-nvd="'+d[1]+'">'
+        +(d[2]?'<svg class="i"><use href="#'+d[2]+'"/></svg>':'')+d[0]+'</button>').join('');
+      ov.querySelector('.nvi').innerHTML = MM_IKONY.map(i=>'<button type="button" class="znik'+(i===ik?' on':'')+'" data-nvi="'+i+'"><svg class="i"><use href="#'+i+'"/></svg></button>').join('');
+      ov.querySelectorAll('[data-nvk]').forEach(b=>b.addEventListener('click',()=>{ kt=b.getAttribute('data-nvk'); prekresli(); }));
+      ov.querySelectorAll('[data-nvd]').forEach(b=>b.addEventListener('click',()=>{ dp=b.getAttribute('data-nvd'); prekresli(); }));
+      ov.querySelectorAll('[data-nvi]').forEach(b=>b.addEventListener('click',()=>{ ik=b.getAttribute('data-nvi'); prekresli(); }));
+    };
+    prekresli();
+    ov.hidden = false;
+    ov.querySelector('[data-nv="zrus"]').onclick = ()=>{ ov.hidden = true; };
+    ov.querySelector('[data-nv="uloz"]').onclick = ()=>{
+      const n = mmVelkePismeno(nn.value.trim()); if(!n){ nn.focus(); return; }
+      const nova = mmAktPridejVlastni({n:n, k:kt, i:ik, dopl:dp || null});
+      ov.hidden = true; hled.value = '';
+      vyber(Object.assign({}, nova, {moje:true}));
+      if(typeof toast==='function') toast('Vytvořil sis vlastní aktivitu „'+n+'" — je uložená mezi oblíbenými', 'success');
+    };
   }
   if(vybrana) vykresliDoplnky(vybrana);
+  hvezda.addEventListener('click', ()=>{ jenOblibene = !jenOblibene; rozbaleno=false; vykresli(); });
   hled.addEventListener('input', ()=>{ rozbaleno=false; vykresli(); });
   hled.addEventListener('keydown', e=>{
     if(e.key!=='Enter') return; e.preventDefault();
