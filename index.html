@@ -7452,7 +7452,7 @@ function mmLvlSlider(sh){
   const vykresli=(l,tahne)=>{
     const x=pozice(l);
     knob.style.left=x+'px'; knob.textContent=l;
-    fill.style.width=(x+14)+'px';
+    fill.style.width=(x+17)+'px';   // 17 = polomer zaobleni drahy, stred sedi na kolecku
     num.textContent=l;
     pts.textContent='+'+(LEVEL_POINTS[l]||0)+' b';
     desc.textContent=LEVEL_HINTS[l]||'';
