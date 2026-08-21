@@ -1983,7 +1983,11 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .wkc .k{font-size:10.86px;color:var(--sec);font-weight:600;margin-top:1px;}
 .mm .up{color:var(--green);font-weight:700;}
 .mm .lc{background:var(--card);box-shadow:var(--shadow);border-radius:20px;overflow:hidden;}
-.mm .lr{display:grid;grid-template-columns:13px 25px 1fr auto;gap:9px;align-items:center;padding:5px 12px;position:relative;}
+
+.mm .slzeb{margin-top:10px;}
+.mm .zebodp{font-style:normal;font-size:10.62px;font-weight:700;color:var(--ter);text-transform:none;letter-spacing:0;white-space:nowrap;flex:0 0 auto;}
+.mm .zebodp b{color:var(--sec);}
+.mm .lr{display:grid;grid-template-columns:13px 1fr auto;gap:9px;align-items:center;padding:5px 12px;position:relative;}
 .mm .lr:not(:last-child)::after{content:"";position:absolute;left:46px;right:0;bottom:0;height:1px;background:var(--sep);}
 .mm .lr.me{background:rgba(52,199,89,.09);}
 .mm .lrk{font-size:13.28px;font-weight:700;color:var(--ter);text-align:center;}
@@ -2530,7 +2534,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .hero .ring{position:relative;}
 .mm .hero{box-shadow:var(--shadow-lg),inset 0 1px 0 rgba(255,255,255,.55);}
 .mm /* žebříček — podium 1/2/3,.mm čisté sloupce,.mm decentní „ty" */
-  .lc>.lr{grid-template-columns:26px 23px 1fr auto;}
+  .lc>.lr{grid-template-columns:26px 1fr auto;}
 .mm .lc>.lr.one,.mm .lc>.lr:nth-child(1){background:transparent;}
 .mm .lc>.lr.me{background:color-mix(in srgb,var(--green) 8%,transparent);box-shadow:none;}
 .mm .lc>.lr:nth-child(-n+3) .lrk{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;margin:0 auto;border:1.5px solid currentColor;font-family:var(--font-display);font-weight:700;font-size:13.28px;}
@@ -2752,7 +2756,11 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
   .sl{font-size:11.15px;letter-spacing:.06em;text-transform:uppercase;color:var(--sec);font-weight:700;margin:6px 3px;display:flex;justify-content:space-between;align-items:center;gap:8px;} .sl a{color:var(--green);text-transform:none;letter-spacing:0;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:rgba(15,169,104,.15);padding:12px 28px 12px 12px;margin:-12px -28px -12px -12px;touch-action:manipulation;white-space:nowrap;flex:0 0 auto;}
   .wk{display:flex;gap:6px;} .wkc{flex:1;background:var(--card);box-shadow:var(--shadow);border-radius:11px;padding:7px 4px;text-align:center;} .wkc .v{font-size:15.94px;font-weight:800;} .wkc .k{font-size:9.56px;color:var(--sec);font-weight:600;margin-top:1px;} .up{color:var(--green);font-weight:700;}
   .lc{background:var(--card);box-shadow:var(--shadow);border-radius:20px;overflow:hidden;}
-  .lr{display:grid;grid-template-columns:13px 25px 1fr auto;gap:9px;align-items:center;padding:5px 12px;position:relative;} .lr:not(:last-child)::after{content:"";position:absolute;left:46px;right:0;bottom:0;height:1px;background:var(--sep);}
+
+.slzeb{margin-top:10px;}
+.zebodp{font-style:normal;font-size:10.62px;font-weight:700;color:var(--ter);text-transform:none;letter-spacing:0;white-space:nowrap;flex:0 0 auto;}
+.zebodp b{color:var(--sec);}
+  .lr{display:grid;grid-template-columns:13px 1fr auto;gap:9px;align-items:center;padding:5px 12px;position:relative;} .lr:not(:last-child)::after{content:"";position:absolute;left:46px;right:0;bottom:0;height:1px;background:var(--sep);}
   .lr.me{background:rgba(52,199,89,.09);} .lrk{font-size:11.69px;font-weight:700;color:var(--ter);text-align:center;} .lr.one .lrk{color:var(--gold);}
   .lav{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:9.03px;font-weight:700;} .lnm{flex-wrap:nowrap;min-width:0;font-size:12.74px;font-weight:600;min-width:0;line-height:1.25;display:flex;align-items:center;gap:3px;overflow:hidden;}.lnm .lnmt{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}.lnm .i{flex:0 0 auto;} .lpt{font-size:13.28px;font-weight:800;} .lpt.z{color:var(--ter);} .lpt .gap{font-size:10.62px;font-weight:700;color:var(--ter);margin-left:3px;}
   .hl{background:var(--card);box-shadow:var(--shadow);border-radius:18px;overflow:hidden;} .hlr{display:flex;align-items:center;gap:10px;padding:8px 12px;position:relative;font-size:12.74px;font-weight:600;} .hlr:not(:last-child)::after{content:"";position:absolute;left:40px;right:0;bottom:0;height:1px;background:var(--sep);} .hlr .ic{font-size:16.99px;width:19px;text-align:center;} .hlr small{color:var(--sec);font-weight:500;} .rx{margin-left:auto;font-size:13.81px;letter-spacing:2px;flex:0 0 auto;}
@@ -3111,7 +3119,7 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
   .hero{box-shadow:var(--shadow-lg),inset 0 1px 0 rgba(255,255,255,.55);}
   [data-theme="dark"] .hero{box-shadow:var(--shadow-lg),inset 0 1px 0 rgba(255,255,255,.06);}
   /* žebříček — podium 1/2/3, čisté sloupce, decentní „ty" */
-  .lc>.lr{grid-template-columns:26px 23px 1fr auto;}
+  .lc>.lr{grid-template-columns:26px 1fr auto;}
   .lc>.lr.one,.lc>.lr:nth-child(1){background:transparent;}
   .lc>.lr.me{background:color-mix(in srgb,var(--green) 8%,transparent);box-shadow:none;}
   .lc>.lr:nth-child(-n+3) .lrk{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;margin:0 auto;border:1.5px solid currentColor;font-family:var(--font-display);font-weight:700;font-size:11.69px;}
@@ -6162,7 +6170,7 @@ function renderDnesek(){
   const rows=board.map((p,i)=>{
     const isMe=me&&p.id===me.id; const col=safeColor(p.barva);
     const d=p.total-myTotal; const gap=isMe?'<small class="gap" style="color:var(--green)">ty</small>':`<small class="gap">${d>0?'+':(d<0?'−':'')}${Math.abs(d)}</small>`; const pct=Math.max(4,Math.round(((p.total||0)/Math.max(1,(board[0]&&board[0].total)||0))*100));
-    return `<div class="lr${i===0?' one':''}${isMe?' me':''}" style="cursor:pointer" onclick="mmOpenSub('profil','${p.id}')"><div class="lrk">${i+1}</div><div class="lav" style="background:linear-gradient(135deg,${col}4d,${col}12);color:${col}">${esc(initials(p.jmeno))}</div><div class="lnm"><span class="lnmt">${esc(p.jmeno)}</span>${mmSerieChip(p.id)}${i===0?'<svg class="i"><use href="#i-crown"/></svg>':''}</div><div class="lpt">${gap}<b class="lv">${fmtNum(p.total)}</b></div><div class="lbar"><i style="width:${pct}%;background:${col}"></i></div></div>`;
+    return `<div class="lr${i===0?' one':''}${isMe?' me':''}" style="cursor:pointer" onclick="mmOpenSub('profil','${p.id}')"><div class="lrk">${i+1}</div><div class="lnm"><span class="lnmt">${esc(p.jmeno)}</span>${mmSerieChip(p.id)}${i===0?'<svg class="i"><use href="#i-crown"/></svg>':''}</div><div class="lpt">${gap}<b class="lv">${fmtNum(p.total)}</b></div><div class="lbar"><i style="width:${pct}%;background:${col}"></i></div></div>`;
   }).join('');
   // Liga chip: N = dni do nedele VCETNE; tap prepne Obdobi=Tyden; pri aktivnim Tydnu zvyrazneny
   const today0=new Date(); today0.setHours(0,0,0,0);
@@ -6187,13 +6195,15 @@ function renderDnesek(){
   const ringPct=Math.max(0,Math.min(100,Math.round(todayPts/Math.max(1,avgDen)*100)));
   // odpocet pod prepinacem — jen u obdobi, ktera skutecne konci
   const _per=state.totalPeriod||'week';
-  let odpocetHtml='<div class="odpocet odpocet-prazdny">&nbsp;</div>';
-  if(_per==='week'){ odpocetHtml='<div class="odpocet">Týdenní soutěž · <b>'+ligaLbl+'</b></div>'; }
+  let odpocetTxt='';
+  if(_per==='week'){ odpocetTxt='Týdenní soutěž · <b>'+ligaLbl+'</b>'; }
   else if(_per==='month'){
     const konecM=new Date(_d.getFullYear(),_d.getMonth()+1,0); konecM.setHours(23,59,59,999);
     const dnu=Math.max(1,Math.ceil((konecM-_d)/864e5));
-    odpocetHtml='<div class="odpocet">Měsíční soutěž · <b>zbývá '+dnu+' '+streakLabel(dnu)+'</b></div>';
+    odpocetTxt='Měsíční soutěž · <b>zbývá '+dnu+' '+streakLabel(dnu)+'</b>';
   }
+  // Nadpis zebricku vlevo, odpocet soutezniho obdobi vpravo — stejny vzor jako Kalendar aktivity / Deni.
+  const odpocetHtml='<div class="sl slzeb"><span>Žebříček</span><i class="zebodp">'+odpocetTxt+'</i></div>';
   const tpl=`<div class="hcard"><div class="hc-hd"><span class="hc-poz">${mmGreet()}${me?', '+esc(mmVocative(mmFirst(me.jmeno))):''}</span><span class="hc-dat">${dlKratke}</span></div><div class="hc-top">${mSerie>0?'<span class="hc-serie"><svg class="i"><use href="#i-flame"/></svg>'+mSerie+'</span>':''}<span class="hc-r">${mTrendHtml}<span class="hc-num">${fmtNum(todayPts)}</span><span class="hc-cil">z ${fmtNum(mCil)} b</span></span></div><div class="hc-tyden">${mSloupce}</div></div>
   <div class="hbm hbnav2" style="margin-top:10px;cursor:pointer" onclick="mmGo('navyky')"><div class="hi hicheck${habTotal>0&&habDone>=habTotal?' hfull':''}" style="--hp:${habTotal>0?Math.round(Math.min(habDone,habTotal)/habTotal*100):0}%"><svg class="i"><use href="#i-check"/></svg></div><div class="ht">Návyky dnes<span class="hdots">${Array.from({length:habTotal},(_,i)=>'<i'+(i<habDone?' class="on"':'')+'></i>').join('')}</span></div><div class="pct" style="display:flex;align-items:baseline;gap:0"><b>${habDone}</b><span style="color:var(--ter);font-weight:700;margin-left:1.5px;margin-right:7px">/${habTotal}</span><span style="color:var(--ter);font-weight:400">›</span></div></div>
   ${mmPartaSegBar()}${odpocetHtml}
@@ -7203,7 +7213,7 @@ function renderParta(){
   const rows=board.map((p,i)=>{
     const isMe=me&&p.id===me.id; const col=safeColor(p.barva);
     const d=p.total-myTotal; const gap=isMe?'<small class="gap" style="color:var(--green)">ty</small>':`<small class="gap">${d>0?'+':(d<0?'−':'')}${Math.abs(d)}</small>`; const pct=Math.max(4,Math.round(((p.total||0)/Math.max(1,(board[0]&&board[0].total)||0))*100));
-    return `<div class="lr${i===0?' one':''}${isMe?' me':''}" style="cursor:pointer" onclick="mmOpenSub('profil','${p.id}')"><div class="lrk">${i+1}</div><div class="lav" style="background:linear-gradient(135deg,${col}4d,${col}12);color:${col}">${esc(initials(p.jmeno))}</div><div class="lnm"><span class="lnmt">${esc(p.jmeno)}</span>${mmSerieChip(p.id)}${i===0?'<svg class="i"><use href="#i-crown"/></svg>':''}</div><div class="lpt">${gap}<b class="lv">${fmtNum(p.total)}</b></div><div class="lbar"><i style="width:${pct}%;background:${col}"></i></div></div>`;
+    return `<div class="lr${i===0?' one':''}${isMe?' me':''}" style="cursor:pointer" onclick="mmOpenSub('profil','${p.id}')"><div class="lrk">${i+1}</div><div class="lnm"><span class="lnmt">${esc(p.jmeno)}</span>${mmSerieChip(p.id)}${i===0?'<svg class="i"><use href="#i-crown"/></svg>':''}</div><div class="lpt">${gap}<b class="lv">${fmtNum(p.total)}</b></div><div class="lbar"><i style="width:${pct}%;background:${col}"></i></div></div>`;
   }).join('');
 
   // Heatmapa party
