@@ -7445,13 +7445,14 @@ function mmLvlSlider(sh){
         fill=box.querySelector('.lvlfill'), num=box.querySelector('.lvlnum'),
         pts=box.querySelector('.lvlpts'), desc=box.querySelector('.lvldesc');
   const N=10;
-  const pozice=l=>{ const w=track.clientWidth, okraj=19; return okraj+(w-2*okraj)*(l-1)/(N-1); };
+  const okraj=17;   // polomer kolecka (14) + 3 px, aby melo od kraje stejne jako shora
+  const pozice=l=>{ const w=track.clientWidth; return okraj+(w-2*okraj)*(l-1)/(N-1); };
   const rozmisti=()=>{ box.querySelectorAll('.lvltick').forEach(t=>{
       t.style.left=pozice(+t.getAttribute('data-l'))+'px'; }); };
   const vykresli=(l,tahne)=>{
     const x=pozice(l);
     knob.style.left=x+'px'; knob.textContent=l;
-    fill.style.width=(x+16)+'px';
+    fill.style.width=(x+14)+'px';
     num.textContent=l;
     pts.textContent='+'+(LEVEL_POINTS[l]||0)+' b';
     desc.textContent=LEVEL_HINTS[l]||'';
@@ -7461,19 +7462,19 @@ function mmLvlSlider(sh){
   const zUdalosti=e=>{
     const r=track.getBoundingClientRect();
     const scr=sh.querySelector('.scr'); const z=(scr&&parseFloat(scr.style.zoom))||1;
-    const w=track.clientWidth, okraj=19;
+    const w=track.clientWidth;
     const x=Math.max(0,Math.min(w,(e.clientX-r.left)/z));
     const pom=(x-okraj)/Math.max(1,(w-2*okraj));
     return Math.max(1,Math.min(N,Math.round(1+pom*(N-1))));
   };
-  let aktualni=state.selectedLevel||null;
+  let aktualni=state.selectedLevel||1;   // vychozi uroven 1
   const nastav=(l,tahne)=>{
     aktualni=l; vykresli(l,tahne);
     const lb=document.querySelector('#form-aktivita [data-level="'+l+'"]');
     if(lb) lb.click();
   };
   rozmisti();
-  if(aktualni) vykresli(aktualni,false); else { knob.style.left=pozice(1)+'px'; knob.textContent=''; fill.style.width='0px'; num.textContent='–'; pts.textContent=''; }
+  nastav(aktualni,false);
 
   let tahnu=false;
   track.addEventListener('pointerdown',e=>{ tahnu=true; track.classList.add('tahne');
