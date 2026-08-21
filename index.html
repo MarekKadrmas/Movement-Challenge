@@ -2193,6 +2193,21 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .pickrow:has(.lvl){display:grid;grid-template-columns:repeat(10,1fr);gap:3px;}
 .mm .pickrow.lvlrow{display:grid;grid-template-columns:repeat(10,1fr);gap:3px;}
 .mm .lvlbox{margin-top:2px;}
+.mm .znhled{display:flex;align-items:center;gap:8px;background:var(--card);border-radius:16px;height:44px;padding:0 15px;box-shadow:var(--shadow);}
+.mm .znhled .i{width:16px;height:16px;color:var(--ter);flex:0 0 auto;}
+.mm .znhled input{flex:1;min-width:0;border:0;outline:0;background:transparent;font:inherit;color:var(--label);}
+.mm .znchips{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;}
+.mm .znchip{display:inline-flex;align-items:center;gap:5px;border:0;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:7px 12px;font:inherit;font-size:12.74px;font-weight:600;color:var(--label);cursor:pointer;}
+.mm .znchip .i{width:13px;height:13px;color:var(--sec);}
+.mm .znchip.on{background:var(--green);color:#fff;box-shadow:0 4px 12px -3px rgba(34,139,90,.45);}
+.mm .znchip.on .i{color:#fff;}
+.mm .znvlastni{margin-top:8px;}
+.mm .zndopl{margin-top:14px;}
+.mm .zndopl .znlbl{font-size:13.28px;font-weight:700;color:var(--sec);display:block;margin-bottom:5px;}
+.mm .znrow{display:flex;gap:7px;}
+.mm .znrow label{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px;font-size:10.62px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--ter);}
+.mm .znrow input{border:0;outline:0;background:var(--card);box-shadow:var(--shadow);border-radius:14px;height:40px;padding:0 12px;font:inherit;font-size:14.48px;font-weight:600;color:var(--label);width:100%;text-transform:none;letter-spacing:0;}
+.mm .znsoon{font-size:12.07px;font-weight:600;color:var(--ter);background:var(--track);border-radius:14px;padding:11px 14px;}
 .mm .lvlbox ~ .lvlhint,.mm .fld .lvlhint{display:none;}
 .mm .lvlhead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;}
 .mm .lvlnum{font-size:22.93px;font-weight:900;letter-spacing:-.04em;line-height:1;color:var(--label);font-family:var(--font-display);}
@@ -2649,6 +2664,21 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .pickrow:has(.lvl){display:grid;grid-template-columns:repeat(10,1fr);gap:3px;}
 .pickrow.lvlrow{display:grid;grid-template-columns:repeat(10,1fr);gap:3px;}
 .lvlbox{margin-top:2px;}
+.znhled{display:flex;align-items:center;gap:8px;background:var(--card);border-radius:16px;height:44px;padding:0 15px;box-shadow:var(--shadow);}
+.znhled .i{width:16px;height:16px;color:var(--ter);flex:0 0 auto;}
+.znhled input{flex:1;min-width:0;border:0;outline:0;background:transparent;font:inherit;color:var(--label);}
+.znchips{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;}
+.znchip{display:inline-flex;align-items:center;gap:5px;border:0;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:7px 12px;font:inherit;font-size:12.74px;font-weight:600;color:var(--label);cursor:pointer;}
+.znchip .i{width:13px;height:13px;color:var(--sec);}
+.znchip.on{background:var(--green);color:#fff;box-shadow:0 4px 12px -3px rgba(34,139,90,.45);}
+.znchip.on .i{color:#fff;}
+.znvlastni{margin-top:8px;}
+.zndopl{margin-top:14px;}
+.zndopl .znlbl{font-size:11.69px;font-weight:700;color:var(--sec);display:block;margin-bottom:5px;}
+.znrow{display:flex;gap:7px;}
+.znrow label{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px;font-size:10.62px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--ter);}
+.znrow input{border:0;outline:0;background:var(--card);box-shadow:var(--shadow);border-radius:14px;height:40px;padding:0 12px;font:inherit;font-size:14.48px;font-weight:600;color:var(--label);width:100%;text-transform:none;letter-spacing:0;}
+.znsoon{font-size:12.07px;font-weight:600;color:var(--ter);background:var(--track);border-radius:14px;padding:11px 14px;}
 .lvlbox ~ .lvlhint,.fld .lvlhint{display:none;}
 .lvlhead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;}
 .lvlnum{font-size:22.93px;font-weight:900;letter-spacing:-.04em;line-height:1;color:var(--label);font-family:var(--font-display);}
@@ -5912,7 +5942,7 @@ function renderDnesek(){
     const dnu=Math.max(1,Math.ceil((konecM-_d)/864e5));
     odpocetHtml='<div class="odpocet">Měsíční soutěž · <b>zbývá '+dnu+' '+streakLabel(dnu)+'</b></div>';
   }
-  const tpl=`<div class="hcard"><div class="hc-hd"><span class="hc-poz">${mmGreet()}${me?', '+esc(mmVocative(mmFirst(me.jmeno))):''}</span><span class="hc-dat">${dlKratke}</span></div><div class="hc-top">${mSerie>0?'<span class="hc-serie"><svg class="i"><use href="#i-flame"/></svg>'+mSerie+'</span>':''}<span class="hc-r">${mTrendHtml}<span class="hc-num">${fmtNum(todayPts)}</span><span class="hc-cil">z ${fmtNum(mCil)} b</span></span></div><div class="hc-tyden">${mSloupce}</div></div>
+  const tpl=`<div class="hcard"><div class="hc-hd"><span class="hc-poz">${mmGreet()}${me?', '+esc(mmVocative(mmFirst(me.jmeno))):''}</span><span class="hc-dat">${dlKratke}</span></div><div class="hc-top">${mSerie>0?'<span class="hc-serie"><svg class="i"><use href="#i-flame"/></svg>'+mSerie+'</span>':''}<span class="hc-r">${mTrendHtml}<span class="hc-num">${fmtNum(todayPts)}</span><span class="hc-cil">z ${fmtNum(mCil)} b</span></span></div><div class="hc-tyden">${mSloupce}</div></div>
   <div class="hbm hbnav2" style="margin-top:10px;cursor:pointer" onclick="mmGo('navyky')"><div class="hi hicheck${habTotal>0&&habDone>=habTotal?' hfull':''}" style="--hp:${habTotal>0?Math.round(Math.min(habDone,habTotal)/habTotal*100):0}%"><svg class="i"><use href="#i-check"/></svg></div><div class="ht">Návyky dnes<span class="hdots">${Array.from({length:habTotal},(_,i)=>'<i'+(i<habDone?' class="on"':'')+'></i>').join('')}</span></div><div class="pct" style="display:flex;align-items:baseline;gap:0"><b>${habDone}</b><span style="color:var(--ter);font-weight:700;margin-left:1.5px;margin-right:7px">/${habTotal}</span><span style="color:var(--ter);font-weight:400">›</span></div></div>
   ${mmPartaSegBar()}${odpocetHtml}
   <div class="lc">${rows||'<div style="padding:20px;text-align:center;color:var(--ter)">Zatím žádné body</div>'}</div>
@@ -7381,6 +7411,7 @@ function mmZapisTplKey(){
     return 'formcvik';
   }
   // Aktivita (vc. stretching): rozliseni Beh/Lezeni podle actSub/entryType, jinak obecna aktivita.
+  if (!state.editMode) return 'formakt';   // 2.0: jednotny formular, doplnky podle vybrane aktivity
   if (state.entryType === 'lezeni' || state.actSub === 'lezeni') return 'formlez';
   if (state.actSub === 'beh') return 'formbeh';
   return 'formakt';
@@ -7472,6 +7503,7 @@ function mmLvlSlider(sh){
     aktualni=l; vykresli(l,tahne);
     const lb=document.querySelector('#form-aktivita [data-level="'+l+'"]');
     if(lb) lb.click();
+    if(typeof mmZapisReward==='function') mmZapisReward(sh);   // odmena dole musi jit s posuvnikem
   };
   rozmisti();
   nastav(aktualni,false);
@@ -7484,6 +7516,121 @@ function mmLvlSlider(sh){
   track.addEventListener('pointerup',konec);
   track.addEventListener('pointercancel',konec);
   window.addEventListener('resize',()=>{ rozmisti(); if(aktualni) vykresli(aktualni,false); });
+}
+
+// ---- Katalog aktivit -------------------------------------------------------
+// dopl: co se u aktivity doplnuje. 'cviky'/'cesty' jsou zatim misto pro dalsi krok.
+const MM_AKTIVITY = [
+  {n:'Gym',             i:'i-pushup',  dopl:'cviky'},
+  {n:'Workout',         i:'i-pullup',  dopl:'cviky'},
+  {n:'Kruhový trénink', i:'i-bolt',    dopl:'cviky'},
+  {n:'Běh',             i:'i-run',     dopl:'beh'},
+  {n:'Kolo',            i:'i-bike',    dopl:'km'},
+  {n:'Turistika',       i:'i-shoe',    dopl:'km'},
+  {n:'Plavání',         i:'i-swim',    dopl:'metry'},
+  {n:'Boulder',         i:'i-boulder', dopl:'cesty'},
+  {n:'Lano',            i:'i-climb',   dopl:'cesty'},
+  {n:'Squash',          i:'i-bolt',    dopl:null},
+  {n:'Tenis',           i:'i-bolt',    dopl:null},
+  {n:'Fotbal',          i:'i-bolt',    dopl:null},
+  {n:'Procházka',       i:'i-shoe',    dopl:null},
+  {n:'Jóga',            i:'i-stretch', dopl:null},
+  {n:'Strečink',        i:'i-stretch', dopl:null},
+];
+function mmAktNorm(s){ return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
+function mmEsc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ---- Novy tok zapisu -------------------------------------------------------
+// Nahrazuje prepinac Cvik/Aktivita a puvodni radku aktivit blokem: hledani -> vyber -> doplnky.
+function mmZapisAktivita(sh){
+  const body = sh && sh.querySelector('.body.formb'); if(!body) return;
+  if(body.querySelector('.zn')) return;                       // uz postaveno
+  const tsel = body.querySelector('.tsel'); if(tsel) tsel.remove();
+  // POZOR: .pickrow ma i admin pole "Za koho" (pilulky hracu) — hledej pole podle jeho labelu.
+  let stare = null;
+  body.querySelectorAll('.fld').forEach(f=>{
+    const l = f.querySelector('label');
+    if(!stare && l && /^Aktivita$/i.test(l.textContent.trim())) stare = f;
+  });
+  if(!stare) return;
+
+  const blok = document.createElement('div');
+  blok.className = 'fld zn';
+  blok.innerHTML =
+     '<label>Co jsi dělal</label>'
+    +'<div class="znhled"><svg class="i"><use href="#i-search"/></svg>'
+    +'<input type="text" placeholder="Hledat aktivitu…" autocomplete="off" spellcheck="false"></div>'
+    +'<div class="znchips"></div>'
+    +'<div class="znvlastni" hidden></div>'
+    +'<div class="zndopl"></div>';
+  stare.replaceWith(blok);
+
+  const hled = blok.querySelector('.znhled input');
+  const chips = blok.querySelector('.znchips');
+  const vlastni = blok.querySelector('.znvlastni');
+  const dopl = blok.querySelector('.zndopl');
+  const nastavNazev = v => { const el=document.getElementById('aktivita-nazev'); if(el) el.value=v; };
+
+  function vykresliDoplnky(a){
+    if(!a || !a.dopl){ dopl.innerHTML=''; return; }
+    if(a.dopl==='beh'){
+      dopl.innerHTML='<label class="znlbl">Doplňky k běhu</label><div class="znrow">'
+        +'<label>Kilometry<input data-d="km" type="number" step="0.1" min="0" inputmode="decimal" placeholder="5,2"></label>'
+        +'<label>Tempo<input data-d="tempo" type="text" inputmode="text" placeholder="5:30"></label>'
+        +'<label>Převýšení<input data-d="prev" type="number" min="0" step="1" inputmode="numeric" placeholder="0"></label></div>';
+    } else if(a.dopl==='km'){
+      dopl.innerHTML='<label class="znlbl">Doplňky</label><div class="znrow">'
+        +'<label>Kilometry<input data-d="km" type="number" step="0.1" min="0" inputmode="decimal" placeholder="12"></label>'
+        +'<label>Převýšení<input data-d="prev" type="number" min="0" step="1" inputmode="numeric" placeholder="0"></label></div>';
+    } else if(a.dopl==='metry'){
+      dopl.innerHTML='<label class="znlbl">Doplňky</label><div class="znrow">'
+        +'<label>Metry<input data-d="metry" type="number" min="0" step="25" inputmode="numeric" placeholder="1000"></label></div>';
+    } else if(a.dopl==='cviky'){
+      dopl.innerHTML='<label class="znlbl">Cviky</label><div class="znsoon">Rozpis cviků sem přijde v dalším kroku.</div>';
+    } else if(a.dopl==='cesty'){
+      dopl.innerHTML='<label class="znlbl">Cesty</label><div class="znsoon">Rozpis cest sem přijde v dalším kroku.</div>';
+    } else dopl.innerHTML='';
+    const most = {km:'aktivita-km', tempo:'aktivita-tempo', prev:'aktivita-prevyseni'};
+    dopl.querySelectorAll('input').forEach(inp=>inp.addEventListener('input',()=>{
+      const id = most[inp.getAttribute('data-d')]; if(!id) return;
+      const el = document.getElementById(id); if(el) el.value = inp.value;
+    }));
+  }
+
+  let vybrana = null;
+  function vyber(a){
+    vybrana = a;
+    chips.querySelectorAll('.znchip').forEach(c=>c.classList.toggle('on', c.getAttribute('data-n')===a.n));
+    vlastni.querySelectorAll('.znchip').forEach(c=>c.classList.remove('on'));
+    state.actSub = (a.n==='Běh') ? 'beh' : null;
+    nastavNazev(a.n);
+    vykresliDoplnky(a);
+    if(typeof mmZapisReward==='function') mmZapisReward(sh);
+  }
+
+  function vykresliChips(){
+    const q = mmAktNorm(hled.value.trim());
+    const sez = q ? MM_AKTIVITY.filter(x=>mmAktNorm(x.n).includes(q)) : MM_AKTIVITY;
+    chips.innerHTML = sez.map(x=>'<button type="button" class="znchip'+(vybrana&&vybrana.n===x.n?' on':'')
+      +'" data-n="'+mmEsc(x.n)+'"><svg class="i"><use href="#'+x.i+'"/></svg>'+mmEsc(x.n)+'</button>').join('');
+    chips.querySelectorAll('.znchip').forEach(c=>c.addEventListener('click',()=>
+      vyber(MM_AKTIVITY.find(x=>x.n===c.getAttribute('data-n')))));
+    const text = hled.value.trim();
+    if(text && !MM_AKTIVITY.some(x=>mmAktNorm(x.n)===q)){
+      vlastni.hidden = false;
+      vlastni.innerHTML = '<button type="button" class="znchip znvl'+(vybrana&&vybrana.n===text?' on':'')
+        +'"><svg class="i"><use href="#i-edit"/></svg>Zapsat jako „'+mmEsc(text)+'"</button>';
+      vlastni.querySelector('button').addEventListener('click',()=>{
+        vybrana = {n:text, dopl:null};
+        chips.querySelectorAll('.znchip').forEach(c=>c.classList.remove('on'));
+        vlastni.querySelector('.znchip').classList.add('on');
+        state.actSub = null; nastavNazev(text); vykresliDoplnky(null);
+        if(typeof mmZapisReward==='function') mmZapisReward(sh);
+      });
+    } else vlastni.hidden = true;
+  }
+  hled.addEventListener('input', vykresliChips);
+  vykresliChips();
 }
 function mmMountZapis(){
   const host = document.getElementById('zapis-shadow'); if(!host) return;
@@ -7510,6 +7657,7 @@ function mmMountZapis(){
   const scrEl = w.querySelector('.scr');
   // MOST: naplnit shadow ze state/light-DOM (hodnoty, .on stavy, datum, reward, edit rezim, admin pilulky)
   mmZapisSync(sh);
+  if(state.entryType!=='cvik') mmZapisAktivita(sh);
   mmLvlSlider(sh);
   const z = (Math.min(Math.max(1,window.innerWidth),393)-8)/306;   // strop 393 = velikost mockupu (varianta A: nikdy vetsi nez mockup)
   scrEl.style.zoom = z;
@@ -9835,6 +9983,7 @@ function openModal() {
   updateSubmitLabel();  // Ukol 3 (formadmin): "Zapsat" vs "Zapsat za X"
   // Marek 2026-07-20: mezikrok "Co jsi delal?" zrusen — + otevre rovnou formular
   // (typ se prepina nahore ve formulari: Cvik/Aktivita + sub-picker). Vychozi: Cvik.
+  state.entryType='aktivita'; state.actSub=null;   // 2.0: zapisuje se vzdy aktivita, cviky jsou jeji soucast
   goToAddStep(2);
   document.getElementById('modal').classList.add('active');
   // Marek 2026-08-18: mount v goToAddStep bezel jeste nad SKRYTYM modalem (display:none => offsetHeight 0),
