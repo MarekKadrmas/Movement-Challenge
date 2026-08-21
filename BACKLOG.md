@@ -37,6 +37,7 @@
   - **Protahovací deník** — poskládám si vlastní cviky pro protažení.
   - **Flashcards** — vlastní kartičky pro učení/opakování (spaced repetition?).
   - Princip: uživatel si add-on aktivuje/přidá volitelně, není součást základu pro všechny.
+- [ ] **Widget na plochu telefonu — zápis na jedno kliknutí** (2026-08-21): z domovské obrazovky se má dát okamžitě něco zapsat — jídlo do kalorických tabulek, návyk, ranní váha, aktivita. Cíl: **co nejmenší tření** — kliknu na widget a rovnou píšu, žádné otevírání appky, hledání záložky a proklikávání. Varianty ke zvážení: (a) iOS Shortcuts + `x-callback` URL do PWA — jde bez App Storu, ale widget je od Zkratek, ne od nás; (b) nativní obal (Capacitor) s vlastním WidgetKit widgetem — plná kontrola, ale znamená to appku v App Storu a build pipeline; (c) Android jde jednodušeji přes PWA shortcuts v manifestu (dlouhý stisk ikony = zkratky „Zapsat aktivitu / Zvážit se / Návyk"). Nejlevnější první krok: **PWA shortcuts + deep-linky** (`/?zapis=vaha`), které otevřou rovnou konkrétní formulář — funguje hned na Androidu a na iOS aspoň přes Zkratky.
 - [ ] (sem přibývají další drobnosti)
 
 ## ✅ Hotové milníky (kontext)
