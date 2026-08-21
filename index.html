@@ -1983,6 +1983,9 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .wkc .k{font-size:10.86px;color:var(--sec);font-weight:600;margin-top:1px;}
 .mm .up{color:var(--green);font-weight:700;}
 .mm .lc{background:var(--card);box-shadow:var(--shadow);border-radius:20px;overflow:hidden;}
+.mm .lcard{background:var(--card);box-shadow:var(--shadow);border-radius:22px;padding:5px;overflow:hidden;}
+.mm .lcard .pcbar{margin:0 0 3px;box-shadow:none;background:var(--track);}
+.mm .lcard .lc{background:none;box-shadow:none;border-radius:17px;}
 
 .mm .slzeb{margin-top:6px;margin-bottom:1px;}
 .mm .zebodp{font-style:normal;font-size:10.62px;font-weight:700;color:var(--ter);text-transform:none;letter-spacing:0;white-space:nowrap;flex:0 0 auto;}
@@ -2781,6 +2784,9 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
   .sl{font-size:11.15px;letter-spacing:.06em;text-transform:uppercase;color:var(--sec);font-weight:700;margin:6px 3px;display:flex;justify-content:space-between;align-items:center;gap:8px;} .sl a{color:var(--green);text-transform:none;letter-spacing:0;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:rgba(15,169,104,.15);padding:12px 28px 12px 12px;margin:-12px -28px -12px -12px;touch-action:manipulation;white-space:nowrap;flex:0 0 auto;}
   .wk{display:flex;gap:6px;} .wkc{flex:1;background:var(--card);box-shadow:var(--shadow);border-radius:11px;padding:7px 4px;text-align:center;} .wkc .v{font-size:15.94px;font-weight:800;} .wkc .k{font-size:9.56px;color:var(--sec);font-weight:600;margin-top:1px;} .up{color:var(--green);font-weight:700;}
   .lc{background:var(--card);box-shadow:var(--shadow);border-radius:20px;overflow:hidden;}
+.lcard{background:var(--card);box-shadow:var(--shadow);border-radius:22px;padding:5px;overflow:hidden;}
+.lcard .pcbar{margin:0 0 3px;box-shadow:none;background:var(--track);}
+.lcard .lc{background:none;box-shadow:none;border-radius:17px;}
 
 .slzeb{margin-top:6px;margin-bottom:1px;}
 .zebodp{font-style:normal;font-size:10.62px;font-weight:700;color:var(--ter);text-transform:none;letter-spacing:0;white-space:nowrap;flex:0 0 auto;}
@@ -6254,8 +6260,8 @@ function renderDnesek(){
   const odpocetHtml='<div class="sl slzeb"><span>Žebříček</span><i class="zebodp">'+odpocetTxt+'</i></div>';
   const tpl=`<div class="hcard"><div class="hc-hd"><span class="hc-poz">${mmGreet()}${me?', '+esc(mmVocative(mmFirst(me.jmeno))):''}</span><span class="hc-dat">${dlKratke}</span></div><div class="hc-top">${mSerie>0?'<span class="hc-serie"><svg class="i"><use href="#i-flame"/></svg>'+mSerie+'</span>':''}<span class="hc-r">${mTrendHtml}<span class="hc-num">${fmtNum(todayPts)}</span><span class="hc-cil">z ${fmtNum(mCil)} b</span></span></div><div class="hc-tyden">${mSloupce}</div></div>
   <div class="hbm hbnav2" style="margin-top:10px;cursor:pointer" onclick="mmGo('navyky')"><div class="hi hicheck${habTotal>0&&habDone>=habTotal?' hfull':''}" style="--hp:${habTotal>0?Math.round(Math.min(habDone,habTotal)/habTotal*100):0}%"><svg class="i"><use href="#i-check"/></svg></div><div class="ht">Návyky dnes<span class="hdots">${Array.from({length:habTotal},(_,i)=>'<i'+(i<habDone?' class="on"':'')+'></i>').join('')}</span></div><div class="pct" style="display:flex;align-items:baseline;gap:0"><b>${habDone}</b><span style="color:var(--ter);font-weight:700;margin-left:1.5px;margin-right:7px">/${habTotal}</span><span style="color:var(--ter);font-weight:400">›</span></div></div>
-  ${odpocetHtml}${mmPartaSegBar()}
-  <div class="lc">${rows||'<div style="padding:20px;text-align:center;color:var(--ter)">Zatím žádné body</div>'}</div>
+  ${odpocetHtml}<div class="lcard">${mmPartaSegBar()}
+  <div class="lc">${rows||'<div style="padding:20px;text-align:center;color:var(--ter)">Zatím žádné body</div>'}</div></div>
   <div class="sl" onclick="mmOpenSub('rokparty')" style="cursor:pointer;touch-action:manipulation"><span>Kalendář aktivity</span><a style="pointer-events:none">celý rok →</a></div>
   <div class="heatcard"><div class="hbnav"><span class="hbarr" onclick="mmPartaHeatMove(1)">‹</span><span class="hbrange"></span><span class="hbarr" onclick="mmPartaHeatMove(-1)">›</span><span class="hbtoday" onclick="mmPartaHeatToday()">⟳ Dnes</span></div>${heatHtml}</div>
   <div class="sl" onclick="mmOpenSub('zaznamy')" style="cursor:pointer;touch-action:manipulation"><span>Dění</span><a style="pointer-events:none">celá historie →</a></div>
@@ -7283,7 +7289,7 @@ function renderParta(){
   const tpl=`<div class="nav"><div><div class="ttl">Parta</div></div><div class="right"><div class="av" style="background:linear-gradient(135deg,${meCol}4d,${meCol}12);color:${meCol}">${me?esc(initials(me.jmeno)):'?'}</div><div class="add" onclick="openModal()">＋</div></div></div>
   <div class="wkl"><div class="wklh"><div class="wklt"><svg class="i"><use href="#i-trophy"/></svg> Liga týdne</div><div class="wkls">${wklLabel} ›</div></div><div class="wkbars">${wkRows}</div></div>
   ${mmPartaSegBar()}
-  <div class="lc">${rows||'<div style="padding:20px;text-align:center;color:var(--ter)">Zatím žádné body</div>'}</div>
+  <div class="lc">${rows||'<div style="padding:20px;text-align:center;color:var(--ter)">Zatím žádné body</div>'}</div></div>
   <div class="sl" onclick="mmOpenSub('rokparty')" style="cursor:pointer;touch-action:manipulation"><span>Aktivita party</span><a style="pointer-events:none">celý rok →</a></div>
   <div class="heatcard"><div class="hbnav"><span class="hbarr" onclick="mmPartaHeatMove(1)">‹</span><span class="hbrange">${heatLabel}</span><span class="hbarr" onclick="mmPartaHeatMove(-1)">›</span><span class="hbtoday" onclick="mmPartaHeatToday()">⟳ Dnes</span></div>${heatHtml}</div>
   <div class="hbm" style="margin-top:13px;padding:6px 12px;cursor:pointer" onclick="mmOpenSub('rekordyparty')"><div class="hi" style="background:#E0A23A22;width:27px;height:27px;font-size:16.9px"><svg class="i"><use href="#i-medal"/></svg></div><div class="ht">Rekordy & maximálky všech<small>všichni hráči na jednom místě</small></div><span class="rx" style="color:var(--ter);font-size:19.31px">›</span></div>
