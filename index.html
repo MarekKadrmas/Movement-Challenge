@@ -2286,6 +2286,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .ffrow .drange .i{width:13px;height:13px;}
 .mm .ffrow .submit{flex:1;margin-top:0;height:46px;padding:0;display:flex;align-items:center;justify-content:center;font-size:14.48px;}
 
+
 .mm .znzvol{display:flex;align-items:center;gap:9px;width:100%;border:0;background:var(--card);box-shadow:var(--shadow);border-radius:999px;height:42px;padding:0 8px 0 15px;font:inherit;cursor:pointer;}
 .mm .znzvol[hidden],.mm .znpick[hidden],.mm .znfil[hidden]{display:none;}
 .mm .znzvol .znri{width:16px;height:16px;color:var(--green);flex:0 0 auto;}
@@ -2320,6 +2321,23 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .nvch{display:flex;flex-wrap:wrap;gap:4px;}
 .mm .nvch .znf{background:var(--card);box-shadow:var(--shadow);color:var(--label);padding:7px 12px;font-weight:700;}
 .mm .nvch .znf.on{background:var(--green);color:#fff;}
+.mm .body.formb .fhd{margin-bottom:3px;}
+.mm .zn{margin-top:0;}
+.mm .znf{display:inline-flex;align-items:center;gap:5px;flex:0 0 auto;border:0;background:transparent;border-radius:999px;padding:6px 12px;font:inherit;font-size:11.6px;font-weight:800;color:var(--ter);cursor:pointer;white-space:nowrap;transition:background .16s ease,color .16s ease;}
+.mm .znf .i{width:11px;height:11px;}
+.mm .znf.on{background:color-mix(in srgb,var(--green) 15%,var(--card));color:var(--green);}
+.mm .znf.znfo{color:var(--green);}
+.mm .znf.znfo.on{background:var(--green);color:#fff;}
+.mm .znsez{max-height:202px;padding-bottom:0;}
+.mm .znsez::after{content:'';display:block;height:1px;}
+.mm .znr{flex:0 0 auto;height:38px;border-radius:14px;transition:background .14s ease;}
+.mm .znrs{width:30px;height:30px;border-radius:50%;padding:0;display:grid;place-items:center;transition:background .14s ease;}
+.mm .znrs .i{width:14px;height:14px;color:var(--ter);opacity:.32;}
+.mm .znrs.on .i{color:var(--green);opacity:1;fill:currentColor;}
+.mm .znr.on .znrs .i{color:#fff;opacity:.5;}
+.mm .znr.on .znrs.on .i{color:#fff;opacity:1;fill:currentColor;}
+.mm .znzvol{height:44px;}
+.mm .znpick{transition:max-height .26s cubic-bezier(.4,0,.2,1),opacity .18s ease;}
 .mm .znhled{display:flex;align-items:center;gap:7px;background:var(--card);border-radius:999px;height:32px;padding:0 13px;box-shadow:var(--shadow);}
 .mm .znhled .i{width:14px;height:14px;color:var(--ter);flex:0 0 auto;}
 .mm .znhled input{flex:1;min-width:0;border:0;outline:0;background:transparent;font:inherit;font-size:12.74px;font-weight:600;color:var(--label);}
@@ -2924,6 +2942,23 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .nvch{display:flex;flex-wrap:wrap;gap:4px;}
 .nvch .znf{background:var(--card);box-shadow:var(--shadow);color:var(--label);padding:7px 12px;font-weight:700;}
 .nvch .znf.on{background:var(--green);color:#fff;}
+.body.formb .fhd{margin-bottom:3px;}
+.zn{margin-top:0;}
+.znf{display:inline-flex;align-items:center;gap:5px;flex:0 0 auto;border:0;background:transparent;border-radius:999px;padding:6px 12px;font:inherit;font-size:11.6px;font-weight:800;color:var(--ter);cursor:pointer;white-space:nowrap;transition:background .16s ease,color .16s ease;}
+.znf .i{width:11px;height:11px;}
+.znf.on{background:color-mix(in srgb,var(--green) 15%,var(--card));color:var(--green);}
+.znf.znfo{color:var(--green);}
+.znf.znfo.on{background:var(--green);color:#fff;}
+.znsez{max-height:202px;padding-bottom:0;}
+.znsez::after{content:'';display:block;height:1px;}
+.znr{flex:0 0 auto;height:38px;border-radius:14px;transition:background .14s ease;}
+.znrs{width:30px;height:30px;border-radius:50%;padding:0;display:grid;place-items:center;transition:background .14s ease;}
+.znrs .i{width:14px;height:14px;color:var(--ter);opacity:.32;}
+.znrs.on .i{color:var(--green);opacity:1;fill:currentColor;}
+.znr.on .znrs .i{color:#fff;opacity:.5;}
+.znr.on .znrs.on .i{color:#fff;opacity:1;fill:currentColor;}
+.znzvol{height:44px;}
+.znpick{transition:max-height .26s cubic-bezier(.4,0,.2,1),opacity .18s ease;}
 .znhled{display:flex;align-items:center;gap:7px;background:var(--card);border-radius:999px;height:32px;padding:0 13px;box-shadow:var(--shadow);}
 .znhled .i{width:14px;height:14px;color:var(--ter);flex:0 0 auto;}
 .znhled input{flex:1;min-width:0;border:0;outline:0;background:transparent;font:inherit;font-size:12.74px;font-weight:600;color:var(--label);}
@@ -8224,12 +8259,35 @@ function mmZapisAktivita(sh){
     if(a.dopl!=='cesty') state.mmCesty = [];
     nastavNazev(a.n);
     vykresliDoplnky(a);
-    vykresli(true);
+    slozit();   // seznam se slozi nahoru, nahore zustane vybrana aktivita
     if(typeof mmZapisReward==='function') mmZapisReward(sh);
     if(typeof mmZapisTlacitko==='function') mmZapisTlacitko(sh);
   }
 
   // ---- Vykresleni vyberu ----
+  function zobrazZvol(){
+    zvol.hidden = false;
+    zvol.innerHTML = '<svg class="i znri"><use href="#'+ikonaPro(vybrana)+'"/></svg>'
+      + '<span class="znrn">'+mmEsc(vybrana.n)+'</span><span class="znzm">Změnit</span>';
+  }
+  // Seznam se slozi nahoru a nahore zustane vybrana aktivita.
+  function slozit(){
+    zobrazZvol();
+    const h = pick.scrollHeight;
+    pick.style.overflow='hidden'; pick.style.maxHeight=h+'px'; void pick.offsetHeight;
+    pick.style.transition='max-height .26s cubic-bezier(.4,0,.2,1),opacity .18s ease';
+    pick.style.maxHeight='0px'; pick.style.opacity='0';
+    clearTimeout(pick._t); pick._t = setTimeout(()=>{ pick.hidden=true; pick.removeAttribute('style'); }, 270);
+  }
+  function rozlozit(){
+    clearTimeout(pick._t);
+    zvol.hidden = true; pick.hidden = false; pick.removeAttribute('style');
+    const h = pick.scrollHeight;
+    pick.style.overflow='hidden'; pick.style.maxHeight='0px'; pick.style.opacity='0'; void pick.offsetHeight;
+    pick.style.transition='max-height .26s cubic-bezier(.4,0,.2,1),opacity .18s ease';
+    pick.style.maxHeight=h+'px'; pick.style.opacity='1';
+    pick._t = setTimeout(()=>{ pick.removeAttribute('style'); }, 280);
+  }
   const ikonaPro = x => x.i || 'i-sprout';
   function radek(x){
     const obl = mmJeOblibena(x.n);
@@ -8271,12 +8329,7 @@ function mmZapisAktivita(sh){
   }
   function vykresli(){
     const seznam = mmAktSeznam();
-    if(!otevreno && vybrana){
-      pick.hidden = true; zvol.hidden = false;
-      zvol.innerHTML = '<svg class="i znri"><use href="#'+ikonaPro(vybrana)+'"/></svg>'
-        + '<span class="znrn">'+mmEsc(vybrana.n)+'</span><span class="znzm">Změnit</span>';
-      return;
-    }
+    if(!otevreno && vybrana){ pick.hidden = true; zobrazZvol(); return; }
     zvol.hidden = true; pick.hidden = false;
     const q = mmAktNorm(hled.value.trim());
     const text = hled.value.trim();
@@ -8297,7 +8350,8 @@ function mmZapisAktivita(sh){
       const f = filtry(seznam);
       if(f.indexOf(filtr) < 0) filtr = f[0];
       fil.hidden = false;
-      fil.innerHTML = f.map(k=>'<button type="button" class="znf'+(k===filtr?' on':'')+'" data-f="'+mmEsc(k)+'">'+mmEsc(k)+'</button>').join('');
+      fil.innerHTML = f.map(k=>'<button type="button" class="znf'+(k===filtr?' on':'')+(k==='Oblíbené'?' znfo':'')+'" data-f="'+mmEsc(k)+'">'
+        + (k==='Oblíbené' ? '<svg class="i"><use href="#i-heart"/></svg>' : '') + mmEsc(k) + '</button>').join('');
       const vyber2 = filtr==='Oblíbené' ? seznam.filter(x=>mmJeOblibena(x.n))
                    : filtr==='Vše'      ? seznam
                    : seznam.filter(x=>x.k===filtr);
@@ -8306,6 +8360,9 @@ function mmZapisAktivita(sh){
       akce.innerHTML = '';
     }
     zapoj(fil); zapoj(sez); zapoj(akce);
+    // aktivni kategorie se sama posune doprostred, at neni schovana za okrajem
+    const akt = fil.querySelector('.znf.on');
+    if(akt) fil.scrollLeft = Math.max(0, akt.offsetLeft - (fil.clientWidth - akt.offsetWidth)/2);
     const on = sez.querySelector('.znr.on'); if(on && on.scrollIntoView) on.scrollIntoView({block:'nearest'});
   }
 
@@ -8350,7 +8407,7 @@ function mmZapisAktivita(sh){
   }
 
   if(vybrana){ otevreno = false; vykresliDoplnky(vybrana); }
-  zvol.addEventListener('click', ()=>{ otevreno = true; hled.value=''; vykresli(); hled.focus(); });
+  zvol.addEventListener('click', ()=>{ otevreno = true; hled.value=''; vykresli(); rozlozit(); });
   hled.addEventListener('input', vykresli);
   hled.addEventListener('keydown', e=>{
     if(e.key!=='Enter') return; e.preventDefault();
