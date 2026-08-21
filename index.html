@@ -2229,7 +2229,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .znchip.znakce .i{color:var(--ter);}
 .mm .znsmaz{border:0;background:var(--track);color:var(--ter);border-radius:999px;width:20px;height:20px;font-size:13px;line-height:1;margin-left:-3px;cursor:pointer;align-self:center;}
 .mm .ffrow{display:flex;align-items:center;gap:8px;}
-.mm .ffrow .drange{flex:0 0 auto;height:46px;padding:0 14px;font-size:11.6px;gap:6px;}
+.mm .ffrow .drange{flex:0 0 152px;width:152px;height:46px;padding:0 14px;font-size:11.6px;gap:6px;overflow:hidden;white-space:nowrap;}
 .mm .ffrow .drange .i{width:13px;height:13px;}
 .mm .ffrow .submit{flex:1;margin-top:0;height:46px;padding:0;display:flex;align-items:center;justify-content:center;font-size:14.48px;}
 .mm .znhled{display:flex;align-items:center;gap:7px;background:var(--card);border-radius:999px;height:32px;padding:0 13px;box-shadow:var(--shadow);}
@@ -2277,6 +2277,18 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .dpgrid .d.on{background:var(--green);color:#fff;font-weight:700;}
 .mm .dpgrid .hh{font-size:10.86px;color:var(--sec);font-weight:700;}
 .mm .dpgrid .d.fut{color:var(--ter);}
+.dpgrid .d{font-weight:700;}
+.dpgrid .d.vik:not(.on):not(.fut){color:var(--sec);}
+.dpgrid .d.dnes:not(.on){box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--green) 42%,transparent);color:var(--green);}
+.dpgrid .d.on{box-shadow:0 5px 14px -4px color-mix(in srgb,var(--green) 60%,transparent);}
+.dpgrid .d.empty{pointer-events:none;}
+.dpgrid .d.fut{opacity:.55;}
+.mm .dpgrid .d{font-weight:700;}
+.mm .dpgrid .d.vik:not(.on):not(.fut){color:var(--sec);}
+.mm .dpgrid .d.dnes:not(.on){box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--green) 42%,transparent);color:var(--green);}
+.mm .dpgrid .d.on{box-shadow:0 5px 14px -4px color-mix(in srgb,var(--green) 60%,transparent);}
+.mm .dpgrid .d.empty{pointer-events:none;}
+.mm .dpgrid .d.fut{opacity:.55;}
 .mm .dpgrid .d.empty{visibility:hidden;}
 .mm .statg{background:var(--card);box-shadow:var(--shadow);border-radius:12px;padding:11px;}
 .mm .statg .gr{display:grid;grid-template-columns:82px 1fr auto;align-items:center;gap:8px;margin-bottom:7px;}
@@ -2736,7 +2748,7 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .znchip.znakce .i{color:var(--ter);}
 .znsmaz{border:0;background:var(--track);color:var(--ter);border-radius:999px;width:20px;height:20px;font-size:13px;line-height:1;margin-left:-3px;cursor:pointer;align-self:center;}
 .ffrow{display:flex;align-items:center;gap:8px;}
-.ffrow .drange{flex:0 0 auto;height:46px;padding:0 14px;font-size:11.6px;gap:6px;}
+.ffrow .drange{flex:0 0 152px;width:152px;height:46px;padding:0 14px;font-size:11.6px;gap:6px;overflow:hidden;white-space:nowrap;}
 .ffrow .drange .i{width:13px;height:13px;}
 .ffrow .submit{flex:1;margin-top:0;height:46px;padding:0;display:flex;align-items:center;justify-content:center;font-size:14.48px;}
 .znhled{display:flex;align-items:center;gap:7px;background:var(--card);border-radius:999px;height:32px;padding:0 13px;box-shadow:var(--shadow);}
@@ -8628,6 +8640,16 @@ function mmDatumSladit(sh){
   b1.style.width=(rD.width/z)+'px'; b1.style.height=(rD.height/z)+'px';
   b2.style.width=(rS.width/z)+'px'; b2.style.height=(rS.height/z)+'px';
   rada.style.gap=Math.max(0,(rS.left-rD.right)/z)+'px';
+  // Leve tlacitko je tataz bublina jako pod nim — ukazuje vybrane datum, klepnutim skoci na dnesek.
+  b1.innerHTML = dr.innerHTML;
+  const sipka = b1.lastElementChild; if(sipka && /▾/.test(sipka.textContent||'')) sipka.remove();
+  // Odstinem je videt, ze kalendar je otevreny — nemeni se jen text.
+  b1.style.gap='6px';
+  b1.style.background='color-mix(in srgb,var(--green) 13%,var(--card))';
+  b1.style.color='var(--green)';
+  b1.style.boxShadow='inset 0 0 0 1.5px color-mix(in srgb,var(--green) 30%,transparent)';
+  b2.style.background='color-mix(in srgb,var(--green) 78%,#05301E)';
+  b2.style.color='#fff';
   const rR = rada.getBoundingClientRect();
   rada.style.transform='translate('+((rD.left-rR.left)/z)+'px,'+((rD.top-rR.top)/z)+'px)';
 }
@@ -8659,19 +8681,22 @@ function mmDatumSync(sh){
   for (let d = 1; d <= dim; d++){
     const ds = dateToStr(new Date(year, month, d));
     const cls = 'd' + (ds === state.selectedDate ? ' on' : (ds > today ? ' fut' : ''));
-    html += `<div class="${cls}" data-mmds="${ds}">${d}</div>`;
+    const vikend = ((first + d - 1) % 7) >= 5;
+    html += `<div class="${cls}${vikend ? ' vik' : ''}${ds === today ? ' dnes' : ''}" data-mmds="${ds}">${d}</div>`;
   }
+  // Doplnit na sest radku, aby kalendar neposkakoval podle delky mesice.
+  for (let i = first + dim; i < 42; i++) html += '<div class="d empty"></div>';
   grid.insertAdjacentHTML('beforeend', html);
 }
 
 function mmDatumClick(e){
   const t = e.target;
   if (t.closest('.sheetx') || t.closest('[data-mmdone]')) { closeDatePicker(); return; }
-  if (t.closest('[data-mmtoday]')) { jumpToToday(); mmDatumSync(); return; }
+  if (t.closest('[data-mmtoday]')) { jumpToToday(); mmDatumSync(); mmDatumSladit(); return; }
   const nav = t.closest('[data-mmnav]');
-  if (nav) { changeMonth(parseInt(nav.dataset.mmnav)); mmDatumSync(); return; }
+  if (nav) { changeMonth(parseInt(nav.dataset.mmnav)); mmDatumSync(); mmDatumSladit(); return; }
   const d = t.closest('.d[data-mmds]');
-  if (d) { if (d.classList.contains('fut')) return; selectDateCell(d.dataset.mmds); mmDatumSync(); return; }
+  if (d) { if (d.classList.contains('fut')) return; selectDateCell(d.dataset.mmds); mmDatumSync(); mmDatumSladit(); return; }
   if (t.closest('.dim') || t.classList.contains('scr')) { closeDatePicker(); return; }
 }
 
