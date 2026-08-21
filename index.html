@@ -2195,7 +2195,25 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .lvlbox{margin-top:2px;}
 
 
-.mm .cvlist{display:flex;flex-direction:column;gap:4px;}
+
+.mm .cvlist{display:flex;flex-direction:column;gap:7px;}
+.mm .cvk{background:var(--card);box-shadow:var(--shadow);border-radius:16px;padding:10px 10px 6px;}
+.mm .cvh{display:flex;align-items:center;gap:7px;margin-bottom:7px;}
+.mm .cvh .i{width:14px;height:14px;color:var(--green);flex:0 0 auto;}
+.mm .cvh b{font-size:13.28px;font-weight:800;color:var(--label);}
+.mm .cvposl{font-size:10.14px;font-weight:700;color:var(--ter);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.mm .cvzrus{margin-left:auto;border:0;background:transparent;color:var(--ter);font-size:17px;line-height:1;width:22px;cursor:pointer;flex:0 0 auto;}
+.mm .cvs{display:grid;grid-template-columns:22px 1fr 1fr 24px;gap:6px;align-items:center;margin-bottom:4px;}
+.mm .cvsz{font-size:9.66px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ter);text-align:center;margin-bottom:3px;}
+.mm .cvc{font-size:11.6px;font-weight:800;color:var(--ter);text-align:center;font-variant-numeric:tabular-nums;}
+.mm .cvin{border:0;outline:0;background:var(--track);border-radius:10px;height:34px;padding:0 8px;font:inherit;font-size:13.28px;font-weight:700;color:var(--label);text-align:center;width:100%;min-width:0;font-variant-numeric:tabular-nums;}
+.mm .cvin::placeholder{color:var(--ter);font-weight:600;}
+.mm .cvsx{border:0;background:transparent;color:var(--ter);font-size:15px;line-height:1;cursor:pointer;padding:0;}
+.mm .cvpridej{width:100%;border:0;background:transparent;color:var(--green);font:inherit;font-size:11.6px;font-weight:800;padding:7px 0 5px;cursor:pointer;text-align:left;}
+.mm .cvnovy{margin-top:7px;}
+.mm .cvov{position:absolute;inset:0;background:rgba(12,18,14,.34);display:flex;align-items:center;justify-content:center;padding:16px;z-index:9;}
+.mm .cvov[hidden]{display:none;}
+.mm .cvov .znsez{max-height:230px;margin-top:8px;}
 .mm .cvr{display:flex;align-items:center;gap:8px;background:var(--card);box-shadow:var(--shadow);border-radius:12px;padding:6px 6px 6px 12px;}
 .mm .cvr b{flex:1;min-width:0;font-size:12.74px;font-weight:700;color:var(--label);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .mm .cvr span{font-size:11.6px;font-weight:700;color:var(--sec);font-variant-numeric:tabular-nums;white-space:nowrap;}
@@ -2781,7 +2799,24 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .pickrow:has(.lvl){display:grid;grid-template-columns:repeat(10,1fr);gap:3px;}
 .pickrow.lvlrow{display:grid;grid-template-columns:repeat(10,1fr);gap:3px;}
 .lvlbox{margin-top:2px;}
-.cvlist{display:flex;flex-direction:column;gap:4px;}
+.cvlist{display:flex;flex-direction:column;gap:7px;}
+.cvk{background:var(--card);box-shadow:var(--shadow);border-radius:16px;padding:10px 10px 6px;}
+.cvh{display:flex;align-items:center;gap:7px;margin-bottom:7px;}
+.cvh .i{width:14px;height:14px;color:var(--green);flex:0 0 auto;}
+.cvh b{font-size:13.28px;font-weight:800;color:var(--label);}
+.cvposl{font-size:10.14px;font-weight:700;color:var(--ter);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cvzrus{margin-left:auto;border:0;background:transparent;color:var(--ter);font-size:17px;line-height:1;width:22px;cursor:pointer;flex:0 0 auto;}
+.cvs{display:grid;grid-template-columns:22px 1fr 1fr 24px;gap:6px;align-items:center;margin-bottom:4px;}
+.cvsz{font-size:9.66px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ter);text-align:center;margin-bottom:3px;}
+.cvc{font-size:11.6px;font-weight:800;color:var(--ter);text-align:center;font-variant-numeric:tabular-nums;}
+.cvin{border:0;outline:0;background:var(--track);border-radius:10px;height:34px;padding:0 8px;font:inherit;font-size:13.28px;font-weight:700;color:var(--label);text-align:center;width:100%;min-width:0;font-variant-numeric:tabular-nums;}
+.cvin::placeholder{color:var(--ter);font-weight:600;}
+.cvsx{border:0;background:transparent;color:var(--ter);font-size:15px;line-height:1;cursor:pointer;padding:0;}
+.cvpridej{width:100%;border:0;background:transparent;color:var(--green);font:inherit;font-size:11.6px;font-weight:800;padding:7px 0 5px;cursor:pointer;text-align:left;}
+.cvnovy{margin-top:7px;}
+.cvov{position:absolute;inset:0;background:rgba(12,18,14,.34);display:flex;align-items:center;justify-content:center;padding:16px;z-index:9;}
+.cvov[hidden]{display:none;}
+.cvov .znsez{max-height:230px;margin-top:8px;}
 .cvr{display:flex;align-items:center;gap:8px;background:var(--card);box-shadow:var(--shadow);border-radius:12px;padding:6px 6px 6px 12px;}
 .cvr b{flex:1;min-width:0;font-size:12.74px;font-weight:700;color:var(--label);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .cvr span{font-size:11.6px;font-weight:700;color:var(--sec);font-variant-numeric:tabular-nums;white-space:nowrap;}
@@ -7738,6 +7773,76 @@ function mmLvlSlider(sh){
 
 // ---- Katalog aktivit -------------------------------------------------------
 // dopl: co se u aktivity doplnuje. 'cviky'/'cesty' jsou zatim misto pro dalsi krok.
+const MM_CVIK_KAT = ['Hrudník','Záda','Nohy','Ramena','Paže','Břicho','Ostatní','Moje'];
+const MM_CVIKY_KNIHOVNA = [
+  {n:'Bench press', k:'Hrudník'},
+  {n:'Bench s jednoručkami', k:'Hrudník'},
+  {n:'Bench na šikmé lavici', k:'Hrudník'},
+  {n:'Kliky', k:'Hrudník'},
+  {n:'Kliky na bradlech', k:'Hrudník'},
+  {n:'Peck deck', k:'Hrudník'},
+  {n:'Rozpažování s jednoručkami', k:'Hrudník'},
+  {n:'Shyby', k:'Záda'},
+  {n:'Shyby podhmatem', k:'Záda'},
+  {n:'Přítahy v předklonu', k:'Záda'},
+  {n:'Přítahy jednoruček', k:'Záda'},
+  {n:'Stahování kladky', k:'Záda'},
+  {n:'Veslování na kladce', k:'Záda'},
+  {n:'Mrtvý tah', k:'Záda'},
+  {n:'Rumunský mrtvý tah', k:'Záda'},
+  {n:'Dřep', k:'Nohy'},
+  {n:'Dřep s činkou', k:'Nohy'},
+  {n:'Předkopávání', k:'Nohy'},
+  {n:'Zakopávání', k:'Nohy'},
+  {n:'Leg press', k:'Nohy'},
+  {n:'Výpady', k:'Nohy'},
+  {n:'Bulharský dřep', k:'Nohy'},
+  {n:'Lýtka', k:'Nohy'},
+  {n:'Hip thrust', k:'Nohy'},
+  {n:'Tlak nad hlavu', k:'Ramena'},
+  {n:'Tlak s jednoručkami', k:'Ramena'},
+  {n:'Upažování', k:'Ramena'},
+  {n:'Předpažování', k:'Ramena'},
+  {n:'Face pull', k:'Ramena'},
+  {n:'Přítahy k bradě', k:'Ramena'},
+  {n:'Bicepsový zdvih', k:'Paže'},
+  {n:'Kladivový zdvih', k:'Paže'},
+  {n:'Biceps na kladce', k:'Paže'},
+  {n:'Dipy', k:'Paže'},
+  {n:'Triceps na kladce', k:'Paže'},
+  {n:'Francouzský tlak', k:'Paže'},
+  {n:'Plank', k:'Břicho'},
+  {n:'Zkracovačky', k:'Břicho'},
+  {n:'Nohy ve visu', k:'Břicho'},
+  {n:'Ruské rotace', k:'Břicho'},
+  {n:'Kolébka', k:'Břicho'},
+  {n:'Mrtvý brouk', k:'Břicho'},
+  {n:'Burpees', k:'Ostatní'},
+  {n:'Švihadlo', k:'Ostatní'},
+  {n:'Farmářská chůze', k:'Ostatní'},
+  {n:'Veslovací trenažér', k:'Ostatní'},
+  {n:'Kettlebell swing', k:'Ostatní'},
+  {n:'Turecký vztyk', k:'Ostatní'},
+  {n:'Sled push', k:'Ostatní'},
+];
+// Cviky si pamatuji: posledni pouzite hodnoty a jak casto cvik pouzivam.
+function mmCvikVlastni(){ const v=mmAktCti('cvikvlastni'); return Array.isArray(v)?v:[]; }
+function mmCvikPridejVlastni(n){ const v=mmCvikVlastni(); if(v.indexOf(n)<0){ v.push(n); mmAktPis('cvikvlastni',v); } }
+function mmCvikPouziti(){ const v=mmAktCti('cvikpouziti'); return (v&&typeof v==='object')?v:{}; }
+function mmCvikPocitej(n){ if(!n) return; const p=mmCvikPouziti(); p[n]=(p[n]||0)+1; mmAktPis('cvikpouziti',p); }
+function mmCvikPosledni(n){ const v=mmAktCti('cvikposledni'); return (v&&v[n])||null; }
+function mmCvikZapamatuj(n, serie){
+  if(!n || !serie || !serie.length) return;
+  const v = mmAktCti('cvikposledni') || {}; v[n] = serie[serie.length-1]; mmAktPis('cvikposledni', v);
+}
+const MM_CVIK_IKONY = {'Hrudník':'i-pushup','Záda':'i-pullup','Nohy':'i-squat','Ramena':'i-bolt','Paže':'i-dips','Břicho':'i-stretch','Ostatní':'i-flame','Moje':'i-sprout'};
+function mmCvikIkona(n){ const x = MM_CVIKY_KNIHOVNA.concat(mmCvikVlastni().map(v=>({n:v,k:'Moje'}))).find(y=>y.n===n);
+  return (x && MM_CVIK_IKONY[x.k]) || 'i-flame'; }
+function mmCvikSeznam(){
+  const moje = mmCvikVlastni().map(n=>({n:n, k:'Moje', moje:true}));
+  const p = mmCvikPouziti();
+  return MM_CVIKY_KNIHOVNA.concat(moje).slice().sort((x,y)=>(p[y.n]||0)-(p[x.n]||0));
+}
 const MM_RADA_POCET = 12;   // kolik nejcastejsich se vejde do rady, zbytek je pod "Vse"
 const MM_KATEGORIE = ['Posilovna','Běh a chůze','Kolo','Voda','Zima','Míčové','Lezení','Bojové','Klid','Ostatní','Moje'];
 const MM_AKTIVITY = [
@@ -7953,26 +8058,96 @@ function mmZapisAktivita(sh){
   function vykresliCviky(){
     const box = dopl.querySelector('.cvlist'); if(!box) return;
     const sez = cvSez();
-    box.innerHTML = sez.length ? sez.map((c,i)=>{
-      const d = [ (c.s&&c.o) ? c.s+' × '+c.o : (c.o ? String(c.o)+'×' : ''), c.kg ? c.kg+' kg' : '' ].filter(Boolean).join(' · ');
-      return '<div class="cvr"><b>'+mmEsc(c.n)+'</b><span>'+mmEsc(d)+'</span>'
-           + '<button type="button" class="cvx" data-i="'+i+'">×</button></div>';
-    }).join('') : '<div class="cvprazdno">Nepovinné — na body to nemá vliv</div>';
-    smazBind(box, cvSez, vykresliCviky);
+    box.innerHTML = sez.map((c,ci)=>{
+      const posl = mmCvikPosledni(c.n);
+      const hlava = '<div class="cvh"><svg class="i"><use href="#'+mmCvikIkona(c.n)+'"/></svg><b>'+mmEsc(c.n)+'</b>'
+        + (posl ? '<span class="cvposl">naposledy '+(posl.kg?posl.kg+' kg × ':'')+(posl.o||'?')+'</span>' : '')
+        + '<button type="button" class="cvzrus" data-cvx="'+ci+'" title="Odebrat cvik">×</button></div>';
+      const zahlavi = '<div class="cvs cvsz"><span class="cvc">#</span><span>kg</span><span>opakování</span><span></span></div>';
+      const serie = (c.s||[]).map((s,si)=>'<div class="cvs">'
+        + '<span class="cvc">'+(si+1)+'</span>'
+        + '<input class="cvin" type="number" inputmode="decimal" min="0" step="0.5" placeholder="—" value="'+(s.kg!=null?s.kg:'')+'" data-c="'+ci+'" data-s="'+si+'" data-p="kg">'
+        + '<input class="cvin" type="number" inputmode="numeric" min="0" step="1" placeholder="—" value="'+(s.o!=null?s.o:'')+'" data-c="'+ci+'" data-s="'+si+'" data-p="o">'
+        + '<button type="button" class="cvsx" data-sx="'+ci+'.'+si+'" title="Smazat sérii">×</button></div>').join('');
+      return '<div class="cvk">'+hlava+zahlavi+serie
+        + '<button type="button" class="cvpridej" data-plus="'+ci+'">+ Přidat sérii</button></div>';
+    }).join('');
+    box.querySelectorAll('.cvin').forEach(inp=>inp.addEventListener('input',()=>{
+      const c = cvSez()[+inp.getAttribute('data-c')]; if(!c) return;
+      const s = c.s[+inp.getAttribute('data-s')]; if(!s) return;
+      const v = inp.value === '' ? null : parseFloat(inp.value);
+      s[inp.getAttribute('data-p')] = (v!=null && !isNaN(v)) ? v : null;
+      mmCvikZapamatuj(c.n, c.s);
+    }));
+    box.querySelectorAll('[data-plus]').forEach(b=>b.addEventListener('click',()=>{
+      const c = cvSez()[+b.getAttribute('data-plus')]; if(!c) return;
+      const p = c.s[c.s.length-1] || mmCvikPosledni(c.n) || {kg:null,o:null};
+      c.s.push({kg:p.kg, o:p.o});   // nova serie prebira predchozi — jen doladit
+      vykresliCviky();
+    }));
+    box.querySelectorAll('[data-sx]').forEach(b=>b.addEventListener('click',()=>{
+      const [ci,si] = b.getAttribute('data-sx').split('.').map(Number);
+      const c = cvSez()[ci]; if(!c) return;
+      c.s.splice(si,1); if(!c.s.length) cvSez().splice(ci,1);
+      vykresliCviky();
+    }));
+    box.querySelectorAll('[data-cvx]').forEach(b=>b.addEventListener('click',()=>{
+      cvSez().splice(+b.getAttribute('data-cvx'),1); vykresliCviky();
+    }));
   }
   function zapojCviky(){
     vykresliCviky();
-    const pridej = ()=>{
-      const n = dopl.querySelector('.cvn').value.trim(); if(!n) return;
-      cvSez().push({ n:n, s:parseInt(dopl.querySelector('.cvs').value)||null,
-                     o:parseInt(dopl.querySelector('.cvo').value)||null,
-                     kg:parseFloat(dopl.querySelector('.cvkg').value)||null });
-      ['.cvn','.cvs','.cvo','.cvkg'].forEach(q=>{ const el=dopl.querySelector(q); if(el) el.value=''; });
-      vykresliCviky(); const n1=dopl.querySelector('.cvn'); if(n1) n1.focus();
+    const b = dopl.querySelector('.cvnovy');
+    if(b) b.addEventListener('click', ()=>oknoCvik(n=>{
+      const posl = mmCvikPosledni(n);
+      cvSez().push({ n:n, s:[ posl ? {kg:posl.kg, o:posl.o} : {kg:null, o:null} ] });
+      mmCvikPocitej(n); vykresliCviky();
+    }));
+  }
+  // Vyber cviku — stejny seznam jako u aktivit, aby se to ucilo jen jednou.
+  function oknoCvik(hotovo){
+    let ov = body.querySelector('.cvov');
+    if(!ov){
+      ov = document.createElement('div'); ov.className='cvov';
+      ov.innerHTML = '<div class="nvbox"><div class="nvttl">Přidat cvik</div>'
+        +'<div class="znhled"><svg class="i"><use href="#i-search"/></svg>'
+        +'<input class="cvh2" type="text" placeholder="Hledat cvik…" autocomplete="off"></div>'
+        +'<div class="znfil cvf"></div><div class="znsez cvs2"></div>'
+        +'<div class="znakce cva2"></div>'
+        +'<div class="nvb"><button type="button" class="zntl" data-cv="zrus">Zavřít</button></div></div>';
+      body.appendChild(ov);
+    }
+    const hl = ov.querySelector('.cvh2'), fl = ov.querySelector('.cvf'),
+          sz = ov.querySelector('.cvs2'), ak = ov.querySelector('.cva2');
+    let kat = MM_CVIK_KAT[0];
+    hl.value = '';
+    const vyberCvik = n => { ov.hidden = true; hotovo(n); };
+    const kresli = ()=>{
+      const q = mmAktNorm(hl.value.trim()), text = hl.value.trim();
+      const vse = mmCvikSeznam();
+      if(q){
+        fl.hidden = true; fl.innerHTML = '';
+        const shody = vse.filter(x=>mmAktNorm(x.n).includes(q));
+        sz.innerHTML = shody.length ? shody.map(x=>'<div class="znr" data-cn="'+mmEsc(x.n)+'"><svg class="i znri"><use href="#'+(MM_CVIK_IKONY[x.k]||'i-flame')+'"/></svg><span class="znrn">'+mmEsc(x.n)+'</span></div>').join('')
+          : '<div class="znnic">Takový cvik v knihovně není</div>';
+        ak.innerHTML = vse.some(x=>mmAktNorm(x.n)===q) ? ''
+          : '<button type="button" class="zntl zntlp" data-cvnovy>Přidat „'+mmEsc(mmVelkePismeno(text))+'"</button>';
+      } else {
+        fl.hidden = false;
+        const kats = MM_CVIK_KAT.filter(k=>k!=='Moje' || vse.some(x=>x.moje));
+        if(kats.indexOf(kat)<0) kat = kats[0];
+        fl.innerHTML = kats.map(k=>'<button type="button" class="znf'+(k===kat?' on':'')+'" data-cvk="'+mmEsc(k)+'">'+mmEsc(k)+'</button>').join('');
+        sz.innerHTML = vse.filter(x=>x.k===kat).map(x=>'<div class="znr" data-cn="'+mmEsc(x.n)+'"><svg class="i znri"><use href="#'+(MM_CVIK_IKONY[x.k]||'i-flame')+'"/></svg><span class="znrn">'+mmEsc(x.n)+'</span></div>').join('');
+        ak.innerHTML = '';
+      }
+      ov.querySelectorAll('[data-cn]').forEach(r=>r.addEventListener('click',()=>vyberCvik(r.getAttribute('data-cn'))));
+      ov.querySelectorAll('[data-cvk]').forEach(c=>c.addEventListener('click',()=>{ kat=c.getAttribute('data-cvk'); kresli(); }));
+      const nb = ov.querySelector('[data-cvnovy]');
+      if(nb) nb.addEventListener('click',()=>{ const n=mmVelkePismeno(hl.value.trim()); if(!n) return; mmCvikPridejVlastni(n); vyberCvik(n); });
     };
-    const b = dopl.querySelector('.cvadd'); if(b) b.addEventListener('click', pridej);
-    dopl.querySelectorAll('.cvrow input').forEach(i=>i.addEventListener('keydown',e=>{
-      if(e.key==='Enter'){ e.preventDefault(); pridej(); } }));
+    hl.oninput = kresli; kresli();
+    ov.querySelector('[data-cv="zrus"]').onclick = ()=>{ ov.hidden = true; };
+    ov.hidden = false; hl.focus();
   }
   function vykresliCesty(disc){
     const box = dopl.querySelector('.cvlist'); if(!box) return;
@@ -8014,11 +8189,7 @@ function mmZapisAktivita(sh){
         +'<label>Metry<input data-d="metry" type="number" min="0" step="25" inputmode="numeric" placeholder="1000"></label></div>';
     } else if(a.dopl==='cviky'){
       dopl.innerHTML='<label class="znlbl">Cviky</label><div class="cvlist"></div>'
-        +'<div class="cvrow"><input class="cvn" type="text" placeholder="Cvik" autocomplete="off">'
-        +'<input class="cvs" type="number" inputmode="numeric" min="1" placeholder="sérií">'
-        +'<input class="cvo" type="number" inputmode="numeric" min="1" placeholder="opak">'
-        +'<input class="cvkg" type="number" inputmode="decimal" min="0" step="0.5" placeholder="kg">'
-        +'<button type="button" class="cvadd">+</button></div>';
+        +'<button type="button" class="zntl cvnovy">+ Přidat cvik</button>';
     } else if(a.dopl==='cesty'){
       dopl.innerHTML='<label class="znlbl">Cesty <i class="cvpocet"></i></label>'
         +'<div class="cvgrades"></div><div class="cvlist"></div>';
