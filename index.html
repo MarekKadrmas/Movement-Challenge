@@ -1892,7 +1892,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .rplbl{font-size:14.48px;font-weight:700;color:var(--sec);text-transform:uppercase;letter-spacing:.06em;margin-bottom:11px;}
 .mm .body{flex:1;overflow:hidden;padding:13px 14px 78px;color:var(--label);}
 .mm .formb{position:static;}
-.mm .body.formb .ff{position:static;margin-top:16px;padding:0 0 14px;background:none;}
+.mm .body.formb .ff{position:absolute;left:0;right:0;bottom:0;margin-top:0;padding:16px 14px 12px;background:linear-gradient(to top,var(--bg) 74%,transparent);}
 .mm .notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:116px;height:24px;background:#111;border-radius:0 0 15px 15px;z-index:5;}
 .mm .nav{display:flex;justify-content:space-between;align-items:center;padding:15px 2px 7px;}
 .mm .nav .ttl{font-size:27.76px;font-weight:800;letter-spacing:-.03em;}
@@ -2193,6 +2193,19 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .pickrow:has(.lvl){display:grid;grid-template-columns:repeat(10,1fr);gap:3px;}
 .mm .pickrow.lvlrow{display:grid;grid-template-columns:repeat(10,1fr);gap:3px;}
 .mm .lvlbox{margin-top:2px;}
+
+.mm .znrada{display:flex;flex-wrap:nowrap;gap:5px;overflow-x:auto;overflow-y:hidden;margin-top:7px;padding-bottom:3px;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.mm .znrada::-webkit-scrollbar{display:none;}
+.mm .znrada .znchip{flex:0 0 auto;}
+.mm .znvse{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px;}
+.mm .znvse .znchip{padding-right:11px;}
+.mm .znchip.znakce{background:var(--track);box-shadow:none;color:var(--sec);}
+.mm .znchip.znakce .i{color:var(--ter);}
+.mm .znsmaz{border:0;background:var(--track);color:var(--ter);border-radius:999px;width:20px;height:20px;font-size:13px;line-height:1;margin-left:-3px;cursor:pointer;align-self:center;}
+.mm .ffrow{display:flex;align-items:center;gap:8px;}
+.mm .ffrow .drange{flex:0 0 auto;padding:8px 12px;font-size:11.6px;gap:6px;}
+.mm .ffrow .drange .i{width:13px;height:13px;}
+.mm .ffrow .submit{flex:1;margin-top:0;padding:11px;font-size:14.48px;}
 .mm .znhled{display:flex;align-items:center;gap:7px;background:var(--card);border-radius:999px;height:32px;padding:0 13px;box-shadow:var(--shadow);}
 .mm .znhled .i{width:14px;height:14px;color:var(--ter);flex:0 0 auto;}
 .mm .znhled input{flex:1;min-width:0;border:0;outline:0;background:transparent;font:inherit;font-size:12.74px;font-weight:600;color:var(--label);}
@@ -2544,7 +2557,7 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
   .rootpair{display:flex;gap:34px;justify-content:center;align-items:flex-start;flex-wrap:wrap;margin-bottom:6px;} .rp{display:flex;flex-direction:column;align-items:center;} .rplbl{font-size:12.74px;font-weight:700;color:var(--sec);text-transform:uppercase;letter-spacing:.06em;margin-bottom:11px;}
   .scr{width:100%;height:100%;background-color:var(--bg);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");border-radius:31px;overflow:hidden;position:relative;display:flex;flex-direction:column;}
   .body{flex:1;overflow:hidden;padding:13px 14px 78px;color:var(--label);}
-  .formb{position:static;} .body.formb .ff{position:static;margin-top:16px;padding:0 0 14px;background:none;}
+  .formb{position:static;} .body.formb .ff{position:absolute;left:0;right:0;bottom:0;margin-top:0;padding:16px 14px 12px;background:linear-gradient(to top,var(--bg) 74%,transparent);}
   .notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:116px;height:24px;background:#111;border-radius:0 0 15px 15px;z-index:5;} [data-theme="dark"] .notch{background:#000;}
   .nav{display:flex;justify-content:space-between;align-items:center;padding:15px 2px 7px;} .nav:not(:has(.date)){padding-top:20px;} .nav:has(.date){padding-top:10px;} .lc .lr{padding-top:6px;padding-bottom:6px;} .lc ~ .sl:has(+ .hl){margin-top:21px;} .nav .ttl{font-size:24.43px;font-weight:800;letter-spacing:-.03em;} .nav .date{font-size:12.74px;font-weight:600;color:var(--sec);}
   .nav .right{display:flex;align-items:center;gap:9px;} .av{width:29px;height:29px;border-radius:50%;display:grid;place-items:center;font-size:11.15px;font-weight:700;background:#2FB17022;color:#1f8a52;}
@@ -2664,6 +2677,18 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .pickrow:has(.lvl){display:grid;grid-template-columns:repeat(10,1fr);gap:3px;}
 .pickrow.lvlrow{display:grid;grid-template-columns:repeat(10,1fr);gap:3px;}
 .lvlbox{margin-top:2px;}
+.znrada{display:flex;flex-wrap:nowrap;gap:5px;overflow-x:auto;overflow-y:hidden;margin-top:7px;padding-bottom:3px;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.znrada::-webkit-scrollbar{display:none;}
+.znrada .znchip{flex:0 0 auto;}
+.znvse{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px;}
+.znvse .znchip{padding-right:11px;}
+.znchip.znakce{background:var(--track);box-shadow:none;color:var(--sec);}
+.znchip.znakce .i{color:var(--ter);}
+.znsmaz{border:0;background:var(--track);color:var(--ter);border-radius:999px;width:20px;height:20px;font-size:13px;line-height:1;margin-left:-3px;cursor:pointer;align-self:center;}
+.ffrow{display:flex;align-items:center;gap:8px;}
+.ffrow .drange{flex:0 0 auto;padding:8px 12px;font-size:11.6px;gap:6px;}
+.ffrow .drange .i{width:13px;height:13px;}
+.ffrow .submit{flex:1;margin-top:0;padding:11px;font-size:14.48px;}
 .znhled{display:flex;align-items:center;gap:7px;background:var(--card);border-radius:999px;height:32px;padding:0 13px;box-shadow:var(--shadow);}
 .znhled .i{width:14px;height:14px;color:var(--ter);flex:0 0 auto;}
 .znhled input{flex:1;min-width:0;border:0;outline:0;background:transparent;font:inherit;font-size:12.74px;font-weight:600;color:var(--label);}
@@ -7503,7 +7528,8 @@ function mmLvlSlider(sh){
     aktualni=l; vykresli(l,tahne);
     const lb=document.querySelector('#form-aktivita [data-level="'+l+'"]');
     if(lb) lb.click();
-    if(typeof mmZapisReward==='function') mmZapisReward(sh);   // odmena dole musi jit s posuvnikem
+    if(typeof mmZapisReward==='function') mmZapisReward(sh);
+    if(typeof mmZapisTlacitko==='function') mmZapisTlacitko(sh);   // body jsou primo v tlacitku
   };
   rozmisti();
   nastav(aktualni,false);
@@ -7542,6 +7568,22 @@ function mmEsc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').r
 
 // ---- Novy tok zapisu -------------------------------------------------------
 // Nahrazuje prepinac Cvik/Aktivita a puvodni radku aktivit blokem: hledani -> vyber -> doplnky.
+
+// ---- Moje aktivity: poradi podle pouzivani + vlastni aktivity (per hrac, localStorage) ----
+function mmAktKlic(co){ return 'mm_'+co+'_'+(state.selectedPlayer||state.currentPlayerId||'x'); }
+function mmAktCti(co){ try{ return JSON.parse(localStorage.getItem(mmAktKlic(co))); }catch(_){ return null; } }
+function mmAktPis(co,v){ try{ localStorage.setItem(mmAktKlic(co), JSON.stringify(v)); }catch(_){} }
+function mmAktVlastni(){ const v=mmAktCti('vlastni'); return Array.isArray(v)?v:[]; }
+function mmAktPouziti(){ const v=mmAktCti('pouziti'); return (v&&typeof v==='object')?v:{}; }
+function mmAktPocitej(nazev){ if(!nazev) return; const p=mmAktPouziti(); p[nazev]=(p[nazev]||0)+1; mmAktPis('pouziti',p); }
+function mmAktPridejVlastni(nazev){ const v=mmAktVlastni(); if(!v.includes(nazev)){ v.push(nazev); mmAktPis('vlastni',v); } }
+function mmAktSmazVlastni(nazev){ mmAktPis('vlastni', mmAktVlastni().filter(x=>x!==nazev)); }
+// Nejcastejsi prvni, zbytek v zakladnim poradi (Array.sort je stabilni).
+function mmAktSeznam(){
+  const moje = mmAktVlastni().map(n=>({n:n, i:'i-sprout', dopl:null, moje:true}));
+  const p = mmAktPouziti();
+  return MM_AKTIVITY.concat(moje).slice().sort((x,y)=>(p[y.n]||0)-(p[x.n]||0));
+}
 function mmZapisAktivita(sh){
   const body = sh && sh.querySelector('.body.formb'); if(!body) return;
   if(body.querySelector('.zn')) return;                       // uz postaveno
@@ -7552,6 +7594,12 @@ function mmZapisAktivita(sh){
   const rw = body.querySelector('.rwbar'); if(rw) rw.remove();
   const ab = body.querySelector('.admbar');
   if(ab && (!state.selectedPlayer || state.selectedPlayer === state.currentPlayerId)) ab.remove();
+  // Spodni lista: datum a Zapsat do jedne radky pripnute na spodek obrazovky.
+  const ffEl = body.querySelector('.ff');
+  if(ffEl && !ffEl.classList.contains('ffrow')){
+    const dr = ffEl.querySelector('.drange'), sb = ffEl.querySelector('.submit');
+    if(dr && sb){ ffEl.classList.add('ffrow'); ffEl.innerHTML=''; ffEl.append(dr, sb); }
+  }
   // POZOR: .pickrow ma i admin pole "Za koho" (pilulky hracu) — hledej pole podle jeho labelu.
   let stare = null;
   body.querySelectorAll('.fld').forEach(f=>{
@@ -7563,17 +7611,16 @@ function mmZapisAktivita(sh){
   const blok = document.createElement('div');
   blok.className = 'fld zn';
   blok.innerHTML =
-     ''
-    +'<div class="znhled"><svg class="i"><use href="#i-search"/></svg>'
+     '<div class="znhled"><svg class="i"><use href="#i-search"/></svg>'
     +'<input type="text" placeholder="Hledat aktivitu…" autocomplete="off" spellcheck="false"></div>'
-    +'<div class="znchips"></div>'
-    +'<div class="znvlastni" hidden></div>'
+    +'<div class="znrada"></div>'
+    +'<div class="znvse" hidden></div>'
     +'<div class="zndopl"></div>';
   stare.replaceWith(blok);
 
   const hled = blok.querySelector('.znhled input');
-  const chips = blok.querySelector('.znchips');
-  const vlastni = blok.querySelector('.znvlastni');
+  const rada = blok.querySelector('.znrada');
+  const vse  = blok.querySelector('.znvse');
   const dopl = blok.querySelector('.zndopl');
   const nastavNazev = v => { const el=document.getElementById('aktivita-nazev'); if(el) el.value=v; };
 
@@ -7603,43 +7650,72 @@ function mmZapisAktivita(sh){
     }));
   }
 
-  let vybrana = null;
+  let vybrana = null, rozbaleno = false;
   const drive = ((document.getElementById('aktivita-nazev')||{}).value||'').trim();
-  if(drive) vybrana = MM_AKTIVITY.find(x=>x.n===drive) || {n:drive, dopl:null};
+  if(drive) vybrana = mmAktSeznam().find(x=>x.n===drive) || {n:drive, dopl:null};
+
   function vyber(a){
-    vybrana = a;
-    chips.querySelectorAll('.znchip').forEach(c=>c.classList.toggle('on', c.getAttribute('data-n')===a.n));
-    vlastni.querySelectorAll('.znchip').forEach(c=>c.classList.remove('on'));
+    vybrana = a; rozbaleno = false;
     state.actSub = (a.n==='Běh') ? 'beh' : null;
     nastavNazev(a.n);
     vykresliDoplnky(a);
+    vykresli(true);
     if(typeof mmZapisReward==='function') mmZapisReward(sh);
+    if(typeof mmZapisTlacitko==='function') mmZapisTlacitko(sh);
   }
 
-  function vykresliChips(){
+  const chip = x => '<button type="button" class="znchip'+(vybrana&&vybrana.n===x.n?' on':'')+'" data-n="'+mmEsc(x.n)+'">'
+    +'<svg class="i"><use href="#'+(x.i||'i-sprout')+'"/></svg>'+mmEsc(x.n)+'</button>';
+  const akce = (kod,ikona,text) => '<button type="button" class="znchip znakce" data-akce="'+kod+'">'
+    +'<svg class="i"><use href="#'+ikona+'"/></svg>'+text+'</button>';
+
+  function vykresli(doStredu){
     const q = mmAktNorm(hled.value.trim());
-    const sez = q ? MM_AKTIVITY.filter(x=>mmAktNorm(x.n).includes(q)) : MM_AKTIVITY;
-    chips.innerHTML = sez.map(x=>'<button type="button" class="znchip'+(vybrana&&vybrana.n===x.n?' on':'')
-      +'" data-n="'+mmEsc(x.n)+'"><svg class="i"><use href="#'+x.i+'"/></svg>'+mmEsc(x.n)+'</button>').join('');
-    chips.querySelectorAll('.znchip').forEach(c=>c.addEventListener('click',()=>
-      vyber(MM_AKTIVITY.find(x=>x.n===c.getAttribute('data-n')))));
     const text = hled.value.trim();
-    if(text && !MM_AKTIVITY.some(x=>mmAktNorm(x.n)===q)){
-      vlastni.hidden = false;
-      vlastni.innerHTML = '<button type="button" class="znchip znvl'+(vybrana&&vybrana.n===text?' on':'')
-        +'"><svg class="i"><use href="#i-edit"/></svg>Zapsat jako „'+mmEsc(text)+'"</button>';
-      vlastni.querySelector('button').addEventListener('click',()=>{
-        vybrana = {n:text, dopl:null};
-        chips.querySelectorAll('.znchip').forEach(c=>c.classList.remove('on'));
-        vlastni.querySelector('.znchip').classList.add('on');
-        state.actSub = null; nastavNazev(text); vykresliDoplnky(null);
-        if(typeof mmZapisReward==='function') mmZapisReward(sh);
-      });
-    } else vlastni.hidden = true;
+    const seznam = mmAktSeznam();
+    const shody = q ? seznam.filter(x=>mmAktNorm(x.n).includes(q)) : seznam;
+    let html = shody.map(chip).join('');
+    if(text && !seznam.some(x=>mmAktNorm(x.n)===q)) html += akce('novy','i-edit','Vytvořit „'+mmEsc(text)+'"');
+    else if(!q) html += akce('vse','i-list', rozbaleno?'Skrýt':'Vše');
+    rada.innerHTML = html;
+
+    vse.hidden = !rozbaleno || !!q;
+    vse.innerHTML = vse.hidden ? '' : seznam.map(x=>chip(x)
+      + (x.moje ? '<button type="button" class="znsmaz" data-smaz="'+mmEsc(x.n)+'" title="Smazat">×</button>' : '')).join('');
+
+    [rada, vse].forEach(box=>{
+      box.querySelectorAll('.znchip[data-n]').forEach(c=>c.addEventListener('click',()=>{
+        const n = c.getAttribute('data-n');
+        vyber(mmAktSeznam().find(x=>x.n===n) || {n:n, dopl:null});
+      }));
+      box.querySelectorAll('[data-akce]').forEach(c=>c.addEventListener('click',()=>{
+        const k = c.getAttribute('data-akce');
+        if(k==='vse'){ rozbaleno = !rozbaleno; vykresli(); }
+        else if(k==='novy'){
+          const nazev = hled.value.trim(); if(!nazev) return;
+          mmAktPridejVlastni(nazev); hled.value=''; vyber({n:nazev, i:'i-sprout', dopl:null, moje:true});
+        }
+      }));
+      box.querySelectorAll('[data-smaz]').forEach(c=>c.addEventListener('click',(e)=>{
+        e.stopPropagation(); mmAktSmazVlastni(c.getAttribute('data-smaz')); vykresli();
+      }));
+    });
+    // vybranou dlazdici odrolovat do zorneho pole (rada je vodorovne rolovaci)
+    if(doStredu){ const on = rada.querySelector('.znchip.on'); if(on && on.scrollIntoView) on.scrollIntoView({block:'nearest', inline:'center'}); }
   }
+
   if(vybrana) vykresliDoplnky(vybrana);
-  hled.addEventListener('input', vykresliChips);
-  vykresliChips();
+  hled.addEventListener('input', ()=>{ rozbaleno=false; vykresli(); });
+  vykresli(true);
+}
+
+// Text tlacitka nese i body — dolni lista tim nahrazuje samostatny radek s odmenou.
+function mmZapisTlacitko(sh){
+  sh = sh || (document.getElementById('zapis-shadow')||{}).shadowRoot; if(!sh) return;
+  const b = sh.querySelector('.submit'); if(!b) return;
+  const zaklad = ((document.getElementById('submit-btn')||{}).textContent||'Zapsat').trim();
+  const lvl = state.selectedLevel;
+  b.textContent = (lvl && !state.editMode) ? (zaklad+' · +'+(LEVEL_POINTS[lvl]||0)+' b') : zaklad;
 }
 function mmMountZapis(){
   const host = document.getElementById('zapis-shadow'); if(!host) return;
@@ -10773,6 +10849,7 @@ async function submitEntry() {
         const { error } = await db.from('aktivity').insert(payload);
         if (error) throw error;
         toast(`+${body} bodů!`, 'success');
+        if(typeof mmAktPocitej==='function') mmAktPocitej(((document.getElementById('aktivita-nazev')||{}).value||'').trim());   // uceni poradi dlazdic
       }
     } else if (state.entryType === 'stretching') {
       if (!state.selectedStretch) { toast('Vyber délku stretchingu', 'error'); btn.disabled = false; btn.textContent = origText; return; }
@@ -10798,6 +10875,7 @@ async function submitEntry() {
         const { error } = await db.from('aktivity').insert(payload);
         if (error) throw error;
         toast(`+${body} bodů!`, 'success');
+        if(typeof mmAktPocitej==='function') mmAktPocitej(((document.getElementById('aktivita-nazev')||{}).value||'').trim());   // uceni poradi dlazdic
       }
     } else if (state.entryType === 'lezeni') {
       const player = state.players.find(p => p.id === state.selectedPlayer);
