@@ -2211,11 +2211,20 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .cvgrades::-webkit-scrollbar{display:none;}
 .mm .cvg{flex:0 0 auto;border:0;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:6px 11px;font:inherit;font-size:11.6px;font-weight:700;color:var(--label);cursor:pointer;}
 .mm .cvpocet{font-style:normal;font-weight:700;color:var(--ter);}
-.mm .znrada{display:flex;flex-wrap:nowrap;gap:5px;overflow-x:auto;overflow-y:hidden;margin-top:7px;padding-bottom:3px;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.mm .znrada[hidden],.znvse[hidden],.znkat[hidden]{display:none;}
+.znrada{display:flex;flex-wrap:nowrap;gap:5px;overflow-x:auto;overflow-y:hidden;margin-top:7px;padding-bottom:3px;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
 .mm .znrada::-webkit-scrollbar{display:none;}
 .mm .znrada .znchip{flex:0 0 auto;}
-.mm .znvse{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px;}
+.mm .znvse{margin-top:2px;}
+.mm .znkat{display:flex;gap:5px;overflow-x:auto;margin:8px 0 6px;padding-bottom:3px;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.mm .znkat::-webkit-scrollbar{display:none;}
+.mm .znk{flex:0 0 auto;border:0;background:transparent;border-radius:999px;padding:5px 10px;font:inherit;font-size:11.6px;font-weight:800;letter-spacing:.02em;color:var(--ter);cursor:pointer;}
+.mm .znk.on{background:var(--label);color:var(--bg);}
+.mm .znmr{display:flex;flex-wrap:wrap;gap:4px;max-height:184px;overflow-y:auto;-webkit-overflow-scrolling:touch;}
 .mm .znvse .znchip{padding-right:11px;}
+
+.mm .znchip.znakce.znprim{background:var(--card);color:var(--green);box-shadow:inset 0 0 0 1.5px var(--green);}
+.mm .znchip.znakce.znprim .i{color:var(--green);}
 .mm .znchip.znakce{background:var(--track);box-shadow:none;color:var(--sec);}
 .mm .znchip.znakce .i{color:var(--ter);}
 .mm .znsmaz{border:0;background:var(--track);color:var(--ter);border-radius:999px;width:20px;height:20px;font-size:13px;line-height:1;margin-left:-3px;cursor:pointer;align-self:center;}
@@ -2710,11 +2719,19 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .cvgrades::-webkit-scrollbar{display:none;}
 .cvg{flex:0 0 auto;border:0;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:6px 11px;font:inherit;font-size:11.6px;font-weight:700;color:var(--label);cursor:pointer;}
 .cvpocet{font-style:normal;font-weight:700;color:var(--ter);}
+.znrada[hidden],.znvse[hidden],.znkat[hidden]{display:none;}
 .znrada{display:flex;flex-wrap:nowrap;gap:5px;overflow-x:auto;overflow-y:hidden;margin-top:7px;padding-bottom:3px;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
 .znrada::-webkit-scrollbar{display:none;}
 .znrada .znchip{flex:0 0 auto;}
-.znvse{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px;}
+.znvse{margin-top:2px;}
+.znkat{display:flex;gap:5px;overflow-x:auto;margin:8px 0 6px;padding-bottom:3px;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.znkat::-webkit-scrollbar{display:none;}
+.znk{flex:0 0 auto;border:0;background:transparent;border-radius:999px;padding:5px 10px;font:inherit;font-size:11.6px;font-weight:800;letter-spacing:.02em;color:var(--ter);cursor:pointer;}
+.znk.on{background:var(--label);color:var(--bg);}
+.znmr{display:flex;flex-wrap:wrap;gap:4px;max-height:184px;overflow-y:auto;-webkit-overflow-scrolling:touch;}
 .znvse .znchip{padding-right:11px;}
+.znchip.znakce.znprim{background:var(--card);color:var(--green);box-shadow:inset 0 0 0 1.5px var(--green);}
+.znchip.znakce.znprim .i{color:var(--green);}
 .znchip.znakce{background:var(--track);box-shadow:none;color:var(--sec);}
 .znchip.znakce .i{color:var(--ter);}
 .znsmaz{border:0;background:var(--track);color:var(--ter);border-radius:999px;width:20px;height:20px;font-size:13px;line-height:1;margin-left:-3px;cursor:pointer;align-self:center;}
@@ -7579,23 +7596,114 @@ function mmLvlSlider(sh){
 
 // ---- Katalog aktivit -------------------------------------------------------
 // dopl: co se u aktivity doplnuje. 'cviky'/'cesty' jsou zatim misto pro dalsi krok.
+const MM_RADA_POCET = 12;   // kolik nejcastejsich se vejde do rady, zbytek je pod "Vse"
+const MM_KATEGORIE = ['Posilovna','Běh a chůze','Kolo','Voda','Zima','Míčové','Lezení','Bojové','Klid','Ostatní','Moje'];
 const MM_AKTIVITY = [
-  {n:'Gym',             i:'i-pushup',  dopl:'cviky'},
-  {n:'Workout',         i:'i-pullup',  dopl:'cviky'},
-  {n:'Kruhový trénink', i:'i-bolt',    dopl:'cviky'},
-  {n:'Běh',             i:'i-run',     dopl:'beh'},
-  {n:'Kolo',            i:'i-bike',    dopl:'km'},
-  {n:'Turistika',       i:'i-shoe',    dopl:'km'},
-  {n:'Plavání',         i:'i-swim',    dopl:'metry'},
-  {n:'Boulder',         i:'i-boulder', dopl:'cesty'},
-  {n:'Lano',            i:'i-climb',   dopl:'cesty'},
-  {n:'Squash',          i:'i-bolt',    dopl:null},
-  {n:'Tenis',           i:'i-bolt',    dopl:null},
-  {n:'Fotbal',          i:'i-bolt',    dopl:null},
-  {n:'Procházka',       i:'i-shoe',    dopl:null},
-  {n:'Jóga',            i:'i-stretch', dopl:null},
-  {n:'Strečink',        i:'i-stretch', dopl:null},
+  {n:'Gym', k:'Posilovna', i:'i-pushup', dopl:'cviky'},
+  {n:'Workout', k:'Posilovna', i:'i-pullup', dopl:'cviky'},
+  {n:'Kruhový trénink', k:'Posilovna', i:'i-bolt', dopl:'cviky'},
+  {n:'Kalistenika', k:'Posilovna', i:'i-pullup', dopl:'cviky'},
+  {n:'CrossFit', k:'Posilovna', i:'i-bolt', dopl:'cviky'},
+  {n:'Silový trénink', k:'Posilovna', i:'i-squat', dopl:'cviky'},
+  {n:'Vzpírání', k:'Posilovna', i:'i-squat', dopl:'cviky'},
+  {n:'TRX', k:'Posilovna', i:'i-dips', dopl:'cviky'},
+  {n:'Kettlebell', k:'Posilovna', i:'i-squat', dopl:'cviky'},
+  {n:'Core', k:'Posilovna', i:'i-pushup', dopl:'cviky'},
+  {n:'Domácí cvičení', k:'Posilovna', i:'i-pushup', dopl:'cviky'},
+  {n:'Běh', k:'Běh a chůze', i:'i-run', dopl:'beh'},
+  {n:'Trailový běh', k:'Běh a chůze', i:'i-run', dopl:'beh'},
+  {n:'Běh na dráze', k:'Běh a chůze', i:'i-run', dopl:'beh'},
+  {n:'Běžecký pás', k:'Běh a chůze', i:'i-run', dopl:'beh'},
+  {n:'Orientační běh', k:'Běh a chůze', i:'i-run', dopl:'beh'},
+  {n:'Chůze', k:'Běh a chůze', i:'i-shoe', dopl:'km'},
+  {n:'Procházka', k:'Běh a chůze', i:'i-shoe', dopl:null},
+  {n:'Turistika', k:'Běh a chůze', i:'i-shoe', dopl:'km'},
+  {n:'Nordic walking', k:'Běh a chůze', i:'i-shoe', dopl:'km'},
+  {n:'Schody', k:'Běh a chůze', i:'i-shoe', dopl:null},
+  {n:'Kolo', k:'Kolo', i:'i-bike', dopl:'km'},
+  {n:'Silniční kolo', k:'Kolo', i:'i-bike', dopl:'km'},
+  {n:'Horské kolo', k:'Kolo', i:'i-bike', dopl:'km'},
+  {n:'Gravel', k:'Kolo', i:'i-bike', dopl:'km'},
+  {n:'Bikepacking', k:'Kolo', i:'i-bike', dopl:'km'},
+  {n:'Spinning', k:'Kolo', i:'i-bike', dopl:null},
+  {n:'Rotoped', k:'Kolo', i:'i-bike', dopl:null},
+  {n:'Plavání', k:'Voda', i:'i-swim', dopl:'metry'},
+  {n:'Bazén', k:'Voda', i:'i-swim', dopl:'metry'},
+  {n:'Otevřená voda', k:'Voda', i:'i-swim', dopl:'metry'},
+  {n:'Kajak', k:'Voda', i:'i-water', dopl:'km'},
+  {n:'Kanoe', k:'Voda', i:'i-water', dopl:'km'},
+  {n:'Paddleboard', k:'Voda', i:'i-water', dopl:'km'},
+  {n:'Veslování', k:'Voda', i:'i-water', dopl:'km'},
+  {n:'Surf', k:'Voda', i:'i-water', dopl:null},
+  {n:'Windsurfing', k:'Voda', i:'i-water', dopl:null},
+  {n:'Potápění', k:'Voda', i:'i-water', dopl:null},
+  {n:'Vodní pólo', k:'Voda', i:'i-water', dopl:null},
+  {n:'Běžky', k:'Zima', i:'i-snow', dopl:'km'},
+  {n:'Sjezdovky', k:'Zima', i:'i-snow', dopl:null},
+  {n:'Skialp', k:'Zima', i:'i-snow', dopl:'km'},
+  {n:'Snowboard', k:'Zima', i:'i-snow', dopl:null},
+  {n:'Bruslení', k:'Zima', i:'i-snow', dopl:'km'},
+  {n:'Hokej', k:'Zima', i:'i-snow', dopl:null},
+  {n:'Sněžnice', k:'Zima', i:'i-snow', dopl:'km'},
+  {n:'Sáňkování', k:'Zima', i:'i-snow', dopl:null},
+  {n:'Fotbal', k:'Míčové', i:'i-bolt', dopl:null},
+  {n:'Basketbal', k:'Míčové', i:'i-bolt', dopl:null},
+  {n:'Volejbal', k:'Míčové', i:'i-bolt', dopl:null},
+  {n:'Házená', k:'Míčové', i:'i-bolt', dopl:null},
+  {n:'Florbal', k:'Míčové', i:'i-bolt', dopl:null},
+  {n:'Nohejbal', k:'Míčové', i:'i-bolt', dopl:null},
+  {n:'Tenis', k:'Míčové', i:'i-bolt', dopl:null},
+  {n:'Squash', k:'Míčové', i:'i-bolt', dopl:null},
+  {n:'Badminton', k:'Míčové', i:'i-bolt', dopl:null},
+  {n:'Stolní tenis', k:'Míčové', i:'i-bolt', dopl:null},
+  {n:'Padel', k:'Míčové', i:'i-bolt', dopl:null},
+  {n:'Ragby', k:'Míčové', i:'i-bolt', dopl:null},
+  {n:'Baseball', k:'Míčové', i:'i-bolt', dopl:null},
+  {n:'Golf', k:'Míčové', i:'i-bolt', dopl:null},
+  {n:'Frisbee', k:'Míčové', i:'i-bolt', dopl:null},
+  {n:'Boulder', k:'Lezení', i:'i-boulder', dopl:'cesty'},
+  {n:'Lano', k:'Lezení', i:'i-climb', dopl:'cesty'},
+  {n:'Umělá stěna', k:'Lezení', i:'i-boulder', dopl:'cesty'},
+  {n:'Ferrata', k:'Lezení', i:'i-climb', dopl:null},
+  {n:'Horolezectví', k:'Lezení', i:'i-climb', dopl:null},
+  {n:'Slackline', k:'Lezení', i:'i-bolt', dopl:null},
+  {n:'Parkour', k:'Lezení', i:'i-bolt', dopl:null},
+  {n:'Box', k:'Bojové', i:'i-bolt', dopl:null},
+  {n:'Kickbox', k:'Bojové', i:'i-bolt', dopl:null},
+  {n:'Thaibox', k:'Bojové', i:'i-bolt', dopl:null},
+  {n:'MMA', k:'Bojové', i:'i-bolt', dopl:null},
+  {n:'Judo', k:'Bojové', i:'i-bolt', dopl:null},
+  {n:'Karate', k:'Bojové', i:'i-bolt', dopl:null},
+  {n:'Jiu-jitsu', k:'Bojové', i:'i-bolt', dopl:null},
+  {n:'Zápas', k:'Bojové', i:'i-bolt', dopl:null},
+  {n:'Šerm', k:'Bojové', i:'i-bolt', dopl:null},
+  {n:'Jóga', k:'Klid', i:'i-stretch', dopl:null},
+  {n:'Strečink', k:'Klid', i:'i-stretch', dopl:null},
+  {n:'Pilates', k:'Klid', i:'i-stretch', dopl:null},
+  {n:'Mobilita', k:'Klid', i:'i-stretch', dopl:null},
+  {n:'Dechové cvičení', k:'Klid', i:'i-stretch', dopl:null},
+  {n:'Meditace', k:'Klid', i:'i-stretch', dopl:null},
+  {n:'Rehabilitace', k:'Klid', i:'i-stretch', dopl:null},
+  {n:'Tanec', k:'Ostatní', i:'i-sprout', dopl:null},
+  {n:'Zumba', k:'Ostatní', i:'i-sprout', dopl:null},
+  {n:'Aerobik', k:'Ostatní', i:'i-sprout', dopl:null},
+  {n:'Švihadlo', k:'Ostatní', i:'i-bolt', dopl:null},
+  {n:'Trampolína', k:'Ostatní', i:'i-sprout', dopl:null},
+  {n:'Gymnastika', k:'Ostatní', i:'i-sprout', dopl:null},
+  {n:'Atletika', k:'Ostatní', i:'i-run', dopl:null},
+  {n:'Triatlon', k:'Ostatní', i:'i-run', dopl:'km'},
+  {n:'Duatlon', k:'Ostatní', i:'i-run', dopl:'km'},
+  {n:'Jízda na koni', k:'Ostatní', i:'i-sprout', dopl:'km'},
+  {n:'Skateboard', k:'Ostatní', i:'i-sprout', dopl:null},
+  {n:'Kolečkové brusle', k:'Ostatní', i:'i-sprout', dopl:'km'},
+  {n:'Longboard', k:'Ostatní', i:'i-sprout', dopl:null},
+  {n:'Lukostřelba', k:'Ostatní', i:'i-target', dopl:null},
+  {n:'Bowling', k:'Ostatní', i:'i-sprout', dopl:null},
+  {n:'Motokros', k:'Ostatní', i:'i-sprout', dopl:null},
+  {n:'Práce na zahradě', k:'Ostatní', i:'i-sprout', dopl:null},
+  {n:'Stěhování', k:'Ostatní', i:'i-sprout', dopl:null},
 ];
+function mmVelkePismeno(s){ s=String(s||'').trim(); return s ? s.charAt(0).toUpperCase()+s.slice(1) : s; }
 function mmAktNorm(s){ return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
 function mmEsc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
@@ -7613,7 +7721,7 @@ function mmAktPridejVlastni(nazev){ const v=mmAktVlastni(); if(!v.includes(nazev
 function mmAktSmazVlastni(nazev){ mmAktPis('vlastni', mmAktVlastni().filter(x=>x!==nazev)); }
 // Nejcastejsi prvni, zbytek v zakladnim poradi (Array.sort je stabilni).
 function mmAktSeznam(){
-  const moje = mmAktVlastni().map(n=>({n:n, i:'i-sprout', dopl:null, moje:true}));
+  const moje = mmAktVlastni().map(n=>({n:n, k:'Moje', i:'i-sprout', dopl:null, moje:true}));
   const p = mmAktPouziti();
   return MM_AKTIVITY.concat(moje).slice().sort((x,y)=>(p[y.n]||0)-(p[x.n]||0));
 }
@@ -7654,13 +7762,16 @@ function mmZapisAktivita(sh){
      '<div class="znhled"><svg class="i"><use href="#i-search"/></svg>'
     +'<input type="text" placeholder="Hledat aktivitu…" autocomplete="off" spellcheck="false"></div>'
     +'<div class="znrada"></div>'
-    +'<div class="znvse" hidden></div>'
+    +'<div class="znvse" hidden><div class="znkat"></div><div class="znmr"></div></div>'
     +'<div class="zndopl"></div>';
   stare.replaceWith(blok);
 
   const hled = blok.querySelector('.znhled input');
   const rada = blok.querySelector('.znrada');
   const vse  = blok.querySelector('.znvse');
+  const kat  = blok.querySelector('.znkat');
+  const mr   = blok.querySelector('.znmr');
+  let katAktivni = MM_KATEGORIE[0];
   const dopl = blok.querySelector('.zndopl');
   const nastavNazev = v => { const el=document.getElementById('aktivita-nazev'); if(el) el.value=v; };
 
@@ -7758,7 +7869,7 @@ function mmZapisAktivita(sh){
   if(drive) vybrana = mmAktSeznam().find(x=>x.n===drive) || {n:drive, dopl:null};
 
   function vyber(a){
-    vybrana = a; rozbaleno = false;
+    vybrana = a; rozbaleno = false; hled.value = '';   // po vyberu zpet na radu, ne do vysledku hledani
     state.actSub = (a.n==='Běh') ? 'beh' : null;
     if(a.dopl!=='cviky') state.mmCviky = [];
     if(a.dopl!=='cesty') state.mmCesty = [];
@@ -7774,51 +7885,80 @@ function mmZapisAktivita(sh){
   const akce = (kod,ikona,text) => '<button type="button" class="znchip znakce" data-akce="'+kod+'">'
     +'<svg class="i"><use href="#'+ikona+'"/></svg>'+text+'</button>';
 
+  const smazTl = x => x.moje ? '<button type="button" class="znsmaz" data-smaz="'+mmEsc(x.n)+'" title="Smazat">×</button>' : '';
+  function zapoj(box){
+    box.querySelectorAll('.znchip[data-n]').forEach(c=>c.addEventListener('click',()=>{
+      const n = c.getAttribute('data-n');
+      vyber(mmAktSeznam().find(x=>x.n===n) || {n:n, dopl:null});
+    }));
+    box.querySelectorAll('[data-akce]').forEach(c=>c.addEventListener('click',()=>{
+      const k = c.getAttribute('data-akce');
+      if(k==='vse'){ rozbaleno = !rozbaleno; vykresli(); }
+      else if(k==='jednou'){
+        const nazev = hled.value.trim(); if(!nazev) return;
+        vyber({n:mmVelkePismeno(nazev), i:'i-note', dopl:null, jednou:true});   // jen pro tenhle zapis
+      }
+      else if(k==='ulozit'){
+        const nazev = hled.value.trim(); if(!nazev) return;
+        const ul = mmVelkePismeno(nazev);
+        mmAktPridejVlastni(ul); hled.value=''; vyber({n:ul, k:'Moje', i:'i-sprout', dopl:null, moje:true});
+      }
+    }));
+    box.querySelectorAll('[data-smaz]').forEach(c=>c.addEventListener('click',(e)=>{
+      e.stopPropagation(); mmAktSmazVlastni(c.getAttribute('data-smaz')); vykresli();
+    }));
+    box.querySelectorAll('[data-k]').forEach(c=>c.addEventListener('click',()=>{
+      katAktivni = c.getAttribute('data-k'); vykresli();
+    }));
+  }
   function vykresli(doStredu){
     const q = mmAktNorm(hled.value.trim());
     const text = hled.value.trim();
     const seznam = mmAktSeznam();
-    const shody = q ? seznam.filter(x=>mmAktNorm(x.n).includes(q)) : seznam;
-    let html = shody.map(chip).join('');
-    if(text && !seznam.some(x=>mmAktNorm(x.n)===q)){
-      // Popis JEN pro tenhle zapis (nikam se neuklada) vs. ulozeni mezi moje aktivity — dve ruzne veci.
-      html += akce('jednou','i-note','Zapsat jako „'+mmEsc(text)+'"')
-            + akce('ulozit','i-sprout','Uložit mezi moje');
+    if(q){
+      // Hledani: vysledky v mrizce, aby byly videt vsechny najednou (v rade by se schovaly).
+      rada.hidden = true; vse.hidden = false; kat.hidden = true; kat.innerHTML = '';
+      let shody = seznam.filter(x=>mmAktNorm(x.n).includes(q));
+      if(!shody.length){
+        // Cely text nesedi — zkusit jednotliva slova, at je co nabidnout („beh v lese" -> Beh).
+        const slova = q.split(/[^a-z0-9]+/).filter(s=>s.length>2);
+        shody = seznam.filter(x=>slova.some(s=>mmAktNorm(x.n).includes(s)));
+      }
+      let html = shody.map(x=>chip(x)+smazTl(x)).join('');
+      if(!seznam.some(x=>mmAktNorm(x.n)===q)){
+        // Popis JEN pro tenhle zapis vs. ulozeni mezi moje aktivity — dve ruzne veci.
+        html += akce('jednou','i-note','Zapsat jako „'+mmEsc(mmVelkePismeno(text))+'"').replace('znakce','znakce znprim')
+             +  akce('ulozit','i-sprout','Uložit mezi moje');
+      }
+      mr.innerHTML = html;
+    } else {
+      rada.hidden = false;
+      const radaSez = seznam.slice(0, MM_RADA_POCET);
+      if(vybrana && !radaSez.some(x=>x.n===vybrana.n)) radaSez.unshift(vybrana);
+      rada.innerHTML = radaSez.map(chip).join('')
+                     + akce('vse','i-list', rozbaleno ? 'Skrýt' : 'Vše');
+      vse.hidden = !rozbaleno;
+      if(rozbaleno){
+        kat.hidden = false;
+        const jsouMoje = seznam.some(x=>x.moje);
+        const kats = MM_KATEGORIE.filter(k=>k!=='Moje' || jsouMoje);
+        if(kats.indexOf(katAktivni)<0) katAktivni = kats[0];
+        kat.innerHTML = kats.map(k=>'<button type="button" class="znk'+(k===katAktivni?' on':'')
+          +'" data-k="'+mmEsc(k)+'">'+mmEsc(k)+'</button>').join('');
+        mr.innerHTML = seznam.filter(x=>x.k===katAktivni).map(x=>chip(x)+smazTl(x)).join('');
+      } else { kat.innerHTML=''; mr.innerHTML=''; }
     }
-    else if(!q) html += akce('vse','i-list', rozbaleno?'Skrýt':'Vše');
-    rada.innerHTML = html;
-
-    vse.hidden = !rozbaleno || !!q;
-    vse.innerHTML = vse.hidden ? '' : seznam.map(x=>chip(x)
-      + (x.moje ? '<button type="button" class="znsmaz" data-smaz="'+mmEsc(x.n)+'" title="Smazat">×</button>' : '')).join('');
-
-    [rada, vse].forEach(box=>{
-      box.querySelectorAll('.znchip[data-n]').forEach(c=>c.addEventListener('click',()=>{
-        const n = c.getAttribute('data-n');
-        vyber(mmAktSeznam().find(x=>x.n===n) || {n:n, dopl:null});
-      }));
-      box.querySelectorAll('[data-akce]').forEach(c=>c.addEventListener('click',()=>{
-        const k = c.getAttribute('data-akce');
-        if(k==='vse'){ rozbaleno = !rozbaleno; vykresli(); }
-        else if(k==='jednou'){
-          const nazev = hled.value.trim(); if(!nazev) return;
-          vyber({n:nazev, i:'i-note', dopl:null, jednou:true});   // jen pro tenhle zapis
-        }
-        else if(k==='ulozit'){
-          const nazev = hled.value.trim(); if(!nazev) return;
-          mmAktPridejVlastni(nazev); hled.value=''; vyber({n:nazev, i:'i-sprout', dopl:null, moje:true});
-        }
-      }));
-      box.querySelectorAll('[data-smaz]').forEach(c=>c.addEventListener('click',(e)=>{
-        e.stopPropagation(); mmAktSmazVlastni(c.getAttribute('data-smaz')); vykresli();
-      }));
-    });
-    // vybranou dlazdici odrolovat do zorneho pole (rada je vodorovne rolovaci)
+    zapoj(rada); zapoj(kat); zapoj(mr);
     if(doStredu){ const on = rada.querySelector('.znchip.on'); if(on && on.scrollIntoView) on.scrollIntoView({block:'nearest', inline:'center'}); }
   }
-
   if(vybrana) vykresliDoplnky(vybrana);
   hled.addEventListener('input', ()=>{ rozbaleno=false; vykresli(); });
+  hled.addEventListener('keydown', e=>{
+    if(e.key!=='Enter') return; e.preventDefault();
+    const text = hled.value.trim(); if(!text) return;
+    const presna = mmAktSeznam().find(x=>mmAktNorm(x.n)===mmAktNorm(text));
+    vyber(presna || {n:mmVelkePismeno(text), i:'i-note', dopl:null, jednou:true});
+  });
   vykresli(true);
 }
 
