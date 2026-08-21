@@ -1998,11 +1998,11 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .lav{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:10.26px;font-weight:700;}
 .mm .lnm{flex-wrap:nowrap;min-width:0;font-size:14.48px;font-weight:600;min-width:0;line-height:1.25;display:flex;align-items:center;gap:3px;overflow:hidden;}.lnm .lnmt{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}.lnm .i{flex:0 0 auto;}
 
-.mm .lpt .gap.gapp{color:color-mix(in srgb,#E8902F 72%,var(--ter));}
-.mm .lpt .gap.gapm{color:color-mix(in srgb,var(--green) 62%,var(--ter));}
+
+
 .mm .lpt{font-size:15.09px;font-weight:800;display:flex;align-items:baseline;justify-content:flex-end;gap:5px;}
 .mm .lpt.z{color:var(--ter);}
-.mm .lpt .gap{font-size:12.07px;font-weight:700;color:var(--ter);margin-left:3px;}
+.mm .lpt .gap{font-size:11.16px;font-weight:700;color:var(--ter);margin-left:3px;}
 .mm .hl{background:var(--card);box-shadow:var(--shadow);border-radius:18px;overflow:hidden;}
 .mm .hlr{display:flex;align-items:center;gap:10px;padding:8px 12px;position:relative;font-size:14.48px;font-weight:600;}
 .mm .hlr:not(:last-child)::after{content:"";position:absolute;left:40px;right:0;bottom:0;height:1px;background:var(--sep);}
@@ -2558,7 +2558,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .hero .ring{position:relative;}
 .mm .hero{box-shadow:var(--shadow-lg),inset 0 1px 0 rgba(255,255,255,.55);}
 .mm /* žebříček — podium 1/2/3,.mm čisté sloupce,.mm decentní „ty" */
-  .lc>.lr{grid-template-columns:26px 1fr 46px 92px;}
+  .lc>.lr{grid-template-columns:26px var(--lnw,104px) 46px 1fr;}
 .mm .lc>.lr.one,.mm .lc>.lr:nth-child(1){background:transparent;}
 .mm .lc>.lr.me{background:color-mix(in srgb,var(--green) 8%,transparent);box-shadow:none;}
 .mm .lc>.lr:nth-child(-n+3) .lrk{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;margin:0 auto;border:1.5px solid currentColor;font-family:var(--font-display);font-weight:700;font-size:13.28px;}
@@ -2789,9 +2789,9 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 
   .lr{display:grid;grid-template-columns:13px 1fr 46px 92px;gap:9px;align-items:center;padding:5px 12px;position:relative;} .lr:not(:last-child)::after{content:"";position:absolute;left:46px;right:0;bottom:0;height:1px;background:var(--sep);}
   .lr.me{background:rgba(52,199,89,.09);} .lrk{font-size:11.69px;font-weight:700;color:var(--ter);text-align:center;} .lr.one .lrk{color:var(--gold);}
-  .lav{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:9.03px;font-weight:700;} .lnm{flex-wrap:nowrap;min-width:0;font-size:12.74px;font-weight:600;min-width:0;line-height:1.25;display:flex;align-items:center;gap:3px;overflow:hidden;}.lnm .lnmt{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}.lnm .i{flex:0 0 auto;} .lpt .gap.gapp{color:color-mix(in srgb,#E8902F 72%,var(--ter));}
-.lpt .gap.gapm{color:color-mix(in srgb,var(--green) 62%,var(--ter));}
-.lpt{font-size:13.28px;font-weight:800;display:flex;align-items:baseline;justify-content:flex-end;gap:5px;} .lpt.z{color:var(--ter);} .lpt .gap{font-size:10.62px;font-weight:700;color:var(--ter);margin-left:3px;}
+  .lav{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:9.03px;font-weight:700;} .lnm{flex-wrap:nowrap;min-width:0;font-size:12.74px;font-weight:600;min-width:0;line-height:1.25;display:flex;align-items:center;gap:3px;overflow:hidden;}.lnm .lnmt{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}.lnm .i{flex:0 0 auto;} 
+
+.lpt{font-size:13.28px;font-weight:800;display:flex;align-items:baseline;justify-content:flex-end;gap:5px;} .lpt.z{color:var(--ter);} .lpt .gap{font-size:9.82px;font-weight:700;color:var(--ter);margin-left:3px;}
   .hl{background:var(--card);box-shadow:var(--shadow);border-radius:18px;overflow:hidden;} .hlr{display:flex;align-items:center;gap:10px;padding:8px 12px;position:relative;font-size:12.74px;font-weight:600;} .hlr:not(:last-child)::after{content:"";position:absolute;left:40px;right:0;bottom:0;height:1px;background:var(--sep);} .hlr .ic{font-size:16.99px;width:19px;text-align:center;} .hlr small{color:var(--sec);font-weight:500;} .rx{margin-left:auto;font-size:13.81px;letter-spacing:2px;flex:0 0 auto;}
   .seg{display:flex;background:rgba(120,128,124,.12);border-radius:999px;padding:3px;margin:5px 0 9px;} .seg b{flex:1;text-align:center;font-size:12.74px;font-weight:700;padding:8px 0;border-radius:999px;color:var(--label);} .seg b.on{background:var(--card);box-shadow:var(--shadow);}
   .tabs{display:inline-flex;gap:8px;margin:6px 0 13px;} .tabs b{font-size:13.28px;font-weight:700;color:var(--sec);background:var(--card);box-shadow:var(--shadow);padding:7px 15px;border-radius:999px;} .tabs b.on{background:var(--green);color:#fff;box-shadow:0 6px 16px -4px rgba(15,169,104,.5);}
@@ -3165,7 +3165,7 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
   .hero{box-shadow:var(--shadow-lg),inset 0 1px 0 rgba(255,255,255,.55);}
   [data-theme="dark"] .hero{box-shadow:var(--shadow-lg),inset 0 1px 0 rgba(255,255,255,.06);}
   /* žebříček — podium 1/2/3, čisté sloupce, decentní „ty" */
-  .lc>.lr{grid-template-columns:26px 1fr 46px 92px;}
+  .lc>.lr{grid-template-columns:26px var(--lnw,104px) 46px 1fr;}
   .lc>.lr.one,.lc>.lr:nth-child(1){background:transparent;}
   .lc>.lr.me{background:color-mix(in srgb,var(--green) 8%,transparent);box-shadow:none;}
   .lc>.lr:nth-child(-n+3) .lrk{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;margin:0 auto;border:1.5px solid currentColor;font-family:var(--font-display);font-weight:700;font-size:11.69px;}
@@ -6271,7 +6271,7 @@ function renderDnesek(){
   if(sprite) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(0)}</div>`;
   sh.appendChild(w);
-  const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin=(window.innerWidth>393?'0 auto':'');
+  mmSrovnejJmena(sh); const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin=(window.innerWidth>393?'0 auto':'');
   mmDeniApplyFeedState(sh,'prehled'); mmBarSnap(sh,0); mmZnackyCile(sh);   // po plnem re-renderu obnov rozbaleni/pocty/tecky komentaru ze state.mmFeed
   mmDeniBindReakce(sh, host);
   mmPsegAnim(sh);
@@ -7071,6 +7071,15 @@ function mmZnackyCile(sh){
     path.style.strokeDasharray='';   // plna cara — carkovani se pri zoomu 1,258 vyhlazuje nesymetricky
   });
 }
+// Sloupec se jmenem siroky presne jako nejdelsi jmeno — plaminky pak sedi hned za jmeny
+// a zaroven pod sebou (kazdy radek je vlastni grid, takze se sam nesrovna).
+function mmSrovnejJmena(sh){
+  if(!sh) return;
+  sh.querySelectorAll(".lc").forEach(lc=>{
+    let max=0; lc.querySelectorAll(".lnmt").forEach(e=>{ max=Math.max(max, e.scrollWidth); });
+    if(max) lc.style.setProperty("--lnw", Math.ceil(max)+3+"px");
+  });
+}
 function mmSerieChip(pid){
   const s=computeStreak(pid);
   if(!s) return '';
@@ -7290,7 +7299,7 @@ function renderParta(){
   if(sprite) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(1)}</div>`;
   sh.appendChild(w);
-  const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin=(window.innerWidth>393?'0 auto':''); mmDeniApplyFeedState(sh,'parta'); mmPsegAnim(sh); mmLbarAlign(sh); mmHeatInit(sh);
+  mmSrovnejJmena(sh); const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin=(window.innerWidth>393?'0 auto':''); mmDeniApplyFeedState(sh,'parta'); mmPsegAnim(sh); mmLbarAlign(sh); mmHeatInit(sh);
 }
 
 // ============================================================
@@ -7469,7 +7478,7 @@ function renderNavykyMM(){
   if(sprite) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(1)}</div>`;
   sh.appendChild(w);
-  const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin=(window.innerWidth>393?'0 auto':''); mmBarSnap(sh,1);
+  mmSrovnejJmena(sh); const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin=(window.innerWidth>393?'0 auto':''); mmBarSnap(sh,1);
   requestAnimationFrame(()=>mmBarPos(sh, MM_TAB_IDX[state.view]));   // usadit indikator spodniho baru i po re-renderu bez navigace
 }
 
@@ -7596,7 +7605,7 @@ function renderJaMM(){
   if(sprite) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(2)}</div>`;
   sh.appendChild(w);
-  const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin=(window.innerWidth>393?'0 auto':''); mmBarSnap(sh,2);
+  mmSrovnejJmena(sh); const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin=(window.innerWidth>393?'0 auto':''); mmBarSnap(sh,2);
   requestAnimationFrame(()=>mmBarPos(sh, MM_TAB_IDX[state.view]));   // usadit indikator spodniho baru i po re-renderu bez navigace
 }
 
@@ -7673,7 +7682,7 @@ function mmMountSub(host, tpl, barIdx){
   if(sprite) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(barIdx)}</div>`;
   sh.appendChild(w);
-  const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin=(window.innerWidth>393?'0 auto':''); mmBarSnap(sh, barIdx);
+  mmSrovnejJmena(sh); const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin=(window.innerWidth>393?'0 auto':''); mmBarSnap(sh, barIdx);
 }
 
 
