@@ -2194,6 +2194,23 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .pickrow.lvlrow{display:grid;grid-template-columns:repeat(10,1fr);gap:3px;}
 .mm .lvlbox{margin-top:2px;}
 
+
+.mm .cvlist{display:flex;flex-direction:column;gap:4px;}
+.mm .cvr{display:flex;align-items:center;gap:8px;background:var(--card);box-shadow:var(--shadow);border-radius:12px;padding:6px 6px 6px 12px;}
+.mm .cvr b{flex:1;min-width:0;font-size:12.74px;font-weight:700;color:var(--label);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.mm .cvr span{font-size:11.6px;font-weight:700;color:var(--sec);font-variant-numeric:tabular-nums;white-space:nowrap;}
+.mm .cvx{border:0;background:transparent;color:var(--ter);font-size:17px;line-height:1;width:22px;height:22px;cursor:pointer;flex:0 0 auto;}
+.mm .cvprazdno{font-size:11.6px;font-weight:600;color:var(--ter);padding:1px 2px 0;}
+.mm .cvrow{display:flex;gap:4px;margin-top:5px;}
+.mm .cvrow input{border:0;outline:0;background:var(--card);box-shadow:var(--shadow);border-radius:12px;height:32px;padding:0 9px;font:inherit;font-size:12.07px;font-weight:600;color:var(--label);min-width:0;}
+.mm .cvrow .cvn{flex:1;}
+.mm .cvrow .cvs,.mm .cvrow .cvo{width:46px;text-align:center;padding:0 4px;}
+.mm .cvrow .cvkg{width:42px;text-align:center;padding:0 4px;}
+.mm .cvadd{flex:0 0 auto;border:0;background:var(--green);color:#fff;border-radius:12px;width:34px;height:32px;font-size:18px;font-weight:800;line-height:1;cursor:pointer;}
+.mm .cvgrades{display:flex;gap:4px;overflow-x:auto;margin:0 0 7px;padding-bottom:3px;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.mm .cvgrades::-webkit-scrollbar{display:none;}
+.mm .cvg{flex:0 0 auto;border:0;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:6px 11px;font:inherit;font-size:11.6px;font-weight:700;color:var(--label);cursor:pointer;}
+.mm .cvpocet{font-style:normal;font-weight:700;color:var(--ter);}
 .mm .znrada{display:flex;flex-wrap:nowrap;gap:5px;overflow-x:auto;overflow-y:hidden;margin-top:7px;padding-bottom:3px;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
 .mm .znrada::-webkit-scrollbar{display:none;}
 .mm .znrada .znchip{flex:0 0 auto;}
@@ -2203,9 +2220,9 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .znchip.znakce .i{color:var(--ter);}
 .mm .znsmaz{border:0;background:var(--track);color:var(--ter);border-radius:999px;width:20px;height:20px;font-size:13px;line-height:1;margin-left:-3px;cursor:pointer;align-self:center;}
 .mm .ffrow{display:flex;align-items:center;gap:8px;}
-.mm .ffrow .drange{flex:0 0 auto;padding:8px 12px;font-size:11.6px;gap:6px;}
+.mm .ffrow .drange{flex:0 0 auto;height:46px;padding:0 14px;font-size:11.6px;gap:6px;}
 .mm .ffrow .drange .i{width:13px;height:13px;}
-.mm .ffrow .submit{flex:1;margin-top:0;padding:11px;font-size:14.48px;}
+.mm .ffrow .submit{flex:1;margin-top:0;height:46px;padding:0;display:flex;align-items:center;justify-content:center;font-size:14.48px;}
 .mm .znhled{display:flex;align-items:center;gap:7px;background:var(--card);border-radius:999px;height:32px;padding:0 13px;box-shadow:var(--shadow);}
 .mm .znhled .i{width:14px;height:14px;color:var(--ter);flex:0 0 auto;}
 .mm .znhled input{flex:1;min-width:0;border:0;outline:0;background:transparent;font:inherit;font-size:12.74px;font-weight:600;color:var(--label);}
@@ -2677,6 +2694,22 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .pickrow:has(.lvl){display:grid;grid-template-columns:repeat(10,1fr);gap:3px;}
 .pickrow.lvlrow{display:grid;grid-template-columns:repeat(10,1fr);gap:3px;}
 .lvlbox{margin-top:2px;}
+.cvlist{display:flex;flex-direction:column;gap:4px;}
+.cvr{display:flex;align-items:center;gap:8px;background:var(--card);box-shadow:var(--shadow);border-radius:12px;padding:6px 6px 6px 12px;}
+.cvr b{flex:1;min-width:0;font-size:12.74px;font-weight:700;color:var(--label);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.cvr span{font-size:11.6px;font-weight:700;color:var(--sec);font-variant-numeric:tabular-nums;white-space:nowrap;}
+.cvx{border:0;background:transparent;color:var(--ter);font-size:17px;line-height:1;width:22px;height:22px;cursor:pointer;flex:0 0 auto;}
+.cvprazdno{font-size:11.6px;font-weight:600;color:var(--ter);padding:1px 2px 0;}
+.cvrow{display:flex;gap:4px;margin-top:5px;}
+.cvrow input{border:0;outline:0;background:var(--card);box-shadow:var(--shadow);border-radius:12px;height:32px;padding:0 9px;font:inherit;font-size:12.07px;font-weight:600;color:var(--label);min-width:0;}
+.cvrow .cvn{flex:1;}
+.cvrow .cvs,.cvrow .cvo{width:46px;text-align:center;padding:0 4px;}
+.cvrow .cvkg{width:42px;text-align:center;padding:0 4px;}
+.cvadd{flex:0 0 auto;border:0;background:var(--green);color:#fff;border-radius:12px;width:34px;height:32px;font-size:18px;font-weight:800;line-height:1;cursor:pointer;}
+.cvgrades{display:flex;gap:4px;overflow-x:auto;margin:0 0 7px;padding-bottom:3px;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.cvgrades::-webkit-scrollbar{display:none;}
+.cvg{flex:0 0 auto;border:0;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:6px 11px;font:inherit;font-size:11.6px;font-weight:700;color:var(--label);cursor:pointer;}
+.cvpocet{font-style:normal;font-weight:700;color:var(--ter);}
 .znrada{display:flex;flex-wrap:nowrap;gap:5px;overflow-x:auto;overflow-y:hidden;margin-top:7px;padding-bottom:3px;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
 .znrada::-webkit-scrollbar{display:none;}
 .znrada .znchip{flex:0 0 auto;}
@@ -2686,9 +2719,9 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .znchip.znakce .i{color:var(--ter);}
 .znsmaz{border:0;background:var(--track);color:var(--ter);border-radius:999px;width:20px;height:20px;font-size:13px;line-height:1;margin-left:-3px;cursor:pointer;align-self:center;}
 .ffrow{display:flex;align-items:center;gap:8px;}
-.ffrow .drange{flex:0 0 auto;padding:8px 12px;font-size:11.6px;gap:6px;}
+.ffrow .drange{flex:0 0 auto;height:46px;padding:0 14px;font-size:11.6px;gap:6px;}
 .ffrow .drange .i{width:13px;height:13px;}
-.ffrow .submit{flex:1;margin-top:0;padding:11px;font-size:14.48px;}
+.ffrow .submit{flex:1;margin-top:0;height:46px;padding:0;display:flex;align-items:center;justify-content:center;font-size:14.48px;}
 .znhled{display:flex;align-items:center;gap:7px;background:var(--card);border-radius:999px;height:32px;padding:0 13px;box-shadow:var(--shadow);}
 .znhled .i{width:14px;height:14px;color:var(--ter);flex:0 0 auto;}
 .znhled input{flex:1;min-width:0;border:0;outline:0;background:transparent;font:inherit;font-size:12.74px;font-weight:600;color:var(--label);}
@@ -7584,6 +7617,13 @@ function mmAktSeznam(){
   const p = mmAktPouziti();
   return MM_AKTIVITY.concat(moje).slice().sort((x,y)=>(p[y.n]||0)-(p[x.n]||0));
 }
+// Slozi poznamku aktivity: doplnky (beh) + nepovinny rozpis cviku nebo cest.
+function mmPoznamkaAktivita(dop, nazev){
+  dop = dop || {};
+  if (Array.isArray(state.mmCviky) && state.mmCviky.length) { dop.mode = dop.mode || 'aktivita'; dop.cviky = state.mmCviky; }
+  if (Array.isArray(state.mmCesty) && state.mmCesty.length) { dop.mode = 'lezeni'; dop.discipline = (nazev === 'Boulder') ? 'boulder' : 'lano'; dop.routes = state.mmCesty; }
+  return Object.keys(dop).length ? JSON.stringify(dop) : null;
+}
 function mmZapisAktivita(sh){
   const body = sh && sh.querySelector('.body.formb'); if(!body) return;
   if(body.querySelector('.zn')) return;                       // uz postaveno
@@ -7624,6 +7664,61 @@ function mmZapisAktivita(sh){
   const dopl = blok.querySelector('.zndopl');
   const nastavNazev = v => { const el=document.getElementById('aktivita-nazev'); if(el) el.value=v; };
 
+  // ---- Rozpis cviku: nepovinny seznam pod aktivitou, do bodu se nepocita ----
+  function cvSez(){ if(!Array.isArray(state.mmCviky)) state.mmCviky=[]; return state.mmCviky; }
+  function ceSez(){ if(!Array.isArray(state.mmCesty)) state.mmCesty=[]; return state.mmCesty; }
+  function smazBind(box, sez, prekresli){
+    box.querySelectorAll('.cvx').forEach(b=>b.addEventListener('click',()=>{
+      sez().splice(+b.getAttribute('data-i'),1); prekresli(); }));
+  }
+  function vykresliCviky(){
+    const box = dopl.querySelector('.cvlist'); if(!box) return;
+    const sez = cvSez();
+    box.innerHTML = sez.length ? sez.map((c,i)=>{
+      const d = [ (c.s&&c.o) ? c.s+' × '+c.o : (c.o ? String(c.o)+'×' : ''), c.kg ? c.kg+' kg' : '' ].filter(Boolean).join(' · ');
+      return '<div class="cvr"><b>'+mmEsc(c.n)+'</b><span>'+mmEsc(d)+'</span>'
+           + '<button type="button" class="cvx" data-i="'+i+'">×</button></div>';
+    }).join('') : '<div class="cvprazdno">Nepovinné — na body to nemá vliv</div>';
+    smazBind(box, cvSez, vykresliCviky);
+  }
+  function zapojCviky(){
+    vykresliCviky();
+    const pridej = ()=>{
+      const n = dopl.querySelector('.cvn').value.trim(); if(!n) return;
+      cvSez().push({ n:n, s:parseInt(dopl.querySelector('.cvs').value)||null,
+                     o:parseInt(dopl.querySelector('.cvo').value)||null,
+                     kg:parseFloat(dopl.querySelector('.cvkg').value)||null });
+      ['.cvn','.cvs','.cvo','.cvkg'].forEach(q=>{ const el=dopl.querySelector(q); if(el) el.value=''; });
+      vykresliCviky(); const n1=dopl.querySelector('.cvn'); if(n1) n1.focus();
+    };
+    const b = dopl.querySelector('.cvadd'); if(b) b.addEventListener('click', pridej);
+    dopl.querySelectorAll('.cvrow input').forEach(i=>i.addEventListener('keydown',e=>{
+      if(e.key==='Enter'){ e.preventDefault(); pridej(); } }));
+  }
+  function vykresliCesty(disc){
+    const box = dopl.querySelector('.cvlist'); if(!box) return;
+    const sez = ceSez();
+    box.innerHTML = sez.length ? sez.map((r,i)=>{
+      const row = lezeniRowAt(disc, r.idx);
+      const hl = row ? (disc==='boulder' ? row.font : row.french) : '?';
+      const ved = row ? (disc==='boulder' ? row.v : row.uiaa) : '';
+      return '<div class="cvr"><b>'+mmEsc(hl)+'</b><span>'+mmEsc(ved)+'</span>'
+           + '<button type="button" class="cvx" data-i="'+i+'">×</button></div>';
+    }).join('') : '<div class="cvprazdno">Klepni na obtížnost a přidej cestu</div>';
+    smazBind(box, ceSez, ()=>vykresliCesty(disc));
+    const poc = dopl.querySelector('.cvpocet');
+    if(poc) poc.textContent = sez.length ? (sez.length+' '+(sez.length===1?'cesta':(sez.length<5?'cesty':'cest'))) : '';
+  }
+  function zapojCesty(disc){
+    const pas = dopl.querySelector('.cvgrades');
+    if(pas){
+      pas.innerHTML = lezeniTable(disc).map(r=>'<button type="button" class="cvg" data-idx="'+r.idx+'">'
+        + mmEsc(disc==='boulder' ? r.font : r.french) + '</button>').join('');
+      pas.querySelectorAll('.cvg').forEach(b=>b.addEventListener('click',()=>{
+        ceSez().push({ idx:+b.getAttribute('data-idx') }); vykresliCesty(disc); }));
+    }
+    vykresliCesty(disc);
+  }
   function vykresliDoplnky(a){
     if(!a || !a.dopl){ dopl.innerHTML=''; return; }
     if(a.dopl==='beh'){
@@ -7639,10 +7734,18 @@ function mmZapisAktivita(sh){
       dopl.innerHTML='<label class="znlbl">Doplňky</label><div class="znrow">'
         +'<label>Metry<input data-d="metry" type="number" min="0" step="25" inputmode="numeric" placeholder="1000"></label></div>';
     } else if(a.dopl==='cviky'){
-      dopl.innerHTML='<label class="znlbl">Cviky</label><div class="znsoon">Rozpis cviků sem přijde v dalším kroku.</div>';
+      dopl.innerHTML='<label class="znlbl">Cviky</label><div class="cvlist"></div>'
+        +'<div class="cvrow"><input class="cvn" type="text" placeholder="Cvik" autocomplete="off">'
+        +'<input class="cvs" type="number" inputmode="numeric" min="1" placeholder="sérií">'
+        +'<input class="cvo" type="number" inputmode="numeric" min="1" placeholder="opak">'
+        +'<input class="cvkg" type="number" inputmode="decimal" min="0" step="0.5" placeholder="kg">'
+        +'<button type="button" class="cvadd">+</button></div>';
     } else if(a.dopl==='cesty'){
-      dopl.innerHTML='<label class="znlbl">Cesty</label><div class="znsoon">Rozpis cest sem přijde v dalším kroku.</div>';
+      dopl.innerHTML='<label class="znlbl">Cesty <i class="cvpocet"></i></label>'
+        +'<div class="cvgrades"></div><div class="cvlist"></div>';
     } else dopl.innerHTML='';
+    if(a.dopl==='cviky') zapojCviky();
+    else if(a.dopl==='cesty') zapojCesty(a.n==='Boulder' ? 'boulder' : 'lano');
     const most = {km:'aktivita-km', tempo:'aktivita-tempo', prev:'aktivita-prevyseni'};
     dopl.querySelectorAll('input').forEach(inp=>inp.addEventListener('input',()=>{
       const id = most[inp.getAttribute('data-d')]; if(!id) return;
@@ -7657,6 +7760,8 @@ function mmZapisAktivita(sh){
   function vyber(a){
     vybrana = a; rozbaleno = false;
     state.actSub = (a.n==='Běh') ? 'beh' : null;
+    if(a.dopl!=='cviky') state.mmCviky = [];
+    if(a.dopl!=='cesty') state.mmCesty = [];
     nastavNazev(a.n);
     vykresliDoplnky(a);
     vykresli(true);
@@ -7675,7 +7780,11 @@ function mmZapisAktivita(sh){
     const seznam = mmAktSeznam();
     const shody = q ? seznam.filter(x=>mmAktNorm(x.n).includes(q)) : seznam;
     let html = shody.map(chip).join('');
-    if(text && !seznam.some(x=>mmAktNorm(x.n)===q)) html += akce('novy','i-edit','Vytvořit „'+mmEsc(text)+'"');
+    if(text && !seznam.some(x=>mmAktNorm(x.n)===q)){
+      // Popis JEN pro tenhle zapis (nikam se neuklada) vs. ulozeni mezi moje aktivity — dve ruzne veci.
+      html += akce('jednou','i-note','Zapsat jako „'+mmEsc(text)+'"')
+            + akce('ulozit','i-sprout','Uložit mezi moje');
+    }
     else if(!q) html += akce('vse','i-list', rozbaleno?'Skrýt':'Vše');
     rada.innerHTML = html;
 
@@ -7691,7 +7800,11 @@ function mmZapisAktivita(sh){
       box.querySelectorAll('[data-akce]').forEach(c=>c.addEventListener('click',()=>{
         const k = c.getAttribute('data-akce');
         if(k==='vse'){ rozbaleno = !rozbaleno; vykresli(); }
-        else if(k==='novy'){
+        else if(k==='jednou'){
+          const nazev = hled.value.trim(); if(!nazev) return;
+          vyber({n:nazev, i:'i-note', dopl:null, jednou:true});   // jen pro tenhle zapis
+        }
+        else if(k==='ulozit'){
           const nazev = hled.value.trim(); if(!nazev) return;
           mmAktPridejVlastni(nazev); hled.value=''; vyber({n:nazev, i:'i-sprout', dopl:null, moje:true});
         }
@@ -8359,12 +8472,32 @@ function mmMountHistUprav(){
 }
 
 // ----- VYBER DATA (#date-picker-overlay -> #datum-shadow) — mockup S.datum sheet -----
+// Kalendar: obe tlacitka dole sednou PRESNE na bublinu data a na Zapsat ve formulari, aby se
+// pri otevreni kalendare nic neposunulo — meni se jen barva a popisek.
+function mmDatumSladit(sh){
+  sh = sh || (document.getElementById('datum-shadow')||{}).shadowRoot; if(!sh) return;
+  const zs = (document.getElementById('zapis-shadow')||{}).shadowRoot; if(!zs) return;
+  const dr = zs.querySelector('.ffrow .drange'), sb = zs.querySelector('.ffrow .submit');
+  const rada = sh.querySelector('.btn2'); if(!dr || !sb || !rada) return;
+  const b1 = rada.children[0], b2 = rada.children[1]; if(!b1 || !b2) return;
+  const scr = sh.querySelector('.scr'); const z = (scr && parseFloat(scr.style.zoom)) || 1;
+  [b1,b2].forEach(b=>{ b.style.flex='0 0 auto'; b.style.padding='0';
+    b.style.display='flex'; b.style.alignItems='center'; b.style.justifyContent='center'; });
+  rada.style.transform='none'; rada.style.display='flex'; rada.style.alignItems='center';
+  const rD = dr.getBoundingClientRect(), rS = sb.getBoundingClientRect();
+  b1.style.width=(rD.width/z)+'px'; b1.style.height=(rD.height/z)+'px';
+  b2.style.width=(rS.width/z)+'px'; b2.style.height=(rS.height/z)+'px';
+  rada.style.gap=Math.max(0,(rS.left-rD.right)/z)+'px';
+  const rR = rada.getBoundingClientRect();
+  rada.style.transform='translate('+((rD.left-rR.left)/z)+'px,'+((rD.top-rR.top)/z)+'px)';
+}
 function mmMountDatum(){
   const host = document.getElementById('datum-shadow'); if (!host) return;
   // Overlay uz dimuje pres vlastni .dim v sablone; .scr musi byt pruhledny (formular pod nim zustava videt)
   const sh = mmBpMount(host, MM_BP2.datum, '.scr{background:none!important;}[data-mmnav]{cursor:pointer;}');
   if (!sh) return;
   mmDatumSync(sh);
+  requestAnimationFrame(()=>mmDatumSladit(sh));
   if (!host._mmBound){
     host._mmBound = true;
     sh.addEventListener('click', mmDatumClick);
@@ -10069,6 +10202,7 @@ function openModal() {
   // Marek 2026-07-20: mezikrok "Co jsi delal?" zrusen — + otevre rovnou formular
   // (typ se prepina nahore ve formulari: Cvik/Aktivita + sub-picker). Vychozi: Cvik.
   state.entryType='aktivita'; state.actSub=null;   // 2.0: zapisuje se vzdy aktivita, cviky jsou jeji soucast
+  state.mmCviky = []; state.mmCesty = [];          // rozpisy pod aktivitou
   goToAddStep(2);
   document.getElementById('modal').classList.add('active');
   // Marek 2026-08-18: mount v goToAddStep bezel jeste nad SKRYTYM modalem (display:none => offsetHeight 0),
@@ -10822,13 +10956,14 @@ async function submitEntry() {
       // Tempo/Prevyseni (jen Beh) nemaji DB sloupec -> DOPLNKOVE do poznamka JSON {mode:'beh',...}.
       // Do bodu se NEpocitaji. Lezeni pouziva poznamka.mode==='lezeni' na te same tabulce — jiny
       // mode string, nekoliduje.
-      let poznamka = null;
+      let poznamka = null; const dop = {};
       if (isBeh) {
         const tempo = document.getElementById('aktivita-tempo').value.trim();
         const prevRaw = document.getElementById('aktivita-prevyseni').value;
         const prevyseni = prevRaw !== '' ? parseFloat(prevRaw) : null;
         if (tempo || (prevyseni != null && !isNaN(prevyseni))) {
-          poznamka = JSON.stringify({ mode: 'beh', tempo: tempo || null, prevyseni: (prevyseni != null && !isNaN(prevyseni)) ? prevyseni : null });
+          dop.mode = 'beh'; dop.tempo = tempo || null;
+          dop.prevyseni = (prevyseni != null && !isNaN(prevyseni)) ? prevyseni : null;
         }
       }
       const payload = {
@@ -10839,7 +10974,7 @@ async function submitEntry() {
         datum: getEntryDate(),
         km: (km && km > 0) ? km : null,
         je_stretching: false,   // F30
-        poznamka: poznamka
+        poznamka: mmPoznamkaAktivita(dop, nazev)
       };
       if (state.editMode) {
         const { error } = await db.from('aktivity').update(payload).eq('id', state.editId);
