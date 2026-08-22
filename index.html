@@ -1983,9 +1983,19 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .wkc .k{font-size:10.86px;color:var(--sec);font-weight:600;margin-top:1px;}
 .mm .up{color:var(--green);font-weight:700;}
 .mm .lc{background:var(--card);box-shadow:var(--shadow);border-radius:20px;overflow:hidden;}
-.mm .lcard{background:var(--card);box-shadow:var(--shadow);border-radius:22px;padding:5px;overflow:hidden;}
-.mm .lcard .pcbar{margin:0 0 3px;box-shadow:none;background:var(--track);}
-.mm .lcard .lc{background:none;box-shadow:none;border-radius:17px;}
+.mm .lcard{background:var(--card);box-shadow:var(--shadow);border-radius:22px;padding:0;overflow:hidden;}
+.mm .lcard .pcbar{margin:0;padding:0 8px;box-shadow:none;background:var(--track);border-radius:22px 22px 0 0;}
+.mm .lcard .pseg{padding:0;}
+.mm .lcard .pseg b.on{color:var(--label);}
+.mm .lcard .psegt{top:0;bottom:0;background:var(--card);border-radius:13px 13px 0 0;box-shadow:none;}
+.mm .lcard .psegt::before,.mm .lcard .psegt::after{content:'';position:absolute;bottom:0;width:8px;height:8px;}
+.mm .lcard .psegt::before{left:-8px;border-bottom-right-radius:8px;box-shadow:4px 4px 0 4px var(--card);}
+.mm .lcard .psegt::after{right:-8px;border-bottom-left-radius:8px;box-shadow:-4px 4px 0 4px var(--card);}
+.mm .lcard .psegt.prvni{border-radius:22px 13px 0 0;}
+.mm .lcard .psegt.prvni::before{display:none;}
+.mm .lcard .psegt.posledni{border-radius:13px 22px 0 0;}
+.mm .lcard .psegt.posledni::after{display:none;}
+.mm .lcard .lc{background:none;box-shadow:none;border-radius:0 0 22px 22px;padding-top:3px;}
 
 .mm .slzeb{margin-top:6px;margin-bottom:1px;}
 .mm .zebodp{font-style:normal;font-size:10.62px;font-weight:700;color:var(--ter);text-transform:none;letter-spacing:0;white-space:nowrap;flex:0 0 auto;}
@@ -2784,9 +2794,19 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
   .sl{font-size:11.15px;letter-spacing:.06em;text-transform:uppercase;color:var(--sec);font-weight:700;margin:6px 3px;display:flex;justify-content:space-between;align-items:center;gap:8px;} .sl a{color:var(--green);text-transform:none;letter-spacing:0;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:rgba(15,169,104,.15);padding:12px 28px 12px 12px;margin:-12px -28px -12px -12px;touch-action:manipulation;white-space:nowrap;flex:0 0 auto;}
   .wk{display:flex;gap:6px;} .wkc{flex:1;background:var(--card);box-shadow:var(--shadow);border-radius:11px;padding:7px 4px;text-align:center;} .wkc .v{font-size:15.94px;font-weight:800;} .wkc .k{font-size:9.56px;color:var(--sec);font-weight:600;margin-top:1px;} .up{color:var(--green);font-weight:700;}
   .lc{background:var(--card);box-shadow:var(--shadow);border-radius:20px;overflow:hidden;}
-.lcard{background:var(--card);box-shadow:var(--shadow);border-radius:22px;padding:5px;overflow:hidden;}
-.lcard .pcbar{margin:0 0 3px;box-shadow:none;background:var(--track);}
-.lcard .lc{background:none;box-shadow:none;border-radius:17px;}
+.lcard{background:var(--card);box-shadow:var(--shadow);border-radius:22px;padding:0;overflow:hidden;}
+.lcard .pcbar{margin:0;padding:0 8px;box-shadow:none;background:var(--track);border-radius:22px 22px 0 0;}
+.lcard .pseg{padding:0;}
+.lcard .pseg b.on{color:var(--label);}
+.lcard .psegt{top:0;bottom:0;background:var(--card);border-radius:13px 13px 0 0;box-shadow:none;}
+.lcard .psegt::before,.lcard .psegt::after{content:'';position:absolute;bottom:0;width:8px;height:8px;}
+.lcard .psegt::before{left:-8px;border-bottom-right-radius:8px;box-shadow:4px 4px 0 4px var(--card);}
+.lcard .psegt::after{right:-8px;border-bottom-left-radius:8px;box-shadow:-4px 4px 0 4px var(--card);}
+.lcard .psegt.prvni{border-radius:22px 13px 0 0;}
+.lcard .psegt.prvni::before{display:none;}
+.lcard .psegt.posledni{border-radius:13px 22px 0 0;}
+.lcard .psegt.posledni::after{display:none;}
+.lcard .lc{background:none;box-shadow:none;border-radius:0 0 22px 22px;padding-top:3px;}
 
 .slzeb{margin-top:6px;margin-bottom:1px;}
 .zebodp{font-style:normal;font-size:10.62px;font-weight:700;color:var(--ter);text-transform:none;letter-spacing:0;white-space:nowrap;flex:0 0 auto;}
@@ -6372,14 +6392,19 @@ function mmPartaSeg(kind,val){ window._psegPrev={period:mmPartaSegIdx("period"),
 // Pilulka .psegt se dopocitava ze SKUTECNE geometrie aktivni bunky (ne z pevne tretiny).
 // Duvod: na iOS zvetsi -webkit-text-size-adjust text, bunky s flex:1 se rozjedou na ruzne
 // sirky a pevna tretina + translateX(idx*100%) pak lezou mimo (Marek 2026-08-18).
-function mmPsegGeo(p,i){ const b=p.querySelectorAll("b")[i]; if(!b) return null;
+function mmPsegGeo(p,i){ const bs=p.querySelectorAll("b"); const b=bs[i]; if(!b) return null;
   const pr=p.getBoundingClientRect(), br=b.getBoundingClientRect();
   if(!pr.width) return null;
   const scr=p.closest(".scr"); let sc=scr?(parseFloat(scr.style.zoom)||0):0;   // presny zoom .scr
   if(!sc) sc=pr.width/(p.offsetWidth||1);                                      // fallback
   if(!isFinite(sc)||sc<=0) return null;
   // pozor: .pdiv ma border-left:1px, ale .psegt{left:4px} se pocita od PADDING boxu
-  return { x:(br.left-pr.left)/sc-(p.clientLeft||0), w:br.width/sc };   // v layout px vuci padding box .pseg
+  let x=(br.left-pr.left)/sc-(p.clientLeft||0), w=br.width/sc;
+  // V karte zebricku je prepinac zalozkovy: krajni zalozka zabira i sedy lem, aby doslo az k okraji karty.
+  const zal = !!(p.closest && p.closest(".lcard")), lem = zal ? 8 : 0;
+  if (zal && i === 0) { x -= lem; w += lem; }
+  else if (zal && i === bs.length - 1) { w += lem; }
+  return { x:x, w:w };   // v layout px vuci padding box .pseg
 }
 function mmPsegFit(sh){
   if(!sh) return;
@@ -6392,8 +6417,14 @@ function mmPsegFit(sh){
       const on=el.querySelector('b.on'), t=el.querySelector('.psegt');
       if(!on||!t) return;
       const er=el.getBoundingClientRect(), br=on.getBoundingClientRect();
-      t.style.width=(br.width/z)+'px';
-      t.style.transform='translateX('+((br.left-er.left)/z)+'px)';
+      // V karte zebricku je prepinac zalozkovy: krajni zalozka jde az k okraji karty (o sirku lemu).
+      const zal = !!(el.closest && el.closest('.lcard')), lem = zal ? 8 : 0;
+      const bs = Array.prototype.slice.call(el.querySelectorAll('b')), idx = bs.indexOf(on);
+      const prvni = zal && idx === 0, posledni = zal && idx === bs.length - 1;
+      t.classList.toggle('prvni', prvni);
+      t.classList.toggle('posledni', posledni);
+      t.style.width=((br.width/z) + (prvni?lem:0) + (posledni?lem:0))+'px';
+      t.style.transform='translateX('+(((br.left-er.left)/z) - (prvni?lem:0))+'px)';
     });
   };
   requestAnimationFrame(()=>run(0));
@@ -6402,6 +6433,10 @@ function mmPsegAnim(sh){ if(!sh) return; const prev=window._psegPrev; let animov
   sh.querySelectorAll(".pseg").forEach(el=>{
     const kind=el.getAttribute("data-pseg"); const t=el.querySelector(".psegt"); if(!t) return;
     const now=mmPartaSegIdx(kind); const gN=mmPsegGeo(el,now); if(!gN) return;
+    if (el.closest && el.closest(".lcard")) {
+      t.classList.toggle("prvni", now === 0);
+      t.classList.toggle("posledni", now === el.querySelectorAll("b").length - 1);
+    }
     // Marek 2026-08-20: mmPsegAnim se po prekresleni vola dvakrat (jednou hned, podruhe v rAF).
     // Prvni volani spotrebovalo _psegPrev a druhe pak pilulku natvrdo prisadilo -> animace se nikdy
     // neprovedla. Cil si proto pamatujeme na elementu a druhe volani uz do bezici animace nesaha.
