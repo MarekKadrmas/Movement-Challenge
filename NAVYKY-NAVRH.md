@@ -1,6 +1,6 @@
 # Návyky — návrh systému
 
-> Stav: k odsouhlasení (2026-08-23). Odsouhlasené body z chatu jsou zapracované.
+> Stav: **odsouhlaseno** (2026-08-23). Otevřené body z chatu vyřešené, zbývá doladit soukromí (viz §10).
 > Návyky = nástroj osobního rozvoje. **Oddělené od soutěže — žádné body do žebříčku.**
 
 ---
@@ -47,10 +47,10 @@ Proklik na návyk dnes rovnou otevírá editaci — místo toho:
 Návyk zůstává osobní věc, ale dá se sdílet s libovolným počtem hráčů party.
 
 **Jak to funguje:**
-- Vytvořím návyk → „Sdílet s" → vyberu hráče → jim přijde **pozvánka** (karta nahoře v Návycích: Přidat se / Odmítnout).
-- Kdo se přidá, má návyk ve svém seznamu a **plní si ho po svém** — vlastní odškrtávání, vlastní série.
+- Vytvořím návyk → „Sdílet s" → vyberu hráče → jim přijde **pozvánka**: karta nahoře v Návycích (Přidat se / Odmítnout) a zároveň zpráva v appce; jakmile budou fungovat notifikace, přijde i do telefonu.
+- Kdo se přidá, má návyk ve svém seznamu a **plní si ho po svém** — vlastní odškrtávání, u měřitelných vlastní hodnoty, vlastní série i statistiky. Definici nemění nikdo kromě zakladatele.
 - Na kartě jsou **avatary členů**: plná barva = dnes splnil, průhledná = zatím ne. Vidí to všichni členové stejně.
-- **Společná série** — kolik dní po sobě to splnili *všichni*. Vedle vlastní série, jako bonus („držíte to spolu 12 dní").
+- **Společná série** — kolik dní po sobě to splnili *všichni*. Vedle vlastní série, jako bonus („držíte to spolu 12 dní"). Ukáže se jen ve sdíleném návyku, ať karta nezhoustne.
 - Definici (název, ikona, cíl, frekvence) upravuje **zakladatel**, změna se propíše všem členům.
 - **Odejít** = návyk mi zůstane jako osobní, včetně historie. Nikomu se nic nemaže.
 
@@ -78,7 +78,7 @@ habits     + rezim            ('splnit' | 'zmerit' | 'vyhybat')
 habit_logs   beze změny — u režimu „vyhýbat se" log = prohřešek
 habit_pozvanky   nová: skupina_id, od_hrace, pro_hrace, stav
 ```
-**Soukromí:** dnes RLS dovoluje každému přihlášenému přečíst přes API všechny návyky a logy (aplikace je jen nezobrazuje). U návyků jako „bez alkoholu" to není dobré — zpřísnit na *moje + sdílené se mnou*.
+**Soukromí (doladit samostatně, Markův pokyn):** dnes RLS dovoluje každému přihlášenému přečíst přes API všechny návyky a logy (aplikace je jen nezobrazuje). U návyků jako „bez alkoholu" to není dobré — udělat pořádně: čtení jen *moje + sdílené se mnou*, ověřit i na produkci.
 
 ## 11. Co teď záměrně neděláme
 - **Notifikace / připomínky** — čas se uloží, samotné notifikace přijdou později jako celek pro celou appku.
