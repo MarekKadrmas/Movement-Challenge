@@ -1996,6 +1996,9 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .lcard .psegt.prvni::before{display:none;}
 .mm .lcard .psegt.posledni{border-radius:13px 22px 0 0;}
 .mm .lcard .psegt.posledni::after{display:none;}
+.lcard .psegt{transform:none!important;transition:left .3s cubic-bezier(.55,1.3,.2,1),width .3s cubic-bezier(.55,1.3,.2,1);}
+.lcard .psegt.prvni{margin-left:-8px;width:calc(33.3333% + 8px)!important;}
+.lcard .psegt.posledni{width:calc(33.3333% + 8px)!important;}
 .mm .lcard .lc{background:var(--card);box-shadow:none;border-radius:8px 8px 22px 22px;padding-top:3px;margin-top:-8px;position:relative;}
 .mm .lcard.zalkraj .lc{border-top-left-radius:0;border-top-right-radius:0;}
 
@@ -2100,34 +2103,34 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .hbm{background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:8px 15px;display:flex;align-items:center;gap:10px;}
 /* --- Navyky: banner + bubliny (Marek 2026-08-23, varianta 1 z mockupu) --- */
 .nvk{--fial:#8B6FE0;--fial2:#7757d6;}
-.nvk .nbn{display:flex;align-items:center;gap:11px;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:9px 19px;}
+.nvk .nbn{display:flex;align-items:center;gap:11px;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:13px 16px;}
 .nvk .kcis{flex:0 0 auto;text-align:center;}
-.nvk .kcis b{display:block;font-family:var(--font-display);font-size:29px;font-weight:900;letter-spacing:-.05em;line-height:.85;background:linear-gradient(160deg,#A98BEE,#6B49CF);-webkit-background-clip:text;background-clip:text;color:transparent;}
-.nvk .kcis b s{text-decoration:none;font-size:14.5px;-webkit-text-fill-color:var(--ter);}
-.nvk .kden{display:block;font-size:7.2px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--ter);margin-top:3px;}
+.nvk .kcis b{display:block;font-family:var(--font-display);font-size:32px;font-weight:900;letter-spacing:-.05em;line-height:.85;background:linear-gradient(160deg,#A98BEE,#6B49CF);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.nvk .kcis b s{text-decoration:none;font-size:16px;-webkit-text-fill-color:var(--ter);}
+.nvk .kden{display:block;font-size:8px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--ter);margin-top:4px;}
 .nvk .kgraf{flex:1;min-width:0;}
-.nvk .tpr{display:flex;justify-content:space-between;gap:1.5px;}
+.nvk .tpr{display:flex;justify-content:space-between;gap:2px;align-items:center;}
 .nvk .tpr span{display:flex;flex-direction:column;align-items:center;gap:2px;}
 .nvk .tpr .pr{position:relative;display:block;}
-.nvk .tpr .pr u{position:absolute;inset:0;display:grid;place-items:center;text-decoration:none;font-size:7px;font-weight:700;color:var(--ter);letter-spacing:-.04em;}
+.nvk .tpr .pr u{position:absolute;inset:0;display:grid;place-items:center;text-decoration:none;font-size:8.6px;font-weight:700;color:var(--ter);letter-spacing:-.04em;}
 .nvk .tpr em{font-style:normal;font-size:7.6px;font-weight:800;color:var(--ter);}
 .nvk .tpr span.dnes em{color:var(--fial2);font-weight:900;}
 .nvk .nbn.vse .kcis b{background:linear-gradient(160deg,#4ED09A,#0FA968);-webkit-background-clip:text;background-clip:text;}
-.nvk .nrow{display:flex;align-items:center;gap:9px;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:5px 12px 5px 7px;margin-bottom:5px;}
-.nvk .nrow .nic{width:26px;height:26px;flex:0 0 26px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--nc) 15%,transparent);color:var(--nc);font-size:13px;}
-.nvk .nrow .nic .i{width:14px;height:14px;}
-.nvk .nrow .nnm{flex:1;min-width:0;font-size:12.74px;font-weight:600;letter-spacing:-.005em;color:color-mix(in srgb,var(--label) 82%,var(--sec));white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.nvk .nrow .ndet{font-size:10.4px;font-weight:800;color:var(--sec);white-space:nowrap;display:inline-flex;align-items:center;gap:2px;}
-.nvk .nrow .ndet .i{width:11px;height:11px;}
-.nvk .nrow .nchk{width:19px;height:19px;flex:0 0 19px;border-radius:50%;border:1.8px solid var(--ter);display:grid;place-items:center;color:#fff;}
-.nvk .nrow .nchk .i{width:11px;height:11px;}
+.nvk .nrow{display:flex;align-items:center;gap:10px;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:7px 14px 7px 8px;margin-bottom:6px;}
+.nvk .nrow .nic{width:30px;height:30px;flex:0 0 30px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--nc) 15%,transparent);color:var(--nc);font-size:15px;}
+.nvk .nrow .nic .i{width:16px;height:16px;}
+.nvk .nrow .nnm{flex:1;min-width:0;font-size:13.81px;font-weight:600;letter-spacing:-.005em;color:color-mix(in srgb,var(--label) 82%,var(--sec));white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.nvk .nrow .ndet{font-size:11.15px;font-weight:800;color:var(--sec);white-space:nowrap;display:inline-flex;align-items:center;gap:3px;}
+.nvk .nrow .ndet .i{width:12px;height:12px;}
+.nvk .nrow .nchk{width:22px;height:22px;flex:0 0 22px;border-radius:50%;border:2px solid var(--ter);display:grid;place-items:center;color:#fff;}
+.nvk .nrow .nchk .i{width:13px;height:13px;}
 .nvk .nrow.hot{background:color-mix(in srgb,var(--card) 62%,transparent);box-shadow:none;}
 .nvk .nrow.hot .nchk{background:var(--nc);border-color:var(--nc);}
 .nvk .nrow.hot .nnm{color:var(--ter);}
 .nvk .nrow.hot .nic{opacity:.5;}
-.nvk .nnew{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:7px;font-size:12.07px;font-weight:800;color:var(--fial2);}
-.nvk .nnew span{width:19px;height:19px;border-radius:50%;background:color-mix(in srgb,var(--fial) 16%,transparent);display:grid;place-items:center;font-size:12px;}
-.nvk .sl a{font-size:10.2px;font-weight:800;color:var(--fial2);text-transform:none;letter-spacing:0;cursor:pointer;}
+.nvk .nnew{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:9px;font-size:13.28px;font-weight:800;color:var(--fial2);}
+.nvk .nnew span{width:22px;height:22px;border-radius:50%;background:color-mix(in srgb,var(--fial) 16%,transparent);display:grid;place-items:center;font-size:13px;}
+.nvk .sl a{font-size:11.15px;font-weight:800;color:var(--fial2);text-transform:none;letter-spacing:0;cursor:pointer;}
 .nvk .zpet{font-size:11.6px;font-weight:800;color:var(--fial2);margin:2px 2px 10px;cursor:pointer;}
 .nvk .nav .right .av{background:linear-gradient(135deg,#8B6FE04d,#8B6FE012)!important;color:#7757d6!important;}
 /* Navyky: stejny design language jako zbytek appky — mensi prvky, jemnejsi stiny (Marek 2026-08-23) */
@@ -2849,6 +2852,9 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .lcard .psegt.prvni::before{display:none;}
 .lcard .psegt.posledni{border-radius:13px 22px 0 0;}
 .lcard .psegt.posledni::after{display:none;}
+.lcard .psegt{transform:none!important;transition:left .3s cubic-bezier(.55,1.3,.2,1),width .3s cubic-bezier(.55,1.3,.2,1);}
+.lcard .psegt.prvni{margin-left:-8px;width:calc(33.3333% + 8px)!important;}
+.lcard .psegt.posledni{width:calc(33.3333% + 8px)!important;}
 .lcard .lc{background:var(--card);box-shadow:none;border-radius:8px 8px 22px 22px;padding-top:3px;margin-top:-8px;position:relative;}
 .lcard.zalkraj .lc{border-top-left-radius:0;border-top-right-radius:0;}
 
@@ -2894,34 +2900,34 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
   .hbm{background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:8px 15px;display:flex;align-items:center;gap:10px;}
 /* --- Navyky: banner + bubliny (Marek 2026-08-23, varianta 1 z mockupu) --- */
 .nvk{--fial:#8B6FE0;--fial2:#7757d6;}
-.nvk .nbn{display:flex;align-items:center;gap:11px;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:9px 19px;}
+.nvk .nbn{display:flex;align-items:center;gap:11px;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:13px 16px;}
 .nvk .kcis{flex:0 0 auto;text-align:center;}
-.nvk .kcis b{display:block;font-family:var(--font-display);font-size:29px;font-weight:900;letter-spacing:-.05em;line-height:.85;background:linear-gradient(160deg,#A98BEE,#6B49CF);-webkit-background-clip:text;background-clip:text;color:transparent;}
-.nvk .kcis b s{text-decoration:none;font-size:14.5px;-webkit-text-fill-color:var(--ter);}
-.nvk .kden{display:block;font-size:7.2px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--ter);margin-top:3px;}
+.nvk .kcis b{display:block;font-family:var(--font-display);font-size:32px;font-weight:900;letter-spacing:-.05em;line-height:.85;background:linear-gradient(160deg,#A98BEE,#6B49CF);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.nvk .kcis b s{text-decoration:none;font-size:16px;-webkit-text-fill-color:var(--ter);}
+.nvk .kden{display:block;font-size:8px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--ter);margin-top:4px;}
 .nvk .kgraf{flex:1;min-width:0;}
-.nvk .tpr{display:flex;justify-content:space-between;gap:1.5px;}
+.nvk .tpr{display:flex;justify-content:space-between;gap:2px;align-items:center;}
 .nvk .tpr span{display:flex;flex-direction:column;align-items:center;gap:2px;}
 .nvk .tpr .pr{position:relative;display:block;}
-.nvk .tpr .pr u{position:absolute;inset:0;display:grid;place-items:center;text-decoration:none;font-size:7px;font-weight:700;color:var(--ter);letter-spacing:-.04em;}
+.nvk .tpr .pr u{position:absolute;inset:0;display:grid;place-items:center;text-decoration:none;font-size:8.6px;font-weight:700;color:var(--ter);letter-spacing:-.04em;}
 .nvk .tpr em{font-style:normal;font-size:7.6px;font-weight:800;color:var(--ter);}
 .nvk .tpr span.dnes em{color:var(--fial2);font-weight:900;}
 .nvk .nbn.vse .kcis b{background:linear-gradient(160deg,#4ED09A,#0FA968);-webkit-background-clip:text;background-clip:text;}
-.nvk .nrow{display:flex;align-items:center;gap:9px;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:5px 12px 5px 7px;margin-bottom:5px;}
-.nvk .nrow .nic{width:26px;height:26px;flex:0 0 26px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--nc) 15%,transparent);color:var(--nc);font-size:13px;}
-.nvk .nrow .nic .i{width:14px;height:14px;}
-.nvk .nrow .nnm{flex:1;min-width:0;font-size:12.74px;font-weight:600;letter-spacing:-.005em;color:color-mix(in srgb,var(--label) 82%,var(--sec));white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.nvk .nrow .ndet{font-size:10.4px;font-weight:800;color:var(--sec);white-space:nowrap;display:inline-flex;align-items:center;gap:2px;}
-.nvk .nrow .ndet .i{width:11px;height:11px;}
-.nvk .nrow .nchk{width:19px;height:19px;flex:0 0 19px;border-radius:50%;border:1.8px solid var(--ter);display:grid;place-items:center;color:#fff;}
-.nvk .nrow .nchk .i{width:11px;height:11px;}
+.nvk .nrow{display:flex;align-items:center;gap:10px;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:7px 14px 7px 8px;margin-bottom:6px;}
+.nvk .nrow .nic{width:30px;height:30px;flex:0 0 30px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--nc) 15%,transparent);color:var(--nc);font-size:15px;}
+.nvk .nrow .nic .i{width:16px;height:16px;}
+.nvk .nrow .nnm{flex:1;min-width:0;font-size:13.81px;font-weight:600;letter-spacing:-.005em;color:color-mix(in srgb,var(--label) 82%,var(--sec));white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.nvk .nrow .ndet{font-size:11.15px;font-weight:800;color:var(--sec);white-space:nowrap;display:inline-flex;align-items:center;gap:3px;}
+.nvk .nrow .ndet .i{width:12px;height:12px;}
+.nvk .nrow .nchk{width:22px;height:22px;flex:0 0 22px;border-radius:50%;border:2px solid var(--ter);display:grid;place-items:center;color:#fff;}
+.nvk .nrow .nchk .i{width:13px;height:13px;}
 .nvk .nrow.hot{background:color-mix(in srgb,var(--card) 62%,transparent);box-shadow:none;}
 .nvk .nrow.hot .nchk{background:var(--nc);border-color:var(--nc);}
 .nvk .nrow.hot .nnm{color:var(--ter);}
 .nvk .nrow.hot .nic{opacity:.5;}
-.nvk .nnew{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:7px;font-size:12.07px;font-weight:800;color:var(--fial2);}
-.nvk .nnew span{width:19px;height:19px;border-radius:50%;background:color-mix(in srgb,var(--fial) 16%,transparent);display:grid;place-items:center;font-size:12px;}
-.nvk .sl a{font-size:10.2px;font-weight:800;color:var(--fial2);text-transform:none;letter-spacing:0;cursor:pointer;}
+.nvk .nnew{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:9px;font-size:13.28px;font-weight:800;color:var(--fial2);}
+.nvk .nnew span{width:22px;height:22px;border-radius:50%;background:color-mix(in srgb,var(--fial) 16%,transparent);display:grid;place-items:center;font-size:13px;}
+.nvk .sl a{font-size:11.15px;font-weight:800;color:var(--fial2);text-transform:none;letter-spacing:0;cursor:pointer;}
 .nvk .zpet{font-size:11.6px;font-weight:800;color:var(--fial2);margin:2px 2px 10px;cursor:pointer;}
 .nvk .nav .right .av{background:linear-gradient(135deg,#8B6FE04d,#8B6FE012)!important;color:#7757d6!important;}
 /* Navyky: stejny design language jako zbytek appky — mensi prvky, jemnejsi stiny (Marek 2026-08-23) */
@@ -6476,19 +6482,19 @@ function mmPartaPeriodLabel(){ return {all:'Celkem',week:'Týden',month:'Měsíc
 function mmPartaCategoryLabel(){ return {all:'Dohromady',cvik:'Cviky',aktivita:'Aktivity',stretching:'Stretching'}[state.totalCategory||'all']||'Dohromady'; }
 const MM_PSEG={period:{opts:["week","month","all"],labels:["Týden","Měsíc","Celkem"]},cat:{opts:["all","cvik","aktivita"],labels:["Vše","Cviky","Aktivity"]}};
 function mmPartaSegIdx(kind){ if(kind==="period") return Math.max(0,MM_PSEG.period.opts.indexOf(state.totalPeriod||"all")); let c=state.totalCategory||"all"; if(c==="stretching") c="all"; return Math.max(0,MM_PSEG.cat.opts.indexOf(c)); }
-function mmPartaSegBar(){ const seg=(kind,extra)=>{ const d=MM_PSEG[kind]; const idx=mmPartaSegIdx(kind); return '<div class="pseg'+(extra||"")+'" data-pseg="'+kind+'"><i class="psegt" style="transform:translateX('+(idx*100)+'%)"></i>'+d.opts.map((o,i)=>'<b class="'+(i===idx?"on":"")+'" onclick="mmPartaSeg(\''+kind+'\',\''+o+'\')">'+d.labels[i]+'</b>').join("")+'</div>'; }; return '<div class="pcbar">'+seg("period")+'</div>'; }
+function mmPartaSegBar(){ const seg=(kind,extra)=>{ const d=MM_PSEG[kind]; const idx=mmPartaSegIdx(kind); const n=d.opts.length;
+    // geometrie zalozky primo v markupu — nezavisi na mereni ani na zoomu (Marek 2026-08-23)
+    const tridy='psegt'+(idx===0?' prvni':(idx===n-1?' posledni':''));
+    return '<div class="pseg'+(extra||"")+'" data-pseg="'+kind+'"><i class="'+tridy+'" style="left:'+(idx*100/n).toFixed(4)+'%;width:'+(100/n).toFixed(4)+'%"></i>'+d.opts.map((o,i)=>'<b class="'+(i===idx?"on":"")+'" onclick="mmPartaSeg(\''+kind+'\',\''+o+'\')">'+d.labels[i]+'</b>').join("")+'</div>'; }; return '<div class="pcbar">'+seg("period")+'</div>'; }
 function mmPartaSeg(kind,val){ window._psegPrev={period:mmPartaSegIdx("period"),cat:mmPartaSegIdx("cat")}; if(kind==="period") setLeaderboardPeriod(val); else setTotalCategory(val); renderDnesek(); }   // Marek 2026-08: filtry ziji na Prehledu
 // Pilulka .psegt se dopocitava ze SKUTECNE geometrie aktivni bunky (ne z pevne tretiny).
 // Duvod: na iOS zvetsi -webkit-text-size-adjust text, bunky s flex:1 se rozjedou na ruzne
 // sirky a pevna tretina + translateX(idx*100%) pak lezou mimo (Marek 2026-08-18).
 function mmPsegGeo(p,i){ const bs=p.querySelectorAll("b"); const b=bs[i]; if(!b) return null;
-  const pr=p.getBoundingClientRect(), br=b.getBoundingClientRect();
-  if(!pr.width) return null;
-  const scr=p.closest(".scr"); let sc=scr?(parseFloat(scr.style.zoom)||0):0;   // presny zoom .scr
-  if(!sc) sc=pr.width/(p.offsetWidth||1);                                      // fallback
-  if(!isFinite(sc)||sc<=0) return null;
-  // pozor: .pdiv ma border-left:1px, ale .psegt{left:4px} se pocita od PADDING boxu
-  let x=(br.left-pr.left)/sc-(p.clientLeft||0), w=br.width/sc;
+  // Geometrie z rozvrzeni (offsetLeft/offsetWidth), ne z rects delenych zoomem: Safari u .scr{zoom}
+  // vraci rects jeste v puvodnim meritku, takze zalozka vysla uzsi a posunuta (Marek 2026-08-23).
+  let x=b.offsetLeft-(p.clientLeft||0), w=b.offsetWidth;
+  if(!w) return null;
   // V karte zebricku je prepinac zalozkovy: krajni zalozka zabira i sedy lem, aby doslo az k okraji karty.
   const zal = !!(p.closest && p.closest(".lcard")), lem = zal ? 8 : 0;
   if (zal && i === 0) { x -= lem; w += lem; }
@@ -6513,6 +6519,7 @@ function mmPsegFit(sh){
       t.classList.toggle('prvni', prvni);
       t.classList.toggle('posledni', posledni);
       const karta=el.closest('.lcard'); if(karta) karta.classList.toggle('zalkraj', prvni||posledni);
+      if(zal){ t.style.left=(idx*100/bs.length).toFixed(4)+'%'; t.style.width=(100/bs.length).toFixed(4)+'%'; return; }
       t.style.width=((br.width/z) + (prvni?lem:0) + (posledni?lem:0))+'px';
       t.style.transform='translateX('+(((br.left-er.left)/z) - (prvni?lem:0))+'px)';
     });
@@ -6530,10 +6537,15 @@ function mmPsegAnim(sh){ if(!sh) return; const prev=window._psegPrev; let animov
   sh.querySelectorAll(".pseg").forEach(el=>{
     const kind=el.getAttribute("data-pseg"); const t=el.querySelector(".psegt"); if(!t) return;
     const now=mmPartaSegIdx(kind); const gN=mmPsegGeo(el,now); if(!gN) return;
-    if (el.closest && el.closest(".lcard")) {
+    const vKarte = !!(el.closest && el.closest(".lcard"));
+    if (vKarte) {
+      const n=el.querySelectorAll("b").length;
       t.classList.toggle("prvni", now === 0);
-      t.classList.toggle("posledni", now === el.querySelectorAll("b").length - 1);
-      const karta=el.closest(".lcard"); if(karta) karta.classList.toggle("zalkraj", now === 0 || now === el.querySelectorAll("b").length - 1);
+      t.classList.toggle("posledni", now === n - 1);
+      const karta=el.closest(".lcard"); if(karta) karta.classList.toggle("zalkraj", now === 0 || now === n - 1);
+      t.style.left=(now*100/n).toFixed(4)+"%";
+      t.style.width=(100/n).toFixed(4)+"%";
+      return;   // sirku i pozici drzi CSS v procentech — zadne mereni
     }
     // Marek 2026-08-20: mmPsegAnim se po prekresleni vola dvakrat (jednou hned, podruhe v rAF).
     // Prvni volani spotrebovalo _psegPrev a druhe pak pilulku natvrdo prisadilo -> animace se nikdy
@@ -7520,7 +7532,7 @@ function mmHabitDetailHtml(h, pid, ds){
 }
 // banner: bublina s cislem a prstenci za kazdy den tydne (Marek 2026-08-23)
 function mmHabitPrstenec(pct, dnes){
-  const r=9, sw=3.2, c=2*Math.PI*r, s=r*2+sw;
+  const r=10.5, sw=4, c=2*Math.PI*r, s=r*2+sw;
   const barva = dnes ? '#6B49CF' : '#8B6FE0';
   return '<svg viewBox="0 0 '+s+' '+s+'" style="width:'+s+'px;height:'+s+'px;display:block">'
     +'<circle cx="'+(s/2)+'" cy="'+(s/2)+'" r="'+(r-sw/2)+'" fill="color-mix(in srgb,#8B6FE0 8%,transparent)"/>'
@@ -7542,7 +7554,7 @@ function mmHabitBannerHtml(pid, mine, existed, ds){
     const spl=den.filter(h=>mmHabitDoneToday(h,pid,dss)).length;
     const pct=(dss>todayS||!den.length)?0:Math.round(spl/den.length*100);
     const jeDnes=dss===todayS;
-    dny+='<span class="'+(jeDnes?'dnes':'')+'"><i class="pr">'+mmHabitPrstenec(pct,jeDnes)+'<u>'+pct+'</u></i><em>'+pism[i]+'</em></span>';
+    dny+='<span class="'+(jeDnes?'dnes':'')+'" title="'+pism[i]+'"><i class="pr">'+mmHabitPrstenec(pct,jeDnes)+'<u>'+pct+'</u></i></span>';
   }
   return '<div class="nbn'+(hotovo>0&&hotovo===existed.length?' vse':'')+'">'
     +'<div class="kcis"><b>'+hotovo+'<s>/'+existed.length+'</s></b><span class="kden">dnes</span></div>'
