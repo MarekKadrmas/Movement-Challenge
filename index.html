@@ -6518,6 +6518,7 @@ function mmPartaHeatHtml(){
     // predel tydnu je vzdy presne v pulce stranky; dnesek dostane ramecek pres cely sloupec.
     // Sirka dne = (100% - predel 5px - 14 mezer po 2px) / 14 — v procentech, takze to sedi i pri zoomu.
     let divs='<i class="hdiv" style="left:50%"></i>';
+    if(wi<weeks.length-1) divs+='<i class="hdiv" style="left:calc(100% + 1px)"></i>';
     const dnesIdx=days.indexOf(tds);
     if(dnesIdx>=0){
       const px=dnesIdx*2+(dnesIdx>=7?7:0);
@@ -6545,9 +6546,9 @@ function mmPartaHeatHtml(){
     const mes=(ds)=>new Date(ds+'T00:00:00').getMonth();
     const nazev=(m)=>MESICE_CZ[m].charAt(0).toUpperCase()+MESICE_CZ[m].slice(1);
     const m1=mes(days[3]), m2=mes(days[10]);
-    const labs='<div class="hwlab" style="'+gridCols+'">'+(m1===m2
-        ? '<b style="grid-column:1/16">'+nazev(m1)+'</b>'
-        : '<b style="grid-column:1/8">'+nazev(m1)+'</b><b style="grid-column:9/16">'+nazev(m2)+'</b>')+'</div>'
+    const labs='<div class="hwlab" style="'+gridCols+'">'
+        +'<b style="grid-column:1/8">'+nazev(m1)+' · W'+w1+'</b>'
+        +'<b style="grid-column:9/16">'+(m2===m1?'':nazev(m2)+' · ')+'W'+w2+'</b></div>'
       +'<div class="hwdnu" style="'+gridCols+'">'+cols.map(c=>c.sp?'<b></b>':'<b class="'+(c.ds===tds?'je':'')+'">'+new Date(c.ds+'T00:00:00').getDate()+'</b>').join('')+'</div>';
     blocks+='<div class="hweek'+(last?' hwlast':'')+'" data-w0="'+days[0]+'" data-w6="'+days[days.length-1]+'">'+labs+'<div class="hwcells" style="'+gridCols+'" data-w0="'+days[0]+'" data-w6="'+days[days.length-1]+'">'+cells+divs+'</div></div>';
   });
