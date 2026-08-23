@@ -6,7 +6,7 @@
 ---
 
 ## 🔨 Právě se dělá
-- **Návyky** — kompletní promyšlení a přestavba (systém + design). Systém odsouhlasen (), běží návrh obrazovek — mockup: https://claude.ai/code/artifact/5fd56578-5bd0-4881-a040-56ace6f39acc
+- **Návyky** — kompletní promyšlení a přestavba (systém + design). Systém odsouhlasen (`NAVYKY-NAVRH.md`), běží návrh obrazovek — mockup: https://claude.ai/code/artifact/5fd56578-5bd0-4881-a040-56ace6f39acc
 
 ## ⏸️ Rozdělané (schválně odloženo)
 - **Systém zápisu** — rozhodnout A/B ([mockup](https://claude.ai/code/artifact/f3760cb0-7d1d-4cb7-8c8c-dca2d18f7cfa)), doladit výběr aktivity, kategorie, srdíčko oblíbených
