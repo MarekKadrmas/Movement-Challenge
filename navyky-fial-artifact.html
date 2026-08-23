@@ -777,6 +777,15 @@ body.mm-full{background:#EDF0EC;padding-bottom:0;}
   background:linear-gradient(160deg,#A98BEE,#6B49CF);-webkit-background-clip:text;background-clip:text;color:transparent;}
 .zlom s{text-decoration:none;font-family:var(--font-display);font-size:17px;font-weight:800;color:var(--ter);letter-spacing:-.03em;}
 .zlom.pct s{font-size:15px;}
+.zbar{display:block;width:100%;height:4px;border-radius:999px;background:var(--track);overflow:hidden;margin-top:5px;}
+.zbar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#A98BEE,#7757d6);}
+.zsl{min-width:52px;}
+.podban{display:flex;justify-content:center;gap:12px;margin:7px 0 2px;font-size:10.2px;font-weight:700;color:var(--ter);}
+.podban span{display:inline-flex;align-items:center;gap:4px;}
+.podban b{font-weight:800;color:var(--sec);}
+.podban .i{width:11px;height:11px;}
+.ntyd.ser{position:relative;}
+.ntyd.ser .serlin{position:absolute;left:0;width:calc(3*14px + 2*4px);bottom:-4px;height:2px;border-radius:999px;background:linear-gradient(90deg,#A98BEE,#7757d6);}
 .zsl{display:flex;flex-direction:column;gap:2px;flex:0 0 auto;}
 .zsl.stred{align-items:center;}
 .zpop{font-size:9.6px;font-weight:700;color:var(--ter);letter-spacing:-.01em;white-space:nowrap;}
@@ -872,14 +881,11 @@ h1{color:#fff;font-size:21px;font-weight:800;letter-spacing:-.02em;margin:6px 4p
 </svg>
 <div class="obal">
   <h1>Návyky ve fialové</h1>
-  <p class="lead">Čtyři doladění levé části. U dneška je nově zvýrazněný jen popisek dne, sloupeček zůstává stejný jako ostatní.</p>
-  <section class="var"><h2>1 · Popisek pod číslem</h2><p class="pop">Zlomek a pod ním „hotovo dnes“, série vedle.</p>
+  <p class="lead">Co všechno má v banneru vlastně být. Zlomek zůstává, mění se okolí.</p>
+  <section class="var"><h2>1 · Jen zlomek a týden</h2><p class="pop">Nic navíc. Kolik máš dnes hotovo a jak šel týden.</p>
 <div class="telefon"><div class="scr" data-theme="light"><div class="body">
 <div class="nav"><div><div class="ttl">Návyky</div></div><div class="right"><div class="av" style="background:linear-gradient(135deg,#8B6FE04d,#8B6FE012);color:#7757d6">MÁ</div></div></div>
-<div class="nbn"><div class="lev">
-  <div class="zsl"><div class="zlom"><b>2</b><s>/5</s></div><span class="zpop">hotovo dnes</span></div>
-  <span class="nchip ser"><svg class="i"><use href="#i-flame"/></svg>17</span>
-</div><div class="ntyd"><span class="nd"><i style="--h:100%"></i><u>Po</u></span><span class="nd"><i style="--h:80%"></i><u>Út</u></span><span class="nd"><i style="--h:100%"></i><u>St</u></span><span class="nd"><i style="--h:60%"></i><u>Čt</u></span><span class="nd"><i style="--h:100%"></i><u>Pá</u></span><span class="nd"><i style="--h:40%"></i><u>So</u></span><span class="nd dnes"><i style="--h:40%"></i><u>Ne</u></span></div></div>
+<div class="nbn"><div class="lev"><div class="zlom"><b>2</b><s>/5</s></div></div><div class="ntyd"><span class="nd"><i style="--h:100%"></i><u>Po</u></span><span class="nd"><i style="--h:80%"></i><u>Út</u></span><span class="nd"><i style="--h:100%"></i><u>St</u></span><span class="nd"><i style="--h:60%"></i><u>Čt</u></span><span class="nd"><i style="--h:100%"></i><u>Pá</u></span><span class="nd"><i style="--h:40%"></i><u>So</u></span><span class="nd dnes"><i style="--h:40%"></i><u>Ne</u></span></div></div>
 <div class="sl"><span>Dnešní návyky</span><a>přehled →</a></div>
 <div class="nrow hot" style="--nc:#2E9BF0">
   <span class="nic"><svg class="i"><use href="#i-water"/></svg></span>
@@ -901,13 +907,10 @@ h1{color:#fff;font-size:21px;font-weight:800;letter-spacing:-.02em;margin:6px 4p
   <span class="nnm">Běh</span><span class="ndet">2/3</span>
   <span class="nchk"></span></div>
 <div class="nnew"><span>＋</span> Nový návyk</div></div></div></div></section>
-  <section class="var"><h2>2 · Jen zlomek a série</h2><p class="pop">Nejčistší — číslo mluví samo, vedle jen série.</p>
+  <section class="var"><h2>2 · Údaje pod banner</h2><p class="pop">Série a týdenní procenta jako jemný řádek pod kartou, ne uvnitř.</p>
 <div class="telefon"><div class="scr" data-theme="light"><div class="body">
 <div class="nav"><div><div class="ttl">Návyky</div></div><div class="right"><div class="av" style="background:linear-gradient(135deg,#8B6FE04d,#8B6FE012);color:#7757d6">MÁ</div></div></div>
-<div class="nbn"><div class="lev">
-  <div class="zlom"><b>2</b><s>/5</s></div>
-  <span class="nchip ser"><svg class="i"><use href="#i-flame"/></svg>17 dní</span>
-</div><div class="ntyd"><span class="nd"><i style="--h:100%"></i><u>Po</u></span><span class="nd"><i style="--h:80%"></i><u>Út</u></span><span class="nd"><i style="--h:100%"></i><u>St</u></span><span class="nd"><i style="--h:60%"></i><u>Čt</u></span><span class="nd"><i style="--h:100%"></i><u>Pá</u></span><span class="nd"><i style="--h:40%"></i><u>So</u></span><span class="nd dnes"><i style="--h:40%"></i><u>Ne</u></span></div></div>
+<div class="nbn"><div class="lev"><div class="zlom"><b>2</b><s>/5</s></div></div><div class="ntyd"><span class="nd"><i style="--h:100%"></i><u>Po</u></span><span class="nd"><i style="--h:80%"></i><u>Út</u></span><span class="nd"><i style="--h:100%"></i><u>St</u></span><span class="nd"><i style="--h:60%"></i><u>Čt</u></span><span class="nd"><i style="--h:100%"></i><u>Pá</u></span><span class="nd"><i style="--h:40%"></i><u>So</u></span><span class="nd dnes"><i style="--h:40%"></i><u>Ne</u></span></div></div><div class="podban"><span><svg class="i"><use href="#i-flame"/></svg><b>17 dní</b> v řadě</span><span><b>82 %</b> tento týden</span></div>
 <div class="sl"><span>Dnešní návyky</span><a>přehled →</a></div>
 <div class="nrow hot" style="--nc:#2E9BF0">
   <span class="nic"><svg class="i"><use href="#i-water"/></svg></span>
@@ -929,13 +932,10 @@ h1{color:#fff;font-size:21px;font-weight:800;letter-spacing:-.02em;margin:6px 4p
   <span class="nnm">Běh</span><span class="ndet">2/3</span>
   <span class="nchk"></span></div>
 <div class="nnew"><span>＋</span> Nový návyk</div></div></div></div></section>
-  <section class="var"><h2>3 · Zlomek vycentrovaný</h2><p class="pop">Pod číslem jen „dnes“, obojí na střed.</p>
+  <section class="var"><h2>3 · Série vetkaná do týdne</h2><p class="pop">Dny splněné za sebou spojí fialová linka — série je vidět rovnou v týdnu.</p>
 <div class="telefon"><div class="scr" data-theme="light"><div class="body">
 <div class="nav"><div><div class="ttl">Návyky</div></div><div class="right"><div class="av" style="background:linear-gradient(135deg,#8B6FE04d,#8B6FE012);color:#7757d6">MÁ</div></div></div>
-<div class="nbn"><div class="lev">
-  <div class="zsl stred"><div class="zlom"><b>2</b><s>/5</s></div><span class="zpop">dnes</span></div>
-  <span class="nchip ser"><svg class="i"><use href="#i-flame"/></svg>17 dní</span>
-</div><div class="ntyd"><span class="nd"><i style="--h:100%"></i><u>Po</u></span><span class="nd"><i style="--h:80%"></i><u>Út</u></span><span class="nd"><i style="--h:100%"></i><u>St</u></span><span class="nd"><i style="--h:60%"></i><u>Čt</u></span><span class="nd"><i style="--h:100%"></i><u>Pá</u></span><span class="nd"><i style="--h:40%"></i><u>So</u></span><span class="nd dnes"><i style="--h:40%"></i><u>Ne</u></span></div></div>
+<div class="nbn"><div class="lev"><div class="zlom"><b>2</b><s>/5</s></div></div><div class="ntyd ser"><span class="nd plny"><i style="--h:100%"></i><u>Po</u></span><span class="nd"><i style="--h:80%"></i><u>Út</u></span><span class="nd plny"><i style="--h:100%"></i><u>St</u></span><span class="nd"><i style="--h:60%"></i><u>Čt</u></span><span class="nd plny"><i style="--h:100%"></i><u>Pá</u></span><span class="nd"><i style="--h:40%"></i><u>So</u></span><span class="nd dnes"><i style="--h:40%"></i><u>Ne</u></span><span class="serlin"></span></div></div>
 <div class="sl"><span>Dnešní návyky</span><a>přehled →</a></div>
 <div class="nrow hot" style="--nc:#2E9BF0">
   <span class="nic"><svg class="i"><use href="#i-water"/></svg></span>
@@ -957,13 +957,10 @@ h1{color:#fff;font-size:21px;font-weight:800;letter-spacing:-.02em;margin:6px 4p
   <span class="nnm">Běh</span><span class="ndet">2/3</span>
   <span class="nchk"></span></div>
 <div class="nnew"><span>＋</span> Nový návyk</div></div></div></div></section>
-  <section class="var"><h2>4 · Obrácená barevnost</h2><p class="pop">Dvojka tmavá, lomítko s pětkou fialové.</p>
+  <section class="var"><h2>4 · Zlomek s proužkem dne</h2><p class="pop">Pod číslem tenký proužek, jak daleko jsi dnes.</p>
 <div class="telefon"><div class="scr" data-theme="light"><div class="body">
 <div class="nav"><div><div class="ttl">Návyky</div></div><div class="right"><div class="av" style="background:linear-gradient(135deg,#8B6FE04d,#8B6FE012);color:#7757d6">MÁ</div></div></div>
-<div class="nbn"><div class="lev">
-  <div class="zlom obr"><b>2</b><s>/5</s></div>
-  <div class="lx"><b class="lt">hotovo</b><span class="nchip ser"><svg class="i"><use href="#i-flame"/></svg>17</span></div>
-</div><div class="ntyd"><span class="nd"><i style="--h:100%"></i><u>Po</u></span><span class="nd"><i style="--h:80%"></i><u>Út</u></span><span class="nd"><i style="--h:100%"></i><u>St</u></span><span class="nd"><i style="--h:60%"></i><u>Čt</u></span><span class="nd"><i style="--h:100%"></i><u>Pá</u></span><span class="nd"><i style="--h:40%"></i><u>So</u></span><span class="nd dnes"><i style="--h:40%"></i><u>Ne</u></span></div></div>
+<div class="nbn"><div class="lev"><div class="zsl"><div class="zlom"><b>2</b><s>/5</s></div><span class="zbar"><i style="width:40%"></i></span></div></div><div class="ntyd"><span class="nd"><i style="--h:100%"></i><u>Po</u></span><span class="nd"><i style="--h:80%"></i><u>Út</u></span><span class="nd"><i style="--h:100%"></i><u>St</u></span><span class="nd"><i style="--h:60%"></i><u>Čt</u></span><span class="nd"><i style="--h:100%"></i><u>Pá</u></span><span class="nd"><i style="--h:40%"></i><u>So</u></span><span class="nd dnes"><i style="--h:40%"></i><u>Ne</u></span></div></div>
 <div class="sl"><span>Dnešní návyky</span><a>přehled →</a></div>
 <div class="nrow hot" style="--nc:#2E9BF0">
   <span class="nic"><svg class="i"><use href="#i-water"/></svg></span>
