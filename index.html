@@ -2103,13 +2103,15 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .hbm{background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:8px 15px;display:flex;align-items:center;gap:10px;}
 /* --- Navyky: banner + bubliny (Marek 2026-08-23, varianta 1 z mockupu) --- */
 .nvk{--fial:#8B6FE0;--fial2:#7757d6;}
-.nvk .nbn{display:flex;align-items:center;gap:11px;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:13px 16px;}
+.nvk .nbn{display:flex;align-items:center;gap:10px;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:11px 14px;}
 .nvk .kcis{flex:0 0 auto;text-align:center;}
-.nvk .kcis b{display:block;font-family:var(--font-display);font-size:32px;font-weight:900;letter-spacing:-.05em;line-height:.85;background:linear-gradient(160deg,#A98BEE,#6B49CF);-webkit-background-clip:text;background-clip:text;color:transparent;}
-.nvk .kcis b s{text-decoration:none;font-size:16px;-webkit-text-fill-color:var(--ter);}
+.nvk .kcis b{display:block;font-family:var(--font-display);font-size:30px;font-weight:900;letter-spacing:-.05em;line-height:.85;background:linear-gradient(160deg,#A98BEE,#6B49CF);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.nvk .kcis b s{text-decoration:none;font-size:15px;-webkit-text-fill-color:var(--ter);}
 .nvk .kden{display:block;font-size:8px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--ter);margin-top:4px;}
 .nvk .kgraf{flex:1;min-width:0;}
-.nvk .tpr{display:flex;justify-content:space-between;gap:2px;align-items:center;}
+.nvk .tpr{display:flex;justify-content:space-between;gap:1.5px;align-items:center;}
+.nvk .tpr em{font-style:normal;font-size:7.4px;font-weight:800;color:var(--ter);}
+.nvk .tpr span.dnes em{color:var(--fial2);font-weight:900;}
 .nvk .tpr span{display:flex;flex-direction:column;align-items:center;gap:2px;}
 .nvk .tpr .pr{position:relative;display:block;}
 .nvk .tpr .pr u{position:absolute;inset:0;display:grid;place-items:center;text-decoration:none;font-size:8.6px;font-weight:700;color:var(--ter);letter-spacing:-.04em;}
@@ -2900,13 +2902,15 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
   .hbm{background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:8px 15px;display:flex;align-items:center;gap:10px;}
 /* --- Navyky: banner + bubliny (Marek 2026-08-23, varianta 1 z mockupu) --- */
 .nvk{--fial:#8B6FE0;--fial2:#7757d6;}
-.nvk .nbn{display:flex;align-items:center;gap:11px;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:13px 16px;}
+.nvk .nbn{display:flex;align-items:center;gap:10px;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:11px 14px;}
 .nvk .kcis{flex:0 0 auto;text-align:center;}
-.nvk .kcis b{display:block;font-family:var(--font-display);font-size:32px;font-weight:900;letter-spacing:-.05em;line-height:.85;background:linear-gradient(160deg,#A98BEE,#6B49CF);-webkit-background-clip:text;background-clip:text;color:transparent;}
-.nvk .kcis b s{text-decoration:none;font-size:16px;-webkit-text-fill-color:var(--ter);}
+.nvk .kcis b{display:block;font-family:var(--font-display);font-size:30px;font-weight:900;letter-spacing:-.05em;line-height:.85;background:linear-gradient(160deg,#A98BEE,#6B49CF);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.nvk .kcis b s{text-decoration:none;font-size:15px;-webkit-text-fill-color:var(--ter);}
 .nvk .kden{display:block;font-size:8px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--ter);margin-top:4px;}
 .nvk .kgraf{flex:1;min-width:0;}
-.nvk .tpr{display:flex;justify-content:space-between;gap:2px;align-items:center;}
+.nvk .tpr{display:flex;justify-content:space-between;gap:1.5px;align-items:center;}
+.nvk .tpr em{font-style:normal;font-size:7.4px;font-weight:800;color:var(--ter);}
+.nvk .tpr span.dnes em{color:var(--fial2);font-weight:900;}
 .nvk .tpr span{display:flex;flex-direction:column;align-items:center;gap:2px;}
 .nvk .tpr .pr{position:relative;display:block;}
 .nvk .tpr .pr u{position:absolute;inset:0;display:grid;place-items:center;text-decoration:none;font-size:8.6px;font-weight:700;color:var(--ter);letter-spacing:-.04em;}
@@ -7532,7 +7536,7 @@ function mmHabitDetailHtml(h, pid, ds){
 }
 // banner: bublina s cislem a prstenci za kazdy den tydne (Marek 2026-08-23)
 function mmHabitPrstenec(pct, dnes){
-  const r=10.5, sw=4, c=2*Math.PI*r, s=r*2+sw;
+  const r=11.5, sw=4, c=2*Math.PI*r, s=r*2+sw;
   const barva = dnes ? '#6B49CF' : '#8B6FE0';
   return '<svg viewBox="0 0 '+s+' '+s+'" style="width:'+s+'px;height:'+s+'px;display:block">'
     +'<circle cx="'+(s/2)+'" cy="'+(s/2)+'" r="'+(r-sw/2)+'" fill="color-mix(in srgb,#8B6FE0 8%,transparent)"/>'
@@ -7554,7 +7558,7 @@ function mmHabitBannerHtml(pid, mine, existed, ds){
     const spl=den.filter(h=>mmHabitDoneToday(h,pid,dss)).length;
     const pct=(dss>todayS||!den.length)?0:Math.round(spl/den.length*100);
     const jeDnes=dss===todayS;
-    dny+='<span class="'+(jeDnes?'dnes':'')+'" title="'+pism[i]+'"><i class="pr">'+mmHabitPrstenec(pct,jeDnes)+'<u>'+pct+'</u></i></span>';
+    dny+='<span class="'+(jeDnes?'dnes':'')+'"><i class="pr">'+mmHabitPrstenec(pct,jeDnes)+'<u>'+pct+'</u></i><em>'+pism[i]+'</em></span>';
   }
   return '<div class="nbn'+(hotovo>0&&hotovo===existed.length?' vse':'')+'">'
     +'<div class="kcis"><b>'+hotovo+'<s>/'+existed.length+'</s></b><span class="kden">dnes</span></div>'
