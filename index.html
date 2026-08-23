@@ -6296,7 +6296,7 @@ function renderDnesek(){
   <div class="sl" onclick="mmOpenSub('zaznamy')" style="cursor:pointer;touch-action:manipulation"><span>Dění</span><a style="pointer-events:none">celá historie →</a></div>
   ${feed}
     <div class="hbm" style="margin-top:6px;padding:6px 12px;cursor:pointer" onclick="mmOpenSub('rekordyparty')"><div class="hi" style="background:#E0A23A22;width:27px;height:27px;font-size:16.9px"><svg class="i"><use href="#i-medal"/></svg></div><div class="ht">Rekordy & maximálky všech<small>všichni hráči na jednom místě</small></div><span class="rx" style="color:var(--ter);font-size:19.31px">›</span></div>`;
-  const _mmK=tpl+'|'+(document.documentElement.getAttribute('data-theme')||'light'); if(host._mmTpl===_mmK&&host.shadowRoot){const s=host.shadowRoot.querySelector('.scr'); if(s){const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; s.style.zoom=z; s.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(s,z);} mmDeniApplyFeedState(host.shadowRoot,'prehled'); mmBarSnap(host.shadowRoot,0); mmZnackyCile(host.shadowRoot); mmDeniBindReakce(host.shadowRoot, host); mmPsegAnim(host.shadowRoot); mmLbarAlign(host.shadowRoot); mmHeatInit(host.shadowRoot); return;} host._mmTpl=_mmK; const sh=host.shadowRoot||host.attachShadow({mode:'open'});
+  const _mmK=tpl+'|'+(document.documentElement.getAttribute('data-theme')||'light'); if(host._mmTpl===_mmK&&host.shadowRoot){const s=host.shadowRoot.querySelector('.scr'); if(s){const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; s.style.zoom=z; s.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(s,z);} mmDeniApplyFeedState(host.shadowRoot,'prehled'); mmBarSnap(host.shadowRoot,0); mmZnackyCile(host.shadowRoot); mmDeniBindReakce(host.shadowRoot, host); mmPsegAnim(host.shadowRoot); mmPsegPrepocet(host.shadowRoot); mmLbarAlign(host.shadowRoot); mmHeatInit(host.shadowRoot); return;} host._mmTpl=_mmK; const sh=host.shadowRoot||host.attachShadow({mode:'open'});
   const tplEl=document.getElementById('mm-tpl'); const sprite=document.getElementById('momentum-sprite');
   sh.innerHTML='';
   if(tplEl) sh.appendChild(tplEl.content.cloneNode(true));
@@ -6317,7 +6317,7 @@ function renderDnesek(){
   // Po usazeni layoutu (fonty/iOS text-size-adjust) dorovnej pilulku filtru i indikator
   // spodniho baru — mmBarPos jinak bezi jen z mmGo, takze po re-renderu bez navigace
   // zustala zelena pilulka baru na levem okraji (Marek 2026-08-18).
-  requestAnimationFrame(()=>{ mmPsegAnim(sh); mmBarPos(sh, MM_TAB_IDX[state.view]); });
+  requestAnimationFrame(()=>{ mmPsegAnim(sh); mmBarPos(sh, MM_TAB_IDX[state.view]); }); mmPsegPrepocet(sh);
   if(!window._mmRz){ window._mmRz=true; window.addEventListener('resize',()=>{ if(state.view==='prehled') renderDnesek(); else if(state.view==='navyky') renderNavykyMM(); else if(state.view==='historie') renderJaMM(); if(mmSubOpen==='historie') renderSubHistorie(); else if(mmSubOpen==='rekordy') renderSubRekordy(); else if(mmSubOpen==='bodovani') renderSubBodovani(); else if(mmSubOpen==='profil') renderSubProfil(state.mmSubProfilId); else if(mmSubOpen==='rekordyparty') renderSubRekordyParty(); else if(mmSubOpen==='feed') renderSubFeed(); else if(mmSubOpen==='pozvat') renderSubPozvat(); else if(mmSubOpen==='cile') renderSubCile(); else if(mmSubOpen==='notifikace') renderSubNotifikace(); else if(mmSubOpen==='den') renderSubDen(state.mmSubDenArg); else if(mmSubOpen==='rokparty') renderSubRokParty(); }); }
 }
 
@@ -6438,6 +6438,13 @@ function mmPsegFit(sh){
     });
   };
   requestAnimationFrame(()=>run(0));
+}
+function mmPsegPrepocet(sh){
+  if(!sh) return;
+  const znovu=()=>{ sh.querySelectorAll('.psegt').forEach(t=>{ delete t.dataset.mmCil; }); mmPsegAnim(sh); };
+  requestAnimationFrame(znovu);
+  setTimeout(znovu, 220);
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(znovu);
 }
 function mmPsegAnim(sh){ if(!sh) return; const prev=window._psegPrev; let animovano=false;
   sh.querySelectorAll(".pseg").forEach(el=>{
