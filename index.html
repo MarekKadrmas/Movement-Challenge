@@ -1934,9 +1934,9 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .hcard .hc-tr{font-size:11.47px;font-weight:800;white-space:nowrap;flex:0 0 auto;}
 .mm .hcard .hc-tr.up{color:var(--green);}
 .mm .hcard .hc-tr.dn{color:var(--red,#E05C5C);}
-.mm .hcard .hc-tyden{display:flex;gap:6px;margin-top:11px;padding-top:13px;}
+.mm .hcard .hc-tyden{display:flex;gap:6px;margin-top:3px;padding-top:6px;}
 .mm .hcard .hc-d{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
-.mm .hcard .hc-dsl{position:relative;width:100%;height:25px;border-radius:5px;background:var(--track);}
+.mm .hcard .hc-dsl{position:relative;width:100%;aspect-ratio:1;border-radius:5px;background:var(--track);}
 .mm .hcard .hc-dsl i{position:absolute;left:0;right:0;bottom:0;display:block;border-radius:5px;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);transition:height .5s cubic-bezier(.22,1,.36,1);}
 .mm .hcard .hc-mark{position:absolute;left:0;right:0;top:0;height:11px;z-index:3;pointer-events:none;overflow:visible;-webkit-mask-image:linear-gradient(to bottom,#000 0 42%,transparent 100%);mask-image:linear-gradient(to bottom,#000 0 42%,transparent 100%);}
 .mm .hcard .hc-mark path{fill:none;stroke:rgba(255,255,255,.55);stroke-width:0.85;stroke-linecap:round;}
@@ -2140,18 +2140,17 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .nvk .tsip.vyp{opacity:.3;pointer-events:none;box-shadow:none;background:none;}
 .nvk .tydhl span{font-size:11.2px;font-weight:800;color:var(--label);letter-spacing:-.01em;}
 .nvk .tydhl i{font-style:normal;font-size:9.8px;font-weight:700;color:var(--ter);}
-.nvk .tyd{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+.nvk .tyd{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
 @keyframes mmTydR{0%{opacity:0;transform:translateX(30px)}100%{opacity:1;transform:none}}
 @keyframes mmTydL{0%{opacity:0;transform:translateX(-30px)}100%{opacity:1;transform:none}}
 .nvk .tyd.in-r{animation:mmTydR .34s cubic-bezier(.33,1,.68,1);}
 .nvk .tyd.in-l{animation:mmTydL .34s cubic-bezier(.33,1,.68,1);}
 @media (prefers-reduced-motion:reduce){.nvk .tyd.in-r,.nvk .tyd.in-l{animation:none;}}
-.nvk .tyd span{display:flex;flex-direction:column;align-items:center;gap:2px;padding:3px 0 1px;border-radius:14px;cursor:pointer;}
+.nvk .tyd span{display:flex;flex-direction:column;align-items:center;padding:3px 1px;border-radius:999px;cursor:pointer;}
 .nvk .tyd .kol{position:relative;display:block;width:100%;}
-.nvk .tyd .kol u{position:absolute;inset:0;display:grid;place-items:center;text-decoration:none;font-size:9px;font-weight:700;color:var(--ter);letter-spacing:-.04em;}
-.nvk .tyd .kol u .i{width:14px;height:14px;color:#fff;}
-.nvk .tyd em{font-style:normal;font-size:8.4px;font-weight:700;color:var(--ter);}
-.nvk .tyd span.dnes em{font-weight:900;color:var(--label);}
+.nvk .tyd .kol u{position:absolute;inset:0;display:grid;place-items:center;text-decoration:none;font-style:normal;font-size:11px;font-weight:800;color:var(--sec);letter-spacing:-.02em;}
+.nvk .tyd .kol u .i{width:15px;height:15px;color:#fff;}
+.nvk .tyd span.dnes .kol u{font-weight:900;color:var(--label);}
 .nvk .tyd span.vyb{background:color-mix(in srgb,var(--sec) 8%,transparent);}
 .nvk .tyd span.plny .kol u{color:#fff;}
 .nvk .tyd span.pak{opacity:.45;}
@@ -2879,9 +2878,9 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .hcard .hc-tr{font-size:11.47px;font-weight:800;white-space:nowrap;flex:0 0 auto;}
 .hcard .hc-tr.up{color:var(--green);}
 .hcard .hc-tr.dn{color:var(--red,#E05C5C);}
-.hcard .hc-tyden{display:flex;gap:6px;margin-top:11px;padding-top:13px;}
+.hcard .hc-tyden{display:flex;gap:6px;margin-top:3px;padding-top:6px;}
 .hcard .hc-d{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
-.hcard .hc-dsl{position:relative;width:100%;height:25px;border-radius:5px;background:var(--track);}
+.hcard .hc-dsl{position:relative;width:100%;aspect-ratio:1;border-radius:5px;background:var(--track);}
 .hcard .hc-dsl i{position:absolute;left:0;right:0;bottom:0;display:block;border-radius:5px;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);transition:height .5s cubic-bezier(.22,1,.36,1);}
 .hcard .hc-mark{position:absolute;left:0;right:0;top:0;height:11px;z-index:3;pointer-events:none;overflow:visible;-webkit-mask-image:linear-gradient(to bottom,#000 0 42%,transparent 100%);mask-image:linear-gradient(to bottom,#000 0 42%,transparent 100%);}
 .hcard .hc-mark path{fill:none;stroke:rgba(255,255,255,.55);stroke-width:0.85;stroke-linecap:round;}
@@ -3010,18 +3009,17 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .nvk .tsip.vyp{opacity:.3;pointer-events:none;box-shadow:none;background:none;}
 .nvk .tydhl span{font-size:11.2px;font-weight:800;color:var(--label);letter-spacing:-.01em;}
 .nvk .tydhl i{font-style:normal;font-size:9.8px;font-weight:700;color:var(--ter);}
-.nvk .tyd{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+.nvk .tyd{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
 @keyframes mmTydR{0%{opacity:0;transform:translateX(30px)}100%{opacity:1;transform:none}}
 @keyframes mmTydL{0%{opacity:0;transform:translateX(-30px)}100%{opacity:1;transform:none}}
 .nvk .tyd.in-r{animation:mmTydR .34s cubic-bezier(.33,1,.68,1);}
 .nvk .tyd.in-l{animation:mmTydL .34s cubic-bezier(.33,1,.68,1);}
 @media (prefers-reduced-motion:reduce){.nvk .tyd.in-r,.nvk .tyd.in-l{animation:none;}}
-.nvk .tyd span{display:flex;flex-direction:column;align-items:center;gap:2px;padding:3px 0 1px;border-radius:14px;cursor:pointer;}
+.nvk .tyd span{display:flex;flex-direction:column;align-items:center;padding:3px 1px;border-radius:999px;cursor:pointer;}
 .nvk .tyd .kol{position:relative;display:block;width:100%;}
-.nvk .tyd .kol u{position:absolute;inset:0;display:grid;place-items:center;text-decoration:none;font-size:9px;font-weight:700;color:var(--ter);letter-spacing:-.04em;}
-.nvk .tyd .kol u .i{width:14px;height:14px;color:#fff;}
-.nvk .tyd em{font-style:normal;font-size:8.4px;font-weight:700;color:var(--ter);}
-.nvk .tyd span.dnes em{font-weight:900;color:var(--label);}
+.nvk .tyd .kol u{position:absolute;inset:0;display:grid;place-items:center;text-decoration:none;font-style:normal;font-size:11px;font-weight:800;color:var(--sec);letter-spacing:-.02em;}
+.nvk .tyd .kol u .i{width:15px;height:15px;color:#fff;}
+.nvk .tyd span.dnes .kol u{font-weight:900;color:var(--label);}
 .nvk .tyd span.vyb{background:color-mix(in srgb,var(--sec) 8%,transparent);}
 .nvk .tyd span.plny .kol u{color:#fff;}
 .nvk .tyd span.pak{opacity:.45;}
@@ -7336,8 +7334,8 @@ const MM_CIL_MIN=40, MM_CIL_MAX=400;
 // s minimalnimi dny. Jen zobrazeni, do DB se nic nezapisuje. Vypnout: false.
 
 // Rozmery sloupcu tydne v horni karte (layout px; ramecek je ctverec 30x30).
-const MM_SL_RAMECEK = 25;   // ramecek = cil; vyska volena tak, aby 2x cil vyslo na maximum
-const MM_SL_MAX_PX  = 50;   // nejvyssi mozny sloupec — konci 4 px pod textovym radkem
+const MM_SL_RAMECEK = 30;   // ramecek = cil; ctverec 30x30 (sirka bunky pri sedmi dnech)
+const MM_SL_MAX_PX  = 40;   // od teto vysky se sloupec zprahledni — prave tam zacina textovy radek
 // minimum vysky uz neni potreba — cislo je pod sloupcem, ne v nem
 // posun nad cilem uz neni potreba — nejmensi krok (25 b) dela pri cili 150 presne 5 px = radius
 
@@ -7886,24 +7884,18 @@ function mmHabitWeekStripHtml(pid, mine){
 }
 // Radka dnu = prepinac dne. Teply prechod: jantar -> fialova podle toho, jak den dopadl.
 // Klepnutim se prepne den, tlacitko Dnes vraci zpet (Marek 2026-08-24).
-// Barvy prstence (Marek 2026-08-24): fialova je zaklad, zelena je cil — prstenec se s rostoucim
-// plnenim prebarvuje z fialove do zelene, takze zeleny konec = den dotazeny do konce.
+// Barvy prstence (Marek 2026-08-24): prstenec je fialovy — to je barva postupu.
+// Dotazeny den se pozna zelenou vyplni s fajfkou, prstenec kolem zustava fialovy.
 // Oranzova NENI barva postupu: nese vyhradne vysec ziskanou nahrazenim navyku z jineho dne.
 function mmHabitDenKolecko(pct, nahr, dnes, vybrany, klic){
-  const r=14, sw=4, c=2*Math.PI*r, s=r*2+sw*2;   // rezerva, aby zaobleny konec prstence nekoncil na hrane
+  const r=14, sw=4, c=2*Math.PI*r, s=r*2+sw*1.2;   // mala rezerva, aby prstenec nekoncil na hrane
   const plny=(pct+nahr)>=100;
   const dilP=c*(Math.min(100,pct)/100), dilN=c*(Math.min(100,nahr)/100);
   const gid='hg'+klic;
-  // Barva oblouku je jedna a odvozuje se z plneni: fialova -> zelena. Prostorovy gradient by
-  // zelenou ukazal i u malych procent podle toho, kudy oblouk zrovna vede (Marek 2026-08-24).
-  const q=Math.max(0,Math.min(100,Math.round(pct)));
-  const t = q<=70 ? 0 : (q-70)/30;        // fialova drzi cely rozjezd, zelena je az odmena za dotazeny den
-  const barva = t<=0 ? 'var(--fial)'
-    : (t<0.5 ? 'color-mix(in oklab,var(--blue) '+Math.round(t*200)+'%,var(--fial))'
-             : 'color-mix(in oklab,var(--green) '+Math.round((t-0.5)*200)+'%,var(--blue))');
+  const barva='var(--fial)';   // prstenec je vzdy fialovy, zelena patri az vyplni hotoveho dne
   return '<svg viewBox="0 0 '+s+' '+s+'" style="width:100%;height:auto;display:block">'
     +'<defs><linearGradient id="'+gid+'v" x1="0" y1="1" x2="1" y2="0">'
-      +'<stop offset="0" style="stop-color:var(--fial)"/><stop offset="1" style="stop-color:var(--green)"/></linearGradient>'
+      +'<stop offset="0" style="stop-color:color-mix(in srgb,var(--green) 72%,#fff)"/><stop offset="1" style="stop-color:var(--green)"/></linearGradient>'
     +'<linearGradient id="'+gid+'n" x1="0" y1="1" x2="1" y2="0">'
       +'<stop offset="0" stop-color="#F0A93C"/><stop offset="1" stop-color="#E07C1F"/></linearGradient></defs>'
     +'<circle cx="'+(s/2)+'" cy="'+(s/2)+'" r="'+(r-sw/2)+'" fill="'+(plny?'url(#'+gid+'v)':'color-mix(in srgb,var(--fial) 6%,transparent)')+'"/>'
@@ -7942,9 +7934,10 @@ function mmHabitTydenHtml(pid, mine, sel){
     const d=new Date(zac); d.setDate(zac.getDate()+i); const ds=dateToStr(d);
     const budouci=ds>todayS;
     const pct=budouci?0:mmHabitDenPct(pid,mine,ds);
+    // V kolecku je primo nazev dne — procenta nese delka oblouku, cislo uz tam neni (Marek 2026-08-24)
     dny+='<span class="'+(ds===sel?'vyb':'')+(ds===todayS?' dnes':'')+(pct>=100?' plny':'')+(budouci?' pak':'')
       +'" onclick="mmHabitDen(&quot;'+ds+'&quot;)"><i class="kol">'+mmHabitDenKolecko(pct,0,ds===todayS,ds===sel,i)
-      +'<u>'+(pct>=100?'<svg class="i"><use href="#i-check"/></svg>':(budouci?'':pct))+'</u></i><em>'+pism[i]+'</em></span>';
+      +'<u>'+pism[i]+'</u></i></span>';
   }
   const zacDnes=new Date(todayS+'T00:00:00'); zacDnes.setDate(zacDnes.getDate()-((zacDnes.getDay()+6)%7));
   const oTydnu=Math.round((zacDnes-zac)/6048e5);
