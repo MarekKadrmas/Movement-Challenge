@@ -2000,7 +2000,8 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .lcard .psegt.prvni{margin-left:-8px;width:calc(33.3333% + 8px)!important;}
 .lcard .psegt.posledni{width:calc(33.3333% + 8px)!important;}
 .mm .lcard .lc{background:var(--card);box-shadow:none;border-radius:8px 8px 22px 22px;padding-top:3px;margin-top:-8px;position:relative;}
-.mm .lcard.zalkraj .lc{border-top-left-radius:0;border-top-right-radius:0;}
+.mm .lcard.zal-prvni .lc{border-top-left-radius:0;}
+.mm .lcard.zal-posledni .lc{border-top-right-radius:0;}
 
 .mm .slzeb{margin-top:6px;margin-bottom:1px;}
 .mm .zebodp{font-style:normal;font-size:10.62px;font-weight:700;color:var(--ter);text-transform:none;letter-spacing:0;white-space:nowrap;flex:0 0 auto;}
@@ -2901,7 +2902,8 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .lcard .psegt.prvni{margin-left:-8px;width:calc(33.3333% + 8px)!important;}
 .lcard .psegt.posledni{width:calc(33.3333% + 8px)!important;}
 .lcard .lc{background:var(--card);box-shadow:none;border-radius:8px 8px 22px 22px;padding-top:3px;margin-top:-8px;position:relative;}
-.lcard.zalkraj .lc{border-top-left-radius:0;border-top-right-radius:0;}
+.lcard.zal-prvni .lc{border-top-left-radius:0;}
+.lcard.zal-posledni .lc{border-top-right-radius:0;}
 
 .slzeb{margin-top:6px;margin-bottom:1px;}
 .zebodp{font-style:normal;font-size:10.62px;font-weight:700;color:var(--ter);text-transform:none;letter-spacing:0;white-space:nowrap;flex:0 0 auto;}
@@ -6623,7 +6625,7 @@ function mmPsegFit(sh){
       const prvni = zal && idx === 0, posledni = zal && idx === bs.length - 1;
       t.classList.toggle('prvni', prvni);
       t.classList.toggle('posledni', posledni);
-      const karta=el.closest('.lcard'); if(karta) karta.classList.toggle('zalkraj', prvni||posledni);
+      const karta=el.closest('.lcard'); if(karta){ karta.classList.toggle('zal-prvni', prvni); karta.classList.toggle('zal-posledni', posledni); }
       if(zal){ t.style.left=(idx*100/bs.length).toFixed(4)+'%'; t.style.width=(100/bs.length).toFixed(4)+'%'; return; }
       t.style.width=((br.width/z) + (prvni?lem:0) + (posledni?lem:0))+'px';
       t.style.transform='translateX('+(((br.left-er.left)/z) - (prvni?lem:0))+'px)';
@@ -6647,7 +6649,7 @@ function mmPsegAnim(sh){ if(!sh) return; const prev=window._psegPrev; let animov
       const n=el.querySelectorAll("b").length;
       t.classList.toggle("prvni", now === 0);
       t.classList.toggle("posledni", now === n - 1);
-      const karta=el.closest(".lcard"); if(karta) karta.classList.toggle("zalkraj", now === 0 || now === n - 1);
+      const karta=el.closest(".lcard"); if(karta){ karta.classList.toggle("zal-prvni", now === 0); karta.classList.toggle("zal-posledni", now === n - 1); }
       t.style.left=(now*100/n).toFixed(4)+"%";
       t.style.width=(100/n).toFixed(4)+"%";
       return;   // sirku i pozici drzi CSS v procentech — zadne mereni
