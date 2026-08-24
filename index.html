@@ -2745,7 +2745,7 @@ html.pwa-standalone body.mm-full .main{margin-top:-33px!important;}
 /* Marek 2026-08-18: v mm rezimu uz misto pro plovouci bar rezervuje stinova .body
    (padding-bottom vc. safe-area) — puvodni `body{padding-bottom:80px+safe-area}` (radek ~1841)
    pod obrazovkou pridaval jen prazdne misto = falesne scrollovani na kazde obrazovce. */
-body.mm-full{background:#EDF0EC;padding-bottom:0;}
+body.mm-full{background:var(--bg);padding-bottom:0;}
 </style>
 </head>
 <body>
@@ -3467,7 +3467,7 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
   .typerow{display:flex;gap:28px;flex-wrap:wrap;justify-content:center;align-items:center;max-width:900px;margin:0 auto;}
 
 body.mm-full .main{padding:0!important;max-width:none;}
-body.mm-full{background:#EDF0EC;padding-bottom:0;}
+body.mm-full{background:var(--bg);padding-bottom:0;}
 </style></template>
 
 
@@ -6553,7 +6553,7 @@ function renderDnesek(){
   if(sprite) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(0)}</div>`;
   sh.appendChild(w);
-  mmSrovnejJmena(sh); const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin=(window.innerWidth>393?'0 auto':'');
+  mmSrovnejJmena(sh); const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin='0 auto';
   mmDeniApplyFeedState(sh,'prehled'); mmBarSnap(sh,0); mmZnackyCile(sh);   // po plnem re-renderu obnov rozbaleni/pocty/tecky komentaru ze state.mmFeed
   mmDeniBindReakce(sh, host);
   mmPsegAnim(sh);
@@ -7641,7 +7641,7 @@ function renderParta(){
   if(sprite) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(1)}</div>`;
   sh.appendChild(w);
-  mmSrovnejJmena(sh); const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin=(window.innerWidth>393?'0 auto':''); mmDeniApplyFeedState(sh,'parta'); mmPsegAnim(sh); mmLbarAlign(sh); mmHeatInit(sh);
+  mmSrovnejJmena(sh); const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin='0 auto'; mmDeniApplyFeedState(sh,'parta'); mmPsegAnim(sh); mmLbarAlign(sh); mmHeatInit(sh);
 }
 
 // ============================================================
@@ -8044,7 +8044,7 @@ function renderNavykyMM(){
   if(sprite) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr nvk" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(1)}</div>`;
   sh.appendChild(w);
-  mmSrovnejJmena(sh); const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin=(window.innerWidth>393?'0 auto':''); mmBarSnap(sh,1); mmHabitSwipe(sh); mmHabitDrzeni(sh); window._mmTydSmer=0;
+  mmSrovnejJmena(sh); const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin='0 auto'; mmBarSnap(sh,1); mmHabitSwipe(sh); mmHabitDrzeni(sh); window._mmTydSmer=0;
   requestAnimationFrame(()=>mmBarPos(sh, MM_TAB_IDX[state.view]));   // usadit indikator spodniho baru i po re-renderu bez navigace
 }
 
@@ -8171,7 +8171,7 @@ function renderJaMM(){
   if(sprite) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(2)}</div>`;
   sh.appendChild(w);
-  mmSrovnejJmena(sh); const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin=(window.innerWidth>393?'0 auto':''); mmBarSnap(sh,2);
+  mmSrovnejJmena(sh); const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin='0 auto'; mmBarSnap(sh,2);
   requestAnimationFrame(()=>mmBarPos(sh, MM_TAB_IDX[state.view]));   // usadit indikator spodniho baru i po re-renderu bez navigace
 }
 
@@ -8248,7 +8248,7 @@ function mmMountSub(host, tpl, barIdx){
   if(sprite) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(barIdx)}</div>`;
   sh.appendChild(w);
-  mmSrovnejJmena(sh); const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin=(window.innerWidth>393?'0 auto':''); mmBarSnap(sh, barIdx);
+  mmSrovnejJmena(sh); const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin='0 auto'; mmBarSnap(sh, barIdx);
 }
 
 
@@ -9041,7 +9041,7 @@ function mmMountZapis(){
   mmLvlSlider(sh);
   const z = (Math.min(Math.max(1,window.innerWidth),393)-8)/306;   // strop 393 = velikost mockupu (varianta A: nikdy vetsi nez mockup)
   scrEl.style.zoom = z;
-  scrEl.style.margin = (window.innerWidth>393?'0 auto':'');   // sirsi telefon: vycentrovat obsah; <=393 nechat jako mockup (doleva)
+  scrEl.style.margin = '0 auto';   // vzdy vycentrovat: 8px rezerva ze zoomu se rozdeli na obe strany (Marek 2026-08-24)
   // .body.formb .ff je position:absolute;bottom -> scr musi byt na vysku displeje, aby Datum/odmena/Zapsat spadlo dolu.
   // UNIFORMNI SPODEK (Marek: "Lezeni posunute" — spodni blok sedel na kazdem formulari jinak):
   // .scr ma PEVNOU vysku displeje (ne min-height, ktera rostla s obsahem) -> .ff (Datum/odmena/
@@ -9405,7 +9405,7 @@ function mmBpMount(host, tpl, extraCss){
   const scr = w.querySelector('.scr');
   const z = (Math.min(Math.max(1,window.innerWidth),393)-8)/306;
   scr.style.zoom = z;
-  scr.style.margin = (window.innerWidth>393?'0 auto':'');
+  scr.style.margin = '0 auto';
   // UNIFORMNI SPODEK (stejny fix jako mmMountZapis): pevna vyska misto min-height —
   // u vysokeho obsahu (tvorba navyku s celou mrizkou ikon) jinak spodni .ff
   // (Platnost + Vytvorit navyk) ujel pod obrazovku. Obsah scrolluje uvnitr .body,
