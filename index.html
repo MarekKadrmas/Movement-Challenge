@@ -2147,6 +2147,9 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .nvk .serchip .i{width:14px;height:14px;}
 .nvk .serchip b{font-family:var(--font-display);font-size:14px;font-weight:900;color:var(--sec);letter-spacing:-.02em;}
 .nvk .nav .right{display:flex;align-items:center;}
+
+.smazbox{display:flex;justify-content:center;margin:10px 0 2px;}
+.smazbox span{font-size:13.28px;font-weight:800;color:var(--red,#E05C5C);padding:8px 16px;border-radius:999px;background:color-mix(in srgb,var(--red,#E05C5C) 10%,transparent);cursor:pointer;}
 .nvk .nrow{display:flex;align-items:center;gap:10px;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:7px 14px 7px 8px;margin-bottom:6px;}
 .nvk .nrow .nic{width:30px;height:30px;flex:0 0 30px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--nc) 15%,transparent);color:var(--nc);font-size:15px;}
 .nvk .nrow .nic .i{width:16px;height:16px;}
@@ -2975,6 +2978,9 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .nvk .serchip .i{width:14px;height:14px;}
 .nvk .serchip b{font-family:var(--font-display);font-size:14px;font-weight:900;color:var(--sec);letter-spacing:-.02em;}
 .nvk .nav .right{display:flex;align-items:center;}
+
+.smazbox{display:flex;justify-content:center;margin:10px 0 2px;}
+.smazbox span{font-size:13.28px;font-weight:800;color:var(--red,#E05C5C);padding:8px 16px;border-radius:999px;background:color-mix(in srgb,var(--red,#E05C5C) 10%,transparent);cursor:pointer;}
 .nvk .nrow{display:flex;align-items:center;gap:10px;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:7px 14px 7px 8px;margin-bottom:6px;}
 .nvk .nrow .nic{width:30px;height:30px;flex:0 0 30px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--nc) 15%,transparent);color:var(--nc);font-size:15px;}
 .nvk .nrow .nic .i{width:16px;height:16px;}
@@ -3390,6 +3396,21 @@ body.mm-full{background:#EDF0EC;padding-bottom:0;}
 
 
 <div class="test-banner" aria-label="Testovací verze"></div><script>
+/* Zkusebni datum: ?den=2026-08-28 posune "dnesek" v cele appce (Marek 2026-08-24).
+   Bez parametru se nic nemeni. Slouzi k vyzkouseni tydne, kdy uz vetsina dnu probehla. */
+(function(){
+  var m = location.search.match(/[?&]den=(\d{4}-\d{2}-\d{2})/);
+  if(!m) return;
+  var F = new Date(m[1]+'T12:00:00').getTime(), O = Date;
+  function D(){ if(!(this instanceof D)) return new O(F).toString();
+    return arguments.length ? new (Function.prototype.bind.apply(O,[null].concat([].slice.call(arguments)))) : new O(F); }
+  D.prototype = O.prototype; D.now = function(){ return F; }; D.parse = O.parse; D.UTC = O.UTC;
+  window.Date = D;
+  document.addEventListener('DOMContentLoaded', function(){
+    var b=document.querySelector('.test-banner'); if(b) b.setAttribute('data-den', m[1]);
+  });
+})();
+
 (function(){try{if(window.navigator.standalone===true||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches))document.documentElement.classList.add('pwa-standalone');}catch(e){}})();
 /* Dark mode dle telefonu (paleta [data-theme=dark] uz v kodu je, jen se nezapinala) */
 (function(){try{var mq=window.matchMedia('(prefers-color-scheme: dark)');function apply(){document.documentElement.setAttribute('data-theme',mq.matches?'dark':'light');if(window.renderAllViews){try{renderAllViews();}catch(e){}}}apply();if(mq.addEventListener)mq.addEventListener('change',apply);else if(mq.addListener)mq.addListener(apply);}catch(e){}})();
@@ -7572,7 +7593,7 @@ function mmHabitSubHtml(h, pid, ds){
   return parts.join(' · ');
 }
 function mmHabitRowHtml(h, pid, ds){
-  const col=safeColor(h.barva); const done=mmHabitDoneToday(h,pid,ds);
+  const col=safeColor(h.barva); const done=habitIsDoneOn(h,pid,ds);   // stav TOHO dne, ne tydenniho cile
   return `<div class="nrow${done?' hot':''}" style="--nc:${col}">`
     +`<span class="nic">${habitIconHtml(h.ikona)}</span>`
     +`<span class="nnm" onclick="openHabitModal('${h.id}')">${esc(h.nazev)}</span>`
@@ -7709,7 +7730,7 @@ function mmHabitDenKolecko(pct, nahr, dnes, vybrany, klic){
 function mmHabitDenPct(pid, mine, ds){
   const den=mine.filter(h=>mmHabitExisted(h,ds));
   if(!den.length) return 0;
-  const spl=den.filter(h=>mmHabitDoneToday(h,pid,ds)).length;
+  const spl=den.filter(h=>habitIsDoneOn(h,pid,ds)).length;
   return Math.round(spl/den.length*100);
 }
 function mmHabitTydenHtml(pid, mine, sel){
@@ -7739,7 +7760,7 @@ function mmHabitTydenPosun(smer){
 }
 // souhrn nad seznamem: vlevo den a co zbyva, vpravo pomer
 function mmHabitSouhrnHtml(pid, existed, sel){
-  const hotovo=existed.filter(h=>mmHabitDoneToday(h,pid,sel)).length;
+  const hotovo=existed.filter(h=>habitIsDoneOn(h,pid,sel)).length;
   const zbyva=Math.max(0, existed.length-hotovo);
   const todayS=todayStr();
   const d=new Date(sel+'T00:00:00');
@@ -7768,8 +7789,8 @@ function renderNavykyMM(){
   } else {
     const sel=state.habitDay||todayS;
     const denNavyky=mine.filter(h=>mmHabitExisted(h, sel));
-    const ceka=denNavyky.filter(h=>!mmHabitDoneToday(h,pid,sel));
-    const hot=denNavyky.filter(h=>mmHabitDoneToday(h,pid,sel));
+    const ceka=denNavyky.filter(h=>!habitIsDoneOn(h,pid,sel));
+    const hot=denNavyky.filter(h=>habitIsDoneOn(h,pid,sel));
     const rows=ceka.concat(hot).map(h=>mmHabitRowHtml(h,pid,sel)).join('');
     body=`${mmHabitTydenHtml(pid, mine, sel)}
     ${mmHabitSouhrnHtml(pid, denNavyky, sel)}
@@ -9112,7 +9133,7 @@ function mmZapisSync(sh){
 // Builder formulare tvorby — 1:1 mockup hf(name,icon,freqOn,sub); "Denní cíl" blok (z S.tvorba) je
 // v sablone vzdy a sync ho skryva u typu Splnit (mockup hf ho u Splnit nema, S.tvorba u Zmerit ma).
 function mmHabitHf(sub){
-  return `<div class="body formb tcompact" style="padding-top:16px"><div class="fhd"><div class="fttl">Nový návyk</div><span class="fx">×</span></div><div class="fld"><label>Název</label><div class="inp"><input data-mmhb="habit-nazev" type="text" maxlength="40" placeholder="Např. Pít 2 l vody"></div></div><div class="fld"><label>Ikona</label><div class="emojirow" data-mmicons></div></div><div class="fld"><label>Barva</label><div class="colors" data-mmcolors></div></div><div class="fld"><label>Typ návyku</label><div class="seg"><b class="on">Splnit ✓</b><b>Změřit #</b></div></div><div class="fld" data-mmcil><label>Denní cíl</label><div class="pickrow"><div class="inp" style="flex:1"><input data-mmhb="habit-cil-hodnota" type="number" inputmode="decimal" min="1" placeholder="8"></div><div class="inp" style="flex:2"><input data-mmhb="habit-cil-jednotka" type="text" maxlength="12" placeholder="sklenic"></div></div></div><div class="fld"><label>Jak často</label><div class="pickrow"><div class="pk on">Každý den</div><div class="pk">Vybrané</div><div class="pk">Týdně</div><div class="pk">Měsíčně</div><div class="pk">Ročně</div></div></div>${sub}<div class="ff"><div class="fld"><label>Platnost · od – do</label><div class="pickrow"><div class="drange" data-mmdate="start" style="flex:1"><span class="cal"><svg class="i"><use href="#i-calendar"/></svg></span><span data-mmdtext>27. 6.</span></div><div class="drange" data-mmdate="end" style="flex:1"><span class="cal"><svg class="i"><use href="#i-calendar"/></svg></span><span data-mmdtext>bez konce</span></div></div></div><div class="submit">Vytvořit návyk</div></div></div>`;
+  return `<div class="body formb tcompact" style="padding-top:16px"><div class="fhd"><div class="fttl">Nový návyk</div><span class="fx">×</span></div><div class="fld"><label>Název</label><div class="inp"><input data-mmhb="habit-nazev" type="text" maxlength="40" placeholder="Např. Pít 2 l vody"></div></div><div class="fld"><label>Ikona</label><div class="emojirow" data-mmicons></div></div><div class="fld"><label>Barva</label><div class="colors" data-mmcolors></div></div><div class="fld"><label>Typ návyku</label><div class="seg"><b class="on">Splnit ✓</b><b>Změřit #</b></div></div><div class="fld" data-mmcil><label>Denní cíl</label><div class="pickrow"><div class="inp" style="flex:1"><input data-mmhb="habit-cil-hodnota" type="number" inputmode="decimal" min="1" placeholder="8"></div><div class="inp" style="flex:2"><input data-mmhb="habit-cil-jednotka" type="text" maxlength="12" placeholder="sklenic"></div></div></div><div class="fld"><label>Jak často</label><div class="pickrow"><div class="pk on">Každý den</div><div class="pk">Vybrané</div><div class="pk">Týdně</div><div class="pk">Měsíčně</div><div class="pk">Ročně</div></div></div>${sub}<div class="smazbox" data-mmsmaz hidden><span data-mmdel>Smazat návyk</span></div><div class="ff"><div class="fld"><label>Platnost · od – do</label><div class="pickrow"><div class="drange" data-mmdate="start" style="flex:1"><span class="cal"><svg class="i"><use href="#i-calendar"/></svg></span><span data-mmdtext>27. 6.</span></div><div class="drange" data-mmdate="end" style="flex:1"><span class="cal"><svg class="i"><use href="#i-calendar"/></svg></span><span data-mmdtext>bez konce</span></div></div></div><div class="submit">Vytvořit návyk</div></div></div>`;
 }
 const MM_BP2 = {
  "tvorba":  mmHabitHf(""),
@@ -9190,6 +9211,7 @@ function mmHabitSync(sh){
   // Titulek dle rezimu (Nový návyk / Upravit návyk / Kopie návyku) — z existujici light logiky
   const t = document.getElementById('habit-modal-title');
   const fttl = body.querySelector('.fttl'); if (fttl && t && t.textContent) fttl.textContent = t.textContent;
+  const smaz = body.querySelector('[data-mmsmaz]'); if (smaz) smaz.hidden = !state.habitEditId;
   if (state.habitView === 'catalog'){
     const si = body.querySelector('input[data-mmhb="habit-search"]');
     if (si && sh.activeElement !== si) si.value = state.habitSearch || '';

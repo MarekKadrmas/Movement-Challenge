@@ -101,3 +101,6 @@ Když v pondělí nedočtu 30 minut a v pátek přečtu 60, můžu klepnutím na
 - Hráč si může vytvořit **vlastní kategorie** (sport, chování, mindset…). Nějaké přednastavené budou hotové rovnou.
 - Kategorie musí jít **úplně vypnout** — pak je seznam jeden a návyky se řadí ručně přetažením.
 - Řazení uvnitř kategorie i bez nich: ruční pořadí, splněné klesají dolů.
+
+## 15. Týdenní cíle v řádku (Marek, 2026-08-24)
+U návyku typu „3× týdně" (běh) mít v řádku sedm malých koleček za dny a odškrtávat rovnou, ve které dny to bylo — místo pouhého počtu 2/3. Až po dokončení základu.
