@@ -96,3 +96,8 @@ Když v pondělí nedočtu 30 minut a v pátek přečtu 60, můžu klepnutím na
 - **Jen v rámci téhož týdne**; s koncem týdne možnost mizí.
 - Ve statistikách vedeno zvlášť: „splněno 5×, nahrazeno 1×".
 - Série nahrazený den **udrží**, ale zobrazí se s poznámkou, aby číslo nelhalo.
+
+## 14. Kategorie a řazení (Marek, 2026-08-24)
+- Hráč si může vytvořit **vlastní kategorie** (sport, chování, mindset…). Nějaké přednastavené budou hotové rovnou.
+- Kategorie musí jít **úplně vypnout** — pak je seznam jeden a návyky se řadí ručně přetažením.
+- Řazení uvnitř kategorie i bez nich: ruční pořadí, splněné klesají dolů.

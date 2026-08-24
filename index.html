@@ -2156,11 +2156,11 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .nvk .nrow .nchk{width:22px;height:22px;flex:0 0 22px;border-radius:50%;border:2px solid var(--ter);display:grid;place-items:center;color:#fff;}
 .nvk .nrow .nchk .i{width:13px;height:13px;}
 .nvk .nrow.hot{background:color-mix(in srgb,var(--card) 62%,transparent);box-shadow:none;}
-.nvk .nrow.hot .nchk{background:var(--nc);border-color:var(--nc);}
+.nvk .nrow.hot .nchk{background:linear-gradient(160deg,#9C7BE6,#6B49CF);border-color:transparent;}
 .nvk .nrow.hot .nnm{color:var(--ter);}
 .nvk .nrow.hot .nic{opacity:.5;}
-.nvk .nnew{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:9px;font-size:13.28px;font-weight:800;color:var(--fial2);}
-.nvk .nnew span{width:22px;height:22px;border-radius:50%;background:color-mix(in srgb,var(--fial) 16%,transparent);display:grid;place-items:center;font-size:13px;}
+.nvk .nnew{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:11px;font-size:14.48px;font-weight:800;color:var(--fial2);cursor:pointer;}
+.nvk .nnew span{width:26px;height:26px;border-radius:50%;background:color-mix(in srgb,var(--fial) 16%,transparent);display:grid;place-items:center;font-size:17px;font-weight:600;line-height:1;padding-bottom:1px;}
 .nvk .sl a{font-size:11.15px;font-weight:800;color:var(--fial2);text-transform:none;letter-spacing:0;cursor:pointer;}
 .nvk .zpet{font-size:11.6px;font-weight:800;color:var(--fial2);margin:2px 2px 10px;cursor:pointer;}
 .nvk .nav .right .av{background:linear-gradient(135deg,#8B6FE04d,#8B6FE012)!important;color:#7757d6!important;}
@@ -2984,11 +2984,11 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .nvk .nrow .nchk{width:22px;height:22px;flex:0 0 22px;border-radius:50%;border:2px solid var(--ter);display:grid;place-items:center;color:#fff;}
 .nvk .nrow .nchk .i{width:13px;height:13px;}
 .nvk .nrow.hot{background:color-mix(in srgb,var(--card) 62%,transparent);box-shadow:none;}
-.nvk .nrow.hot .nchk{background:var(--nc);border-color:var(--nc);}
+.nvk .nrow.hot .nchk{background:linear-gradient(160deg,#9C7BE6,#6B49CF);border-color:transparent;}
 .nvk .nrow.hot .nnm{color:var(--ter);}
 .nvk .nrow.hot .nic{opacity:.5;}
-.nvk .nnew{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:9px;font-size:13.28px;font-weight:800;color:var(--fial2);}
-.nvk .nnew span{width:22px;height:22px;border-radius:50%;background:color-mix(in srgb,var(--fial) 16%,transparent);display:grid;place-items:center;font-size:13px;}
+.nvk .nnew{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:11px;font-size:14.48px;font-weight:800;color:var(--fial2);cursor:pointer;}
+.nvk .nnew span{width:26px;height:26px;border-radius:50%;background:color-mix(in srgb,var(--fial) 16%,transparent);display:grid;place-items:center;font-size:17px;font-weight:600;line-height:1;padding-bottom:1px;}
 .nvk .sl a{font-size:11.15px;font-weight:800;color:var(--fial2);text-transform:none;letter-spacing:0;cursor:pointer;}
 .nvk .zpet{font-size:11.6px;font-weight:800;color:var(--fial2);margin:2px 2px 10px;cursor:pointer;}
 .nvk .nav .right .av{background:linear-gradient(135deg,#8B6FE04d,#8B6FE012)!important;color:#7757d6!important;}
@@ -7592,10 +7592,104 @@ function mmHabitDetailHtml(h, pid, ds){
   const st=habitDayStreak(h,pid,ds);
   return st>=3 ? '<svg class="i"><use href="#i-flame"/></svg>'+st : '';
 }
+function mmHabitSetTab(t){ state.habitTab=t; renderNavykyMM(); }
+function mmHabitSetStatRange(r){ state.statRange=r; renderNavykyMM(); }
+async function mmHabitToggle(id){ await toggleHabitToday(id); renderNavykyMM(); }
+
+// ----- Statistiky (3.1) — jednoduchá reálná verze uvnitř root Návyků -----
+function mmHabitPeriodDays(range){
+  const now=new Date(); now.setHours(0,0,0,0);
+  if(range==='tyden'){ const s=new Date(now); s.setDate(now.getDate()-((now.getDay()+6)%7)); return {from:s,to:now}; }
+  if(range==='mesic'){ return {from:new Date(now.getFullYear(),now.getMonth(),1), to:now}; }
+  return {from:new Date(now.getFullYear(),0,1), to:now};
+}
+function mmHabitSuccessRate(pid, mine, range){
+  const {from,to}=mmHabitPeriodDays(range);
+  let sum=0,cnt=0; const d=new Date(from);
+  while(d<=to){ const fr=dayCompletion(pid,mine,d); if(fr!=null){ sum+=fr; cnt++; } d.setDate(d.getDate()+1); }
+  return cnt? Math.round(sum/cnt*100) : 0;
+}
+function mmHabitCompletedCount(pid, mine, range){
+  const {from,to}=mmHabitPeriodDays(range);
+  let n=0;
+  mine.forEach(h=>{
+    const d=new Date(from);
+    while(d<=to){ const ds=dateToStr(d); if(mmHabitExisted(h,ds) && habitIsDoneOn(h,pid,ds)) n++; d.setDate(d.getDate()+1); }
+  });
+  return n;
+}
+function mmHabitWeekFrac(h, pid, weekStart){
+  const now=new Date(); now.setHours(0,0,0,0);
+  let sum=0,cnt=0;
+  for(let i=0;i<7;i++){
+    const d=new Date(weekStart); d.setDate(weekStart.getDate()+i);
+    if(d>now) continue;
+    const ds=dateToStr(d);
+    if(!mmHabitExisted(h,ds)) continue;
+    const isWM=h.frekvence_typ==='weekly'||h.frekvence_typ==='monthly'||h.frekvence_typ==='yearly';
+    if(!isWM && !habitDueOn(h,d)) continue;
+    cnt++; sum+=habitFractionOn(h,pid,ds);
+  }
+  return cnt? sum/cnt : null;
+}
+function mmHabitYearGridHtml(pid, mine, year){
+  if(!mine.length) return '';
+  const jan1=new Date(year,0,1);
+  const firstMon=new Date(jan1); firstMon.setDate(jan1.getDate()-((jan1.getDay()+6)%7));
+  const now=new Date(); now.setHours(0,0,0,0);
+  let html='';
+  mine.forEach(h=>{
+    const col=safeColor(h.barva);
+    let cells='';
+    for(let w=0; w<52; w++){
+      const ws=new Date(firstMon); ws.setDate(firstMon.getDate()+w*7);
+      const frac = ws>now ? null : mmHabitWeekFrac(h,pid,ws);
+      let bg='var(--track)';
+      if(frac!=null && frac>0){ const op=frac>=0.85?1:(frac>=0.5?.7:(frac>=0.15?.4:.2)); bg=col+Math.round(op*255).toString(16).padStart(2,'0'); }
+      cells+=`<i style="background:${bg}"></i>`;
+    }
+    const doneCount=mmHabitCompletedCount(pid,[h],'rok');
+    html+=`<div class="gr"><div style="display:flex;align-items:center;gap:5px"><span>${habitIconHtml(h.ikona)}</span><span class="nm2">${esc(h.nazev)}</span></div><div class="yg">${cells}</div><div class="ct2">${doneCount}×</div></div>`;
+  });
+  return html;
+}
+function mmHabitStatsHtml(pid, mine){
+  const range=state.statRange||'tyden';
+  const year=new Date().getFullYear();
+  const rate=mmHabitSuccessRate(pid, mine, range);
+  const streak=mine.length?Math.max(0, ...mine.map(h=>habitLongestStreak(h,pid))):0;
+  const done=mmHabitCompletedCount(pid, mine, range);
+  const grid=mmHabitYearGridHtml(pid, mine, year);
+  return `${mmHabitTabsHtml('stats')}
+  <div class="tabs"><b class="${range==='tyden'?'on':''}" onclick="mmHabitSetStatRange('tyden')">Týden</b><b class="${range==='mesic'?'on':''}" onclick="mmHabitSetStatRange('mesic')">Měsíc</b><b class="${range==='rok'?'on':''}" onclick="mmHabitSetStatRange('rok')">Rok</b></div>
+  <div class="stat2"><div class="st"><div class="v">${rate} %</div><div class="k">úspěšnost</div></div><div class="st"><div class="v"><svg class="i"><use href="#i-flame"/></svg> ${streak}</div><div class="k">nejdelší série</div></div><div class="st"><div class="v">${done}</div><div class="k">splněno</div></div></div>
+  <div class="sl"><span>Po návycích · ${year}</span></div>
+  <div class="statg">${grid||'<div style="padding:14px;text-align:center;color:var(--ter);font-size:14.48px">Zatím žádná data</div>'}</div>
+  <div class="ccap" style="margin-top:8px">1 čtvereček = 1 týden · tmavší = víc splnění</div>`;
+}
+function mmHabitTabsHtml(tab){
+  if(tab==='stats') return `<div class="zpet" onclick="mmHabitSetTab('dnes')">‹ Zpět na dnešek</div>`;
+  return `<div class="tabs"><b class="on">Dnes</b><b onclick="mmHabitSetTab('stats')">Přehled</b></div>`;
+}
+function mmHabitWeekStripHtml(pid, mine){
+  const now=new Date(); now.setHours(0,0,0,0);
+  const start=new Date(now); start.setDate(now.getDate()-((now.getDay()+6)%7));
+  const todayS=todayStr();
+  let html='';
+  for(let i=0;i<7;i++){
+    const d=new Date(start); d.setDate(start.getDate()+i);
+    const ds=dateToStr(d);
+    let cls='';
+    if(ds===todayS) cls='on';
+    else if(ds<todayS){ const fr=dayCompletion(pid, mine, d); if(fr!=null && fr>=1) cls='done'; }
+    html+=`<span class="${cls}">${HABIT_DEN_NAMES[i]}</span>`;
+  }
+  return html;
+}
 // Radka dnu = prepinac dne. Teply prechod: jantar -> fialova podle toho, jak den dopadl.
 // Klepnutim se prepne den, tlacitko Dnes vraci zpet (Marek 2026-08-24).
 function mmHabitDenKolecko(pct, nahr, dnes, vybrany, klic){
-  const r=13, sw=3.4, c=2*Math.PI*r, s=r*2+sw;
+  const r=13, sw=3.4, c=2*Math.PI*r, s=r*2+sw*2;   // rezerva, aby zaobleny konec prstence nekoncil na hrane
   const plny=(pct+nahr)>=100;
   const dilP=c*(Math.min(100,pct)/100), dilN=c*(Math.min(100,nahr)/100);
   const gid='hg'+klic;
@@ -7680,7 +7774,7 @@ function renderNavykyMM(){
     body=`${mmHabitTydenHtml(pid, mine, sel)}
     ${mmHabitSouhrnHtml(pid, denNavyky, sel)}
     ${rows||'<div style="padding:16px;text-align:center;color:var(--ter);font-size:12.74px">Na tento den nic naplánováno</div>'}
-    <div class="nnew" onclick="openHabitModal()"><span>＋</span> Nový návyk</div>`;
+    <div class="nnew" onclick="openHabitModal()"><span>+</span> Nový návyk</div>`;
   }
   const tpl=nav+body;
   const _mmK=tpl+'|'+(document.documentElement.getAttribute('data-theme')||'light'); if(host._mmTpl===_mmK&&host.shadowRoot){const s=host.shadowRoot.querySelector('.scr'); if(s){const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; s.style.zoom=z; s.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(s,z);} mmBarSnap(host.shadowRoot,1); return;} host._mmTpl=_mmK; const sh=host.shadowRoot||host.attachShadow({mode:'open'});
