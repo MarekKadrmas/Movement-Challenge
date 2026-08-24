@@ -1,12 +1,17 @@
 # Movement Challenge — přehled stavu
 
 > Živý dokument. Aktualizuje se po každé dokončené části. Detailní nápady a kontext = `BACKLOG.md`.
-> Poslední aktualizace: 2026-08-23
+> Poslední aktualizace: 2026-08-24
 
 ---
 
 ## 🔨 Právě se dělá
-- **Návyky** — kompletní promyšlení a přestavba (systém + design). Systém odsouhlasen (`NAVYKY-NAVRH.md`), běží návrh obrazovek — mockup: https://claude.ai/code/artifact/5fd56578-5bd0-4881-a040-56ace6f39acc
+- **Návyky** — přestavba obrazovky. Hotovo: řádek týdne jako přepínač dnů (teplý přechod, prstenec plnění),
+  přepínání dnů i týdnů (šipky + prst, s rolovací animací), zaškrtnutí aktualizuje kolečka i poměr,
+  denní návyky vs. cíle za období (týden/měsíc/rok) ve vlastních sekcích, rychlé plnění měřitelných návyků
+  (klik = +krok, podržení = hotovo), test libovolného dne přes `?den=RRRR-MM-DD`. Systém: `NAVYKY-NAVRH.md`.
+  Zbývá: nahrazení zameškaného dne (§13), kategorie a vlastní řazení (§14), kolečka dnů u týdenních cílů (§15),
+  okno pro založení a úpravu návyku je pořád ve starém designu.
 
 ## ⏸️ Rozdělané (schválně odloženo)
 - **Systém zápisu** — rozhodnout A/B ([mockup](https://claude.ai/code/artifact/f3760cb0-7d1d-4cb7-8c8c-dca2d18f7cfa)), doladit výběr aktivity, kategorie, srdíčko oblíbených
