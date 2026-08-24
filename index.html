@@ -2160,10 +2160,17 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .nvk .nrow .nnm{flex:1;min-width:0;font-size:13.81px;font-weight:600;letter-spacing:-.005em;color:color-mix(in srgb,var(--label) 82%,var(--sec));white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .nvk .nrow .ndet{font-size:11.15px;font-weight:800;color:var(--sec);white-space:nowrap;display:inline-flex;align-items:center;gap:3px;}
 .nvk .nrow .ndet .i{width:12px;height:12px;}
-.nvk .nrow .nchk{width:22px;height:22px;flex:0 0 22px;border-radius:50%;border:2px solid var(--ter);display:grid;place-items:center;color:#fff;}
+.nvk .nrow .nchk{width:22px;height:22px;flex:0 0 22px;border-radius:50%;border:none;box-shadow:inset 0 0 0 2px var(--ter);display:grid;place-items:center;color:#fff;cursor:pointer;transition:background .2s ease,box-shadow .2s ease;}
 .nvk .nrow .nchk .i{width:13px;height:13px;}
 .nvk .nrow.hot{background:color-mix(in srgb,var(--card) 62%,transparent);box-shadow:none;}
-.nvk .nrow.hot .nchk{background:linear-gradient(160deg,#9C7BE6,#6B49CF);border-color:transparent;}
+.nvk .nrow.hot .nchk{background:linear-gradient(160deg,#9C7BE6,#6B49CF);box-shadow:none;}
+.nvk .nrow.hot.just .nchk{animation:mmChk .34s cubic-bezier(.2,1.35,.4,1);}
+.nvk .nrow.hot.just .nchk .i{animation:mmChkI .3s ease .04s both;}
+.nvk .nrow.just{animation:mmRow .5s ease;}
+@keyframes mmChk{0%{transform:scale(.55)}60%{transform:scale(1.14)}100%{transform:scale(1)}}
+@keyframes mmChkI{0%{opacity:0;transform:scale(.4)}100%{opacity:1;transform:scale(1)}}
+@keyframes mmRow{0%{background:color-mix(in srgb,#8B6FE0 14%,var(--card))}100%{}}
+@media (prefers-reduced-motion:reduce){.nvk .nrow.just,.nvk .nrow.hot.just .nchk,.nvk .nrow.hot.just .nchk .i{animation:none;}}
 .nvk .nrow.hot .nnm{color:var(--ter);}
 .nvk .nrow.hot .nic{opacity:.5;}
 .nvk .nnew{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:11px;font-size:14.48px;font-weight:800;color:var(--fial2);cursor:pointer;}
@@ -2995,10 +3002,17 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .nvk .nrow .nnm{flex:1;min-width:0;font-size:13.81px;font-weight:600;letter-spacing:-.005em;color:color-mix(in srgb,var(--label) 82%,var(--sec));white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .nvk .nrow .ndet{font-size:11.15px;font-weight:800;color:var(--sec);white-space:nowrap;display:inline-flex;align-items:center;gap:3px;}
 .nvk .nrow .ndet .i{width:12px;height:12px;}
-.nvk .nrow .nchk{width:22px;height:22px;flex:0 0 22px;border-radius:50%;border:2px solid var(--ter);display:grid;place-items:center;color:#fff;}
+.nvk .nrow .nchk{width:22px;height:22px;flex:0 0 22px;border-radius:50%;border:none;box-shadow:inset 0 0 0 2px var(--ter);display:grid;place-items:center;color:#fff;cursor:pointer;transition:background .2s ease,box-shadow .2s ease;}
 .nvk .nrow .nchk .i{width:13px;height:13px;}
 .nvk .nrow.hot{background:color-mix(in srgb,var(--card) 62%,transparent);box-shadow:none;}
-.nvk .nrow.hot .nchk{background:linear-gradient(160deg,#9C7BE6,#6B49CF);border-color:transparent;}
+.nvk .nrow.hot .nchk{background:linear-gradient(160deg,#9C7BE6,#6B49CF);box-shadow:none;}
+.nvk .nrow.hot.just .nchk{animation:mmChk .34s cubic-bezier(.2,1.35,.4,1);}
+.nvk .nrow.hot.just .nchk .i{animation:mmChkI .3s ease .04s both;}
+.nvk .nrow.just{animation:mmRow .5s ease;}
+@keyframes mmChk{0%{transform:scale(.55)}60%{transform:scale(1.14)}100%{transform:scale(1)}}
+@keyframes mmChkI{0%{opacity:0;transform:scale(.4)}100%{opacity:1;transform:scale(1)}}
+@keyframes mmRow{0%{background:color-mix(in srgb,#8B6FE0 14%,var(--card))}100%{}}
+@media (prefers-reduced-motion:reduce){.nvk .nrow.just,.nvk .nrow.hot.just .nchk,.nvk .nrow.hot.just .nchk .i{animation:none;}}
 .nvk .nrow.hot .nnm{color:var(--ter);}
 .nvk .nrow.hot .nic{opacity:.5;}
 .nvk .nnew{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:11px;font-size:14.48px;font-weight:800;color:var(--fial2);cursor:pointer;}
@@ -7602,7 +7616,8 @@ function mmHabitSubHtml(h, pid, ds){
 }
 function mmHabitRowHtml(h, pid, ds){
   const col=safeColor(h.barva); const done=habitIsDoneOn(h,pid,ds);   // stav TOHO dne, ne tydenniho cile
-  return `<div class="nrow${done?' hot':''}" style="--nc:${col}">`
+  const cerstve = (window._mmNoveId===h.id) ? ' just' : '';
+  return `<div class="nrow${done?' hot':''}${cerstve}" style="--nc:${col}">`
     +`<span class="nic">${habitIconHtml(h.ikona)}</span>`
     +`<span class="nnm" onclick="openHabitModal('${h.id}')">${esc(h.nazev)}</span>`
     +`<span class="ndet">${mmHabitDetailHtml(h,pid,ds)}</span>`
@@ -7623,7 +7638,8 @@ function mmHabitDetailHtml(h, pid, ds){
 }
 function mmHabitSetTab(t){ state.habitTab=t; renderNavykyMM(); }
 function mmHabitSetStatRange(r){ state.statRange=r; renderNavykyMM(); }
-async function mmHabitToggle(id){ await toggleHabitToday(id); renderNavykyMM(); }
+async function mmHabitToggle(id){ window._mmNoveId=id; await toggleHabitToday(id); renderNavykyMM();
+  clearTimeout(window._mmNoveT); window._mmNoveT=setTimeout(()=>{ window._mmNoveId=null; },450); }
 
 // ----- Statistiky (3.1) — jednoduchá reálná verze uvnitř root Návyků -----
 function mmHabitPeriodDays(range){
@@ -7815,9 +7831,7 @@ function renderNavykyMM(){
   } else {
     const sel=state.habitDay||todayS;
     const denNavyky=mine.filter(h=>mmHabitExisted(h, sel));
-    const ceka=denNavyky.filter(h=>!habitIsDoneOn(h,pid,sel));
-    const hot=denNavyky.filter(h=>habitIsDoneOn(h,pid,sel));
-    const rows=ceka.concat(hot).map(h=>mmHabitRowHtml(h,pid,sel)).join('');
+    const rows=denNavyky.map(h=>mmHabitRowHtml(h,pid,sel)).join('');
     body=`${mmHabitTydenHtml(pid, mine, sel)}
     ${mmHabitSouhrnHtml(pid, denNavyky, sel)}
     ${rows||'<div style="padding:16px;text-align:center;color:var(--ter);font-size:12.74px">Na tento den nic naplánováno</div>'}
