@@ -29,14 +29,14 @@ html{-webkit-text-size-adjust:100%;}
 .rx-back{position:fixed;inset:0;background:rgba(0,0,0,.28);opacity:0;transition:opacity .26s ease;z-index:9998;}
 .rx-back.on{opacity:1;}
 .rx-back.tich{background:transparent;}
-.rx-sheet{position:fixed;left:0;right:0;bottom:0;z-index:9999;background:#F2F2F6;display:flex;flex-direction:column;border-radius:20px 20px 0 0;box-shadow:0 -10px 34px rgba(0,0,0,.18);transform:translateY(102%);transition:transform .32s cubic-bezier(.22,1,.36,1);padding-bottom:calc(4px + env(safe-area-inset-bottom));will-change:transform;}
+.rx-sheet{position:fixed;left:0;right:0;bottom:0;z-index:9999;background:var(--bg,#F2F2F6);display:flex;flex-direction:column;border-radius:20px 20px 0 0;box-shadow:0 -10px 34px rgba(0,0,0,.18);transform:translateY(102%);transition:transform .32s cubic-bezier(.22,1,.36,1);padding-bottom:calc(4px + env(safe-area-inset-bottom));will-change:transform;}
 .rx-sheet.on{transform:none;}
 .rx-sheet.rx-drag{transition:none;}
 .rx-sheet,.rx-sheet *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
 .rx-sheet input{-webkit-user-select:text;user-select:text;}
 .rx-hlava{padding:0 18px 8px;touch-action:none;}
 .rx-handle{width:36px;height:5px;border-radius:999px;background:var(--sep,#e2e5e1);margin:7px auto 15px;}
-.rx-hled{display:flex;align-items:center;gap:7px;background:#fff;border-radius:11px;height:40px;padding:0 11px;}
+.rx-hled{display:flex;align-items:center;gap:7px;background:var(--bg-card,#fff);border-radius:11px;height:40px;padding:0 11px;}
 .rx-hled svg{width:16px;height:16px;flex:0 0 auto;fill:none;stroke:var(--ter,#9AA39C);stroke-width:2;stroke-linecap:round;}
 .rx-hled input{flex:1;min-width:0;border:0;outline:0;background:transparent;font:inherit;font-size:17px;line-height:1.2;color:var(--label,#141915);padding:0;}
 .rx-hled input::placeholder{color:var(--ter,#9AA39C);opacity:1;}
@@ -47,7 +47,7 @@ html{-webkit-text-size-adjust:100%;}
 .rx-grid{display:grid;grid-template-columns:repeat(7,1fr);}
 .rx-grid b{height:49px;display:grid;place-items:center;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;font-size:32px;font-weight:400;line-height:1;border-radius:10px;cursor:pointer;-webkit-tap-highlight-color:transparent;}
 .rx-grid b:active{background:var(--track,#EEF0EC);}
-.rx-katbar{flex:0 0 auto;display:flex;justify-content:space-between;align-items:center;padding:5px 20px 1px;border-top:1px solid rgba(0,0,0,.10);background:#F2F2F6;}.rx-katbar b.on{background:#DCDCE1;}.rx-hlava{flex:0 0 auto;}.rx-sheet.hledani .rx-handle{display:none;}.rx-sheet.hledani .rx-hlava{padding-top:8px;}.rx-sheet.hledani .rx-body{height:auto!important;max-height:none!important;flex:1 1 auto;min-height:0;padding-bottom:4px;}.rx-sheet.hledani{padding-bottom:0;}
+.rx-katbar{flex:0 0 auto;display:flex;justify-content:space-between;align-items:center;padding:5px 20px 1px;border-top:1px solid var(--border,rgba(0,0,0,.10));background:var(--bg,#F2F2F6);}.rx-katbar b.on{background:#DCDCE1;}.rx-hlava{flex:0 0 auto;}.rx-sheet.hledani .rx-handle{display:none;}.rx-sheet.hledani .rx-hlava{padding-top:8px;}.rx-sheet.hledani .rx-body{height:auto!important;max-height:none!important;flex:1 1 auto;min-height:0;padding-bottom:4px;}.rx-sheet.hledani{padding-bottom:0;}
 .rx-katbar b{width:33px;height:33px;display:grid;place-items:center;border-radius:50%;cursor:pointer;color:var(--sec,#6B756F);opacity:.72;}
 .rx-katbar b svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
 .rx-katbar b.on{background:var(--track,#EEF0EC);color:var(--label,#141915);opacity:1;}
@@ -6465,6 +6465,7 @@ function renderDnesek(){
                         +sumRoundedBody(state.aktivity.filter(x=>x.player_id===me.id&&x.datum===ds)):0}); } }
   // plny sloupecek = splneny denni cil
   if(MM_UKAZKA_KARTA) _dnyB.forEach((d,i)=>{ if(MM_UKAZKA_DNY[i]!==null) d.b = MM_UKAZKA_DNY[i]||0; });
+  if(MM_TYDEN_UKAZKA) _dnyB.forEach((d,i)=>{ if(MM_TYDEN_UKAZKA[i]!=null) d.b = Math.round(MM_TYDEN_UKAZKA[i]/100*mCil); });
   const _pism=['P','Ú','S','Č','P','S','N'];
   const mSloupce=_dnyB.map((d,i)=>{
     const pom=d.b/Math.max(1,mCil);
@@ -6472,7 +6473,7 @@ function renderDnesek(){
     const nadPx = pom>1 ? (pom-1)*R : 0;   // stejne meritko jako pod cilem
     const v = Math.round(pom*100);   // pomer bez stropu; nad maximem se sloupec zprahledni
     const rad = 5;   // pevne zaobleni; cele lezi nad ryskou diky posunu MM_SL_NAD_MIN
-    const dnesek=d.ds===today, budouci=d.ds>today;
+    const dnesek=d.ds===today, budouci=(d.ds>today && !MM_TYDEN_UKAZKA);   // v ukazce vykreslit cely tyden
     return '<div class="hc-d'+(dnesek?' je-dnes':'')+(budouci?' je-pak':'')+(d.b>mCil&&!budouci?' je-nad':'')+'">'
       +'<div class="hc-dsl">'+((d.b>mCil&&!budouci)?'<svg class="hc-mark" preserveAspectRatio="none"><path/></svg>':'')+'<i style="height:'+((d.b>0&&!budouci)?v:0)+'%;border-radius:'+rad+'px '+rad+'px 5px 5px'+((R*pom)>MM_SL_MAX_PX?(()=>{const tot=R*pom; const P=x=>Math.min(100,x/tot*100).toFixed(1);const g='linear-gradient(to top,#000 '+P(MM_SL_MAX_PX-6)+'%,rgba(0,0,0,.55) '+P(MM_SL_MAX_PX+4)+'%,rgba(0,0,0,.22) '+P(MM_SL_MAX_PX+14)+'%,rgba(0,0,0,.22) 100%)';return ';-webkit-mask-image:'+g+';mask-image:'+g;})():'')+'"></i>'+((d.b>0&&!budouci)?'<u>'+fmtNum(d.b)+'</u>':'')+'</div>'
       +'<span>'+_pism[i]+'</span></div>';
@@ -7344,6 +7345,10 @@ const MM_SL_MAX_PX  = 40;   // od teto vysky se sloupec zprahledni — prave tam
 // rozplyv zacina presne na MM_SL_MAX_PX — do maxima je sloupec uplne plny
 const MM_SL_ROZPLYV_DO = 82;     // px ode dna — pod pozdravem uz sloupec neni videt vubec
 const MM_SL_ROZPLYV_ZLOM = 64;   // px ode dna — tady uz jen slabe prosvita
+// ?tyden=0,53,100,147,200,300,27 — ukazkovy tyden v horni karte; hodnoty jsou procenta
+// denniho cile, aby to sedelo at ma kdokoli cil jakykoli. Jen zobrazeni, do DB se nezapisuje.
+const MM_TYDEN_UKAZKA = (function(){ try{ const m=location.search.match(/[?&]tyden=([0-9,]+)/);
+  return m ? m[1].split(',').map(x=>Number(x)||0).slice(0,7) : null; }catch(_){ return null; } })();
 const MM_UKAZKA_KARTA = true;
 const MM_UKAZKA_CIL = 75;    // realny cil v nove skale (nasobek 25)
 const MM_UKAZKA_DNY = [50, 150, 25, 100, 0, 0, 0];   // Po-Ne; vse nasobky 25, Ct = dnesek
