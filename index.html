@@ -2141,6 +2141,11 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .nvk .tydhl span{font-size:11.2px;font-weight:800;color:var(--label);letter-spacing:-.01em;}
 .nvk .tydhl i{font-style:normal;font-size:9.8px;font-weight:700;color:var(--ter);}
 .nvk .tyd{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+@keyframes mmTydR{0%{opacity:0;transform:translateX(30px)}100%{opacity:1;transform:none}}
+@keyframes mmTydL{0%{opacity:0;transform:translateX(-30px)}100%{opacity:1;transform:none}}
+.nvk .tyd.in-r{animation:mmTydR .34s cubic-bezier(.33,1,.68,1);}
+.nvk .tyd.in-l{animation:mmTydL .34s cubic-bezier(.33,1,.68,1);}
+@media (prefers-reduced-motion:reduce){.nvk .tyd.in-r,.nvk .tyd.in-l{animation:none;}}
 .nvk .tyd span{display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0 3px;border-radius:14px;cursor:pointer;}
 .nvk .tyd .kol{position:relative;display:block;width:100%;}
 .nvk .tyd .kol u{position:absolute;inset:0;display:grid;place-items:center;text-decoration:none;font-size:9px;font-weight:700;color:var(--ter);letter-spacing:-.04em;}
@@ -2169,6 +2174,13 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .nvk .nrow .nic .i{width:16px;height:16px;}
 .nvk .nrow .nnm{flex:1;min-width:0;font-size:13.81px;font-weight:600;letter-spacing:-.005em;color:color-mix(in srgb,var(--label) 82%,var(--sec));white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .nvk .nrow .ndet{font-size:11.15px;font-weight:800;color:var(--sec);white-space:nowrap;display:inline-flex;align-items:center;gap:3px;}
+.nvk .tecky{display:inline-flex;gap:3px;align-items:center;}
+.nvk .tecky i{width:6px;height:6px;border-radius:50%;background:var(--track);}
+.nvk .tecky i.on{background:var(--nc);}
+.nvk .mprouzek{display:inline-block;width:34px;height:5px;border-radius:999px;background:var(--track);overflow:hidden;}
+.nvk .mprouzek i{display:block;height:100%;border-radius:999px;background:var(--nc);}
+.nvk .cilpomer{font-size:11.15px;font-weight:800;color:var(--sec);}
+.nvk .slinfo{font-size:10.2px;font-weight:700;color:var(--ter);text-transform:none;letter-spacing:0;}
 .nvk .nrow .ndet .i{width:12px;height:12px;}
 .nvk .nrow .nchk{width:22px;height:22px;flex:0 0 22px;border-radius:50%;border:none;box-shadow:inset 0 0 0 2px var(--ter);display:grid;place-items:center;color:#fff;cursor:pointer;transition:background .2s ease,box-shadow .2s ease;}
 .nvk .nrow .nchk .i{width:13px;height:13px;}
@@ -2993,6 +3005,11 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .nvk .tydhl span{font-size:11.2px;font-weight:800;color:var(--label);letter-spacing:-.01em;}
 .nvk .tydhl i{font-style:normal;font-size:9.8px;font-weight:700;color:var(--ter);}
 .nvk .tyd{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+@keyframes mmTydR{0%{opacity:0;transform:translateX(30px)}100%{opacity:1;transform:none}}
+@keyframes mmTydL{0%{opacity:0;transform:translateX(-30px)}100%{opacity:1;transform:none}}
+.nvk .tyd.in-r{animation:mmTydR .34s cubic-bezier(.33,1,.68,1);}
+.nvk .tyd.in-l{animation:mmTydL .34s cubic-bezier(.33,1,.68,1);}
+@media (prefers-reduced-motion:reduce){.nvk .tyd.in-r,.nvk .tyd.in-l{animation:none;}}
 .nvk .tyd span{display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0 3px;border-radius:14px;cursor:pointer;}
 .nvk .tyd .kol{position:relative;display:block;width:100%;}
 .nvk .tyd .kol u{position:absolute;inset:0;display:grid;place-items:center;text-decoration:none;font-size:9px;font-weight:700;color:var(--ter);letter-spacing:-.04em;}
@@ -3021,6 +3038,13 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .nvk .nrow .nic .i{width:16px;height:16px;}
 .nvk .nrow .nnm{flex:1;min-width:0;font-size:13.81px;font-weight:600;letter-spacing:-.005em;color:color-mix(in srgb,var(--label) 82%,var(--sec));white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .nvk .nrow .ndet{font-size:11.15px;font-weight:800;color:var(--sec);white-space:nowrap;display:inline-flex;align-items:center;gap:3px;}
+.nvk .tecky{display:inline-flex;gap:3px;align-items:center;}
+.nvk .tecky i{width:6px;height:6px;border-radius:50%;background:var(--track);}
+.nvk .tecky i.on{background:var(--nc);}
+.nvk .mprouzek{display:inline-block;width:34px;height:5px;border-radius:999px;background:var(--track);overflow:hidden;}
+.nvk .mprouzek i{display:block;height:100%;border-radius:999px;background:var(--nc);}
+.nvk .cilpomer{font-size:11.15px;font-weight:800;color:var(--sec);}
+.nvk .slinfo{font-size:10.2px;font-weight:700;color:var(--ter);text-transform:none;letter-spacing:0;}
 .nvk .nrow .ndet .i{width:12px;height:12px;}
 .nvk .nrow .nchk{width:22px;height:22px;flex:0 0 22px;border-radius:50%;border:none;box-shadow:inset 0 0 0 2px var(--ter);display:grid;place-items:center;color:#fff;cursor:pointer;transition:background .2s ease,box-shadow .2s ease;}
 .nvk .nrow .nchk .i{width:13px;height:13px;}
@@ -7656,13 +7680,18 @@ function mmHabitRowHtml(h, pid, ds){
     +`<span class="nic">${habitIconHtml(h.ikona)}</span>`
     +`<span class="nnm" onclick="openHabitModal('${h.id}')">${esc(h.nazev)}</span>`
     +`<span class="ndet">${mmHabitDetailHtml(h,pid,ds)}</span>`
-    +`<span class="nchk" onclick="event.stopPropagation();mmHabitToggle('${h.id}')">${done?'<svg class="i"><use href="#i-check"/></svg>':''}</span></div>`;
+    +`<span class="nchk" data-id="${h.id}" onclick="event.stopPropagation();mmHabitKlik('${h.id}')">${done?'<svg class="i"><use href="#i-check"/></svg>':''}</span></div>`;
 }
 // vpravo v radku jen kratky udaj (hodnota u meritelnych, pomer u flexibilnich cilu)
 function mmHabitDetailHtml(h, pid, ds){
-  if(h.frekvence_typ==='weekly') return habitWeekCount(h,pid,ds)+'/'+(h.frekvence_cil||1);
-  if(h.frekvence_typ==='monthly') return habitMonthCount(h,pid,ds)+'/'+(h.frekvence_cil||1);
-  if(h.frekvence_typ==='yearly') return habitYearCount(h,pid,ds)+'/'+(h.frekvence_cil||1);
+  const flexTyp={weekly:habitWeekCount, monthly:habitMonthCount, yearly:habitYearCount}[h.frekvence_typ];
+  if(flexTyp){
+    const mam=flexTyp(h,pid,ds), cil=Math.max(1, h.frekvence_cil||1);
+    const postup = cil<=7
+      ? '<span class="tecky">'+Array.from({length:cil},(_,i)=>'<i class="'+(i<mam?'on':'')+'"></i>').join('')+'</span>'
+      : '<span class="mprouzek"><i style="width:'+Math.min(100,Math.round(mam/cil*100))+'%"></i></span>';
+    return postup+'<b class="cilpomer">'+mam+'/'+cil+'</b>';
+  }
   if(habitEffZapis(h)!=='check'){
     const log=habitLogObj(h.id,pid,ds); const cil=Number(h.cil_hodnota)||0;
     const val=log?(log.hodnota!=null?Number(log.hodnota):cil):0;
@@ -7673,6 +7702,57 @@ function mmHabitDetailHtml(h, pid, ds){
 }
 function mmHabitSetTab(t){ state.habitTab=t; renderNavykyMM(); }
 function mmHabitSetStatRange(r){ state.statRange=r; renderNavykyMM(); }
+// Meritelny navyk jde plnit bez okna: klik prida krok, podrzeni splni cely (Marek 2026-08-24).
+async function mmHabitZapisHodnotu(id, val){
+  const pid=currentHabitPlayer(); if(!pid) return;
+  const sel=state.habitDay||todayStr(); if(sel>todayStr()) return;
+  const ex=habitLogObj(id,pid,sel);
+  window._mmNoveId=id;
+  if(isDemo()){
+    if(val>0){ if(ex) ex.hodnota=val; else state.habitLogs.push({id:'demo-'+Math.random().toString(36).slice(2),habit_id:id,player_id:pid,datum:sel,hodnota:val}); }
+    else if(ex) state.habitLogs=state.habitLogs.filter(l=>l.id!==ex.id);
+  } else {
+    try{
+      if(val>0){
+        if(ex){ const {error}=await db.from('habit_logs').update({hodnota:val}).eq('id',ex.id); if(error) throw error; ex.hodnota=val; }
+        else { const {data,error}=await db.from('habit_logs').insert({habit_id:id,player_id:pid,datum:sel,hodnota:val}).select(); if(error) throw error; if(data&&data[0]) state.habitLogs.push(data[0]); }
+      } else if(ex){ const {error}=await db.from('habit_logs').delete().eq('id',ex.id); if(error) throw error; state.habitLogs=state.habitLogs.filter(l=>l.id!==ex.id); }
+    }catch(e){ toast('Chyba: '+e.message,'error'); }
+  }
+  renderNavykyMM(); try{ renderDnesek(); }catch(_){}
+  clearTimeout(window._mmNoveT); window._mmNoveT=setTimeout(()=>{ window._mmNoveId=null; },450);
+}
+function mmHabitKrok(h){ const cil=Number(h.cil_hodnota)||0; return cil<=12 ? 1 : Math.max(1, Math.round(cil/4)); }
+async function mmHabitKlik(id){
+  const h=state.habits.find(x=>x.id===id); if(!h) return;
+  if(habitEffZapis(h)==='check') return mmHabitToggle(id);
+  const pid=currentHabitPlayer(); const sel=state.habitDay||todayStr();
+  const cil=Number(h.cil_hodnota)||0; const log=habitLogObj(id,pid,sel);
+  const mam=log?(log.hodnota!=null?Number(log.hodnota):cil):0;
+  if(cil>0 && mam>=cil) return mmHabitZapisHodnotu(id, 0);
+  return mmHabitZapisHodnotu(id, Math.min(cil||9e9, mam+mmHabitKrok(h)));
+}
+async function mmHabitCely(id){
+  const h=state.habits.find(x=>x.id===id); if(!h) return;
+  if(habitEffZapis(h)==='check') return mmHabitToggle(id);
+  const pid=currentHabitPlayer(); const sel=state.habitDay||todayStr();
+  const cil=Number(h.cil_hodnota)||0; const log=habitLogObj(id,pid,sel);
+  const mam=log?(log.hodnota!=null?Number(log.hodnota):cil):0;
+  return mmHabitZapisHodnotu(id, (cil>0 && mam>=cil) ? 0 : cil);
+}
+function mmHabitDrzeni(sh){
+  if(!sh || sh._mmDrz) return; sh._mmDrz=true;
+  let t=null, dlouhy=false;
+  const start=(e)=>{ const chk=e.target.closest && e.target.closest('.nchk[data-id]'); if(!chk) return;
+    dlouhy=false; clearTimeout(t); t=setTimeout(()=>{ dlouhy=true; try{navigator.vibrate&&navigator.vibrate(12);}catch(_){}
+      mmHabitCely(chk.dataset.id); }, 550); };
+  const konec=(e)=>{ clearTimeout(t); if(dlouhy){ if(e.preventDefault) e.preventDefault(); if(e.stopPropagation) e.stopPropagation(); } dlouhy=false; };
+  sh.addEventListener('touchstart', start, {passive:true});
+  sh.addEventListener('touchend', konec, {passive:false});
+  sh.addEventListener('mousedown', start);
+  sh.addEventListener('mouseup', konec);
+  sh.addEventListener('mouseleave', ()=>clearTimeout(t), true);
+}
 async function mmHabitToggle(id){ window._mmNoveId=id; await toggleHabitToday(id); renderNavykyMM();
   clearTimeout(window._mmNoveT); window._mmNoveT=setTimeout(()=>{ window._mmNoveId=null; },450); }
 
@@ -7828,11 +7908,35 @@ function mmHabitTydenHtml(pid, mine, sel){
     +'<span class="tsip'+(oTydnu<=0?' vyp':'')+'" onclick="mmHabitTydenPosun(1)">›</span>'
     +'<i>'+rozsah+'</i>'
     +(jinyDen?'<span class="dnesbtn" onclick="mmHabitDnes()">⟳ Dnes</span>':'')
-    +'</div><div class="tyd" data-tyd>'+dny+'</div>';
+    +'</div><div class="tyd'+(window._mmTydSmer? (window._mmTydSmer>0?' in-r':' in-l') : '')+'" data-tyd>'+dny+'</div>';
+}
+// Cile za obdobi (X-krat tydne / mesicne / rocne) — vlastni sekce podle horizontu,
+// v nadpisu je kolik cilu je splneno a kolik casu do konce obdobi zbyva (Marek 2026-08-24).
+function mmHabitZbyvaDni(typ, ds){
+  const d=habitStrToDate(ds);
+  if(typ==='weekly'){ const konec=new Date(d); konec.setDate(d.getDate()+(7-((d.getDay()+6)%7))-1); return Math.round((konec-d)/864e5)+1; }
+  if(typ==='monthly'){ const konec=new Date(d.getFullYear(), d.getMonth()+1, 0); return Math.round((konec-d)/864e5)+1; }
+  const konec=new Date(d.getFullYear(),11,31); return Math.round((konec-d)/864e5)+1;
+}
+function mmHabitCileHtml(pid, flex, ds){
+  if(!flex.length) return '';
+  const skupiny=[['weekly','Cíle na tento týden'],['monthly','Cíle na tento měsíc'],['yearly','Cíle na tento rok']];
+  let out='';
+  skupiny.forEach(([typ,nazev])=>{
+    const list=flex.filter(h=>h.frekvence_typ===typ);
+    if(!list.length) return;
+    const hotovo=list.filter(h=>mmHabitDoneToday(h,pid,ds)).length;
+    const dni=mmHabitZbyvaDni(typ, ds);
+    const zbyva = hotovo===list.length ? 'splněno' : ('zbývá '+dni+' '+(dni===1?'den':(dni<5?'dny':'dní')));
+    out+='<div class="sl"><span>'+nazev+'</span><a class="slinfo">'+hotovo+'/'+list.length+' · '+zbyva+'</a></div>'
+      + list.map(h=>mmHabitRowHtml(h,pid,ds)).join('');
+  });
+  return out;
 }
 function mmHabitDen(ds){ state.habitDay=ds; renderNavykyMM(); }
 function mmHabitDnes(){ state.habitDay=todayStr(); renderNavykyMM(); }
 function mmHabitTydenPosun(smer){
+  window._mmTydSmer=smer;
   const sel=state.habitDay||todayStr(); const d=new Date(sel+'T00:00:00');
   d.setDate(d.getDate()+smer*7);
   let ds=dateToStr(d);
@@ -7881,8 +7985,7 @@ function renderNavykyMM(){
     const denNavyky=mmHabitDenniNavyky(mine, sel);
     const flex=mmHabitFlexNavyky(mine, sel);
     const rows=denNavyky.map(h=>mmHabitRowHtml(h,pid,sel)).join('');
-    const flexRows=flex.length ? '<div class="sl"><span>Cíle na tento týden</span></div>'
-      + flex.map(h=>mmHabitRowHtml(h,pid,sel)).join('') : '';
+    const flexRows=mmHabitCileHtml(pid, flex, sel);
     body=`${mmHabitTydenHtml(pid, mine, sel)}
     ${mmHabitSouhrnHtml(pid, denNavyky, sel)}
     ${rows||'<div style="padding:16px;text-align:center;color:var(--ter);font-size:12.74px">Na tento den nic naplánováno</div>'}
@@ -7900,7 +8003,7 @@ function renderNavykyMM(){
   if(sprite) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr nvk" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(1)}</div>`;
   sh.appendChild(w);
-  mmSrovnejJmena(sh); const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin=(window.innerWidth>393?'0 auto':''); mmBarSnap(sh,1); mmHabitSwipe(sh);
+  mmSrovnejJmena(sh); const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin=(window.innerWidth>393?'0 auto':''); mmBarSnap(sh,1); mmHabitSwipe(sh); mmHabitDrzeni(sh); window._mmTydSmer=0;
   requestAnimationFrame(()=>mmBarPos(sh, MM_TAB_IDX[state.view]));   // usadit indikator spodniho baru i po re-renderu bez navigace
 }
 
@@ -10799,7 +10902,7 @@ async function saveHabitValue(){
     const existing = habitLogObj(id, pid, sel);
     if (val > 0){ if (existing) existing.hodnota = val; else state.habitLogs.push({ id:'demo-'+Math.random().toString(36).slice(2), habit_id:id, player_id:pid, datum:sel, hodnota:val }); }
     const se = state.statEditCell; closeHabitValue();
-    if (se && state.habitTab === 'stats') renderHabitStats(); else renderNavyky(); try{ renderDnesek(); }catch(_){}
+    if (se && state.habitTab === 'stats') renderHabitStats(); else renderNavyky(); try{ renderDnesek(); }catch(_){} try{ renderNavykyMM(); }catch(_){}
     return;
   }
   const pid = currentHabitPlayer(); const id = state.habitValueId; if (!pid || !id) return;
@@ -10817,7 +10920,7 @@ async function saveHabitValue(){
       if (data && data[0]) state.habitLogs.push(data[0]);
     }
     const se = state.statEditCell; closeHabitValue();
-    if (se && state.habitTab === 'stats') renderHabitStats(); else renderNavyky(); try{ renderDnesek(); }catch(_){}
+    if (se && state.habitTab === 'stats') renderHabitStats(); else renderNavyky(); try{ renderDnesek(); }catch(_){} try{ renderNavykyMM(); }catch(_){}
   } catch(e){ toast('Chyba: ' + e.message, 'error'); }
 }
 async function clearHabitValue(){
@@ -10827,7 +10930,7 @@ async function clearHabitValue(){
     const existing = id ? habitLogObj(id, pid, sel) : null;
     if (existing) state.habitLogs = state.habitLogs.filter(l => l.id !== existing.id);
     const se = state.statEditCell; closeHabitValue();
-    if (se && state.habitTab === 'stats') renderHabitStats(); else renderNavyky(); try{ renderDnesek(); }catch(_){}
+    if (se && state.habitTab === 'stats') renderHabitStats(); else renderNavyky(); try{ renderDnesek(); }catch(_){} try{ renderNavykyMM(); }catch(_){}
     return;
   }
   const pid = currentHabitPlayer(); const id = state.habitValueId; if (!pid || !id) return;
@@ -10836,7 +10939,7 @@ async function clearHabitValue(){
   try {
     if (existing){ const { error } = await db.from('habit_logs').delete().eq('id', existing.id); if (error) throw error; state.habitLogs = state.habitLogs.filter(l => l.id !== existing.id); }
     const se = state.statEditCell; closeHabitValue();
-    if (se && state.habitTab === 'stats') renderHabitStats(); else renderNavyky(); try{ renderDnesek(); }catch(_){}
+    if (se && state.habitTab === 'stats') renderHabitStats(); else renderNavyky(); try{ renderDnesek(); }catch(_){} try{ renderNavykyMM(); }catch(_){}
   } catch(e){ toast('Chyba: ' + e.message, 'error'); }
 }
 // check návyk z dialogu: nastav splněno / nesplněno pro daný den
@@ -10849,7 +10952,7 @@ async function hvSetCheck(done){
     if (done && !existing){ const { data, error } = await db.from('habit_logs').insert({ habit_id: id, player_id: pid, datum: sel, hodnota: null }).select(); if (error) throw error; if (data && data[0]) state.habitLogs.push(data[0]); }
     else if (!done && existing){ const { error } = await db.from('habit_logs').delete().eq('id', existing.id); if (error) throw error; state.habitLogs = state.habitLogs.filter(l => l.id !== existing.id); }
     const se = state.statEditCell; closeHabitValue();
-    if (se && state.habitTab === 'stats') renderHabitStats(); else renderNavyky(); try{ renderDnesek(); }catch(_){}
+    if (se && state.habitTab === 'stats') renderHabitStats(); else renderNavyky(); try{ renderDnesek(); }catch(_){} try{ renderNavykyMM(); }catch(_){}
   } catch(e){ toast('Chyba: ' + e.message, 'error'); }
 }
 
