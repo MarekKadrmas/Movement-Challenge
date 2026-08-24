@@ -86,3 +86,13 @@ habit_pozvanky   nová: skupina_id, od_hrace, pro_hrace, stav
 
 ## 12. Obrazovka Návyky — struktura
 Bude jako mockup v CSS appky, až bude systém odsouhlasený. Směr: denní návyky nahoře (volitelně dělené na ráno / během dne / večer), pod nimi „tento týden" pro flexibilní cíle, zlozvyky vizuálně oddělené.
+
+## 13. Nahrazení návyku (Markův nápad, 2026-08-24)
+Když v pondělí nedočtu 30 minut a v pátek přečtu 60, můžu klepnutím na pondělní kolečko označit, že jsem chybějící část **nahradil**. Chybějící díl prstence se dobarví jinou barvou — je vidět, že den nebyl splněn normálně, ale dohnán.
+
+**Podmínky, aby to nebylo obcházení pravidel:**
+- Jen u **měřitelných** návyků a návyků s flexibilním cílem (X× týdně). U „spát do 23:00" nebo „bez sladkého" nahradit nejde — zmeškaný večer se nedohání.
+- Nahradit lze **jen z reálného přebytku**: appka spočítá, kolik jsem jiný den udělal nad cíl, a nabídne k použití jen tolik. Bez přebytku se nabídka neukáže.
+- **Jen v rámci téhož týdne**; s koncem týdne možnost mizí.
+- Ve statistikách vedeno zvlášť: „splněno 5×, nahrazeno 1×".
+- Série nahrazený den **udrží**, ale zobrazí se s poznámkou, aby číslo nelhalo.
