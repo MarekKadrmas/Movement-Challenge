@@ -2000,6 +2000,12 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .lcard .psegt.prvni{margin-left:-8px;width:calc(33.3333% + 8px)!important;}
 .lcard .psegt.posledni{width:calc(33.3333% + 8px)!important;}
 .mm .lcard .lc{background:var(--card);box-shadow:none;border-radius:8px 8px 22px 22px;padding-top:3px;margin-top:-8px;position:relative;}
+.mm .lcard .lc{transition:border-top-left-radius .3s ease,border-top-right-radius .3s ease;}
+@keyframes mmLcR{0%{opacity:.45;transform:translateX(9px)}100%{opacity:1;transform:none}}
+@keyframes mmLcL{0%{opacity:.45;transform:translateX(-9px)}100%{opacity:1;transform:none}}
+.mm .lcard .lc.anim-r{animation:mmLcR .3s cubic-bezier(.33,1,.68,1);}
+.mm .lcard .lc.anim-l{animation:mmLcL .3s cubic-bezier(.33,1,.68,1);}
+@media (prefers-reduced-motion:reduce){.mm .lcard .lc.anim-r,.mm .lcard .lc.anim-l{animation:none;}.mm .lcard .lc{transition:none;}}
 .mm .lcard.zal-prvni .lc{border-top-left-radius:0;}
 .mm .lcard.zal-posledni .lc{border-top-right-radius:0;}
 
@@ -2905,6 +2911,12 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .lcard .psegt.prvni{margin-left:-8px;width:calc(33.3333% + 8px)!important;}
 .lcard .psegt.posledni{width:calc(33.3333% + 8px)!important;}
 .lcard .lc{background:var(--card);box-shadow:none;border-radius:8px 8px 22px 22px;padding-top:3px;margin-top:-8px;position:relative;}
+.lcard .lc{transition:border-top-left-radius .3s ease,border-top-right-radius .3s ease;}
+@keyframes mmLcR{0%{opacity:.45;transform:translateX(9px)}100%{opacity:1;transform:none}}
+@keyframes mmLcL{0%{opacity:.45;transform:translateX(-9px)}100%{opacity:1;transform:none}}
+.lcard .lc.anim-r{animation:mmLcR .3s cubic-bezier(.33,1,.68,1);}
+.lcard .lc.anim-l{animation:mmLcL .3s cubic-bezier(.33,1,.68,1);}
+@media (prefers-reduced-motion:reduce){.lcard .lc.anim-r,.lcard .lc.anim-l{animation:none;}.lcard .lc{transition:none;}}
 .lcard.zal-prvni .lc{border-top-left-radius:0;}
 .lcard.zal-posledni .lc{border-top-right-radius:0;}
 
@@ -6656,8 +6668,21 @@ function mmPsegAnim(sh){ if(!sh) return; const prev=window._psegPrev; let animov
       t.classList.toggle("prvni", now === 0);
       t.classList.toggle("posledni", now === n - 1);
       const karta=el.closest(".lcard"); if(karta){ karta.classList.toggle("zal-prvni", now === 0); karta.classList.toggle("zal-posledni", now === n - 1); }
-      t.style.left=(now*100/n).toFixed(4)+"%";
-      t.style.width=(100/n).toFixed(4)+"%";
+      const cilL=(now*100/n).toFixed(4)+"%", cilW=(100/n).toFixed(4)+"%";
+      const odkud = prev ? prev[kind] : null;
+      if(odkud!=null && odkud!==now){
+        t.style.transition="none";
+        t.style.left=(odkud*100/n).toFixed(4)+"%";
+        t.style.width=cilW;
+        void t.offsetWidth;
+        t.style.transition="";
+        const lc=karta?karta.querySelector(".lc"):null;
+        if(lc){ const tr=now>odkud?"anim-r":"anim-l";
+          lc.classList.remove("anim-r","anim-l"); void lc.offsetWidth; lc.classList.add(tr);
+          setTimeout(()=>lc.classList.remove(tr), 340); }
+      }
+      t.style.left=cilL;
+      t.style.width=cilW;
       return;   // sirku i pozici drzi CSS v procentech — zadne mereni
     }
     // Marek 2026-08-20: mmPsegAnim se po prekresleni vola dvakrat (jednou hned, podruhe v rAF).
