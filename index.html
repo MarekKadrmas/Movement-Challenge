@@ -2001,8 +2001,8 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .lcard .psegt.posledni{width:calc(33.3333% + 8px)!important;}
 .mm .lcard .lc{background:var(--card);box-shadow:none;border-radius:8px 8px 22px 22px;padding-top:3px;margin-top:-8px;position:relative;}
 .mm .lcard .lc{transition:border-top-left-radius .3s ease,border-top-right-radius .3s ease;}
-@keyframes mmLcR{0%{opacity:.45;transform:translateX(9px)}100%{opacity:1;transform:none}}
-@keyframes mmLcL{0%{opacity:.45;transform:translateX(-9px)}100%{opacity:1;transform:none}}
+@keyframes mmLcR{0%{opacity:.6;transform:translateX(6px)}100%{opacity:1;transform:none}}
+@keyframes mmLcL{0%{opacity:.6;transform:translateX(-6px)}100%{opacity:1;transform:none}}
 .mm .lcard .lc.anim-r{animation:mmLcR .3s cubic-bezier(.33,1,.68,1);}
 .mm .lcard .lc.anim-l{animation:mmLcL .3s cubic-bezier(.33,1,.68,1);}
 @media (prefers-reduced-motion:reduce){.mm .lcard .lc.anim-r,.mm .lcard .lc.anim-l{animation:none;}.mm .lcard .lc{transition:none;}}
@@ -2146,7 +2146,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .nvk .tyd.in-r{animation:mmTydR .34s cubic-bezier(.33,1,.68,1);}
 .nvk .tyd.in-l{animation:mmTydL .34s cubic-bezier(.33,1,.68,1);}
 @media (prefers-reduced-motion:reduce){.nvk .tyd.in-r,.nvk .tyd.in-l{animation:none;}}
-.nvk .tyd span{display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0 3px;border-radius:14px;cursor:pointer;}
+.nvk .tyd span{display:flex;flex-direction:column;align-items:center;gap:2px;padding:3px 0 1px;border-radius:14px;cursor:pointer;}
 .nvk .tyd .kol{position:relative;display:block;width:100%;}
 .nvk .tyd .kol u{position:absolute;inset:0;display:grid;place-items:center;text-decoration:none;font-size:9px;font-weight:700;color:var(--ter);letter-spacing:-.04em;}
 .nvk .tyd .kol u .i{width:14px;height:14px;color:#fff;}
@@ -2155,7 +2155,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .nvk .tyd span.vyb{background:color-mix(in srgb,var(--sec) 8%,transparent);}
 .nvk .tyd span.plny .kol u{color:#fff;}
 .nvk .tyd span.pak{opacity:.45;}
-.nvk .souhrn{display:flex;align-items:baseline;gap:8px;margin:10px 3px 8px;}
+.nvk .souhrn{display:flex;align-items:baseline;gap:8px;margin:2px 3px 7px;}
 .nvk .sleva{flex:1;min-width:0;}
 .nvk .sleva b{display:block;font-family:var(--font-display);font-size:13.5px;font-weight:800;letter-spacing:-.02em;color:var(--label);line-height:1.15;}
 .nvk .szbyva{font-size:10.6px;font-weight:600;color:var(--ter);white-space:nowrap;}
@@ -2177,6 +2177,12 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .nvk .tecky{display:inline-flex;gap:3px;align-items:center;}
 .nvk .tecky i{width:6px;height:6px;border-radius:50%;background:var(--track);}
 .nvk .tecky i.on{background:var(--nc);}
+.nvk .tydny{display:inline-flex;gap:2.5px;align-items:center;}
+.nvk .tydny i{width:7px;height:7px;border-radius:50%;background:var(--track);cursor:pointer;transition:background .18s ease;}
+.nvk .tydny i.on{background:var(--nc);}
+.nvk .tydny i.pak{opacity:.4;cursor:default;}
+.nvk .tydny i.ten{box-shadow:0 0 0 1.5px color-mix(in srgb,var(--sec) 36%,transparent);}
+.nvk .tydny i.on.ten{box-shadow:0 0 0 1.5px color-mix(in srgb,var(--nc) 45%,transparent);}
 .nvk .mprouzek{display:inline-block;width:34px;height:5px;border-radius:999px;background:var(--track);overflow:hidden;}
 .nvk .mprouzek i{display:block;height:100%;border-radius:999px;background:var(--nc);}
 .nvk .cilpomer{font-size:11.15px;font-weight:800;color:var(--sec);}
@@ -2924,8 +2930,8 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .lcard .psegt.posledni{width:calc(33.3333% + 8px)!important;}
 .lcard .lc{background:var(--card);box-shadow:none;border-radius:8px 8px 22px 22px;padding-top:3px;margin-top:-8px;position:relative;}
 .lcard .lc{transition:border-top-left-radius .3s ease,border-top-right-radius .3s ease;}
-@keyframes mmLcR{0%{opacity:.45;transform:translateX(9px)}100%{opacity:1;transform:none}}
-@keyframes mmLcL{0%{opacity:.45;transform:translateX(-9px)}100%{opacity:1;transform:none}}
+@keyframes mmLcR{0%{opacity:.6;transform:translateX(6px)}100%{opacity:1;transform:none}}
+@keyframes mmLcL{0%{opacity:.6;transform:translateX(-6px)}100%{opacity:1;transform:none}}
 .lcard .lc.anim-r{animation:mmLcR .3s cubic-bezier(.33,1,.68,1);}
 .lcard .lc.anim-l{animation:mmLcL .3s cubic-bezier(.33,1,.68,1);}
 @media (prefers-reduced-motion:reduce){.lcard .lc.anim-r,.lcard .lc.anim-l{animation:none;}.lcard .lc{transition:none;}}
@@ -3010,7 +3016,7 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .nvk .tyd.in-r{animation:mmTydR .34s cubic-bezier(.33,1,.68,1);}
 .nvk .tyd.in-l{animation:mmTydL .34s cubic-bezier(.33,1,.68,1);}
 @media (prefers-reduced-motion:reduce){.nvk .tyd.in-r,.nvk .tyd.in-l{animation:none;}}
-.nvk .tyd span{display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0 3px;border-radius:14px;cursor:pointer;}
+.nvk .tyd span{display:flex;flex-direction:column;align-items:center;gap:2px;padding:3px 0 1px;border-radius:14px;cursor:pointer;}
 .nvk .tyd .kol{position:relative;display:block;width:100%;}
 .nvk .tyd .kol u{position:absolute;inset:0;display:grid;place-items:center;text-decoration:none;font-size:9px;font-weight:700;color:var(--ter);letter-spacing:-.04em;}
 .nvk .tyd .kol u .i{width:14px;height:14px;color:#fff;}
@@ -3019,7 +3025,7 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .nvk .tyd span.vyb{background:color-mix(in srgb,var(--sec) 8%,transparent);}
 .nvk .tyd span.plny .kol u{color:#fff;}
 .nvk .tyd span.pak{opacity:.45;}
-.nvk .souhrn{display:flex;align-items:baseline;gap:8px;margin:10px 3px 8px;}
+.nvk .souhrn{display:flex;align-items:baseline;gap:8px;margin:2px 3px 7px;}
 .nvk .sleva{flex:1;min-width:0;}
 .nvk .sleva b{display:block;font-family:var(--font-display);font-size:13.5px;font-weight:800;letter-spacing:-.02em;color:var(--label);line-height:1.15;}
 .nvk .szbyva{font-size:10.6px;font-weight:600;color:var(--ter);white-space:nowrap;}
@@ -3041,6 +3047,12 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .nvk .tecky{display:inline-flex;gap:3px;align-items:center;}
 .nvk .tecky i{width:6px;height:6px;border-radius:50%;background:var(--track);}
 .nvk .tecky i.on{background:var(--nc);}
+.nvk .tydny{display:inline-flex;gap:2.5px;align-items:center;}
+.nvk .tydny i{width:7px;height:7px;border-radius:50%;background:var(--track);cursor:pointer;transition:background .18s ease;}
+.nvk .tydny i.on{background:var(--nc);}
+.nvk .tydny i.pak{opacity:.4;cursor:default;}
+.nvk .tydny i.ten{box-shadow:0 0 0 1.5px color-mix(in srgb,var(--sec) 36%,transparent);}
+.nvk .tydny i.on.ten{box-shadow:0 0 0 1.5px color-mix(in srgb,var(--nc) 45%,transparent);}
 .nvk .mprouzek{display:inline-block;width:34px;height:5px;border-radius:999px;background:var(--track);overflow:hidden;}
 .nvk .mprouzek i{display:block;height:100%;border-radius:999px;background:var(--nc);}
 .nvk .cilpomer{font-size:11.15px;font-weight:800;color:var(--sec);}
@@ -6695,6 +6707,11 @@ function mmPsegAnim(sh){ if(!sh) return; const prev=window._psegPrev; let animov
       const cilL=(now*100/n).toFixed(4)+"%", cilW=(100/n).toFixed(4)+"%";
       const odkud = prev ? prev[kind] : null;
       if(odkud!=null && odkud!==now){
+        // Marek 2026-08-24: prev je nutne spotrebovat hned. mmPsegAnim se po prekresleni vola
+        // nekolikrat (rovnou, v rAF, z mmPsegPrepocet po 220 ms i po nacteni fontu) a bez tohoto
+        // se animace pokazde restartovala -> zalozka i cely zebricek poskocily dvakrat.
+        if(window._psegPrev) window._psegPrev[kind]=null;
+        animovano=true;
         t.style.transition="none";
         t.style.left=(odkud*100/n).toFixed(4)+"%";
         t.style.width=cilW;
@@ -7687,6 +7704,9 @@ function mmHabitDetailHtml(h, pid, ds){
   const flexTyp={weekly:habitWeekCount, monthly:habitMonthCount, yearly:habitYearCount}[h.frekvence_typ];
   if(flexTyp){
     const mam=flexTyp(h,pid,ds), cil=Math.max(1, h.frekvence_cil||1);
+    // Tydenni cil: misto anonymnich tecek rovnou dny Po–Ne, at je videt KTERY den byl splneny
+    // (Marek 2026-08-24: "odkliknu si ho v pondeli, ale nevim, ze jsem byl behat v pondeli").
+    if(h.frekvence_typ==='weekly') return mmHabitTydenTecky(h,pid,ds)+'<b class="cilpomer">'+mam+'/'+cil+'</b>';
     const postup = cil<=7
       ? '<span class="tecky">'+Array.from({length:cil},(_,i)=>'<i class="'+(i<mam?'on':'')+'"></i>').join('')+'</span>'
       : '<span class="mprouzek"><i style="width:'+Math.min(100,Math.round(mam/cil*100))+'%"></i></span>';
@@ -7699,6 +7719,24 @@ function mmHabitDetailHtml(h, pid, ds){
   }
   const st=habitDayStreak(h,pid,ds);
   return st>=3 ? '<svg class="i"><use href="#i-flame"/></svg>'+st : '';
+}
+// Proužek dnů Po–Ne u tydenniho cile; ťuknutim na den se da zapsat i zpetne.
+function mmHabitTydenTecky(h, pid, ds){
+  const zac=habitStrToDate(ds); zac.setDate(zac.getDate()-((zac.getDay()+6)%7));
+  const dnes=todayStr(); let out='';
+  for(let i=0;i<7;i++){
+    const d=new Date(zac); d.setDate(zac.getDate()+i); const dd=dateToStr(d);
+    out+='<i class="'+(habitIsDoneOn(h,pid,dd)?'on':'')+(dd>dnes?' pak':'')+(dd===ds?' ten':'')+'"'
+      +' onclick="event.stopPropagation();mmHabitDenTecka(&quot;'+h.id+'&quot;,&quot;'+dd+'&quot;)"></i>';
+  }
+  return '<span class="tydny">'+out+'</span>';
+}
+async function mmHabitDenTecka(id, ds){
+  if(ds>todayStr()) return;                 // budoucnost nejde zapsat
+  const puvodni=state.habitDay; state.habitDay=ds; window._mmNoveId=id;
+  try{ await toggleHabitToday(id); } finally { state.habitDay=puvodni; }
+  renderNavykyMM(); try{ renderDnesek(); }catch(_){}
+  clearTimeout(window._mmNoveT); window._mmNoveT=setTimeout(()=>{ window._mmNoveId=null; },450);
 }
 function mmHabitSetTab(t){ state.habitTab=t; renderNavykyMM(); }
 function mmHabitSetStatRange(r){ state.statRange=r; renderNavykyMM(); }
@@ -7848,21 +7886,31 @@ function mmHabitWeekStripHtml(pid, mine){
 }
 // Radka dnu = prepinac dne. Teply prechod: jantar -> fialova podle toho, jak den dopadl.
 // Klepnutim se prepne den, tlacitko Dnes vraci zpet (Marek 2026-08-24).
+// Barvy prstence (Marek 2026-08-24): fialova je zaklad, zelena je cil — prstenec se s rostoucim
+// plnenim prebarvuje z fialove do zelene, takze zeleny konec = den dotazeny do konce.
+// Oranzova NENI barva postupu: nese vyhradne vysec ziskanou nahrazenim navyku z jineho dne.
 function mmHabitDenKolecko(pct, nahr, dnes, vybrany, klic){
   const r=14, sw=4, c=2*Math.PI*r, s=r*2+sw*2;   // rezerva, aby zaobleny konec prstence nekoncil na hrane
   const plny=(pct+nahr)>=100;
   const dilP=c*(Math.min(100,pct)/100), dilN=c*(Math.min(100,nahr)/100);
   const gid='hg'+klic;
+  // Barva oblouku je jedna a odvozuje se z plneni: fialova -> zelena. Prostorovy gradient by
+  // zelenou ukazal i u malych procent podle toho, kudy oblouk zrovna vede (Marek 2026-08-24).
+  const q=Math.max(0,Math.min(100,Math.round(pct)));
+  const t = q<=70 ? 0 : (q-70)/30;        // fialova drzi cely rozjezd, zelena je az odmena za dotazeny den
+  const barva = t<=0 ? 'var(--fial)'
+    : (t<0.5 ? 'color-mix(in oklab,var(--blue) '+Math.round(t*200)+'%,var(--fial))'
+             : 'color-mix(in oklab,var(--green) '+Math.round((t-0.5)*200)+'%,var(--blue))');
   return '<svg viewBox="0 0 '+s+' '+s+'" style="width:100%;height:auto;display:block">'
-    +'<defs><linearGradient id="'+gid+'" x1="0" y1="1" x2="1" y2="0">'
-      +'<stop offset="0" stop-color="#F0A93C"/><stop offset="1" stop-color="#E07C1F"/></linearGradient>'
-    +'<linearGradient id="'+gid+'v" x1="0" y1="1" x2="1" y2="0">'
+    +'<defs><linearGradient id="'+gid+'v" x1="0" y1="1" x2="1" y2="0">'
+      +'<stop offset="0" style="stop-color:var(--fial)"/><stop offset="1" style="stop-color:var(--green)"/></linearGradient>'
+    +'<linearGradient id="'+gid+'n" x1="0" y1="1" x2="1" y2="0">'
       +'<stop offset="0" stop-color="#F0A93C"/><stop offset="1" stop-color="#E07C1F"/></linearGradient></defs>'
-    +'<circle cx="'+(s/2)+'" cy="'+(s/2)+'" r="'+(r-sw/2)+'" fill="'+(plny?'url(#'+gid+'v)':'color-mix(in srgb,#8B6FE0 6%,transparent)')+'"/>'
+    +'<circle cx="'+(s/2)+'" cy="'+(s/2)+'" r="'+(r-sw/2)+'" fill="'+(plny?'url(#'+gid+'v)':'color-mix(in srgb,var(--fial) 6%,transparent)')+'"/>'
     +'<circle cx="'+(s/2)+'" cy="'+(s/2)+'" r="'+r+'" fill="none" stroke="var(--track)" stroke-width="'+sw+'"/>'
-    +(nahr>0?'<circle cx="'+(s/2)+'" cy="'+(s/2)+'" r="'+r+'" fill="none" stroke="#F7D9A6" stroke-width="'+sw+'" stroke-linecap="round"'
+    +(nahr>0?'<circle cx="'+(s/2)+'" cy="'+(s/2)+'" r="'+r+'" fill="none" stroke="url(#'+gid+'n)" stroke-width="'+sw+'" stroke-linecap="round"'
       +' stroke-dasharray="'+dilN.toFixed(1)+' '+(c-dilN).toFixed(1)+'" stroke-dashoffset="'+(-dilP).toFixed(1)+'" transform="rotate(-90 '+(s/2)+' '+(s/2)+')"/>':'')
-    +(pct>0&&!plny?'<circle cx="'+(s/2)+'" cy="'+(s/2)+'" r="'+r+'" fill="none" stroke="url(#'+gid+')" stroke-width="'+sw+'" stroke-linecap="round"'
+    +(pct>0?'<circle cx="'+(s/2)+'" cy="'+(s/2)+'" r="'+r+'" fill="none" style="stroke:'+barva+'" stroke-width="'+sw+'" stroke-linecap="round"'
       +' stroke-dasharray="'+dilP.toFixed(1)+' '+(c-dilP).toFixed(1)+'" transform="rotate(-90 '+(s/2)+' '+(s/2)+')"/>':'')
     +'</svg>';
 }
