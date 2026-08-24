@@ -2123,7 +2123,11 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .nvk .nbn.vse .kcis b{background:linear-gradient(160deg,#4ED09A,#0FA968);-webkit-background-clip:text;background-clip:text;}
 
 /* radka dnu jako prepinac (Marek 2026-08-24) */
-.nvk .tydhl{display:flex;align-items:baseline;justify-content:space-between;margin:2px 4px 7px;}
+.nvk .tydhl{display:flex;align-items:center;gap:6px;margin:2px 0 7px;}
+.nvk .tydhl b{font-size:11.2px;font-weight:800;color:var(--label);letter-spacing:-.01em;}
+.nvk .tydhl i{flex:1;font-style:normal;font-size:9.8px;font-weight:700;color:var(--ter);}
+.nvk .tsip{width:22px;height:22px;flex:0 0 22px;display:grid;place-items:center;border-radius:50%;background:var(--card);box-shadow:var(--shadow);color:var(--sec);font-size:15px;font-weight:700;line-height:1;cursor:pointer;}
+.nvk .tsip.vyp{opacity:.3;pointer-events:none;box-shadow:none;background:none;}
 .nvk .tydhl span{font-size:11.2px;font-weight:800;color:var(--label);letter-spacing:-.01em;}
 .nvk .tydhl i{font-style:normal;font-size:9.8px;font-weight:700;color:var(--ter);}
 .nvk .tyd{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
@@ -2954,7 +2958,11 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .nvk .nbn.vse .kcis b{background:linear-gradient(160deg,#4ED09A,#0FA968);-webkit-background-clip:text;background-clip:text;}
 
 /* radka dnu jako prepinac (Marek 2026-08-24) */
-.nvk .tydhl{display:flex;align-items:baseline;justify-content:space-between;margin:2px 4px 7px;}
+.nvk .tydhl{display:flex;align-items:center;gap:6px;margin:2px 0 7px;}
+.nvk .tydhl b{font-size:11.2px;font-weight:800;color:var(--label);letter-spacing:-.01em;}
+.nvk .tydhl i{flex:1;font-style:normal;font-size:9.8px;font-weight:700;color:var(--ter);}
+.nvk .tsip{width:22px;height:22px;flex:0 0 22px;display:grid;place-items:center;border-radius:50%;background:var(--card);box-shadow:var(--shadow);color:var(--sec);font-size:15px;font-weight:700;line-height:1;cursor:pointer;}
+.nvk .tsip.vyp{opacity:.3;pointer-events:none;box-shadow:none;background:none;}
 .nvk .tydhl span{font-size:11.2px;font-weight:800;color:var(--label);letter-spacing:-.01em;}
 .nvk .tydhl i{font-style:normal;font-size:9.8px;font-weight:700;color:var(--ter);}
 .nvk .tyd{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
@@ -7749,14 +7757,32 @@ function mmHabitTydenHtml(pid, mine, sel){
       +'" onclick="mmHabitDen(&quot;'+ds+'&quot;)"><i class="kol">'+mmHabitDenKolecko(pct,0,ds===todayS,ds===sel,i)
       +'<u>'+(pct>=100?'<svg class="i"><use href="#i-check"/></svg>':(budouci?'':pct))+'</u></i><em>'+pism[i]+'</em></span>';
   }
-  return '<div class="tydhl"><span>'+(tentoTyden?'Tento týden':'Týden')+'</span><i>'+rozsah+'</i></div>'
-    +'<div class="tyd">'+dny+'</div>';
+  const zacDnes=new Date(todayS+'T00:00:00'); zacDnes.setDate(zacDnes.getDate()-((zacDnes.getDay()+6)%7));
+  const oTydnu=Math.round((zacDnes-zac)/6048e5);
+  const popis = oTydnu===0 ? 'Tento týden' : (oTydnu===1 ? 'Minulý týden'
+    : (oTydnu>1 ? 'Před '+oTydnu+' týdny' : 'Příští týden'));
+  return '<div class="tydhl"><span class="tsip" onclick="mmHabitTydenPosun(-1)">‹</span>'
+    +'<b>'+popis+'</b><i>'+rozsah+'</i>'
+    +'<span class="tsip'+(oTydnu<=0?' vyp':'')+'" onclick="mmHabitTydenPosun(1)">›</span></div>'
+    +'<div class="tyd" data-tyd>'+dny+'</div>';
 }
 function mmHabitDen(ds){ state.habitDay=ds; renderNavykyMM(); }
 function mmHabitDnes(){ state.habitDay=todayStr(); renderNavykyMM(); }
 function mmHabitTydenPosun(smer){
   const sel=state.habitDay||todayStr(); const d=new Date(sel+'T00:00:00');
-  d.setDate(d.getDate()+smer*7); state.habitDay=dateToStr(d); renderNavykyMM();
+  d.setDate(d.getDate()+smer*7);
+  let ds=dateToStr(d);
+  if(ds>todayStr()) ds=todayStr();      // dopredu nejdal nez dnesek
+  state.habitDay=ds; renderNavykyMM();
+}
+// prejeti prstem po radce dnu prepina tydny
+function mmHabitSwipe(sh){
+  const el=sh && sh.querySelector('[data-tyd]'); if(!el || el._mmSw) return;
+  el._mmSw=true; let x0=null, y0=null;
+  el.addEventListener('touchstart', (e)=>{ const t=e.touches[0]; x0=t.clientX; y0=t.clientY; }, {passive:true});
+  el.addEventListener('touchend', (e)=>{ if(x0==null) return; const t=e.changedTouches[0];
+    const dx=t.clientX-x0, dy=t.clientY-y0; x0=null;
+    if(Math.abs(dx)>40 && Math.abs(dx)>Math.abs(dy)*1.5) mmHabitTydenPosun(dx>0?-1:1); }, {passive:true});
 }
 // souhrn nad seznamem: vlevo den a co zbyva, vpravo pomer
 function mmHabitSouhrnHtml(pid, existed, sel){
@@ -7808,7 +7834,7 @@ function renderNavykyMM(){
   if(sprite) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr nvk" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(1)}</div>`;
   sh.appendChild(w);
-  mmSrovnejJmena(sh); const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin=(window.innerWidth>393?'0 auto':''); mmBarSnap(sh,1);
+  mmSrovnejJmena(sh); const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin=(window.innerWidth>393?'0 auto':''); mmBarSnap(sh,1); mmHabitSwipe(sh);
   requestAnimationFrame(()=>mmBarPos(sh, MM_TAB_IDX[state.view]));   // usadit indikator spodniho baru i po re-renderu bez navigace
 }
 
