@@ -54,7 +54,13 @@
 - **Kalorické tabulky** — jídlo, makra, databáze potravin, spálené vs. přijaté
 - **Tělesné údaje** — váha, výška, obvody + historie a graf (nová tabulka `body_metrics`)
 - **Kalendář akcí + ankety** — společný trénink, hlasování o termínu (styl Doodle), export .ics
-- **Add-ony** — tréninkový deník, protahovací deník, flashcards (volitelné moduly)
+- **Modulární appky (Marek 25. 8.)** — appka nebude jeden monolit. Na **profilu** si hráč přidá moduly,
+  které chce používat: kalorické tabulky, učení slovíček / jazyků, návyky, tréninkový deník, protahovací deník,
+  flashcards… Kdo chce počítat kalorie, přidá si kalorie; kdo se učí jazyk, přidá si jazyky.
+  **Dopad na stavbu už teď:** každou featuru držet jako samostatný modul (vlastní obrazovka, vlastní data,
+  vlastní render), aby šla zapnout a vypnout bez zásahu do zbytku. Otevřené otázky na potom: co ve spodní liště
+  (pevné 4 sloty vs. dynamické), jestli moduly sypou body do žebříčku, a kde se drží seznam zapnutých modulů
+  (sloupec u hráče v DB).
 - **Widget na plochu** — zápis na jedno kliknutí (PWA shortcuts + deep-linky jako první krok)
 
 ## 👥 Sociální / retence
