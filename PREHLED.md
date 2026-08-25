@@ -23,7 +23,7 @@
 | 2 | Žebříček — rádiusy u krajních filtrů | ✅ |
 | 3 | Přehled — čtverečky dnů jsou čtverce | ✅ |
 | 4 | Přehled — ukázkový týden natvrdo v appce | 🅼 odsouhlasit (odblokováno bodem 5), pak vrátím reálná data |
-| 5 | Přehled — varianta D: tmavší hrana na pseudoprvku (nešla přebít pravidlem pro dnešek), strop 274 % = stejná mezera nahoře jako dole, výraznější plusko | ⏳ |
+| 5 | Přehled — varianta D | ⏳ plusko bylo šedé a malé (přebíjelo ho obecné pravidlo pro span), dnešek měl jiný odstín zelené než ostatní dny, tmavší hrana zelené tónovaná místo šedé |
 | 6 | Návyky — viditelnost výplně koleček | ✅ |
 | 7 | Návyky — prstenec: hladký oblouk, kulička, gradient | ✅ |
 | 8 | Návyky — velikost koleček | ✅ |
@@ -37,14 +37,14 @@
 | 16 | Výběr aktivity v tmavém režimu | ✅ |
 | 17 | Plusko ve spodní liště na střed | ✅ |
 | 18 | Bublina Návyky — číslo, šipka, logo s fajfkou | ✅ |
-| 19 | Historie výkonu — mockup v7 | ⏳ čtverečky u týdnů na celou šířku (měsíc 673 px ✓), rok pod sebou (scrollovatelný) + varianta se dvěma sloupci, detail týdne 627 px ✓ |
+| 19 | Historie výkonu — mockup v8 | ⏳ čtverečky jdou od kraje ke kraji karty (32,3 px místo 29,4), měsíc 678 px, detail týdne 627 px, rok scrollovatelný + varianta se dvěma sloupci |
 | 20 | Ikony jako textové znaky → SVG | ✅ (křížky `×` v modálech až při jejich předělání) |
 | 21 | Návyky — seznam skákal při přepnutí dne | ✅ |
-| 22 | Návyky — barva prstence podle plnění (Markův koncept) | ⏳ **mockup se 3 variantami:** https://claude.ai/code/artifact/ca3d7dfe-18df-4f29-8a80-57ca668129b8 |
+| 22 | Návyky — barva prstence podle plnění (Markův koncept) | ⏳ **mockup: varianta A rozvedená na 3 míry měkkosti přechodu + fajfka jako v appce:** https://claude.ai/code/artifact/ca3d7dfe-18df-4f29-8a80-57ca668129b8 |
 | 23 | Návyky — hlavička bez iniciál, fialová série | ✅ |
 | 28 | Návyky — menší mezera mezi prstenci a datem pod nimi | ⏳ |
 | 24 | Návyky — poskakování prstenců při přepnutí týdne | ✅ |
-| 25 | Žebříček — skákal samotný plamínek | ⏳ 4. pokus: chip má pevnou výšku 16 px, aby se ikona necentrovala podle výšky čísla |
+| 25 | Žebříček — skákal samotný plamínek | ⏳ 5. pokus, z Markova videa: přepnutí filtru posouvalo celý žebříček transformem a Safari během toho přerastrizuje SVG. Přechod je nově jen krytím, bez posunu |
 | 26 | Návyky — vybraný den výrazněji; tečky u týdenního cíle nejdou proklikávat | ✅ |
 | 27 | **Systémová oprava:** 60 měření DOM ve 20 funkcích, 9 z nich běží při vykreslení — zdroj celé třídy bugů | 🔧 Marek schválil, dělá se |
 
