@@ -1940,7 +1940,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .hcard .hc-dsl{position:relative;width:100%;aspect-ratio:1;border-radius:5px;background:var(--track);}
 .mm .hcard .hc-dsl i{position:absolute;left:0;right:0;bottom:0;z-index:1;display:block;border-radius:5px;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);transition:height .5s cubic-bezier(.22,1,.36,1);}
 .mm .hcard .hc-nad{position:absolute;left:0;right:0;bottom:calc(100% - 5px);z-index:0;display:block;border-radius:5px 5px 0 0;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);-webkit-mask-image:linear-gradient(to top,rgba(0,0,0,.46),rgba(0,0,0,.11));mask-image:linear-gradient(to top,rgba(0,0,0,.46),rgba(0,0,0,.11));}
-.mm .hcard .hc-mark{position:absolute;left:0;right:0;top:0;height:5px;z-index:4;pointer-events:none;border:1px solid rgba(255,255,255,.5);border-bottom:0;border-radius:5px 5px 0 0;}
+.mm .hcard .hc-mark{position:absolute;left:0;right:0;top:0;height:5px;z-index:4;pointer-events:none;border-top:1px solid rgba(255,255,255,.45);border-left:1px solid rgba(255,255,255,.45);border-right:1px solid rgba(255,255,255,.45);border-radius:5px 5px 0 0;}
 .mm .hcard .hc-d.je-dnes span{color:var(--green);font-weight:900;}
 .mm .hcard .hc-dsl u{position:absolute;left:0;right:0;bottom:1px;text-align:center;text-decoration:none;font-size:9.06px;font-weight:800;line-height:1;letter-spacing:-.02em;color:#fff;font-variant-numeric:tabular-nums;pointer-events:none;z-index:4;text-shadow:0 1px 2px rgba(0,0,0,.42);}
 .mm 
@@ -2899,7 +2899,7 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .hcard .hc-dsl{position:relative;width:100%;aspect-ratio:1;border-radius:5px;background:var(--track);}
 .hcard .hc-dsl i{position:absolute;left:0;right:0;bottom:0;z-index:1;display:block;border-radius:5px;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);transition:height .5s cubic-bezier(.22,1,.36,1);}
 .hcard .hc-nad{position:absolute;left:0;right:0;bottom:calc(100% - 5px);z-index:0;display:block;border-radius:5px 5px 0 0;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);-webkit-mask-image:linear-gradient(to top,rgba(0,0,0,.46),rgba(0,0,0,.11));mask-image:linear-gradient(to top,rgba(0,0,0,.46),rgba(0,0,0,.11));}
-.hcard .hc-mark{position:absolute;left:0;right:0;top:0;height:5px;z-index:4;pointer-events:none;border:1px solid rgba(255,255,255,.5);border-bottom:0;border-radius:5px 5px 0 0;}
+.hcard .hc-mark{position:absolute;left:0;right:0;top:0;height:5px;z-index:4;pointer-events:none;border-top:1px solid rgba(255,255,255,.45);border-left:1px solid rgba(255,255,255,.45);border-right:1px solid rgba(255,255,255,.45);border-radius:5px 5px 0 0;}
 .hcard .hc-d.je-dnes span{color:var(--green);font-weight:900;}
 .hcard .hc-dsl u{position:absolute;left:0;right:0;bottom:1px;text-align:center;text-decoration:none;font-size:9.06px;font-weight:800;line-height:1;letter-spacing:-.02em;color:#fff;font-variant-numeric:tabular-nums;pointer-events:none;z-index:4;text-shadow:0 1px 2px rgba(0,0,0,.42);}
 
@@ -6503,7 +6503,7 @@ function renderDnesek(){
     const dnesek=d.ds===today, budouci=(d.ds>today && !MM_TYDEN_UKAZKA);   // v ukazce vykreslit cely tyden
     return '<div class="hc-d'+(dnesek?' je-dnes':'')+(budouci?' je-pak':'')+(d.b>mCil&&!budouci?' je-nad':'')+'">'
       +'<div class="hc-dsl">'
-      +'<i style="height:'+((d.b>0&&!budouci)?doCile:0)+'%"></i>'
+      +'<i style="height:'+((d.b>0&&!budouci)?doCile:0)+'%'+((nadCil>0&&!budouci)?';background:var(--green)':'')+'"></i>'
       +((nadCil>0&&!budouci)?'<b class="hc-nad" style="height:calc('+nadCil+'% + 5px)"></b>':'')
       +((d.b>mCil&&!budouci)?'<i class="hc-mark"></i>':'')
       +((d.b>0&&!budouci)?'<u>'+fmtNum(d.b)+'</u>':'')+'</div>'
@@ -6565,7 +6565,7 @@ function renderDnesek(){
   // Nadpis zebricku vlevo, odpocet soutezniho obdobi vpravo — stejny vzor jako Kalendar aktivity / Deni.
   const odpocetHtml='<div class="sl slzeb"><span>Žebříček</span><i class="zebodp'+naleh+'">'+odpocetTxt+'</i></div>';
   const tpl=`<div class="hcard"><div class="hc-hd"><span class="hc-poz">${mmGreet()}${me?', '+esc(mmVocative(mmFirst(me.jmeno))):''}</span><span class="hc-dat">${dlKratke}</span></div><div class="hc-top">${mSerie>0?'<span class="hc-serie"><svg class="i"><use href="#i-flame"/></svg>'+mSerie+'</span>':''}<span class="hc-r">${mTrendHtml}<span class="hc-num">${fmtNum(todayPts)}</span><span class="hc-cil">z ${fmtNum(mCil)} b</span></span></div><div class="hc-tyden">${mSloupce}</div></div>
-  <div class="hbm hbnav2" style="margin-top:10px;cursor:pointer" onclick="mmGo('navyky')"><div class="hi hikol nvk">${mmHabitDenKolecko(habTotal>0?Math.round(Math.min(habDone,habTotal)/habTotal*100):0,0,false,false,'bub')}</div><div class="ht">Návyky dnes<span class="hdots">${Array.from({length:habTotal},(_,i)=>'<i'+(i<habDone?' class="on"':'')+'></i>').join('')}</span></div><div class="pct" style="display:flex;align-items:baseline;gap:0;align-self:center;position:relative;top:1px"><b>${habDone}</b><span style="color:var(--ter);font-weight:700;margin-left:1.5px;margin-right:7px">/${habTotal}</span><span class="hbsip"><svg class="i" aria-hidden="true"><use href="#i-chev"/></svg></span></div></div>
+  <div class="hbm hbnav2" style="margin-top:10px;cursor:pointer" onclick="mmGo('navyky')"><div class="hi hikol nvk">${mmHabitDenKolecko(habTotal>0?Math.round(Math.min(habDone,habTotal)/habTotal*100):0,0,false,false,'bub')}</div><div class="ht">Návyky dnes<span class="hdots">${Array.from({length:habTotal},(_,i)=>'<i'+(i<habDone?' class="on"':'')+'></i>').join('')}</span></div><div class="pct" style="display:flex;align-items:baseline;gap:0;align-self:center;position:relative;top:1px"><b>${habDone}</b><span style="color:var(--ter);font-weight:700;margin-left:1.5px;margin-right:2px">/${habTotal}</span><span class="hbsip"><svg class="i" aria-hidden="true"><use href="#i-chev"/></svg></span></div></div>
   ${odpocetHtml}<div class="lcard${mmPartaZalTrida()}">${mmPartaSegBar()}
   <div class="lc">${rows||'<div style="padding:20px;text-align:center;color:var(--ter)">Zatím žádné body</div>'}</div></div>
   <div class="sl" onclick="mmOpenSub('rokparty')" style="cursor:pointer;touch-action:manipulation"><span>Kalendář aktivity</span><a style="pointer-events:none">celý rok →</a></div>
@@ -7961,7 +7961,7 @@ function mmHabitDenKolecko(pct, nahr, dnes, vybrany, klic){
   // Kulicka na konci prstence — o kus siri nez linka, aby bylo videt, kam jsem se dostal (Marek 2026-08-25)
   // Konec oblouku se plynule rozsiri do kulicky — jeden tvar, ne navlekane kolecka (Marek 2026-08-25).
   const hlava=(uhel, barva)=>{
-    const kroku=12, rozsah=100*(6/c);                 // po jak dlouhe vyseci se linka rozsiruje
+    const kroku=12, rozsah=100*(3.4/c);               // po jak dlouhe vyseci se linka rozsiruje
     const uhl=(t)=>((uhel-rozsah*(1-t))/100*360-90)*Math.PI/180;
     const sirka=(t)=>sw/2+(kul-sw/2)*(t*t*(3-2*t));   // smoothstep
     let ven='', dovnitr=[];
@@ -8014,6 +8014,24 @@ function mmHabitDenNahrPct(pid, mine, ds){
   const n=den.filter(h=>habitIsDoneOn(h,pid,ds) && habitNahrazenoOn(h,pid,ds)>0).length;
   return Math.round(n/den.length*100);
 }
+// Hlavicka tydne (popis, sipky, rozsah, tlacitko Dnes) — vlastni funkce, aby sla pri posunu
+// prstem prehodit hned na zacatku dojezdu a datum nenabihalo pozdeji (Marek 2026-08-25).
+function mmHabitHlavickaHtml(sel){
+  const todayS=todayStr();
+  const zac=new Date(sel+'T00:00:00'); zac.setDate(zac.getDate()-((zac.getDay()+6)%7));
+  const konec=new Date(zac); konec.setDate(zac.getDate()+6);
+  const rozsah=zac.getDate()+'.–'+konec.getDate()+'. '+(konec.getMonth()+1)+'.';
+  const zacDnes=new Date(todayS+'T00:00:00'); zacDnes.setDate(zacDnes.getDate()-((zacDnes.getDay()+6)%7));
+  const oTydnu=Math.round((zacDnes-zac)/6048e5);
+  const popis = oTydnu===0 ? 'Tento týden' : (oTydnu===1 ? 'Minulý týden'
+    : (oTydnu>1 ? 'Před '+oTydnu+' týdny' : 'Příští týden'));
+  return '<div class="tydhl"><span class="tsip" onclick="mmHabitTydenPosun(-1)"><svg class="i" aria-hidden="true"><use href="#i-chev"/></svg></span>'
+    +'<b>'+popis+'</b>'
+    +'<span class="tsip vpred'+(oTydnu<=0?' vyp':'')+'" onclick="mmHabitTydenPosun(1)"><svg class="i" aria-hidden="true"><use href="#i-chev"/></svg></span>'
+    +'<i>'+rozsah+'</i>'
+    +(sel!==todayS?'<span class="dnesbtn" onclick="mmHabitDnes()">⟳ Dnes</span>':'')
+    +'</div>';
+}
 // Radka sedmi dnu pro libovolny tyden — pouziva ji i posun prstem pro sousedni tydny
 function mmHabitDnyHtml(pid, mine, sel){
   const todayS=todayStr();
@@ -8040,17 +8058,8 @@ function mmHabitTydenHtml(pid, mine, sel){
   const rozsah=zac.getDate()+'.–'+konec.getDate()+'. '+(konec.getMonth()+1)+'.';
   const tentoTyden = (()=>{ const t=new Date(todayS+'T00:00:00'); t.setDate(t.getDate()-((t.getDay()+6)%7)); return dateToStr(t)===dateToStr(zac); })();
   const dny=mmHabitDnyHtml(pid, mine, sel);
-  const zacDnes=new Date(todayS+'T00:00:00'); zacDnes.setDate(zacDnes.getDate()-((zacDnes.getDay()+6)%7));
-  const oTydnu=Math.round((zacDnes-zac)/6048e5);
-  const popis = oTydnu===0 ? 'Tento týden' : (oTydnu===1 ? 'Minulý týden'
-    : (oTydnu>1 ? 'Před '+oTydnu+' týdny' : 'Příští týden'));
-  const jinyDen = sel!==todayS;
-  return '<div class="tydhl"><span class="tsip" onclick="mmHabitTydenPosun(-1)"><svg class="i" aria-hidden="true"><use href="#i-chev"/></svg></span>'
-    +'<b>'+popis+'</b>'
-    +'<span class="tsip vpred'+(oTydnu<=0?' vyp':'')+'" onclick="mmHabitTydenPosun(1)"><svg class="i" aria-hidden="true"><use href="#i-chev"/></svg></span>'
-    +'<i>'+rozsah+'</i>'
-    +(jinyDen?'<span class="dnesbtn" onclick="mmHabitDnes()">⟳ Dnes</span>':'')
-    +'</div><div class="tydbox"><div class="tyd'+(window._mmTydSmer? (window._mmTydSmer>0?' in-r':' in-l') : '')+'" data-tyd>'+dny+'</div></div>';
+  return mmHabitHlavickaHtml(sel)
+    +'<div class="tydbox"><div class="tyd'+(window._mmTydSmer? (window._mmTydSmer>0?' in-r':' in-l') : '')+'" data-tyd>'+dny+'</div></div>';
 }
 // Cile za obdobi (X-krat tydne / mesicne / rocne) — vlastni sekce podle horizontu,
 // v nadpisu je kolik cilu je splneno a kolik casu do konce obdobi zbyva (Marek 2026-08-24).
@@ -8104,7 +8113,7 @@ function mmHabitSwipe(sh){
   const soused=(smer)=>{                       // smer -1 = minuly tyden vlevo, +1 = pristi vpravo
     const pid=state.currentPlayerId; if(!pid) return null;
     const d=new Date((state.habitDay||todayStr())+'T00:00:00'); d.setDate(d.getDate()+smer*7);
-    const ds=dateToStr(d);
+    let ds=dateToStr(d); if(ds>todayStr()) ds=todayStr();     // stejne clamp jako mmHabitTydenPosun
     const uzel=document.createElement('div');
     uzel.className='tyd soused';
     uzel.innerHTML=mmHabitDnyHtml(pid, mmHabitMine(pid), ds);
@@ -8141,6 +8150,10 @@ function mmHabitSwipe(sh){
     if(jde){
       const cil = dozadu ? sirka : -sirka;
       posun(el, 0, cil, true); posun(pred, -100, cil, true); posun(po, 100, cil, true);
+      const nd=new Date((state.habitDay||todayStr())+'T00:00:00'); nd.setDate(nd.getDate()+(dozadu?-7:7));
+      let nds=dateToStr(nd); if(nds>todayStr()) nds=todayStr();
+      const hl=box.parentElement&&box.parentElement.querySelector('.tydhl');
+      if(hl) hl.outerHTML=mmHabitHlavickaHtml(nds);          // datum a tyden se meni s pohybem, ne az potom
       setTimeout(()=>{ mmHabitTydenPosun(dozadu?-1:1, true); uklid(); }, 210);
     } else {
       posun(el, 0, 0, true); posun(pred, -100, 0, true); posun(po, 100, 0, true);

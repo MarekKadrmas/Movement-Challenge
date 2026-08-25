@@ -21,12 +21,12 @@
 | 2 | Žebříček — rádiusy u krajních filtrů | ~~uzavřeno~~ |
 | 3 | Přehled — čtverečky dnů jsou čtverce | hotovo |
 | 4 | Přehled — ukázkový týden natvrdo v appce | **čeká na odsouhlasení, pak vrátit na reálná data** |
-| 5 | Přehled — ryska cíle | tenká 1px linka jen v místě horní hrany čtverce, stejně silná po celé délce, krátké rohy, bez masky — čeká na posouzení |
+| 5 | Přehled — ryska cíle | vlásková linka jen po horní hraně čtverce (výška = rádius, žádná svislá ramena — právě ta z ní dělaly plovoucí rámeček) + nad cílem plná barva bez přechodu — čeká na posouzení |
 | 6 | Návyky — viditelnost výplně koleček | ~~prozatím ok~~ |
-| 7 | Návyky — konec oblouku se plynule rozšíří do kuličky (jeden tvar, ne navlékaná kolečka) | ~~fajfka uzavřena~~, kulička čeká na posouzení |
+| 7 | Návyky — konec oblouku se rozšíří do kuličky, zaoblení zmenšeno | ~~uzavřeno~~ |
 | 8 | Návyky — velikost koleček | ~~uzavřeno~~ (46,6 px) |
 | 9 | Návyky — mezera pod kolečky | ~~uzavřeno~~ |
-| 10 | Návyky — přepnutí týdne: kolotoč; posun převeden do layout px (zoom), takže soused dosedne přesně a vlevo nezůstane prázdno | čeká na posouzení |
+| 10 | Návyky — přepnutí týdne: hlavička se mění hned se startem dojezdu, sousední týden je identický s cílovým (prstence neposkočí) | čeká na posouzení |
 | 11 | Návyky — proužek dnů Po–Ne u týdenního cíle | hotovo, Markovi se líbí |
 | 12 | Návyky — měřitelné návyky klikem a podržením | hotovo, Marek zkouší v provozu |
 | 13 | Návyky — nahrazení z přebytku (§13) | hotovo v kódu, **čeká na migraci `F53-nahrazeni.sql`** |
@@ -34,8 +34,8 @@
 | 15 | Vycentrování aplikace (4+4 px) | hotovo |
 | 16 | Výběr aktivity (zelené plus) v tmavém režimu | ~~uzavřeno~~ |
 | 17 | Plusko ve spodní liště na střed | ~~uzavřeno~~ |
-| 18 | Bublina Návyky — „2/5" blíž k šipce, ikona je stejný prstenec s kuličkou jako v Návycích | čeká na posouzení |
-| 19 | Přehled — historie čtverečků za týden/měsíc/rok | **mockup se dělá** |
+| 18 | Bublina Návyky — „2/5" blíž k šipce, ikona je stejný prstenec s kuličkou jako v Návycích | čeká na posouzení (posunuto podruhé) |
+| 19 | Přehled — historie čtverečků | **zadání od Marka 25. 8.:** proklik z horního banneru → přehled týdnů v průběhu měsíce a celého roku, jednotlivé týdny se dají rozkliknout. V přehledu se dny nad cíl značí jen plusky nad čtverečky nebo lehkým přesahem; detailní výška sloupce až po rozkliknutí týdne. **Mockup se dělá.** |
 | 20 | Ikony jako textové znaky (plusko, šipky) → SVG, optický střed změřen | ~~uzavřeno~~; křížky `×` v modálech projít při jejich předělání |
 | 21 | Návyky — seznam skákal při přepnutí dne | ~~uzavřeno~~ |
 
