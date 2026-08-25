@@ -38,7 +38,8 @@
 | 19 | Přehled — historie výkonu | **mockup v2:** https://claude.ai/code/artifact/9dd2f22f-2f6f-452c-ab7c-fda1a1bffe2c — bez bublin kolem každého týdne, dvanáct měsíců pod sebou. Čeká na posouzení. |
 | 20 | Ikony jako textové znaky (plusko, šipky) → SVG, optický střed změřen | ~~uzavřeno~~; křížky `×` v modálech projít při jejich předělání |
 | 21 | Návyky — seznam skákal při přepnutí dne | ~~uzavřeno~~ |
-| 22 | Návyky — označení dnů | vybraný den výrazně tučnější, dnešek fialová tečka, budoucí dny mají šikmou texturu (jde na ně kliknout, ale nejde zaškrtnout), minulé týdny jemně utlumené. Nahrazovat jde tenhle týden a celý minulý — čeká na posouzení |
+| 22 | Návyky — označení dnů | hotovo; **zbývá:** vymyslet jiný způsob označení splněného dne — mockup |
+| 23 | Návyky — hlavička bez iniciál, bublina série do fialova | hotovo |
 
 
 ## ⏸️ Rozdělané (schválně odloženo)
