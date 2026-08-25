@@ -1919,6 +1919,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .hcard .hc-poz{flex:1;min-width:0;font-size:18.71px;font-weight:800;letter-spacing:-.02em;line-height:1.15;color:var(--label);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .mm .hcard .hc-dat{font-size:10.62px;font-weight:700;color:var(--ter);white-space:nowrap;}
 .mm .tb .tbadd{width:34px;height:34px;flex:0 0 auto;border:0;padding:0;border-radius:50%;background:var(--green);color:#fff;font-size:22.5px;line-height:1;display:grid;place-items:center;cursor:pointer;font-family:inherit;box-shadow:0 2px 6px -1px color-mix(in srgb,var(--green) 40%,transparent);}
+.mm .tb .tbadd .i{width:17px;height:17px;stroke-width:2.4;}
 .mm .tb .tbadd:active{transform:scale(.93);}
 .mm .hcard{background:var(--card);border-radius:18px;box-shadow:var(--shadow);padding:11px 15px 10px;margin:14px 0 10px;}
 .mm .hcard .hc-top{display:flex;align-items:flex-end;gap:9px;}
@@ -1938,7 +1939,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .hcard .hc-d{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
 .mm .hcard .hc-dsl{position:relative;width:100%;aspect-ratio:1;border-radius:5px;background:var(--track);}
 .mm .hcard .hc-dsl i{position:absolute;left:0;right:0;bottom:0;display:block;border-radius:5px;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);transition:height .5s cubic-bezier(.22,1,.36,1);}
-.mm .hcard .hc-nad{position:absolute;left:0;right:0;bottom:100%;display:block;border-radius:5px 5px 0 0;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);-webkit-mask-image:linear-gradient(to top,rgba(0,0,0,.46),rgba(0,0,0,.11));mask-image:linear-gradient(to top,rgba(0,0,0,.46),rgba(0,0,0,.11));}
+.mm .hcard .hc-nad{position:absolute;left:3px;right:3px;bottom:100%;display:block;border-radius:4px 4px 0 0;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);-webkit-mask-image:linear-gradient(to top,rgba(0,0,0,.46),rgba(0,0,0,.11));mask-image:linear-gradient(to top,rgba(0,0,0,.46),rgba(0,0,0,.11));}
 .mm .hcard .hc-mark{position:absolute;left:0;right:0;top:0;height:11px;z-index:3;pointer-events:none;overflow:visible;-webkit-mask-image:linear-gradient(to bottom,#000 0 42%,transparent 100%);mask-image:linear-gradient(to bottom,#000 0 42%,transparent 100%);}
 .mm .hcard .hc-mark path{fill:none;stroke:rgba(255,255,255,.55);stroke-width:0.85;stroke-linecap:round;}
 .mm .hcard .hc-d.je-dnes span{color:var(--green);font-weight:900;}
@@ -2141,21 +2142,23 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .nvk .tsip.vyp{opacity:.3;pointer-events:none;box-shadow:none;background:none;}
 .nvk .tydhl span{font-size:11.2px;font-weight:800;color:var(--label);letter-spacing:-.01em;}
 .nvk .tydhl i{font-style:normal;font-size:9.8px;font-weight:700;color:var(--ter);}
-.nvk .tyd{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
-@keyframes mmTydR{0%{opacity:0;transform:translateX(30px)}100%{opacity:1;transform:none}}
-@keyframes mmTydL{0%{opacity:0;transform:translateX(-30px)}100%{opacity:1;transform:none}}
-.nvk .tyd.in-r{animation:mmTydR .34s cubic-bezier(.33,1,.68,1);}
-.nvk .tyd.in-l{animation:mmTydL .34s cubic-bezier(.33,1,.68,1);}
-@media (prefers-reduced-motion:reduce){.nvk .tyd.in-r,.nvk .tyd.in-l{animation:none;}}
-.nvk .tyd span{display:flex;flex-direction:column;align-items:center;padding:3px 1px;border-radius:999px;cursor:pointer;}
+.nvk .tyd{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
+/* Prepnuti tydne: dny nastupuji po sobe od strany, ze ktere jsem prejel (Marek 2026-08-25) */
+@keyframes mmDenIn{0%{opacity:0;transform:translateX(var(--dx)) scale(.9)}
+  60%{opacity:1}100%{opacity:1;transform:none}}
+.nvk .tyd.in-r span,.nvk .tyd.in-l span{animation:mmDenIn .46s cubic-bezier(.22,.92,.24,1) both;}
+.nvk .tyd.in-r span{--dx:26px;animation-delay:calc(var(--i) * 26ms);}
+.nvk .tyd.in-l span{--dx:-26px;animation-delay:calc(var(--j) * 26ms);}
+@media (prefers-reduced-motion:reduce){.nvk .tyd.in-r span,.nvk .tyd.in-l span{animation:none;}}
+.nvk .tyd span{display:flex;flex-direction:column;align-items:center;padding:2px 1px 0;border-radius:999px;cursor:pointer;}
 .nvk .tyd .kol{position:relative;display:block;width:100%;}
-.nvk .tyd .kol u{position:absolute;inset:0;display:grid;place-items:center;text-decoration:none;font-style:normal;font-size:11px;font-weight:800;color:var(--sec);letter-spacing:-.02em;}
+.nvk .tyd .kol u{position:absolute;inset:0;display:grid;place-items:center;text-decoration:none;font-style:normal;font-size:11px;font-weight:800;color:color-mix(in srgb,var(--label) 45%,var(--sec));letter-spacing:-.02em;}
 .nvk .tyd .kol u .i{width:15px;height:15px;color:#fff;}
 .nvk .tyd span.dnes .kol u{font-weight:900;color:var(--label);}
 .nvk .tyd span.vyb{background:color-mix(in srgb,var(--sec) 8%,transparent);}
-.nvk .tyd span.plny .kol u{color:#fff;}
+.nvk .tyd span.plny .kol u{color:color-mix(in srgb,var(--green) 78%,var(--label));}
 .nvk .tyd span.pak{opacity:.45;}
-.nvk .souhrn{display:flex;align-items:baseline;gap:8px;margin:2px 3px 7px;}
+.nvk .souhrn{display:flex;align-items:baseline;gap:8px;margin:-1px 3px 7px;}
 .nvk .sleva{flex:1;min-width:0;}
 .nvk .sleva b{display:block;font-family:var(--font-display);font-size:13.5px;font-weight:800;letter-spacing:-.02em;color:var(--label);line-height:1.15;}
 .nvk .szbyva{font-size:10.6px;font-weight:600;color:var(--ter);white-space:nowrap;}
@@ -2217,7 +2220,8 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .hbm .ht small{display:block;color:var(--sec);font-weight:500;font-size:12.67px;}
 .mm .hbm .hc{width:22px;height:22px;border-radius:50%;border:2px solid var(--ter);}
 .mm .hbm .hc.on{background:var(--green);border-color:var(--green);display:grid;place-items:center;color:#fff;font-size:13.28px;}
-.mm .hbm .pct{font-size:14.48px;font-weight:800;color:var(--green);}
+.mm .hbm .pct{font-size:13.4px;font-weight:800;color:var(--green);}
+.mm .hbm .pct b{font-family:var(--font-display);font-size:21px;font-weight:900;letter-spacing:-.04em;line-height:1;}
 .mm .newbtn{margin-top:9px;width:100%;border:1.5px dashed var(--ter);color:var(--green);background:none;border-radius:999px;padding:9px;font:inherit;font-size:15.69px;font-weight:700;}
 .mm .stat2{display:flex;gap:7px;}
 .mm .st{flex:1;background:var(--card);box-shadow:var(--shadow);border-radius:12px;padding:9px;text-align:center;}
@@ -2779,7 +2783,7 @@ body.mm-full{background:var(--bg);padding-bottom:0;}
 <symbol id="i-list" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2.5"/><path d="M9 3.2h6v2.6H9z"/><path d="M8.5 11h7M8.5 15h4.5"/></symbol>
 <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20.3S3.8 15 3.8 9.2A4.2 4.2 0 0 1 12 6.8a4.2 4.2 0 0 1 8.2 2.4C20.2 15 12 20.3 12 20.3Z" fill="currentColor" fill-opacity=".2"/></symbol>
 <symbol id="i-clap" viewBox="0 0 24 24"><path d="M11 8.5 8.8 4.8a1.4 1.4 0 0 1 2.4-1.4L13 6"/><path d="M8.3 8.2 7 6a1.4 1.4 0 0 1 2.4-1.4l1.8 3"/><path d="M7.5 20.5a5.5 5.5 0 0 1-1.8-3l-1.4-4a1.4 1.4 0 0 1 2.5-1.2l1 1.8"/><path d="M14.5 20.5c3-1 4.7-3.8 4-7l-.9-4a1.4 1.4 0 0 0-2.7.5l-.6 2.4"/></symbol>
-<symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6.5 9.2 17 4 11.8"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6.5 9.2 17 4 11.8"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
 <symbol id="i-edit" viewBox="0 0 24 24"><path d="M12.5 20H21"/><path d="M16.5 3.6a2.1 2.1 0 0 1 3 3L7.4 18.7 3.5 20l1.3-3.9Z"/></symbol>
 <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/></symbol>
 <symbol id="i-comment" viewBox="0 0 24 24"><path d="M20.5 12a8 8 0 0 1-11.3 7.3L4 20.5l1.2-5.2A8 8 0 1 1 20.5 12Z"/></symbol>
@@ -2867,6 +2871,7 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .hcard .hc-poz{flex:1;min-width:0;font-size:18.71px;font-weight:800;letter-spacing:-.02em;line-height:1.15;color:var(--label);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .hcard .hc-dat{font-size:10.62px;font-weight:700;color:var(--ter);white-space:nowrap;}
 .tb .tbadd{width:34px;height:34px;flex:0 0 auto;border:0;padding:0;border-radius:50%;background:var(--green);color:#fff;font-size:22.5px;line-height:1;display:grid;place-items:center;cursor:pointer;font-family:inherit;box-shadow:0 2px 6px -1px color-mix(in srgb,var(--green) 40%,transparent);}
+.tb .tbadd .i{width:17px;height:17px;stroke-width:2.4;}
 .tb .tbadd:active{transform:scale(.93);}
 .hcard{background:var(--card);border-radius:18px;box-shadow:var(--shadow);padding:11px 15px 10px;margin:14px 0 10px;}
 .hcard .hc-top{display:flex;align-items:flex-end;gap:9px;}
@@ -2886,7 +2891,7 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .hcard .hc-d{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
 .hcard .hc-dsl{position:relative;width:100%;aspect-ratio:1;border-radius:5px;background:var(--track);}
 .hcard .hc-dsl i{position:absolute;left:0;right:0;bottom:0;display:block;border-radius:5px;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);transition:height .5s cubic-bezier(.22,1,.36,1);}
-.hcard .hc-nad{position:absolute;left:0;right:0;bottom:100%;display:block;border-radius:5px 5px 0 0;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);-webkit-mask-image:linear-gradient(to top,rgba(0,0,0,.46),rgba(0,0,0,.11));mask-image:linear-gradient(to top,rgba(0,0,0,.46),rgba(0,0,0,.11));}
+.hcard .hc-nad{position:absolute;left:3px;right:3px;bottom:100%;display:block;border-radius:4px 4px 0 0;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);-webkit-mask-image:linear-gradient(to top,rgba(0,0,0,.46),rgba(0,0,0,.11));mask-image:linear-gradient(to top,rgba(0,0,0,.46),rgba(0,0,0,.11));}
 .hcard .hc-mark{position:absolute;left:0;right:0;top:0;height:11px;z-index:3;pointer-events:none;overflow:visible;-webkit-mask-image:linear-gradient(to bottom,#000 0 42%,transparent 100%);mask-image:linear-gradient(to bottom,#000 0 42%,transparent 100%);}
 .hcard .hc-mark path{fill:none;stroke:rgba(255,255,255,.55);stroke-width:0.85;stroke-linecap:round;}
 .hcard .hc-d.je-dnes span{color:var(--green);font-weight:900;}
@@ -3014,21 +3019,23 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .nvk .tsip.vyp{opacity:.3;pointer-events:none;box-shadow:none;background:none;}
 .nvk .tydhl span{font-size:11.2px;font-weight:800;color:var(--label);letter-spacing:-.01em;}
 .nvk .tydhl i{font-style:normal;font-size:9.8px;font-weight:700;color:var(--ter);}
-.nvk .tyd{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
-@keyframes mmTydR{0%{opacity:0;transform:translateX(30px)}100%{opacity:1;transform:none}}
-@keyframes mmTydL{0%{opacity:0;transform:translateX(-30px)}100%{opacity:1;transform:none}}
-.nvk .tyd.in-r{animation:mmTydR .34s cubic-bezier(.33,1,.68,1);}
-.nvk .tyd.in-l{animation:mmTydL .34s cubic-bezier(.33,1,.68,1);}
-@media (prefers-reduced-motion:reduce){.nvk .tyd.in-r,.nvk .tyd.in-l{animation:none;}}
-.nvk .tyd span{display:flex;flex-direction:column;align-items:center;padding:3px 1px;border-radius:999px;cursor:pointer;}
+.nvk .tyd{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
+/* Prepnuti tydne: dny nastupuji po sobe od strany, ze ktere jsem prejel (Marek 2026-08-25) */
+@keyframes mmDenIn{0%{opacity:0;transform:translateX(var(--dx)) scale(.9)}
+  60%{opacity:1}100%{opacity:1;transform:none}}
+.nvk .tyd.in-r span,.nvk .tyd.in-l span{animation:mmDenIn .46s cubic-bezier(.22,.92,.24,1) both;}
+.nvk .tyd.in-r span{--dx:26px;animation-delay:calc(var(--i) * 26ms);}
+.nvk .tyd.in-l span{--dx:-26px;animation-delay:calc(var(--j) * 26ms);}
+@media (prefers-reduced-motion:reduce){.nvk .tyd.in-r span,.nvk .tyd.in-l span{animation:none;}}
+.nvk .tyd span{display:flex;flex-direction:column;align-items:center;padding:2px 1px 0;border-radius:999px;cursor:pointer;}
 .nvk .tyd .kol{position:relative;display:block;width:100%;}
-.nvk .tyd .kol u{position:absolute;inset:0;display:grid;place-items:center;text-decoration:none;font-style:normal;font-size:11px;font-weight:800;color:var(--sec);letter-spacing:-.02em;}
+.nvk .tyd .kol u{position:absolute;inset:0;display:grid;place-items:center;text-decoration:none;font-style:normal;font-size:11px;font-weight:800;color:color-mix(in srgb,var(--label) 45%,var(--sec));letter-spacing:-.02em;}
 .nvk .tyd .kol u .i{width:15px;height:15px;color:#fff;}
 .nvk .tyd span.dnes .kol u{font-weight:900;color:var(--label);}
 .nvk .tyd span.vyb{background:color-mix(in srgb,var(--sec) 8%,transparent);}
-.nvk .tyd span.plny .kol u{color:#fff;}
+.nvk .tyd span.plny .kol u{color:color-mix(in srgb,var(--green) 78%,var(--label));}
 .nvk .tyd span.pak{opacity:.45;}
-.nvk .souhrn{display:flex;align-items:baseline;gap:8px;margin:2px 3px 7px;}
+.nvk .souhrn{display:flex;align-items:baseline;gap:8px;margin:-1px 3px 7px;}
 .nvk .sleva{flex:1;min-width:0;}
 .nvk .sleva b{display:block;font-family:var(--font-display);font-size:13.5px;font-weight:800;letter-spacing:-.02em;color:var(--label);line-height:1.15;}
 .nvk .szbyva{font-size:10.6px;font-weight:600;color:var(--ter);white-space:nowrap;}
@@ -3083,7 +3090,7 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .nvk .zpet{font-size:11.6px;font-weight:800;color:var(--fial2);margin:2px 2px 10px;cursor:pointer;}
 .nvk .nav .right .av{background:linear-gradient(135deg,#8B6FE04d,#8B6FE012)!important;color:#7757d6!important;}
 /* Navyky: stejny design language jako zbytek appky — mensi prvky, jemnejsi stiny (Marek 2026-08-23) */
-.nvk .tabs{margin:4px 0 10px;}.nvk .tabs b{padding:5px 13px;font-size:12.74px;}.nvk .tabs b.on{box-shadow:0 3px 10px -5px color-mix(in srgb,var(--green) 60%,transparent);}.nvk .wks{gap:3px;margin-bottom:9px;}.nvk .wks span{width:26px;height:26px;font-size:10.09px;}.nvk .stat2{gap:6px;}.nvk .stat2 .st{padding:6px;border-radius:14px;}.nvk .stat2 .st .v{font-size:15.09px;}.nvk .stat2 .st .k{font-size:9.06px;}.nvk .sl{margin:10px 3px 5px;}.nvk .hbm{padding:4px 11px;margin-bottom:4px;gap:8px;}.nvk .hbm .hi{width:25px;height:25px;border-radius:8px;font-size:13.28px;}.nvk .hbm .hi .i{width:14px;height:14px;}.nvk .hbm .ht{font-size:12.74px;font-weight:600;letter-spacing:-.005em;color:color-mix(in srgb,var(--label) 78%,var(--sec));line-height:1.25;}.nvk .hbm .ht small{font-size:10.62px;font-weight:500;color:var(--sec);margin-top:0;line-height:1.3;}.nvk .hbm .hc{width:19px;height:19px;border-width:1.8px;}.nvk .newbtn{margin-top:7px;padding:7px;font-size:12.74px;}.nvk .statg{border-radius:16px;padding:10px;} .hbm+.hbm{margin-top:6px;} .hbm .hi{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-size:15.94px;} .hbm .ht{flex:1;font-size:13.81px;font-weight:600;} .hbm .ht small{display:block;color:var(--sec);font-weight:500;font-size:11.15px;} .hbm .hc{width:22px;height:22px;border-radius:50%;border:2px solid var(--ter);} .hbm .hc.on{background:var(--green);border-color:var(--green);display:grid;place-items:center;color:#fff;font-size:11.69px;} .hbm .pct{font-size:12.74px;font-weight:800;color:var(--green);}
+.nvk .tabs{margin:4px 0 10px;}.nvk .tabs b{padding:5px 13px;font-size:12.74px;}.nvk .tabs b.on{box-shadow:0 3px 10px -5px color-mix(in srgb,var(--green) 60%,transparent);}.nvk .wks{gap:3px;margin-bottom:9px;}.nvk .wks span{width:26px;height:26px;font-size:10.09px;}.nvk .stat2{gap:6px;}.nvk .stat2 .st{padding:6px;border-radius:14px;}.nvk .stat2 .st .v{font-size:15.09px;}.nvk .stat2 .st .k{font-size:9.06px;}.nvk .sl{margin:10px 3px 5px;}.nvk .hbm{padding:4px 11px;margin-bottom:4px;gap:8px;}.nvk .hbm .hi{width:25px;height:25px;border-radius:8px;font-size:13.28px;}.nvk .hbm .hi .i{width:14px;height:14px;}.nvk .hbm .ht{font-size:12.74px;font-weight:600;letter-spacing:-.005em;color:color-mix(in srgb,var(--label) 78%,var(--sec));line-height:1.25;}.nvk .hbm .ht small{font-size:10.62px;font-weight:500;color:var(--sec);margin-top:0;line-height:1.3;}.nvk .hbm .hc{width:19px;height:19px;border-width:1.8px;}.nvk .newbtn{margin-top:7px;padding:7px;font-size:12.74px;}.nvk .statg{border-radius:16px;padding:10px;} .hbm+.hbm{margin-top:6px;} .hbm .hi{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-size:15.94px;} .hbm .ht{flex:1;font-size:13.81px;font-weight:600;} .hbm .ht small{display:block;color:var(--sec);font-weight:500;font-size:11.15px;} .hbm .hc{width:22px;height:22px;border-radius:50%;border:2px solid var(--ter);} .hbm .hc.on{background:var(--green);border-color:var(--green);display:grid;place-items:center;color:#fff;font-size:11.69px;} .hbm .pct{font-size:11.8px;font-weight:800;color:var(--green);} .hbm .pct b{font-family:var(--font-display);font-size:18.5px;font-weight:900;letter-spacing:-.04em;line-height:1;}
   .newbtn{margin-top:9px;width:100%;border:1.5px dashed var(--ter);color:var(--green);background:none;border-radius:999px;padding:9px;font:inherit;font-size:13.81px;font-weight:700;}
   .stat2{display:flex;gap:7px;} .st{flex:1;background:var(--card);box-shadow:var(--shadow);border-radius:12px;padding:9px;text-align:center;} .st .v{font-size:16.99px;font-weight:800;} .st .k{font-size:9.56px;color:var(--sec);font-weight:600;}
   .pcard{background:var(--card);box-shadow:var(--shadow);border-radius:15px;padding:12px;display:flex;align-items:center;gap:11px;} .pcard .pav{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:14.87px;font-weight:700;background:#2FB17022;color:#1f8a52;} .pcard .pn{font-size:16.99px;font-weight:800;} .pcard .ps{font-size:12.21px;color:var(--sec);font-weight:600;}
@@ -6402,7 +6409,7 @@ function mmBar(a){
   // Bez nej scrolluje obsah v mezere pod barem (na iPhonu 15 Pro 16.5 pt) — Marek 2026-08-18.
   var h='<i class="tbveil"></i><div class="tb"><i class="tbind"></i>';
   for(var i=0;i<3;i++){ h+='<a class="'+(i==a?'on':'')+'" onclick="mmGo(\''+T[i]+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">'+IC[i]+'</svg></a>'; }
-  h+='<button class="tbadd" onclick="openModal()" aria-label="Přidat záznam">＋</button>';
+  h+='<button class="tbadd" onclick="openModal()" aria-label="Přidat záznam"><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg></button>';
   return h+'</div>';
 }
 
@@ -6547,7 +6554,7 @@ function renderDnesek(){
   const odpocetHtml='<div class="sl slzeb"><span>Žebříček</span><i class="zebodp'+naleh+'">'+odpocetTxt+'</i></div>';
   const tpl=`<div class="hcard"><div class="hc-hd"><span class="hc-poz">${mmGreet()}${me?', '+esc(mmVocative(mmFirst(me.jmeno))):''}</span><span class="hc-dat">${dlKratke}</span></div><div class="hc-top">${mSerie>0?'<span class="hc-serie"><svg class="i"><use href="#i-flame"/></svg>'+mSerie+'</span>':''}<span class="hc-r">${mTrendHtml}<span class="hc-num">${fmtNum(todayPts)}</span><span class="hc-cil">z ${fmtNum(mCil)} b</span></span></div><div class="hc-tyden">${mSloupce}</div></div>
   <div class="hbm hbnav2" style="margin-top:10px;cursor:pointer" onclick="mmGo('navyky')"><div class="hi hicheck${habTotal>0&&habDone>=habTotal?' hfull':''}" style="--hp:${habTotal>0?Math.round(Math.min(habDone,habTotal)/habTotal*100):0}%"><svg class="i"><use href="#i-check"/></svg></div><div class="ht">Návyky dnes<span class="hdots">${Array.from({length:habTotal},(_,i)=>'<i'+(i<habDone?' class="on"':'')+'></i>').join('')}</span></div><div class="pct" style="display:flex;align-items:baseline;gap:0"><b>${habDone}</b><span style="color:var(--ter);font-weight:700;margin-left:1.5px;margin-right:7px">/${habTotal}</span><span style="color:var(--ter);font-weight:400">›</span></div></div>
-  ${odpocetHtml}<div class="lcard">${mmPartaSegBar()}
+  ${odpocetHtml}<div class="lcard${mmPartaZalTrida()}">${mmPartaSegBar()}
   <div class="lc">${rows||'<div style="padding:20px;text-align:center;color:var(--ter)">Zatím žádné body</div>'}</div></div>
   <div class="sl" onclick="mmOpenSub('rokparty')" style="cursor:pointer;touch-action:manipulation"><span>Kalendář aktivity</span><a style="pointer-events:none">celý rok →</a></div>
   <div class="heatcard"><div class="hbnav"><span class="hbarr" onclick="mmPartaHeatMove(1)">‹</span><span class="hbrange"></span><span class="hbarr" onclick="mmPartaHeatMove(-1)">›</span><span class="hbtoday" onclick="mmPartaHeatToday()">⟳ Dnes</span></div>${heatHtml}</div>
@@ -6654,6 +6661,13 @@ function mmPartaPeriodLabel(){ return {all:'Celkem',week:'Týden',month:'Měsíc
 function mmPartaCategoryLabel(){ return {all:'Dohromady',cvik:'Cviky',aktivita:'Aktivity',stretching:'Stretching'}[state.totalCategory||'all']||'Dohromady'; }
 const MM_PSEG={period:{opts:["week","month","all"],labels:["Týden","Měsíc","Celkem"]},cat:{opts:["all","cvik","aktivita"],labels:["Vše","Cviky","Aktivity"]}};
 function mmPartaSegIdx(kind){ if(kind==="period") return Math.max(0,MM_PSEG.period.opts.indexOf(state.totalPeriod||"all")); let c=state.totalCategory||"all"; if(c==="stretching") c="all"; return Math.max(0,MM_PSEG.cat.opts.indexOf(c)); }
+// Trida karty patri do MARKUPU, ne do mereni. Kdyz se Prehled prekresli z jine obrazovky
+// (napr. odkliknuti navyku), je host skryty, offsetWidth vrati 0, mereni se preskoci
+// a rohy zustanou spatne. Tohle je koren toho opakovaneho bugu (Marek 2026-08-25).
+function mmPartaZalTrida(){
+  const n=MM_PSEG.period.opts.length, idx=mmPartaSegIdx('period');
+  return idx===0 ? ' zal-prvni' : (idx===n-1 ? ' zal-posledni' : '');
+}
 function mmPartaSegBar(){ const seg=(kind,extra)=>{ const d=MM_PSEG[kind]; const idx=mmPartaSegIdx(kind); const n=d.opts.length;
     // geometrie zalozky primo v markupu — nezavisi na mereni ani na zoomu (Marek 2026-08-23)
     const tridy='psegt'+(idx===0?' prvni':(idx===n-1?' posledni':''));
@@ -7939,24 +7953,31 @@ function mmHabitWeekStripHtml(pid, mine){
 // Dotazeny den se pozna zelenou vyplni s fajfkou, prstenec kolem zustava fialovy.
 // Oranzova NENI barva postupu: nese vyhradne vysec ziskanou nahrazenim navyku z jineho dne.
 function mmHabitDenKolecko(pct, nahr, dnes, vybrany, klic){
-  const r=14, sw=4, c=2*Math.PI*r, s=r*2+sw*1.2;   // mala rezerva, aby prstenec nekoncil na hrane
-  const plny=(pct+nahr)>=100;
+  const r=14, sw=4.4, c=2*Math.PI*r, s=r*2+sw*1.08;   // mala rezerva, aby prstenec nekoncil na hrane
+  const stred=s/2, plny=(pct+nahr)>=100;
   const dilP=c*(Math.min(100,pct)/100), dilN=c*(Math.min(100,nahr)/100);
   const gid='hg'+klic;
-  const barva='var(--fial)';   // prstenec je vzdy fialovy, zelena patri az vyplni hotoveho dne
+  // Kulicka na konci prstence — o kus siri nez linka, aby bylo videt, kam jsem se dostal (Marek 2026-08-25)
+  const hlava=(uhel, barva)=>{ const a=(uhel/100*360-90)*Math.PI/180;
+    return '<circle cx="'+(stred+r*Math.cos(a)).toFixed(2)+'" cy="'+(stred+r*Math.sin(a)).toFixed(2)+'" r="'+(sw*0.72).toFixed(2)+'"'
+      +' style="fill:'+barva+'"/>'; };
+  const konec=Math.min(100, pct+nahr);
   return '<svg viewBox="0 0 '+s+' '+s+'" style="width:100%;height:auto;display:block">'
     +'<defs><linearGradient id="'+gid+'v" x1="0" y1="1" x2="1" y2="0">'
       +'<stop offset="0" style="stop-color:color-mix(in srgb,var(--green) 72%,#fff)"/><stop offset="1" style="stop-color:var(--green)"/></linearGradient>'
     +'<linearGradient id="'+gid+'n" x1="0" y1="1" x2="1" y2="0">'
       +'<stop offset="0" stop-color="#F0A93C"/><stop offset="1" stop-color="#E07C1F"/></linearGradient></defs>'
-    +'<circle cx="'+(s/2)+'" cy="'+(s/2)+'" r="'+(r-sw/2)+'" fill="'+(plny?'url(#'+gid+'v)':'color-mix(in srgb,var(--fial) 6%,transparent)')+'"/>'
-    +'<circle cx="'+(s/2)+'" cy="'+(s/2)+'" r="'+r+'" fill="none" stroke="var(--track)" stroke-width="'+sw+'"/>'
-    +(nahr>0?'<circle cx="'+(s/2)+'" cy="'+(s/2)+'" r="'+r+'" fill="none" stroke="url(#'+gid+'n)" stroke-width="'+sw+'" stroke-linecap="round"'
-      +' stroke-dasharray="'+dilN.toFixed(1)+' '+(c-dilN).toFixed(1)+'" stroke-dashoffset="'+(-dilP).toFixed(1)+'" transform="rotate(-90 '+(s/2)+' '+(s/2)+')"/>':'')
-    +(pct>0?'<circle cx="'+(s/2)+'" cy="'+(s/2)+'" r="'+r+'" fill="none" style="stroke:'+barva+'" stroke-width="'+sw+'" stroke-linecap="round"'
-      +' stroke-dasharray="'+dilP.toFixed(1)+' '+(c-dilP).toFixed(1)+'" transform="rotate(-90 '+(s/2)+' '+(s/2)+')"/>':'')
+    +'<circle cx="'+stred+'" cy="'+stred+'" r="'+(r-sw/2)+'" style="fill:color-mix(in srgb,var(--fial) 11%,transparent)"/>'
+    +'<circle cx="'+stred+'" cy="'+stred+'" r="'+r+'" fill="none" style="stroke:color-mix(in srgb,var(--fial) 20%,var(--track))" stroke-width="'+sw+'"/>'
+    +(plny?'<path class="fajf" d="M'+(stred-6.4)+' '+stred+' l4.6 4.6 l8.2-8.6" fill="none" style="stroke:var(--green)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" opacity=".55"/>':'')
+    +(nahr>0?'<circle cx="'+stred+'" cy="'+stred+'" r="'+r+'" fill="none" stroke="url(#'+gid+'n)" stroke-width="'+sw+'" stroke-linecap="round"'
+      +' stroke-dasharray="'+dilN.toFixed(1)+' '+(c-dilN).toFixed(1)+'" stroke-dashoffset="'+(-dilP).toFixed(1)+'" transform="rotate(-90 '+stred+' '+stred+')"/>':'')
+    +(pct>0?'<circle cx="'+stred+'" cy="'+stred+'" r="'+r+'" fill="none" style="stroke:var(--fial)" stroke-width="'+sw+'" stroke-linecap="round"'
+      +' stroke-dasharray="'+dilP.toFixed(1)+' '+(c-dilP).toFixed(1)+'" transform="rotate(-90 '+stred+' '+stred+')"/>':'')
+    +((pct+nahr)>0&&!plny ? hlava(konec, nahr>0?'#E07C1F':'var(--fial)') : '')
     +'</svg>';
 }
+
 // Do dne patri jen navyky, ktere na ten den skutecne pripadaji (denne / vybrane dny).
 // Flexibilni cile (X-krat tydne) nemaji svuj den, denni procenta tedy neovlivnuji (Marek 2026-08-24).
 function mmHabitDenniNavyky(mine, ds){
@@ -7996,8 +8017,8 @@ function mmHabitTydenHtml(pid, mine, sel){
     const pct=Math.max(0, celkem-nahr);          // vlastní výkon; nahrazené jde zvlášť
     // V kolecku je primo nazev dne — procenta nese delka oblouku, cislo uz tam neni (Marek 2026-08-24)
     dny+='<span class="'+(ds===sel?'vyb':'')+(ds===todayS?' dnes':'')+(celkem>=100?' plny':'')+(budouci?' pak':'')
-      +'" onclick="mmHabitDen(&quot;'+ds+'&quot;)"><i class="kol">'+mmHabitDenKolecko(pct,nahr,ds===todayS,ds===sel,i)
-      +'<u>'+pism[i]+'</u></i></span>';
+      +'" style="--i:'+i+';--j:'+(6-i)+'" onclick="mmHabitDen(&quot;'+ds+'&quot;)"><i class="kol">'+mmHabitDenKolecko(pct,nahr,ds===todayS,ds===sel,i)
+      +'<u>'+(celkem>=100?'':pism[i])+'</u></i></span>';
   }
   const zacDnes=new Date(todayS+'T00:00:00'); zacDnes.setDate(zacDnes.getDate()-((zacDnes.getDay()+6)%7));
   const oTydnu=Math.round((zacDnes-zac)/6048e5);
