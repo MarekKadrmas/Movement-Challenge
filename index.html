@@ -7469,15 +7469,25 @@ function mmSirkaTextu(el){
     return w;
   }catch(_){ return 0; }
 }
+// Sirka sloupce se jmeny. Nesmi zaviset na tom, co je zrovna vykreslene ani na tom, jestli
+// mereni prosло — jinak se pri prepnuti filtru zmeni nejdelsi jmeno, sloupec se posune
+// a plaminky odskoci; a kdyz mereni vrati min nez skutecnost, jmeno i plaminek se orizne.
+// Bereme MAXIMUM z mereni i z vypoctu z fontu a hodnotu uz nikdy nezmensujeme (Marek 2026-08-25).
 function mmSrovnejJmena(sh){
   if(!sh) return;
-  sh.querySelectorAll(".lc").forEach(lc=>{
-    let max=0;
-    lc.querySelectorAll(".lnmt").forEach(e=>{ max=Math.max(max, e.scrollWidth || mmSirkaTextu(e)); });
-    if(max){ window._mmLnw=Math.ceil(max)+1; }
-    const w=max ? Math.ceil(max)+1 : window._mmLnw;      // radeji posledni znama hodnota nez zadna
-    if(w) lc.style.setProperty("--lnw", w+"px");
-  });
+  const vzor=sh.querySelector(".lnmt");
+  let max=window._mmLnwRaw||0;                 // syrove maximum, aby hodnota nerostla o rezervu pokazde
+  sh.querySelectorAll(".lnmt").forEach(e=>{ max=Math.max(max, e.scrollWidth||0, mmSirkaTextu(e)); });
+  // vsichni hraci, ne jen ti zrovna zobrazeni — sloupec pak drzi napric filtry
+  if(vzor && state.players && state.players.length){
+    const puv=vzor.textContent;
+    state.players.forEach(hr=>{ vzor.textContent=hr.jmeno||''; max=Math.max(max, mmSirkaTextu(vzor)); });
+    vzor.textContent=puv;
+  }
+  if(!max) return;
+  window._mmLnwRaw=max;
+  window._mmLnw=Math.ceil(max)+2;
+  sh.querySelectorAll(".lc").forEach(lc=>{ lc.style.setProperty("--lnw", window._mmLnw+"px"); });
 }
 function mmSerieChip(pid){
   const s=computeStreak(pid);
