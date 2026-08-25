@@ -21,12 +21,12 @@
 | 2 | Žebříček — rádiusy u krajních filtrů | ~~uzavřeno~~ |
 | 3 | Přehled — čtverečky dnů jsou čtverce | hotovo |
 | 4 | Přehled — ukázkový týden natvrdo v appce | **čeká na odsouhlasení, pak vrátit na reálná data** |
-| 5 | Přehled — ryska cíle | **5 variant v mockupu:** https://claude.ai/code/artifact/48d582b0-ac92-4268-9c5a-8fd4ff6b8d8c — Marek vybere písmeno. Plocha čtverce už má zpátky svůj gradient. |
+| 5 | Přehled — ryska cíle | **mockup v3 (jen D a E):** https://claude.ai/code/artifact/48d582b0-ac92-4268-9c5a-8fd4ff6b8d8c — D má tmavší gradient na vrcholu každého sloupce, E obtahuje celý čtverec. Přidán zastropovaný sloupec s nenápadným pluskem. Marek vybere. |
 | 6 | Návyky — viditelnost výplně koleček | ~~prozatím ok~~ |
-| 7 | Návyky — prstenec má vlastní gradient místo ploché fialové | čeká na posouzení |
+| 7 | Návyky — oblouk i kulička je JEDEN tvar se společným gradientem (žádný švár ani jiná barva na konci) | čeká na posouzení |
 | 8 | Návyky — velikost koleček | ~~uzavřeno~~ (46,6 px) |
 | 9 | Návyky — mezera pod kolečky | ~~uzavřeno~~ |
-| 10 | Návyky — přepnutí týdne: hlavička i údaj o dni se mění hned se startem dojezdu | čeká na posouzení |
+| 10 | Návyky — přepnutí týdne: opraveno poskakování prstenců (duplicitní id gradientů), tlačítko Dnes je odkaz s fialovým gradientem vpravo za datem | čeká na posouzení |
 | 11 | Návyky — proužek dnů Po–Ne u týdenního cíle | hotovo, Markovi se líbí |
 | 12 | Návyky — měřitelné návyky klikem a podržením | hotovo, Marek zkouší v provozu |
 | 13 | Návyky — nahrazení z přebytku (§13) | hotovo v kódu, **čeká na migraci `F53-nahrazeni.sql`** |
@@ -34,11 +34,11 @@
 | 15 | Vycentrování aplikace (4+4 px) | hotovo |
 | 16 | Výběr aktivity (zelené plus) v tmavém režimu | ~~uzavřeno~~ |
 | 17 | Plusko ve spodní liště na střed | ~~uzavřeno~~ |
-| 18 | Bublina Návyky — logo má prstenec s gradientem a fajfku na středu (odchylka 0,00) | čeká na posouzení |
+| 18 | Bublina Návyky — logo má prstenec s gradientem a menší fajfku na středu | čeká na posouzení |
 | 19 | Přehled — historie výkonu | **mockup v2:** https://claude.ai/code/artifact/9dd2f22f-2f6f-452c-ab7c-fda1a1bffe2c — bez bublin kolem každého týdne, dvanáct měsíců pod sebou. Čeká na posouzení. |
 | 20 | Ikony jako textové znaky (plusko, šipky) → SVG, optický střed změřen | ~~uzavřeno~~; křížky `×` v modálech projít při jejich předělání |
 | 21 | Návyky — seznam skákal při přepnutí dne | ~~uzavřeno~~ |
-| 22 | Návyky — označení vybraného dne a dneška | zakroužkování pryč; názvy dnů lehčí, vybraný den tučný a tmavý, dnešek má pod kolečkem fialovou tečku — čeká na posouzení |
+| 22 | Návyky — označení dnů | vybraný den výrazně tučnější, dnešek fialová tečka, budoucí dny mají šikmou texturu (jde na ně kliknout, ale nejde zaškrtnout), minulé týdny jemně utlumené. Nahrazovat jde tenhle týden a celý minulý — čeká na posouzení |
 
 
 ## ⏸️ Rozdělané (schválně odloženo)
