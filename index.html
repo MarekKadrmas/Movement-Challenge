@@ -6475,7 +6475,9 @@ function renderDnesek(){
     const rad = 5;   // pevne zaobleni; cele lezi nad ryskou diky posunu MM_SL_NAD_MIN
     const dnesek=d.ds===today, budouci=(d.ds>today && !MM_TYDEN_UKAZKA);   // v ukazce vykreslit cely tyden
     return '<div class="hc-d'+(dnesek?' je-dnes':'')+(budouci?' je-pak':'')+(d.b>mCil&&!budouci?' je-nad':'')+'">'
-      +'<div class="hc-dsl">'+((d.b>mCil&&!budouci)?'<svg class="hc-mark" preserveAspectRatio="none"><path/></svg>':'')+'<i style="height:'+((d.b>0&&!budouci)?v:0)+'%;border-radius:'+rad+'px '+rad+'px 5px 5px'+((R*pom)>MM_SL_MAX_PX?(()=>{const tot=R*pom; const P=x=>Math.min(100,x/tot*100).toFixed(1);const g='linear-gradient(to top,#000 '+P(MM_SL_MAX_PX-6)+'%,rgba(0,0,0,.55) '+P(MM_SL_MAX_PX+4)+'%,rgba(0,0,0,.22) '+P(MM_SL_MAX_PX+14)+'%,rgba(0,0,0,.22) 100%)';return ';-webkit-mask-image:'+g+';mask-image:'+g;})():'')+'"></i>'+((d.b>0&&!budouci)?'<u>'+fmtNum(d.b)+'</u>':'')+'</div>'
+      +'<div class="hc-dsl">'+((d.b>mCil&&!budouci)?'<svg class="hc-mark" preserveAspectRatio="none"><path/></svg>':'')+'<i style="height:'+((d.b>0&&!budouci)?v:0)+'%;border-radius:'+rad+'px '+rad+'px 5px 5px'+(pom>1?(()=>{const X=(100/pom).toFixed(2);   // presne linka cile: pod ni plna barva, nad ni vybledly odstin
+        const g='linear-gradient(to top,#000 0 '+X+'%,rgba(0,0,0,.34) '+X+'%,rgba(0,0,0,.34) 100%)';
+        return ';-webkit-mask-image:'+g+';mask-image:'+g;})():'')+'"></i>'+((d.b>0&&!budouci)?'<u>'+fmtNum(d.b)+'</u>':'')+'</div>'
       +'<span>'+_pism[i]+'</span></div>';
   }).join('');
   const mTrendHtml = todayPts<=0 ? ''
@@ -7347,8 +7349,11 @@ const MM_SL_ROZPLYV_DO = 82;     // px ode dna — pod pozdravem uz sloupec neni
 const MM_SL_ROZPLYV_ZLOM = 64;   // px ode dna — tady uz jen slabe prosvita
 // ?tyden=0,53,100,147,200,300,27 — ukazkovy tyden v horni karte; hodnoty jsou procenta
 // denniho cile, aby to sedelo at ma kdokoli cil jakykoli. Jen zobrazeni, do DB se nezapisuje.
+// DOCASNE (Marek 2026-08-25): ukazkovy tyden je natvrdo, aby si nemusel nic psat do adresy.
+// Po odsouhlaseni vratit vychozi hodnotu na null.
+const MM_TYDEN_VYCHOZI = [0,53,100,147,200,300,27];
 const MM_TYDEN_UKAZKA = (function(){ try{ const m=location.search.match(/[?&]tyden=([0-9,]+)/);
-  return m ? m[1].split(',').map(x=>Number(x)||0).slice(0,7) : null; }catch(_){ return null; } })();
+  return m ? m[1].split(',').map(x=>Number(x)||0).slice(0,7) : MM_TYDEN_VYCHOZI; }catch(_){ return MM_TYDEN_VYCHOZI; } })();
 const MM_UKAZKA_KARTA = true;
 const MM_UKAZKA_CIL = 75;    // realny cil v nove skale (nasobek 25)
 const MM_UKAZKA_DNY = [50, 150, 25, 100, 0, 0, 0];   // Po-Ne; vse nasobky 25, Ct = dnesek
