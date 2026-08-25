@@ -2163,6 +2163,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .nvk .tyd span.dnes::after{content:'';position:absolute;left:50%;bottom:1px;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:var(--fial);}
 .nvk .tyd span.dnes.vyb::after{background:var(--fial2);}
 .nvk .tyd span.plny .kol u{color:color-mix(in srgb,var(--green) 78%,var(--label));}
+.nvk .tyd span.plny.vyb .kol u{color:var(--label);}
 .nvk .tyd span.pak{opacity:.9;}
 .nvk .tyd span.pak .kol::after{content:'';position:absolute;inset:0;border-radius:50%;pointer-events:none;background:repeating-linear-gradient(45deg,color-mix(in srgb,var(--sec) 26%,transparent) 0 1px,transparent 1px 4px);-webkit-mask-image:radial-gradient(circle at 50% 50%,#000 63%,transparent 64%);mask-image:radial-gradient(circle at 50% 50%,#000 63%,transparent 64%);}
 .nvk .tyd span.pak .kol u{color:color-mix(in srgb,var(--ter) 78%,transparent);}
@@ -2191,10 +2192,10 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .nvk .tecky i.on{background:var(--nc);}
 .nvk .tydny{display:inline-flex;gap:2.5px;align-items:center;}
 .nvk .tydny i{width:7px;height:7px;border-radius:50%;background:var(--track);cursor:pointer;transition:background .18s ease;}
-.nvk .tydny i.on{background:var(--nc);}
+.nvk .tydny i.on{background:var(--fial);}
 .nvk .tydny i.pak{opacity:.4;cursor:default;}
 .nvk .tydny i.ten{box-shadow:0 0 0 1.5px color-mix(in srgb,var(--sec) 36%,transparent);}
-.nvk .tydny i.on.ten{box-shadow:0 0 0 1.5px color-mix(in srgb,var(--nc) 45%,transparent);}
+.nvk .tydny i.on.ten{box-shadow:0 0 0 1.5px color-mix(in srgb,var(--fial) 45%,transparent);}
 .nvk .mprouzek{display:inline-block;width:34px;height:5px;border-radius:999px;background:var(--track);overflow:hidden;}
 .nvk .mprouzek i{display:block;height:100%;border-radius:999px;background:var(--nc);}
 .nvk .cilpomer{font-size:11.15px;font-weight:800;color:var(--sec);}
@@ -3053,6 +3054,7 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .nvk .tyd span.dnes::after{content:'';position:absolute;left:50%;bottom:1px;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:var(--fial);}
 .nvk .tyd span.dnes.vyb::after{background:var(--fial2);}
 .nvk .tyd span.plny .kol u{color:color-mix(in srgb,var(--green) 78%,var(--label));}
+.nvk .tyd span.plny.vyb .kol u{color:var(--label);}
 .nvk .tyd span.pak{opacity:.9;}
 .nvk .tyd span.pak .kol::after{content:'';position:absolute;inset:0;border-radius:50%;pointer-events:none;background:repeating-linear-gradient(45deg,color-mix(in srgb,var(--sec) 26%,transparent) 0 1px,transparent 1px 4px);-webkit-mask-image:radial-gradient(circle at 50% 50%,#000 63%,transparent 64%);mask-image:radial-gradient(circle at 50% 50%,#000 63%,transparent 64%);}
 .nvk .tyd span.pak .kol u{color:color-mix(in srgb,var(--ter) 78%,transparent);}
@@ -3081,10 +3083,10 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .nvk .tecky i.on{background:var(--nc);}
 .nvk .tydny{display:inline-flex;gap:2.5px;align-items:center;}
 .nvk .tydny i{width:7px;height:7px;border-radius:50%;background:var(--track);cursor:pointer;transition:background .18s ease;}
-.nvk .tydny i.on{background:var(--nc);}
+.nvk .tydny i.on{background:var(--fial);}
 .nvk .tydny i.pak{opacity:.4;cursor:default;}
 .nvk .tydny i.ten{box-shadow:0 0 0 1.5px color-mix(in srgb,var(--sec) 36%,transparent);}
-.nvk .tydny i.on.ten{box-shadow:0 0 0 1.5px color-mix(in srgb,var(--nc) 45%,transparent);}
+.nvk .tydny i.on.ten{box-shadow:0 0 0 1.5px color-mix(in srgb,var(--fial) 45%,transparent);}
 .nvk .mprouzek{display:inline-block;width:34px;height:5px;border-radius:999px;background:var(--track);overflow:hidden;}
 .nvk .mprouzek i{display:block;height:100%;border-radius:999px;background:var(--nc);}
 .nvk .cilpomer{font-size:11.15px;font-weight:800;color:var(--sec);}
@@ -7453,11 +7455,28 @@ function mmAkuzativ(j){
 function mmZnackyCile(sh){ /* ryska je ciste v CSS, nic se nedopocitava */ }
 // Sloupec se jmenem siroky presne jako nejdelsi jmeno — plaminky pak sedi hned za jmeny
 // a zaroven pod sebou (kazdy radek je vlastni grid, takze se sam nesrovna).
+function mmSirkaTextu(el){
+  // sirka textu z fontu — na rozdil od scrollWidth funguje i pro skrytou obrazovku
+  try{
+    const cs=getComputedStyle(el);
+    const cv=mmSirkaTextu._cv||(mmSirkaTextu._cv=document.createElement('canvas'));
+    const cx=cv.getContext('2d');
+    cx.font=cs.fontStyle+' '+cs.fontWeight+' '+cs.fontSize+' '+cs.fontFamily;
+    const t=(el.textContent||'').trim();
+    let w=cx.measureText(t).width;
+    const ls=parseFloat(cs.letterSpacing);
+    if(!isNaN(ls) && t.length) w+=ls*t.length;
+    return w;
+  }catch(_){ return 0; }
+}
 function mmSrovnejJmena(sh){
   if(!sh) return;
   sh.querySelectorAll(".lc").forEach(lc=>{
-    let max=0; lc.querySelectorAll(".lnmt").forEach(e=>{ max=Math.max(max, e.scrollWidth); });
-    if(max) lc.style.setProperty("--lnw", Math.ceil(max)+1+"px");
+    let max=0;
+    lc.querySelectorAll(".lnmt").forEach(e=>{ max=Math.max(max, e.scrollWidth || mmSirkaTextu(e)); });
+    if(max){ window._mmLnw=Math.ceil(max)+1; }
+    const w=max ? Math.ceil(max)+1 : window._mmLnw;      // radeji posledni znama hodnota nez zadna
+    if(w) lc.style.setProperty("--lnw", w+"px");
   });
 }
 function mmSerieChip(pid){
@@ -7970,42 +7989,51 @@ function mmHabitDenKolecko(pct, nahr, dnes, vybrany, klic, vzdyFajfka){
   const gid='hg'+klic;
   // Oblouk je JEDEN vyplneny tvar, ktery se na konci rozsiri do kulicky — zadny samostatny
   // kolecko s vlastnim gradientem a svarem uprostred (Marek 2026-08-25).
+  // Oblouk kreslime skutecnymi obloukovymi prikazy (A), ne lomenou carou — 16 usecek delalo
+  // u dlouheho oblouku viditelny mnohouhelnik (Marek 2026-08-25). Lomena je jen kratka spicka.
   const oblouk=(odPct, doPct, vypln, sKulickou)=>{
-    const a=(p)=>((p/100)*2*Math.PI)-Math.PI/2;
     const delka=doPct-odPct; if(delka<=0.15) return '';
-    const rozsah=Math.min(delka, 100*(3.4/c));            // po jake casti se linka rozsiruje do kulicky
-    const kroku=16, body=[];
-    for(let i=0;i<=kroku;i++){
-      const p=odPct+delka*(i/kroku);
-      let h=sw/2;
-      if(sKulickou && p>doPct-rozsah){ const t=(p-(doPct-rozsah))/rozsah; h=sw/2+(kul-sw/2)*(t*t*(3-2*t)); }
-      body.push({a:a(p), h});
+    const uhel=(p)=>((p/100)*2*Math.PI)-Math.PI/2;
+    const bod=(u,rr)=>(stred+rr*Math.cos(u)).toFixed(3)+' '+(stred+rr*Math.sin(u)).toFixed(3);
+    const h=sw/2;
+    const spicka = sKulickou ? Math.min(delka*0.6, 100*(3.4/c)) : 0;
+    const konecHl = doPct - spicka;                    // kam saha cast se stalou sirkou
+    const velky = (konecHl-odPct)>50 ? 1 : 0;
+    const uA=uhel(odPct), uB=uhel(konecHl);
+    let d='M'+bod(uA, r+h)+' A'+(r+h)+' '+(r+h)+' 0 '+velky+' 1 '+bod(uB, r+h)+' ';
+    if(spicka>0){
+      const kroku=8, ven=[], dovnitr=[];
+      for(let i=1;i<=kroku;i++){
+        const t=i/kroku, p=konecHl+spicka*t;
+        const hh=h+(kul-h)*(t*t*(3-2*t)), u=uhel(p);
+        ven.push(bod(u, r+hh)); dovnitr.push(bod(u, r-hh));
+      }
+      d+=ven.map(x=>'L'+x+' ').join('');
+      const posl=uhel(doPct);
+      d+='A'+kul.toFixed(2)+' '+kul.toFixed(2)+' 0 0 1 '+bod(posl, r-kul)+' ';
+      d+=dovnitr.slice(0,-1).reverse().map(x=>'L'+x+' ').join('');
+    } else {
+      d+='A'+h+' '+h+' 0 0 1 '+bod(uB, r-h)+' ';
     }
-    const bod=(u,rr)=>(stred+rr*Math.cos(u)).toFixed(2)+' '+(stred+rr*Math.sin(u)).toFixed(2);
-    let d='M'+bod(body[0].a, r+body[0].h)+' ';
-    for(let i=1;i<body.length;i++) d+='L'+bod(body[i].a, r+body[i].h)+' ';
-    const k=body[body.length-1];
-    d+='A'+k.h.toFixed(2)+' '+k.h.toFixed(2)+' 0 0 1 '+bod(k.a, r-k.h)+' ';
-    for(let i=body.length-2;i>=0;i--) d+='L'+bod(body[i].a, r-body[i].h)+' ';
-    const z=body[0];
-    d+='A'+z.h.toFixed(2)+' '+z.h.toFixed(2)+' 0 0 1 '+bod(z.a, r+z.h)+' Z';
+    d+='A'+(r-h)+' '+(r-h)+' 0 '+velky+' 0 '+bod(uA, r-h)+' ';
+    d+='A'+h+' '+h+' 0 0 1 '+bod(uA, r+h)+' Z';
     return '<path d="'+d+'" style="fill:'+vypln+'"/>';
   };
   const doP=Math.min(100, pct), doN=Math.min(100, pct+nahr);
   return '<svg viewBox="0 0 '+s+' '+s+'" style="width:100%;height:auto;display:block">'
     // gradient v souradnicich cele kresby, aby oblouk i kulicka vzorkovaly TOTEZ
     +'<defs><linearGradient id="'+gid+'p" gradientUnits="userSpaceOnUse" x1="'+(s*0.08)+'" y1="0" x2="'+(s*0.92)+'" y2="'+s+'">'
-      +'<stop offset="0" style="stop-color:color-mix(in srgb,var(--fial) 55%,#fff)"/>'
-      +'<stop offset="0.5" style="stop-color:var(--fial)"/>'
-      +'<stop offset="1" style="stop-color:color-mix(in srgb,var(--fial2) 82%,#000)"/></linearGradient>'
+      +'<stop offset="0" style="stop-color:color-mix(in srgb,var(--fial) 34%,#fff)"/>'
+      +'<stop offset="0.45" style="stop-color:var(--fial)"/>'
+      +'<stop offset="1" style="stop-color:color-mix(in srgb,var(--fial2) 58%,#1B0D46)"/></linearGradient>'
     +'<linearGradient id="'+gid+'n" gradientUnits="userSpaceOnUse" x1="'+(s*0.08)+'" y1="0" x2="'+(s*0.92)+'" y2="'+s+'">'
       +'<stop offset="0" stop-color="#F5BC63"/><stop offset="1" stop-color="#D06E12"/></linearGradient>'
     +'<linearGradient id="'+gid+'v" x1="0" y1="1" x2="1" y2="0">'
       +'<stop offset="0" style="stop-color:color-mix(in srgb,var(--green) 72%,#fff)"/><stop offset="1" style="stop-color:var(--green)"/></linearGradient></defs>'
     +'<circle cx="'+stred+'" cy="'+stred+'" r="'+(r-sw/2)+'" style="fill:color-mix(in srgb,var(--fial) 11%,transparent)"/>'
     +'<circle cx="'+stred+'" cy="'+stred+'" r="'+r+'" fill="none" style="stroke:color-mix(in srgb,var(--fial) 20%,var(--track))" stroke-width="'+sw+'"/>'
-    +((plny||vzdyFajfka)?'<path class="fajf" d="M'+(stred-(vzdyFajfka&&!plny?5.6:7.65))+' '+(stred-(vzdyFajfka&&!plny?0.25:0.35))+' l'
-      +(vzdyFajfka&&!plny?'4 4 l7.2-7.6':'5.5 5.5 l9.8-10.3')+'" fill="none" style="stroke:'
+    +((plny||vzdyFajfka)?'<path class="fajf" d="M'+(stred-(vzdyFajfka&&!plny?5.6:6.45))+' '+(stred-(vzdyFajfka&&!plny?0.25:0.3))+' l'
+      +(vzdyFajfka&&!plny?'4 4 l7.2-7.6':'4.6 4.6 l8.3-8.7')+'" fill="none" style="stroke:'
       +((vzdyFajfka&&!plny)?'url(#'+gid+'p)':'var(--green)')+'" stroke-width="'+((vzdyFajfka&&!plny)?'3':'3.6')+'" stroke-linecap="round" stroke-linejoin="round" opacity="'
       +((vzdyFajfka&&!plny)?'.5':'.3')+'"/>':'')
     +(pct>0 ? oblouk(0, doP, 'url(#'+gid+'p)', !plny && nahr<=0) : '')
