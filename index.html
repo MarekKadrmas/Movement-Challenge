@@ -1938,13 +1938,14 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .hcard .hc-d{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
 .mm .hcard .hc-dsl{position:relative;width:100%;aspect-ratio:1;border-radius:5px;background:var(--track);}
 .mm .hcard .hc-dsl i{position:absolute;left:0;right:0;bottom:0;display:block;border-radius:5px;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);transition:height .5s cubic-bezier(.22,1,.36,1);}
+.mm .hcard .hc-nad{position:absolute;left:0;right:0;bottom:100%;display:block;border-radius:5px 5px 0 0;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);-webkit-mask-image:linear-gradient(to top,rgba(0,0,0,.46),rgba(0,0,0,.11));mask-image:linear-gradient(to top,rgba(0,0,0,.46),rgba(0,0,0,.11));}
 .mm .hcard .hc-mark{position:absolute;left:0;right:0;top:0;height:11px;z-index:3;pointer-events:none;overflow:visible;-webkit-mask-image:linear-gradient(to bottom,#000 0 42%,transparent 100%);mask-image:linear-gradient(to bottom,#000 0 42%,transparent 100%);}
 .mm .hcard .hc-mark path{fill:none;stroke:rgba(255,255,255,.55);stroke-width:0.85;stroke-linecap:round;}
 .mm .hcard .hc-d.je-dnes span{color:var(--green);font-weight:900;}
 .mm .hcard .hc-dsl u{position:absolute;left:0;right:0;bottom:1px;text-align:center;text-decoration:none;font-size:9.06px;font-weight:800;line-height:1;letter-spacing:-.02em;color:#fff;font-variant-numeric:tabular-nums;pointer-events:none;z-index:4;text-shadow:0 1px 2px rgba(0,0,0,.42);}
 .mm 
 .mm .hcard .hc-d span{font-size:9.66px;font-weight:800;color:var(--ter);line-height:1;}
-.mm .hcard .hc-d.je-dnes .hc-dsl i{background:linear-gradient(180deg,color-mix(in srgb,var(--green) 82%,#fff) 0%,color-mix(in srgb,var(--green) 88%,#000) 82%);}
+.mm .hcard .hc-d.je-dnes .hc-dsl i,.hcard .hc-d.je-dnes .hc-nad{background:linear-gradient(180deg,color-mix(in srgb,var(--green) 82%,#fff) 0%,color-mix(in srgb,var(--green) 88%,#000) 82%);}
 .mm 
 .mm .hcard .hc-d.je-pak .hc-dsl{background:color-mix(in srgb,var(--track) 55%,transparent);}
 .mm .kruh{display:flex;flex-direction:column;align-items:center;gap:2px;flex:0 0 auto;}
@@ -2885,13 +2886,14 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .hcard .hc-d{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
 .hcard .hc-dsl{position:relative;width:100%;aspect-ratio:1;border-radius:5px;background:var(--track);}
 .hcard .hc-dsl i{position:absolute;left:0;right:0;bottom:0;display:block;border-radius:5px;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);transition:height .5s cubic-bezier(.22,1,.36,1);}
+.hcard .hc-nad{position:absolute;left:0;right:0;bottom:100%;display:block;border-radius:5px 5px 0 0;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);-webkit-mask-image:linear-gradient(to top,rgba(0,0,0,.46),rgba(0,0,0,.11));mask-image:linear-gradient(to top,rgba(0,0,0,.46),rgba(0,0,0,.11));}
 .hcard .hc-mark{position:absolute;left:0;right:0;top:0;height:11px;z-index:3;pointer-events:none;overflow:visible;-webkit-mask-image:linear-gradient(to bottom,#000 0 42%,transparent 100%);mask-image:linear-gradient(to bottom,#000 0 42%,transparent 100%);}
 .hcard .hc-mark path{fill:none;stroke:rgba(255,255,255,.55);stroke-width:0.85;stroke-linecap:round;}
 .hcard .hc-d.je-dnes span{color:var(--green);font-weight:900;}
 .hcard .hc-dsl u{position:absolute;left:0;right:0;bottom:1px;text-align:center;text-decoration:none;font-size:9.06px;font-weight:800;line-height:1;letter-spacing:-.02em;color:#fff;font-variant-numeric:tabular-nums;pointer-events:none;z-index:4;text-shadow:0 1px 2px rgba(0,0,0,.42);}
 
 .hcard .hc-d span{font-size:9.66px;font-weight:800;color:var(--ter);line-height:1;}
-.hcard .hc-d.je-dnes .hc-dsl i{background:linear-gradient(180deg,color-mix(in srgb,var(--green) 82%,#fff) 0%,color-mix(in srgb,var(--green) 88%,#000) 82%);}
+.hcard .hc-d.je-dnes .hc-dsl i,.hcard .hc-d.je-dnes .hc-nad{background:linear-gradient(180deg,color-mix(in srgb,var(--green) 82%,#fff) 0%,color-mix(in srgb,var(--green) 88%,#000) 82%);}
 
 .hcard .hc-d.je-pak .hc-dsl{background:color-mix(in srgb,var(--track) 55%,transparent);}
 .kruh{display:flex;flex-direction:column;align-items:center;gap:2px;flex:0 0 auto;}
@@ -6475,15 +6477,17 @@ function renderDnesek(){
   const _pism=['P','Ú','S','Č','P','S','N'];
   const mSloupce=_dnyB.map((d,i)=>{
     const pom=d.b/Math.max(1,mCil);
-    const R=MM_SL_RAMECEK;
-    const nadPx = pom>1 ? (pom-1)*R : 0;   // stejne meritko jako pod cilem
-    const v = Math.round(pom*100);   // pomer bez stropu; nad maximem se sloupec zprahledni
-    const rad = 5;   // pevne zaobleni; cele lezi nad ryskou diky posunu MM_SL_NAD_MIN
+    const v = Math.round(pom*100);   // pomer bez stropu
+    // Dve vrstvy misto jedne s maskou: cast do cile konci PRESNE na rysce a ma jeji radiusy,
+    // prebytek sedi nad ni. Jednim obdelnikem s maskou zustaval nad ryskou plny pruh a plne
+    // rohy nad zaoblenim (Marek 2026-08-25).
+    const doCile = Math.min(100, v), nadCil = Math.max(0, v-100);
     const dnesek=d.ds===today, budouci=(d.ds>today && !MM_TYDEN_UKAZKA);   // v ukazce vykreslit cely tyden
     return '<div class="hc-d'+(dnesek?' je-dnes':'')+(budouci?' je-pak':'')+(d.b>mCil&&!budouci?' je-nad':'')+'">'
-      +'<div class="hc-dsl">'+((d.b>mCil&&!budouci)?'<svg class="hc-mark" preserveAspectRatio="none"><path/></svg>':'')+'<i style="height:'+((d.b>0&&!budouci)?v:0)+'%;border-radius:'+rad+'px '+rad+'px 5px 5px'+(pom>1?(()=>{const X=(100/pom).toFixed(2);   // presne linka cile: pod ni plna barva, nad ni vybledly odstin
-        const g='linear-gradient(to top,#000 0 '+X+'%,rgba(0,0,0,.44) '+X+'%,rgba(0,0,0,.11) 100%)';
-        return ';-webkit-mask-image:'+g+';mask-image:'+g;})():'')+'"></i>'+((d.b>0&&!budouci)?'<u>'+fmtNum(d.b)+'</u>':'')+'</div>'
+      +'<div class="hc-dsl">'+((d.b>mCil&&!budouci)?'<svg class="hc-mark" preserveAspectRatio="none"><path/></svg>':'')
+      +'<i style="height:'+((d.b>0&&!budouci)?doCile:0)+'%"></i>'
+      +((nadCil>0&&!budouci)?'<b class="hc-nad" style="height:'+nadCil+'%"></b>':'')
+      +((d.b>0&&!budouci)?'<u>'+fmtNum(d.b)+'</u>':'')+'</div>'
       +'<span>'+_pism[i]+'</span></div>';
   }).join('');
   const mTrendHtml = todayPts<=0 ? ''
@@ -7342,17 +7346,10 @@ const MM_CIL_MIN=40, MM_CIL_MAX=400;
 // DOCASNE (Marek 2026-08-20): ukazka horni karty na telefonu — cil 150 b a tyden
 // s minimalnimi dny. Jen zobrazeni, do DB se nic nezapisuje. Vypnout: false.
 
-// Rozmery sloupcu tydne v horni karte (layout px; ramecek je ctverec 30x30).
-const MM_SL_RAMECEK = 30;   // ramecek = cil; ctverec 30x30 (sirka bunky pri sedmi dnech)
-const MM_SL_MAX_PX  = 40;   // od teto vysky se sloupec zprahledni — prave tam zacina textovy radek
-// minimum vysky uz neni potreba — cislo je pod sloupcem, ne v nem
-// posun nad cilem uz neni potreba — nejmensi krok (25 b) dela pri cili 150 presne 5 px = radius
-
-
-
-// rozplyv zacina presne na MM_SL_MAX_PX — do maxima je sloupec uplne plny
-const MM_SL_ROZPLYV_DO = 82;     // px ode dna — pod pozdravem uz sloupec neni videt vubec
-const MM_SL_ROZPLYV_ZLOM = 64;   // px ode dna — tady uz jen slabe prosvita
+// Sloupce tydne v horni karte: ramecek = denni cil (ctverec, sirka bunky pri sedmi dnech).
+// Zadne pixelove konstanty — cast do cile je <i> s vyskou min(100, pomer)%, prebytek je
+// <b class="hc-nad"> nad rameckem s vyskou (pomer-100)%. Vse v procentech ramecku,
+// takze to sedi pri jakekoli sirce telefonu.
 // ?tyden=0,53,100,147,200,300,27 — ukazkovy tyden v horni karte; hodnoty jsou procenta
 // denniho cile, aby to sedelo at ma kdokoli cil jakykoli. Jen zobrazeni, do DB se nezapisuje.
 // DOCASNE (Marek 2026-08-25): ukazkovy tyden je natvrdo, aby si nemusel nic psat do adresy.
