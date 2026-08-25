@@ -36,6 +36,7 @@
 | 17 | Plusko ve spodní liště na střed | hotovo |
 | 18 | „2/5" v bublině Návyky — větší, display font | hotovo |
 | 19 | Přehled — historie čtverečků za týden/měsíc/rok | **mockup se dělá** |
+| 20 | Ikony jako textové znaky (plusko, šipky) → SVG, optický střed změřen | hotovo; křížky `×` v modálech projít při jejich předělání |
 
 
 ## ⏸️ Rozdělané (schválně odloženo)
