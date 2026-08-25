@@ -35,7 +35,7 @@
 | 16 | Výběr aktivity (zelené plus) v tmavém režimu | ~~uzavřeno~~ |
 | 17 | Plusko ve spodní liště na střed | ~~uzavřeno~~ |
 | 18 | Bublina Návyky — „2/5" blíž k šipce, ikona je stejný prstenec s kuličkou jako v Návycích | čeká na posouzení (posunuto podruhé) |
-| 19 | Přehled — historie čtverečků | **zadání od Marka 25. 8.:** proklik z horního banneru → přehled týdnů v průběhu měsíce a celého roku, jednotlivé týdny se dají rozkliknout. V přehledu se dny nad cíl značí jen plusky nad čtverečky nebo lehkým přesahem; detailní výška sloupce až po rozkliknutí týdne. **Mockup se dělá.** |
+| 19 | Přehled — historie výkonu | **mockup hotový:** https://claude.ai/code/artifact/9dd2f22f-2f6f-452c-ab7c-fda1a1bffe2c — tři obrazovky (měsíc / rok / detail týdne). Zadání: proklik z horního banneru, den nad cíl se v přehledu značí jen pluskem nad čtverečkem, přesná výška sloupce až po rozkliknutí týdne. Čeká na Markovo posouzení. |
 | 20 | Ikony jako textové znaky (plusko, šipky) → SVG, optický střed změřen | ~~uzavřeno~~; křížky `×` v modálech projít při jejich předělání |
 | 21 | Návyky — seznam skákal při přepnutí dne | ~~uzavřeno~~ |
 
