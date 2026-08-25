@@ -6503,7 +6503,7 @@ function renderDnesek(){
     const dnesek=d.ds===today, budouci=(d.ds>today && !MM_TYDEN_UKAZKA);   // v ukazce vykreslit cely tyden
     return '<div class="hc-d'+(dnesek?' je-dnes':'')+(budouci?' je-pak':'')+(d.b>mCil&&!budouci?' je-nad':'')+'">'
       +'<div class="hc-dsl">'
-      +'<i style="height:'+((d.b>0&&!budouci)?doCile:0)+'%'+((nadCil>0&&!budouci)?';background:var(--green)':'')+'"></i>'
+      +'<i style="height:'+((d.b>0&&!budouci)?doCile:0)+'%"></i>'
       +((nadCil>0&&!budouci)?'<b class="hc-nad" style="height:calc('+nadCil+'% + 5px)"></b>':'')
       +((d.b>mCil&&!budouci)?'<i class="hc-mark"></i>':'')
       +((d.b>0&&!budouci)?'<u>'+fmtNum(d.b)+'</u>':'')+'</div>'
@@ -6565,7 +6565,7 @@ function renderDnesek(){
   // Nadpis zebricku vlevo, odpocet soutezniho obdobi vpravo — stejny vzor jako Kalendar aktivity / Deni.
   const odpocetHtml='<div class="sl slzeb"><span>Žebříček</span><i class="zebodp'+naleh+'">'+odpocetTxt+'</i></div>';
   const tpl=`<div class="hcard"><div class="hc-hd"><span class="hc-poz">${mmGreet()}${me?', '+esc(mmVocative(mmFirst(me.jmeno))):''}</span><span class="hc-dat">${dlKratke}</span></div><div class="hc-top">${mSerie>0?'<span class="hc-serie"><svg class="i"><use href="#i-flame"/></svg>'+mSerie+'</span>':''}<span class="hc-r">${mTrendHtml}<span class="hc-num">${fmtNum(todayPts)}</span><span class="hc-cil">z ${fmtNum(mCil)} b</span></span></div><div class="hc-tyden">${mSloupce}</div></div>
-  <div class="hbm hbnav2" style="margin-top:10px;cursor:pointer" onclick="mmGo('navyky')"><div class="hi hikol nvk">${mmHabitDenKolecko(habTotal>0?Math.round(Math.min(habDone,habTotal)/habTotal*100):0,0,false,false,'bub')}</div><div class="ht">Návyky dnes<span class="hdots">${Array.from({length:habTotal},(_,i)=>'<i'+(i<habDone?' class="on"':'')+'></i>').join('')}</span></div><div class="pct" style="display:flex;align-items:baseline;gap:0;align-self:center;position:relative;top:1px"><b>${habDone}</b><span style="color:var(--ter);font-weight:700;margin-left:1.5px;margin-right:2px">/${habTotal}</span><span class="hbsip"><svg class="i" aria-hidden="true"><use href="#i-chev"/></svg></span></div></div>
+  <div class="hbm hbnav2" style="margin-top:10px;cursor:pointer" onclick="mmGo('navyky')"><div class="hi hikol nvk">${mmHabitDenKolecko(habTotal>0?Math.round(Math.min(habDone,habTotal)/habTotal*100):0,0,false,false,'bub',true)}</div><div class="ht">Návyky dnes<span class="hdots">${Array.from({length:habTotal},(_,i)=>'<i'+(i<habDone?' class="on"':'')+'></i>').join('')}</span></div><div class="pct" style="display:flex;align-items:baseline;gap:0;align-self:center;position:relative;top:1px"><b>${habDone}</b><span style="color:var(--ter);font-weight:700;margin-left:1.5px;margin-right:2px">/${habTotal}</span><span class="hbsip"><svg class="i" aria-hidden="true"><use href="#i-chev"/></svg></span></div></div>
   ${odpocetHtml}<div class="lcard${mmPartaZalTrida()}">${mmPartaSegBar()}
   <div class="lc">${rows||'<div style="padding:20px;text-align:center;color:var(--ter)">Zatím žádné body</div>'}</div></div>
   <div class="sl" onclick="mmOpenSub('rokparty')" style="cursor:pointer;touch-action:manipulation"><span>Kalendář aktivity</span><a style="pointer-events:none">celý rok →</a></div>
@@ -7951,7 +7951,7 @@ function mmHabitWeekStripHtml(pid, mine){
 // Barvy prstence (Marek 2026-08-24): prstenec je fialovy — to je barva postupu.
 // Dotazeny den se pozna zelenou vyplni s fajfkou, prstenec kolem zustava fialovy.
 // Oranzova NENI barva postupu: nese vyhradne vysec ziskanou nahrazenim navyku z jineho dne.
-function mmHabitDenKolecko(pct, nahr, dnes, vybrany, klic){
+function mmHabitDenKolecko(pct, nahr, dnes, vybrany, klic, vzdyFajfka){
   const r=14, sw=4.4, kul=sw*0.62, c=2*Math.PI*r;
   // viewBox musi pojmout i kulicku na konci oblouku, jinak ji dole orizne (Marek 2026-08-25)
   const s=2*(r+kul)+0.5;
@@ -7978,16 +7978,22 @@ function mmHabitDenKolecko(pct, nahr, dnes, vybrany, klic){
   return '<svg viewBox="0 0 '+s+' '+s+'" style="width:100%;height:auto;display:block">'
     +'<defs><linearGradient id="'+gid+'v" x1="0" y1="1" x2="1" y2="0">'
       +'<stop offset="0" style="stop-color:color-mix(in srgb,var(--green) 72%,#fff)"/><stop offset="1" style="stop-color:var(--green)"/></linearGradient>'
+    +'<linearGradient id="'+gid+'p" x1="0.12" y1="0" x2="0.88" y2="1">'
+      +'<stop offset="0" style="stop-color:color-mix(in srgb,var(--fial) 72%,#fff)"/>'
+      +'<stop offset="0.55" style="stop-color:var(--fial)"/>'
+      +'<stop offset="1" style="stop-color:var(--fial2)"/></linearGradient>'
     +'<linearGradient id="'+gid+'n" x1="0" y1="1" x2="1" y2="0">'
       +'<stop offset="0" stop-color="#F0A93C"/><stop offset="1" stop-color="#E07C1F"/></linearGradient></defs>'
     +'<circle cx="'+stred+'" cy="'+stred+'" r="'+(r-sw/2)+'" style="fill:color-mix(in srgb,var(--fial) 11%,transparent)"/>'
     +'<circle cx="'+stred+'" cy="'+stred+'" r="'+r+'" fill="none" style="stroke:color-mix(in srgb,var(--fial) 20%,var(--track))" stroke-width="'+sw+'"/>'
-    +(plny?'<path class="fajf" d="M'+(stred-7.6)+' '+(stred+0.4)+' l5.5 5.5 l9.8-10.3" fill="none" style="stroke:var(--green)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" opacity=".3"/>':'')
+    +((plny||vzdyFajfka)?'<path class="fajf" d="M'+(stred-7.65)+' '+(stred-0.35)+' l5.5 5.5 l9.8-10.3" fill="none" style="stroke:'
+      +((vzdyFajfka&&!plny)?'url(#'+gid+'p)':'var(--green)')+'" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" opacity="'
+      +((vzdyFajfka&&!plny)?'.5':'.3')+'"/>':'')
     +(nahr>0?'<circle cx="'+stred+'" cy="'+stred+'" r="'+r+'" fill="none" stroke="url(#'+gid+'n)" stroke-width="'+sw+'" stroke-linecap="round"'
       +' stroke-dasharray="'+dilN.toFixed(1)+' '+(c-dilN).toFixed(1)+'" stroke-dashoffset="'+(-dilP).toFixed(1)+'" transform="rotate(-90 '+stred+' '+stred+')"/>':'')
-    +(pct>0?'<circle cx="'+stred+'" cy="'+stred+'" r="'+r+'" fill="none" style="stroke:var(--fial)" stroke-width="'+sw+'" stroke-linecap="round"'
+    +(pct>0?'<circle cx="'+stred+'" cy="'+stred+'" r="'+r+'" fill="none" stroke="url(#'+gid+'p)" stroke-width="'+sw+'" stroke-linecap="round"'
       +' stroke-dasharray="'+dilP.toFixed(1)+' '+(c-dilP).toFixed(1)+'" transform="rotate(-90 '+stred+' '+stred+')"/>':'')
-    +((pct+nahr)>0&&!plny ? hlava(konec, nahr>0?'#E07C1F':'var(--fial)') : '')
+    +((pct+nahr)>0&&!plny ? hlava(konec, nahr>0?'#E07C1F':'url(#'+gid+'p)') : '')
     +'</svg>';
 }
 
@@ -8152,8 +8158,12 @@ function mmHabitSwipe(sh){
       posun(el, 0, cil, true); posun(pred, -100, cil, true); posun(po, 100, cil, true);
       const nd=new Date((state.habitDay||todayStr())+'T00:00:00'); nd.setDate(nd.getDate()+(dozadu?-7:7));
       let nds=dateToStr(nd); if(nds>todayStr()) nds=todayStr();
-      const hl=box.parentElement&&box.parentElement.querySelector('.tydhl');
+      const koren=box.parentElement;
+      const hl=koren&&koren.querySelector('.tydhl');
       if(hl) hl.outerHTML=mmHabitHlavickaHtml(nds);          // datum a tyden se meni s pohybem, ne az potom
+      const sh2=koren&&koren.querySelector('.souhrn');
+      if(sh2){ const pid=state.currentPlayerId, mine=mmHabitMine(pid);
+        sh2.outerHTML=mmHabitSouhrnHtml(pid, mmHabitDenniNavyky(mine, nds), nds); }   // i nazev dne pod kolecky
       setTimeout(()=>{ mmHabitTydenPosun(dozadu?-1:1, true); uklid(); }, 210);
     } else {
       posun(el, 0, 0, true); posun(pred, -100, 0, true); posun(po, 100, 0, true);
