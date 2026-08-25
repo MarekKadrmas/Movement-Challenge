@@ -81,3 +81,10 @@
 ## Backlog (Marek, 2026-08-20): kdo dal reakci
 - U emoji reakce videt, KDO ji dal (jako na Instagramu — tuknuti na pilulku ukaze seznam hracu).
 - Az po dokonceni zakladu reakci.
+
+## Žebříček — animace přehození pořadí (Marek 25. 8. 2026)
+Při přepnutí filtru Týden / Měsíc / Celkem se mění pořadí hráčů. Teď se obsah jen prolne.
+Marek chce, aby se **řádky mezi sebou prohodily** — hráč, který stoupá, viditelně přejede nahoru
+a ten, kdo klesá, dolů. Technicky: zapamatovat si pozice řádků před překreslením, po překreslení
+je nasadit zpět transformem a nechat dojet na nové místo (FLIP). Pozor na to, že transform
+na řádcích rozbíjí rastrování SVG v Safari — plamínky jsou proto rastr, ne SVG.

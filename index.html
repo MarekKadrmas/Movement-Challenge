@@ -1942,7 +1942,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .hcard .hc-dsl i{position:absolute;left:0;right:0;bottom:0;z-index:1;display:block;overflow:hidden;border-radius:5px;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 74%,#fff) 0%,color-mix(in srgb,var(--green) 94%,#0A5C39) 82%);transition:height .5s cubic-bezier(.22,1,.36,1);}
 .mm .hcard .hc-dsl i::after{content:'';position:absolute;left:0;right:0;top:0;height:7px;pointer-events:none;border-radius:5px 5px 0 0;background:linear-gradient(180deg,rgba(2,58,36,.24) 0,rgba(2,58,36,.06) 60%,rgba(2,58,36,0) 100%);}
 .mm .hcard .hc-nad{position:absolute;left:0;right:0;bottom:calc(100% - 5px);z-index:0;display:block;border-radius:5px 5px 0 0;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 74%,#fff) 0%,color-mix(in srgb,var(--green) 94%,#0A5C39) 82%);-webkit-mask-image:linear-gradient(to top,rgba(0,0,0,.46),rgba(0,0,0,.11));mask-image:linear-gradient(to top,rgba(0,0,0,.46),rgba(0,0,0,.11));}
-.mm .hcard .hc-dsl .hc-nad .hc-plus{position:absolute;left:0;right:0;top:2px;z-index:6;pointer-events:none;text-align:center;font-size:15px;font-weight:900;line-height:1;letter-spacing:0;color:#0B6B43;text-shadow:0 1px 0 rgba(255,255,255,.55);}
+.mm .hcard .hc-dsl .hc-nad .hc-plus{position:absolute;left:0;right:0;top:-1px;z-index:6;pointer-events:none;text-align:center;font-size:15px;font-weight:900;line-height:1;letter-spacing:0;color:#05502F;text-shadow:0 1px 0 rgba(255,255,255,.35);}
 .mm .hcard .hc-d.je-dnes span{color:var(--green);font-weight:900;}
 .mm .hcard .hc-dsl u{position:absolute;left:0;right:0;bottom:1px;text-align:center;text-decoration:none;font-size:9.06px;font-weight:800;line-height:1;letter-spacing:-.02em;color:#fff;font-variant-numeric:tabular-nums;pointer-events:none;z-index:4;text-shadow:0 1px 2px rgba(0,0,0,.42);}
 .mm 
@@ -2137,11 +2137,11 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .nvk .nav{padding:8px 2px 4px;}
 .nvk .nav .ttl{font-size:20.7px;}
 .nvk .tydhl{margin-top:0;}
-.nvk .tydhl b{flex:0 0 58px;font-size:11.2px;font-weight:800;color:var(--label);letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.nvk .tydhl i{flex:0 0 46px;font-style:normal;font-size:9.8px;font-weight:700;color:var(--ter);margin-left:0;}
+.nvk .tydhl b{flex:0 0 74px;font-size:11.2px;font-weight:800;color:var(--label);letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.nvk .tydhl i{flex:0 0 28px;font-style:normal;font-size:9.8px;font-weight:700;color:var(--ter);margin-left:0;}
 .nvk .tsip .i{width:13px;height:13px;stroke-width:2.6;}
 .nvk .tsip.vpred .i{transform:rotate(180deg);}
-.nvk .tsip{width:22px;height:22px;flex:0 0 22px;display:grid;place-items:center;border-radius:50%;background:var(--card);box-shadow:var(--shadow);color:var(--sec);font-size:15px;font-weight:700;line-height:1;cursor:pointer;}
+.nvk .tsip{width:22px;height:22px;flex:0 0 22px;display:grid;place-items:center;border-radius:50%;background:color-mix(in srgb,var(--fial) 10%,transparent);box-shadow:none;color:var(--fial2);font-size:15px;font-weight:700;line-height:1;cursor:pointer;}
 .nvk .tsip.vyp{opacity:.3;pointer-events:none;box-shadow:none;background:none;}
 .nvk .tydhl span{font-size:11.2px;font-weight:800;color:var(--label);letter-spacing:-.01em;}
 .nvk .tydhl i{font-style:normal;font-size:9.8px;font-weight:700;color:var(--ter);}
@@ -2910,7 +2910,7 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .hcard .hc-dsl i{position:absolute;left:0;right:0;bottom:0;z-index:1;display:block;overflow:hidden;border-radius:5px;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 74%,#fff) 0%,color-mix(in srgb,var(--green) 94%,#0A5C39) 82%);transition:height .5s cubic-bezier(.22,1,.36,1);}
 .hcard .hc-dsl i::after{content:'';position:absolute;left:0;right:0;top:0;height:7px;pointer-events:none;border-radius:5px 5px 0 0;background:linear-gradient(180deg,rgba(2,58,36,.24) 0,rgba(2,58,36,.06) 60%,rgba(2,58,36,0) 100%);}
 .hcard .hc-nad{position:absolute;left:0;right:0;bottom:calc(100% - 5px);z-index:0;display:block;border-radius:5px 5px 0 0;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 74%,#fff) 0%,color-mix(in srgb,var(--green) 94%,#0A5C39) 82%);-webkit-mask-image:linear-gradient(to top,rgba(0,0,0,.46),rgba(0,0,0,.11));mask-image:linear-gradient(to top,rgba(0,0,0,.46),rgba(0,0,0,.11));}
-.hcard .hc-dsl .hc-nad .hc-plus{position:absolute;left:0;right:0;top:2px;z-index:6;pointer-events:none;text-align:center;font-size:15px;font-weight:900;line-height:1;letter-spacing:0;color:#0B6B43;text-shadow:0 1px 0 rgba(255,255,255,.55);}
+.hcard .hc-dsl .hc-nad .hc-plus{position:absolute;left:0;right:0;top:-1px;z-index:6;pointer-events:none;text-align:center;font-size:15px;font-weight:900;line-height:1;letter-spacing:0;color:#05502F;text-shadow:0 1px 0 rgba(255,255,255,.35);}
 .hcard .hc-d.je-dnes span{color:var(--green);font-weight:900;}
 .hcard .hc-dsl u{position:absolute;left:0;right:0;bottom:1px;text-align:center;text-decoration:none;font-size:9.06px;font-weight:800;line-height:1;letter-spacing:-.02em;color:#fff;font-variant-numeric:tabular-nums;pointer-events:none;z-index:4;text-shadow:0 1px 2px rgba(0,0,0,.42);}
 
@@ -3030,11 +3030,11 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .nvk .nav{padding:8px 2px 4px;}
 .nvk .nav .ttl{font-size:20.7px;}
 .nvk .tydhl{margin-top:0;}
-.nvk .tydhl b{flex:0 0 58px;font-size:11.2px;font-weight:800;color:var(--label);letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.nvk .tydhl i{flex:0 0 46px;font-style:normal;font-size:9.8px;font-weight:700;color:var(--ter);margin-left:0;}
+.nvk .tydhl b{flex:0 0 74px;font-size:11.2px;font-weight:800;color:var(--label);letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.nvk .tydhl i{flex:0 0 28px;font-style:normal;font-size:9.8px;font-weight:700;color:var(--ter);margin-left:0;}
 .nvk .tsip .i{width:13px;height:13px;stroke-width:2.6;}
 .nvk .tsip.vpred .i{transform:rotate(180deg);}
-.nvk .tsip{width:22px;height:22px;flex:0 0 22px;display:grid;place-items:center;border-radius:50%;background:var(--card);box-shadow:var(--shadow);color:var(--sec);font-size:15px;font-weight:700;line-height:1;cursor:pointer;}
+.nvk .tsip{width:22px;height:22px;flex:0 0 22px;display:grid;place-items:center;border-radius:50%;background:color-mix(in srgb,var(--fial) 10%,transparent);box-shadow:none;color:var(--fial2);font-size:15px;font-weight:700;line-height:1;cursor:pointer;}
 .nvk .tsip.vyp{opacity:.3;pointer-events:none;box-shadow:none;background:none;}
 .nvk .tydhl span{font-size:11.2px;font-weight:800;color:var(--label);letter-spacing:-.01em;}
 .nvk .tydhl i{font-style:normal;font-size:9.8px;font-weight:700;color:var(--ter);}
@@ -7399,7 +7399,7 @@ const MM_CIL_MIN=40, MM_CIL_MAX=400;
 // ?tyden=0,50,75,125,175,400,25 — ukazkovy tyden v horni karte, hodnoty jsou BODY.
 // DOCASNE: vychozi ukazka je natvrdo, aby si Marek nemusel nic psat do adresy.
 // Po odsouhlaseni vratit MM_TYDEN_VYCHOZI na null.
-const MM_TYDEN_VYCHOZI = [400,400,75,125,175,400,25];
+const MM_TYDEN_VYCHOZI = [400,400,75,125,175,50,25];
 const MM_TYDEN_UKAZKA = (function(){ try{ const m=location.search.match(/[?&]tyden=([0-9,]+)/);
   return m ? m[1].split(',').map(x=>Number(x)||0).slice(0,7) : MM_TYDEN_VYCHOZI; }catch(_){ return MM_TYDEN_VYCHOZI; } })();
 const MM_UKAZKA_KARTA = true;
@@ -8047,7 +8047,7 @@ function mmHabitDenKolecko(pct, nahr, dnes, vybrany, klic, vzdyFajfka){
   const progBarva=(x)=> x>=100 ? '#2FB170' : (x>=70 ? '#E8C33D' : (x>=40 ? '#E8902F' : '#E0584B'));
   const prog=progBarva(Math.min(100, pct+nahr));
   const odR=r-sw/2, doR=r+sw/2;
-  const pr0=(odR/doR).toFixed(4), pr1=((odR+sw*0.68)/doR).toFixed(4);
+  const pr0=((odR+sw*0.10)/doR).toFixed(4), pr1=((odR+sw*0.46)/doR).toFixed(4);
   return '<svg viewBox="0 0 '+s+' '+s+'" style="width:100%;height:auto;display:block">'
     // gradient v souradnicich cele kresby, aby oblouk i kulicka vzorkovaly TOTEZ
     +'<defs><linearGradient id="'+gid+'p" gradientUnits="userSpaceOnUse" x1="'+(s*0.08)+'" y1="0" x2="'+(s*0.92)+'" y2="'+s+'">'
@@ -8061,14 +8061,14 @@ function mmHabitDenKolecko(pct, nahr, dnes, vybrany, klic, vzdyFajfka){
       +'<stop offset="0" stop-color="#F5BC63"/><stop offset="1" stop-color="#D06E12"/></linearGradient>'
     +'<linearGradient id="'+gid+'v" x1="0" y1="1" x2="1" y2="0">'
       +'<stop offset="0" style="stop-color:color-mix(in srgb,var(--green) 72%,#fff)"/><stop offset="1" style="stop-color:var(--green)"/></linearGradient></defs>'
-    +'<circle cx="'+stred+'" cy="'+stred+'" r="'+(r-sw/2)+'" style="fill:color-mix(in srgb,var(--fial) '+(vybrany?26:11)+'%,transparent)"/>'
+    +'<circle cx="'+stred+'" cy="'+stred+'" r="'+(r-sw/2)+'" style="fill:color-mix(in srgb,var(--fial) 11%,transparent)"/>'
     +'<circle cx="'+stred+'" cy="'+stred+'" r="'+r+'" fill="none" style="stroke:color-mix(in srgb,var(--fial) 20%,var(--track))" stroke-width="'+sw+'"/>'
     +((plny||vzdyFajfka)?'<path class="fajf" d="M'+(stred-(vzdyFajfka&&!plny?5.6:6.45))+' '+(stred-(vzdyFajfka&&!plny?0.25:0.3))+' l'
       +(vzdyFajfka&&!plny?'4 4 l7.2-7.6':'4.6 4.6 l8.3-8.7')+'" fill="none" style="stroke:'
       +((vzdyFajfka&&!plny)?'url(#'+gid+'p)':'var(--green)')+'" stroke-width="'+((vzdyFajfka&&!plny)?'3':'3.6')+'" stroke-linecap="round" stroke-linejoin="round" opacity="'
       +((vzdyFajfka&&!plny)?'.5':'.3')+'"/>':'')
-    +(pct>0 ? oblouk(0, doP, 'url(#'+gid+'p)', !plny && nahr<=0) : '')
-    +(pct>0 ? oblouk(0, doP, 'url(#'+gid+'r)', !plny && nahr<=0) : '')
+    +(pct>0 ? oblouk(0, doP, 'url(#'+gid+'p)', false) : '')
+    +(pct>0 ? oblouk(0, doP, 'url(#'+gid+'r)', false) : '')
     +(nahr>0 ? oblouk(doP, doN, 'url(#'+gid+'n)', !plny) : '')
     +'</svg>';
 }
@@ -8106,12 +8106,14 @@ function mmHabitHlavickaHtml(sel){
   const rozsah=zac.getDate()+'.–'+konec.getDate()+'. '+(konec.getMonth()+1)+'.';
   const zacDnes=new Date(todayS+'T00:00:00'); zacDnes.setDate(zacDnes.getDate()-((zacDnes.getDay()+6)%7));
   const oTydnu=Math.round((zacDnes-zac)/6048e5);
-  const popis = oTydnu===0 ? 'Tento týden' : (oTydnu===1 ? 'Minulý týden'
-    : (oTydnu>1 ? 'Před '+oTydnu+' týdny' : 'Příští týden'));
+  // cislo tydne podle ISO 8601
+  const ct=new Date(zac.getTime()); ct.setDate(ct.getDate()+3);
+  const prvni=new Date(ct.getFullYear(),0,4);
+  const tydenCislo=1+Math.round(((ct-prvni)/864e5-3+((prvni.getDay()+6)%7))/7);
   return '<div class="tydhl"><span class="tsip" onclick="mmHabitTydenPosun(-1)"><svg class="i" aria-hidden="true"><use href="#i-chev"/></svg></span>'
-    +'<b>'+popis+'</b>'
+    +'<b>'+rozsah+'</b>'
     +'<span class="tsip vpred'+(oTydnu<=0?' vyp':'')+'" onclick="mmHabitTydenPosun(1)"><svg class="i" aria-hidden="true"><use href="#i-chev"/></svg></span>'
-    +'<i>'+rozsah+'</i>'
+    +'<i>W'+tydenCislo+'</i>'
     +'<a class="dnesbtn'+(sel===todayS?' vyp':'')+'" onclick="event.stopPropagation();mmHabitDnes()">Dnes →</a>'
     +'</div>';
 }
