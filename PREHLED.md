@@ -1,7 +1,7 @@
 # Movement Challenge — přehled stavu
 
 > Živý dokument. Aktualizuje se po každé dokončené části. Detailní nápady a kontext = `BACKLOG.md`.
-> Poslední aktualizace: 2026-08-24
+> Poslední aktualizace: 2026-08-25
 
 ---
 
@@ -12,6 +12,31 @@
   (klik = +krok, podržení = hotovo), test libovolného dne přes `?den=RRRR-MM-DD`. Systém: `NAVYKY-NAVRH.md`.
   Zbývá: nahrazení zameškaného dne (§13), kategorie a vlastní řazení (§14), kolečka dnů u týdenních cílů (§15),
   okno pro založení a úpravu návyku je pořád ve starém designu.
+
+## 🔢 Co právě řešíme (čísla jsou stálá — Marek na ně odpovídá „1-ok, 2-ne")
+
+| # | Věc | Stav |
+|---|---|---|
+| 1 | Žebříček — animace přepnutí filtru | hotovo |
+| 2 | Žebříček — rádiusy u krajních filtrů | hotovo, opraven kořen (třída karty je v markupu, ne z měření) |
+| 3 | Přehled — čtverečky dnů jsou čtverce | hotovo |
+| 4 | Přehled — ukázkový týden natvrdo v appce | **čeká na odsouhlasení, pak vrátit na reálná data** |
+| 5 | Přehled — přetečení nad cíl (krček na rysce + vlastní gradient) | hotovo |
+| 6 | Návyky — viditelnost výplně koleček | přitvrzeno, čeká na posouzení |
+| 7 | Návyky — prstenec + kulička na konci oblouku, průsvitná fajfka místo plné výplně | hotovo, čeká na posouzení |
+| 8 | Návyky — velikost koleček | zvětšeno na ~45 px, čeká na posouzení |
+| 9 | Návyky — mezera pod kolečky | zmenšeno na nulu |
+| 10 | Návyky — animace přepnutí týdne (stagger po dnech) | hotovo, čeká na posouzení |
+| 11 | Návyky — proužek dnů Po–Ne u týdenního cíle | hotovo, Markovi se líbí |
+| 12 | Návyky — měřitelné návyky klikem a podržením | hotovo, Marek zkouší v provozu |
+| 13 | Návyky — nahrazení z přebytku (§13) | hotovo v kódu, **čeká na migraci `F53-nahrazeni.sql`** |
+| 14 | Tmavý režim — světlý pruh vpravo | hotovo |
+| 15 | Vycentrování aplikace (4+4 px) | hotovo |
+| 16 | Výběr aktivity (zelené plus) v tmavém režimu | hotovo |
+| 17 | Plusko ve spodní liště na střed | hotovo |
+| 18 | „2/5" v bublině Návyky — větší, display font | hotovo |
+| 19 | Přehled — historie čtverečků za týden/měsíc/rok | **mockup se dělá** |
+
 
 ## ⏸️ Rozdělané (schválně odloženo)
 - **Systém zápisu** — rozhodnout A/B ([mockup](https://claude.ai/code/artifact/f3760cb0-7d1d-4cb7-8c8c-dca2d18f7cfa)), doladit výběr aktivity, kategorie, srdíčko oblíbených
