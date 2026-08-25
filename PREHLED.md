@@ -31,13 +31,13 @@
 | 10 | Návyky — tlačítko Dnes u data | ⏳ posunuto na 248 px (celkem o 38 px doleva) |
 | 11 | Návyky — proužek dnů Po–Ne u týdenního cíle | ✅ |
 | 12 | Návyky — měřitelné návyky klikem a podržením | ✅ |
-| 13 | Návyky — nahrazení z přebytku | ✅ migrace proběhla, funguje i v ostré appce |
+| 13 | Návyky — nahrazení z přebytku | ✅ migrace proběhla na **testovací** DB, funguje na větvi `v2.0-test` s reálnými daty. Produkce (`main` + prod DB) nedotčená |
 | 14 | Tmavý režim — světlý pruh vpravo | ✅ |
 | 15 | Vycentrování aplikace | ✅ |
 | 16 | Výběr aktivity v tmavém režimu | ✅ |
 | 17 | Plusko ve spodní liště na střed | ✅ |
 | 18 | Bublina Návyky — číslo, šipka, logo s fajfkou | ✅ |
-| 19 | Historie výkonu — mockup | 🔧 dny z okolních měsíců v prvním a posledním týdnu + vejít se na jednu obrazovku |
+| 19 | Historie výkonu — mockup v5 | ⏳ dny ze sousedních měsíců doplněné a prouhované; měsíc 669 px a detail týdne 629 px se vejdou na obrazovku (max ~660), **rok vychází 904 px = zhruba 1,4 obrazovky** — dvanáct mini kalendářů se na jednu nevejde, viz otázka pro Marka |
 | 20 | Ikony jako textové znaky → SVG | ✅ (křížky `×` v modálech až při jejich předělání) |
 | 21 | Návyky — seznam skákal při přepnutí dne | ✅ |
 | 22 | Návyky — označení dnů | ✅ hotovo; 🔧 zbývá mockup jiného označení splněného dne |
