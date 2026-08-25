@@ -6482,7 +6482,7 @@ function renderDnesek(){
     const dnesek=d.ds===today, budouci=(d.ds>today && !MM_TYDEN_UKAZKA);   // v ukazce vykreslit cely tyden
     return '<div class="hc-d'+(dnesek?' je-dnes':'')+(budouci?' je-pak':'')+(d.b>mCil&&!budouci?' je-nad':'')+'">'
       +'<div class="hc-dsl">'+((d.b>mCil&&!budouci)?'<svg class="hc-mark" preserveAspectRatio="none"><path/></svg>':'')+'<i style="height:'+((d.b>0&&!budouci)?v:0)+'%;border-radius:'+rad+'px '+rad+'px 5px 5px'+(pom>1?(()=>{const X=(100/pom).toFixed(2);   // presne linka cile: pod ni plna barva, nad ni vybledly odstin
-        const g='linear-gradient(to top,#000 0 '+X+'%,rgba(0,0,0,.34) '+X+'%,rgba(0,0,0,.34) 100%)';
+        const g='linear-gradient(to top,#000 0 '+X+'%,rgba(0,0,0,.44) '+X+'%,rgba(0,0,0,.11) 100%)';
         return ';-webkit-mask-image:'+g+';mask-image:'+g;})():'')+'"></i>'+((d.b>0&&!budouci)?'<u>'+fmtNum(d.b)+'</u>':'')+'</div>'
       +'<span>'+_pism[i]+'</span></div>';
   }).join('');
