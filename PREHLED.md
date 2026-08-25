@@ -22,16 +22,16 @@
 | 1 | Žebříček — animace přepnutí filtru | ✅ |
 | 2 | Žebříček — rádiusy u krajních filtrů | ✅ |
 | 3 | Přehled — čtverečky dnů jsou čtverce | ✅ |
-| 4 | Přehled — ukázkový týden natvrdo v appce | 🅼 odsouhlasit, pak vrátím reálná data |
-| 5 | Přehled — ryska cíle, varianta D | 🔧 doladit čtverečky nahoře v týdnu (Čt/Pá/So) |
+| 4 | Přehled — ukázkový týden natvrdo v appce | 🅼 odsouhlasit (odblokováno bodem 5), pak vrátím reálná data |
+| 5 | Přehled — varianta D nasazena v appce: žádná ryska, tmavší hrana na vrcholu každého sloupce, výška zastropovaná na 225 % s pluskem | ⏳ |
 | 6 | Návyky — viditelnost výplně koleček | ✅ |
 | 7 | Návyky — prstenec: hladký oblouk, kulička, gradient | ✅ |
 | 8 | Návyky — velikost koleček | ✅ |
 | 9 | Návyky — mezera pod kolečky | ✅ |
-| 10 | Návyky — tlačítko Dnes u data | ⏳ posunuto ještě o 23 px doleva |
+| 10 | Návyky — tlačítko Dnes u data | ⏳ posunuto na 248 px (celkem o 38 px doleva) |
 | 11 | Návyky — proužek dnů Po–Ne u týdenního cíle | ✅ |
 | 12 | Návyky — měřitelné návyky klikem a podržením | ✅ |
-| 13 | Návyky — nahrazení z přebytku | 🅼 spustit `F53-KOPIROVAT.sql` v Supabase |
+| 13 | Návyky — nahrazení z přebytku | ✅ migrace proběhla, funguje i v ostré appce |
 | 14 | Tmavý režim — světlý pruh vpravo | ✅ |
 | 15 | Vycentrování aplikace | ✅ |
 | 16 | Výběr aktivity v tmavém režimu | ✅ |
@@ -42,9 +42,10 @@
 | 21 | Návyky — seznam skákal při přepnutí dne | ✅ |
 | 22 | Návyky — označení dnů | ✅ hotovo; 🔧 zbývá mockup jiného označení splněného dne |
 | 23 | Návyky — hlavička bez iniciál, fialová série | ✅ |
-| 24 | Návyky — poskakování prstenců při přepnutí týdne | ⏳ opraveny dvě příčiny, třetí je nejspíš překreslování SVG v Safari po animaci — nasazen lék, Marek ověří |
-| 25 | Žebříček — plamínky se ořezávaly a skákaly | ⏳ šířka sloupce se jmény se už neměří, počítá se z dat |
-| 26 | Návyky — proužek dnů u běhu, výraznější splněné dny | ⏳ |
+| 28 | Návyky — menší mezera mezi prstenci a datem pod nimi | ⏳ |
+| 24 | Návyky — poskakování prstenců při přepnutí týdne | ✅ |
+| 25 | Žebříček — skákal samotný plamínek | ⏳ gradient byl definovaný uvnitř symbolu, vytažen ven a ukotven do pevných souřadnic |
+| 26 | Návyky — výraznější označení VYBRANÉHO dne (ne teček splnění — to jsem spletl a vrátil) | ⏳ silnější fialová výplň kolečka, kolečka o kus větší |
 | 27 | **Systémová oprava:** 60 měření DOM ve 20 funkcích, 9 z nich běží při vykreslení — zdroj celé třídy bugů | 🔧 Marek schválil, dělá se |
 
 
