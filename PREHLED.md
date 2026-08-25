@@ -13,33 +13,39 @@
   Zbývá: nahrazení zameškaného dne (§13), kategorie a vlastní řazení (§14), kolečka dnů u týdenních cílů (§15),
   okno pro založení a úpravu návyku je pořád ve starém designu.
 
-## 🔢 Co právě řešíme (čísla jsou stálá — Marek na ně odpovídá „1-ok, 2-ne")
+## 🔢 Co právě řešíme
+
+**Čísla jsou stálá.** Marek odpovídá „7-ok, 10-ne". Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno (Marek potvrdil) · 🅼 na Markovi
 
 | # | Věc | Stav |
 |---|---|---|
-| 1 | Žebříček — animace přepnutí filtru | hotovo |
-| 2 | Žebříček — rádiusy u krajních filtrů | ~~uzavřeno~~ |
-| 3 | Přehled — čtverečky dnů jsou čtverce | hotovo |
-| 4 | Přehled — ukázkový týden natvrdo v appce | **čeká na odsouhlasení, pak vrátit na reálná data** |
-| 5 | Přehled — ryska cíle | **mockup v3 (jen D a E):** https://claude.ai/code/artifact/48d582b0-ac92-4268-9c5a-8fd4ff6b8d8c — D má tmavší gradient na vrcholu každého sloupce, E obtahuje celý čtverec. Přidán zastropovaný sloupec s nenápadným pluskem. Marek vybere. |
-| 6 | Návyky — viditelnost výplně koleček | ~~prozatím ok~~ |
-| 7 | Návyky — oblouk i kulička je JEDEN tvar se společným gradientem (žádný švár ani jiná barva na konci) | čeká na posouzení |
-| 8 | Návyky — velikost koleček | ~~uzavřeno~~ (46,6 px) |
-| 9 | Návyky — mezera pod kolečky | ~~uzavřeno~~ |
-| 10 | Návyky — přepnutí týdne: opraveno poskakování prstenců (duplicitní id gradientů), tlačítko Dnes je odkaz s fialovým gradientem vpravo za datem | čeká na posouzení |
-| 11 | Návyky — proužek dnů Po–Ne u týdenního cíle | hotovo, Markovi se líbí |
-| 12 | Návyky — měřitelné návyky klikem a podržením | hotovo, Marek zkouší v provozu |
-| 13 | Návyky — nahrazení z přebytku (§13) | hotovo v kódu, **čeká na migraci `F53-nahrazeni.sql`** |
-| 14 | Tmavý režim — světlý pruh vpravo | hotovo |
-| 15 | Vycentrování aplikace (4+4 px) | hotovo |
-| 16 | Výběr aktivity (zelené plus) v tmavém režimu | ~~uzavřeno~~ |
-| 17 | Plusko ve spodní liště na střed | ~~uzavřeno~~ |
-| 18 | Bublina Návyky — logo má prstenec s gradientem a menší fajfku na středu | čeká na posouzení |
-| 19 | Přehled — historie výkonu | **mockup v2:** https://claude.ai/code/artifact/9dd2f22f-2f6f-452c-ab7c-fda1a1bffe2c — bez bublin kolem každého týdne, dvanáct měsíců pod sebou. Čeká na posouzení. |
-| 20 | Ikony jako textové znaky (plusko, šipky) → SVG, optický střed změřen | ~~uzavřeno~~; křížky `×` v modálech projít při jejich předělání |
-| 21 | Návyky — seznam skákal při přepnutí dne | ~~uzavřeno~~ |
-| 22 | Návyky — označení dnů | hotovo; **zbývá:** vymyslet jiný způsob označení splněného dne — mockup |
-| 23 | Návyky — hlavička bez iniciál, bublina série do fialova | hotovo |
+| 1 | Žebříček — animace přepnutí filtru | ✅ |
+| 2 | Žebříček — rádiusy u krajních filtrů | ✅ |
+| 3 | Přehled — čtverečky dnů jsou čtverce | ✅ |
+| 4 | Přehled — ukázkový týden natvrdo v appce | 🅼 odsouhlasit, pak vrátím reálná data |
+| 5 | Přehled — ryska cíle, varianta D | 🔧 doladit čtverečky nahoře v týdnu (Čt/Pá/So) |
+| 6 | Návyky — viditelnost výplně koleček | ✅ |
+| 7 | Návyky — prstenec: hladký oblouk, kulička, gradient | ✅ |
+| 8 | Návyky — velikost koleček | ✅ |
+| 9 | Návyky — mezera pod kolečky | ✅ |
+| 10 | Návyky — tlačítko Dnes u data | ⏳ posunuto ještě o 23 px doleva |
+| 11 | Návyky — proužek dnů Po–Ne u týdenního cíle | ✅ |
+| 12 | Návyky — měřitelné návyky klikem a podržením | ✅ |
+| 13 | Návyky — nahrazení z přebytku | 🅼 spustit `F53-KOPIROVAT.sql` v Supabase |
+| 14 | Tmavý režim — světlý pruh vpravo | ✅ |
+| 15 | Vycentrování aplikace | ✅ |
+| 16 | Výběr aktivity v tmavém režimu | ✅ |
+| 17 | Plusko ve spodní liště na střed | ✅ |
+| 18 | Bublina Návyky — číslo, šipka, logo s fajfkou | ✅ |
+| 19 | Historie výkonu — mockup | 🔧 dny z okolních měsíců v prvním a posledním týdnu + vejít se na jednu obrazovku |
+| 20 | Ikony jako textové znaky → SVG | ✅ (křížky `×` v modálech až při jejich předělání) |
+| 21 | Návyky — seznam skákal při přepnutí dne | ✅ |
+| 22 | Návyky — označení dnů | ✅ hotovo; 🔧 zbývá mockup jiného označení splněného dne |
+| 23 | Návyky — hlavička bez iniciál, fialová série | ✅ |
+| 24 | Návyky — poskakování prstenců při přepnutí týdne | ⏳ opraveny dvě příčiny, třetí je nejspíš překreslování SVG v Safari po animaci — nasazen lék, Marek ověří |
+| 25 | Žebříček — plamínky se ořezávaly a skákaly | ⏳ šířka sloupce se jmény se už neměří, počítá se z dat |
+| 26 | Návyky — proužek dnů u běhu, výraznější splněné dny | ⏳ |
+| 27 | **Systémová oprava:** 60 měření DOM ve 20 funkcích, 9 z nich běží při vykreslení — zdroj celé třídy bugů | 🔧 Marek schválil, dělá se |
 
 
 ## ⏸️ Rozdělané (schválně odloženo)

@@ -2135,17 +2135,17 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .nvk .nav{padding:8px 2px 4px;}
 .nvk .nav .ttl{font-size:20.7px;}
 .nvk .tydhl{margin-top:0;}
-.nvk .tydhl b{flex:0 0 78px;font-size:11.2px;font-weight:800;color:var(--label);letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.nvk .tydhl i{flex:0 0 62px;font-style:normal;font-size:9.8px;font-weight:700;color:var(--ter);margin-left:2px;}
+.nvk .tydhl b{flex:0 0 70px;font-size:11.2px;font-weight:800;color:var(--label);letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.nvk .tydhl i{flex:0 0 58px;font-style:normal;font-size:9.8px;font-weight:700;color:var(--ter);margin-left:0;}
 .nvk .tsip .i{width:13px;height:13px;stroke-width:2.6;}
 .nvk .tsip.vpred .i{transform:rotate(180deg);}
 .nvk .tsip{width:22px;height:22px;flex:0 0 22px;display:grid;place-items:center;border-radius:50%;background:var(--card);box-shadow:var(--shadow);color:var(--sec);font-size:15px;font-weight:700;line-height:1;cursor:pointer;}
 .nvk .tsip.vyp{opacity:.3;pointer-events:none;box-shadow:none;background:none;}
 .nvk .tydhl span{font-size:11.2px;font-weight:800;color:var(--label);letter-spacing:-.01em;}
 .nvk .tydhl i{font-style:normal;font-size:9.8px;font-weight:700;color:var(--ter);}
-.nvk .tydbox{position:relative;overflow:hidden;}
-.nvk .tyd.soused{position:absolute;top:0;left:0;right:0;}
-.nvk .tyd{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;}
+.nvk .tydbox{position:relative;overflow:hidden;transform:translateZ(0);}
+.nvk .tyd.soused{position:absolute;top:0;left:0;right:0;will-change:transform;backface-visibility:hidden;-webkit-backface-visibility:hidden;}
+.nvk .tyd{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;will-change:transform;backface-visibility:hidden;-webkit-backface-visibility:hidden;}
 /* Prepnuti tydne: dny nastupuji po sobe od strany, ze ktere jsem prejel (Marek 2026-08-25) */
 @keyframes mmDenIn{0%{opacity:0;transform:translateX(var(--dx))}100%{opacity:1;transform:none}}
 .nvk .tyd.in-r,.nvk .tyd.in-l{animation:mmDenIn .3s cubic-bezier(.33,1,.68,1);}
@@ -2173,7 +2173,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .nvk .szbyva{font-size:10.6px;font-weight:600;color:var(--ter);white-space:nowrap;}
 .nvk .spocet{font-family:var(--font-display);font-size:23px;font-weight:900;letter-spacing:-.04em;color:var(--fial2);}
 .nvk .spocet s{text-decoration:none;font-size:13.5px;color:var(--ter);}
-.nvk .dnesbtn{flex:0 0 auto;margin-right:auto;text-align:left;padding:0;line-height:1.2;font-size:11.6px;font-weight:800;letter-spacing:-.01em;cursor:pointer;background:linear-gradient(120deg,color-mix(in srgb,var(--fial) 62%,#fff),var(--fial),var(--fial2));-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;transition:opacity .2s ease;}
+.nvk .dnesbtn{flex:0 0 auto;margin-right:auto;margin-left:-4px;text-align:left;padding:0;line-height:1.2;font-size:11.6px;font-weight:800;letter-spacing:-.01em;cursor:pointer;background:linear-gradient(120deg,color-mix(in srgb,var(--fial) 62%,#fff),var(--fial),var(--fial2));-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;transition:opacity .2s ease;}
 .nvk .dnesbtn.vyp{opacity:0;pointer-events:none;}
 .nvk .serchip{display:inline-flex;align-items:center;gap:3px;background:color-mix(in srgb,var(--fial) 13%,transparent);border-radius:999px;padding:4px 10px 4px 8px;margin-right:0;}
 .nvk .serchip .i{width:14px;height:14px;color:var(--fial2);}
@@ -2192,7 +2192,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .nvk .tecky i.on{background:var(--nc);}
 .nvk .tydny{display:inline-flex;gap:2.5px;align-items:center;}
 .nvk .tydny i{width:9px;height:9px;border-radius:50%;background:color-mix(in srgb,var(--fial) 16%,var(--track));cursor:pointer;transition:background .18s ease;}
-.nvk .tydny i.on{background:var(--fial2);box-shadow:0 1px 3px -1px color-mix(in srgb,var(--fial) 70%,transparent);}
+.nvk .tydny i.on{background:var(--fial2);transform:scale(1.18);box-shadow:0 1px 4px -1px color-mix(in srgb,var(--fial) 85%,transparent);}
 .nvk .tydny i.pak{opacity:.4;cursor:default;}
 .nvk .tydny i.ten{box-shadow:0 0 0 1.5px color-mix(in srgb,var(--sec) 36%,transparent);}
 .nvk .tydny i.on.ten{box-shadow:0 0 0 1.5px color-mix(in srgb,var(--fial) 45%,transparent);}
@@ -3026,17 +3026,17 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .nvk .nav{padding:8px 2px 4px;}
 .nvk .nav .ttl{font-size:20.7px;}
 .nvk .tydhl{margin-top:0;}
-.nvk .tydhl b{flex:0 0 78px;font-size:11.2px;font-weight:800;color:var(--label);letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.nvk .tydhl i{flex:0 0 62px;font-style:normal;font-size:9.8px;font-weight:700;color:var(--ter);margin-left:2px;}
+.nvk .tydhl b{flex:0 0 70px;font-size:11.2px;font-weight:800;color:var(--label);letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.nvk .tydhl i{flex:0 0 58px;font-style:normal;font-size:9.8px;font-weight:700;color:var(--ter);margin-left:0;}
 .nvk .tsip .i{width:13px;height:13px;stroke-width:2.6;}
 .nvk .tsip.vpred .i{transform:rotate(180deg);}
 .nvk .tsip{width:22px;height:22px;flex:0 0 22px;display:grid;place-items:center;border-radius:50%;background:var(--card);box-shadow:var(--shadow);color:var(--sec);font-size:15px;font-weight:700;line-height:1;cursor:pointer;}
 .nvk .tsip.vyp{opacity:.3;pointer-events:none;box-shadow:none;background:none;}
 .nvk .tydhl span{font-size:11.2px;font-weight:800;color:var(--label);letter-spacing:-.01em;}
 .nvk .tydhl i{font-style:normal;font-size:9.8px;font-weight:700;color:var(--ter);}
-.nvk .tydbox{position:relative;overflow:hidden;}
-.nvk .tyd.soused{position:absolute;top:0;left:0;right:0;}
-.nvk .tyd{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;}
+.nvk .tydbox{position:relative;overflow:hidden;transform:translateZ(0);}
+.nvk .tyd.soused{position:absolute;top:0;left:0;right:0;will-change:transform;backface-visibility:hidden;-webkit-backface-visibility:hidden;}
+.nvk .tyd{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;will-change:transform;backface-visibility:hidden;-webkit-backface-visibility:hidden;}
 /* Prepnuti tydne: dny nastupuji po sobe od strany, ze ktere jsem prejel (Marek 2026-08-25) */
 @keyframes mmDenIn{0%{opacity:0;transform:translateX(var(--dx))}100%{opacity:1;transform:none}}
 .nvk .tyd.in-r,.nvk .tyd.in-l{animation:mmDenIn .3s cubic-bezier(.33,1,.68,1);}
@@ -3064,7 +3064,7 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .nvk .szbyva{font-size:10.6px;font-weight:600;color:var(--ter);white-space:nowrap;}
 .nvk .spocet{font-family:var(--font-display);font-size:23px;font-weight:900;letter-spacing:-.04em;color:var(--fial2);}
 .nvk .spocet s{text-decoration:none;font-size:13.5px;color:var(--ter);}
-.nvk .dnesbtn{flex:0 0 auto;margin-right:auto;text-align:left;padding:0;line-height:1.2;font-size:11.6px;font-weight:800;letter-spacing:-.01em;cursor:pointer;background:linear-gradient(120deg,color-mix(in srgb,var(--fial) 62%,#fff),var(--fial),var(--fial2));-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;transition:opacity .2s ease;}
+.nvk .dnesbtn{flex:0 0 auto;margin-right:auto;margin-left:-4px;text-align:left;padding:0;line-height:1.2;font-size:11.6px;font-weight:800;letter-spacing:-.01em;cursor:pointer;background:linear-gradient(120deg,color-mix(in srgb,var(--fial) 62%,#fff),var(--fial),var(--fial2));-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;transition:opacity .2s ease;}
 .nvk .dnesbtn.vyp{opacity:0;pointer-events:none;}
 .nvk .serchip{display:inline-flex;align-items:center;gap:3px;background:color-mix(in srgb,var(--fial) 13%,transparent);border-radius:999px;padding:4px 10px 4px 8px;margin-right:0;}
 .nvk .serchip .i{width:14px;height:14px;color:var(--fial2);}
@@ -3083,7 +3083,7 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .nvk .tecky i.on{background:var(--nc);}
 .nvk .tydny{display:inline-flex;gap:2.5px;align-items:center;}
 .nvk .tydny i{width:9px;height:9px;border-radius:50%;background:color-mix(in srgb,var(--fial) 16%,var(--track));cursor:pointer;transition:background .18s ease;}
-.nvk .tydny i.on{background:var(--fial2);box-shadow:0 1px 3px -1px color-mix(in srgb,var(--fial) 70%,transparent);}
+.nvk .tydny i.on{background:var(--fial2);transform:scale(1.18);box-shadow:0 1px 4px -1px color-mix(in srgb,var(--fial) 85%,transparent);}
 .nvk .tydny i.pak{opacity:.4;cursor:default;}
 .nvk .tydny i.ten{box-shadow:0 0 0 1.5px color-mix(in srgb,var(--sec) 36%,transparent);}
 .nvk .tydny i.on.ten{box-shadow:0 0 0 1.5px color-mix(in srgb,var(--fial) 45%,transparent);}
@@ -7469,26 +7469,23 @@ function mmSirkaTextu(el){
     return w;
   }catch(_){ return 0; }
 }
-// Sirka sloupce se jmeny. Nesmi zaviset na tom, co je zrovna vykreslene ani na tom, jestli
-// mereni prosло — jinak se pri prepnuti filtru zmeni nejdelsi jmeno, sloupec se posune
-// a plaminky odskoci; a kdyz mereni vrati min nez skutecnost, jmeno i plaminek se orizne.
-// Bereme MAXIMUM z mereni i z vypoctu z fontu a hodnotu uz nikdy nezmensujeme (Marek 2026-08-25).
+// Sirka sloupce se jmeny se NEMERI. Merenim vychazela pokazde jinak (skryta obrazovka, jeste
+// nenactene pismo, jina sada radku po prepnuti filtru) — proto plaminky skakaly a orezavaly se.
+// Pocita se z poctu znaku nejdelsiho jmena, coz je data, ne layout. Delsi jmeno dostane vypustku.
+function mmSirkaJmen(){
+  if(window._mmLnw) return window._mmLnw;
+  let nej=0;
+  (state.players||[]).forEach(hr=>{ nej=Math.max(nej, (hr.jmeno||'').length); });
+  if(!nej) nej=7;
+  window._mmLnw = Math.round(Math.min(14, nej)*6.5) + 6;
+  return window._mmLnw;
+}
 function mmSrovnejJmena(sh){
   if(!sh) return;
-  const vzor=sh.querySelector(".lnmt");
-  let max=window._mmLnwRaw||0;                 // syrove maximum, aby hodnota nerostla o rezervu pokazde
-  sh.querySelectorAll(".lnmt").forEach(e=>{ max=Math.max(max, e.scrollWidth||0, mmSirkaTextu(e)); });
-  // vsichni hraci, ne jen ti zrovna zobrazeni — sloupec pak drzi napric filtry
-  if(vzor && state.players && state.players.length){
-    const puv=vzor.textContent;
-    state.players.forEach(hr=>{ vzor.textContent=hr.jmeno||''; max=Math.max(max, mmSirkaTextu(vzor)); });
-    vzor.textContent=puv;
-  }
-  if(!max) return;
-  window._mmLnwRaw=max;
-  window._mmLnw=Math.ceil(max)+2;
-  sh.querySelectorAll(".lc").forEach(lc=>{ lc.style.setProperty("--lnw", window._mmLnw+"px"); });
+  const w=mmSirkaJmen();
+  sh.querySelectorAll(".lc").forEach(lc=>{ lc.style.setProperty("--lnw", w+"px"); });
 }
+
 function mmSerieChip(pid){
   const s=computeStreak(pid);
   if(!s) return '';
