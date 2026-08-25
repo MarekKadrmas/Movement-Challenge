@@ -21,12 +21,12 @@
 | 2 | Žebříček — rádiusy u krajních filtrů | ~~uzavřeno~~ |
 | 3 | Přehled — čtverečky dnů jsou čtverce | hotovo |
 | 4 | Přehled — ukázkový týden natvrdo v appce | **čeká na odsouhlasení, pak vrátit na reálná data** |
-| 5 | Přehled — přetečení nad cíl | ryska je rovná čára přes celou šířku, přebytek stejně široký jako čtverec, plná výplň má nad cílem hranaté rohy — čeká na posouzení |
+| 5 | Přehled — přetečení nad cíl | ryska má tvar horní hrany čtverce včetně rohů; přebytek leží POD výplní a zasahuje 5 px do rámečku, takže rohy nad obloukem dobarví průsvitně — čeká na posouzení |
 | 6 | Návyky — viditelnost výplně koleček | ~~prozatím ok~~ |
-| 7 | Návyky — kulička na konci oblouku (byla oříznutá viewBoxem) + fajfka průsvitně ZA názvem dne | opraveno, čeká na posouzení |
-| 8 | Návyky — velikost koleček | 46,6 px, čeká na posouzení |
+| 7 | Návyky — kulička na konci oblouku, spoj s linkou zaoblený; fajfka průsvitně za názvem dne | ~~fajfka uzavřena~~, kulička čeká na posouzení |
+| 8 | Návyky — velikost koleček | ~~uzavřeno~~ (46,6 px) |
 | 9 | Návyky — mezera pod kolečky | ~~uzavřeno~~ |
-| 10 | Návyky — přepnutí týdne jde za prstem (drag), pak nástup dnů | předěláno, čeká na posouzení |
+| 10 | Návyky — přepnutí týdne: kolotoč, sousední týdny jsou vidět už při tahu, bez prodlevy | čeká na posouzení |
 | 11 | Návyky — proužek dnů Po–Ne u týdenního cíle | hotovo, Markovi se líbí |
 | 12 | Návyky — měřitelné návyky klikem a podržením | hotovo, Marek zkouší v provozu |
 | 13 | Návyky — nahrazení z přebytku (§13) | hotovo v kódu, **čeká na migraci `F53-nahrazeni.sql`** |
@@ -34,10 +34,10 @@
 | 15 | Vycentrování aplikace (4+4 px) | hotovo |
 | 16 | Výběr aktivity (zelené plus) v tmavém režimu | ~~uzavřeno~~ |
 | 17 | Plusko ve spodní liště na střed | ~~uzavřeno~~ |
-| 18 | „2/5" v bublině Návyky — větší (+10 %), svisle na střed | čeká na posouzení |
+| 18 | „2/5" v bublině Návyky — větší, šipka je SVG a sedí ve středu zaoblení bubliny | ~~uzavřeno~~ |
 | 19 | Přehled — historie čtverečků za týden/měsíc/rok | **mockup se dělá** |
 | 20 | Ikony jako textové znaky (plusko, šipky) → SVG, optický střed změřen | ~~uzavřeno~~; křížky `×` v modálech projít při jejich předělání |
-| 21 | Návyky — seznam skákal při přepnutí dne (tlačítko Dnes zvyšovalo hlavičku) | opraveno |
+| 21 | Návyky — seznam skákal při přepnutí dne | ~~uzavřeno~~ |
 
 
 ## ⏸️ Rozdělané (schválně odloženo)

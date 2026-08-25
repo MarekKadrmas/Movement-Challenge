@@ -1938,9 +1938,9 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .hcard .hc-tyden{display:flex;gap:6px;margin-top:3px;padding-top:6px;}
 .mm .hcard .hc-d{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
 .mm .hcard .hc-dsl{position:relative;width:100%;aspect-ratio:1;border-radius:5px;background:var(--track);}
-.mm .hcard .hc-dsl i{position:absolute;left:0;right:0;bottom:0;display:block;border-radius:5px;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);transition:height .5s cubic-bezier(.22,1,.36,1);}
-.mm .hcard .hc-nad{position:absolute;left:0;right:0;bottom:100%;display:block;border-radius:5px 5px 0 0;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);-webkit-mask-image:linear-gradient(to top,rgba(0,0,0,.46),rgba(0,0,0,.11));mask-image:linear-gradient(to top,rgba(0,0,0,.46),rgba(0,0,0,.11));}
-.mm .hcard .hc-mark{position:absolute;left:0;right:0;top:0;height:0;z-index:3;pointer-events:none;border-top:1.6px solid rgba(255,255,255,.66);}
+.mm .hcard .hc-dsl i{position:absolute;left:0;right:0;bottom:0;z-index:1;display:block;border-radius:5px;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);transition:height .5s cubic-bezier(.22,1,.36,1);}
+.mm .hcard .hc-nad{position:absolute;left:0;right:0;bottom:calc(100% - 5px);z-index:0;display:block;border-radius:5px 5px 0 0;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);-webkit-mask-image:linear-gradient(to top,rgba(0,0,0,.46),rgba(0,0,0,.11));mask-image:linear-gradient(to top,rgba(0,0,0,.46),rgba(0,0,0,.11));}
+.mm .hcard .hc-mark{position:absolute;left:0;right:0;top:0;height:10px;z-index:3;pointer-events:none;border:1.6px solid rgba(255,255,255,.66);border-bottom:0;border-radius:5px 5px 0 0;-webkit-mask-image:linear-gradient(to bottom,#000 0 46%,transparent 100%);mask-image:linear-gradient(to bottom,#000 0 46%,transparent 100%);}
 .mm .hcard .hc-d.je-dnes span{color:var(--green);font-weight:900;}
 .mm .hcard .hc-dsl u{position:absolute;left:0;right:0;bottom:1px;text-align:center;text-decoration:none;font-size:9.06px;font-weight:800;line-height:1;letter-spacing:-.02em;color:#fff;font-variant-numeric:tabular-nums;pointer-events:none;z-index:4;text-shadow:0 1px 2px rgba(0,0,0,.42);}
 .mm 
@@ -2143,6 +2143,8 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .nvk .tsip.vyp{opacity:.3;pointer-events:none;box-shadow:none;background:none;}
 .nvk .tydhl span{font-size:11.2px;font-weight:800;color:var(--label);letter-spacing:-.01em;}
 .nvk .tydhl i{font-style:normal;font-size:9.8px;font-weight:700;color:var(--ter);}
+.nvk .tydbox{position:relative;overflow:hidden;}
+.nvk .tyd.soused{position:absolute;top:0;left:0;right:0;}
 .nvk .tyd{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;}
 /* Prepnuti tydne: dny nastupuji po sobe od strany, ze ktere jsem prejel (Marek 2026-08-25) */
 @keyframes mmDenIn{0%{opacity:0;transform:translateX(var(--dx)) scale(.9)}
@@ -2222,6 +2224,8 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .hbm .ht small{display:block;color:var(--sec);font-weight:500;font-size:12.67px;}
 .mm .hbm .hc{width:22px;height:22px;border-radius:50%;border:2px solid var(--ter);}
 .mm .hbm .hc.on{background:var(--green);border-color:var(--green);display:grid;place-items:center;color:#fff;font-size:13.28px;}
+.mm .hbm .hbsip{display:inline-grid;place-items:center;width:18px;height:18px;margin-left:9px;color:var(--ter);align-self:center;}
+.mm .hbm .hbsip .i{width:18px;height:18px;stroke-width:2.2;transform:rotate(180deg);}
 .mm .hbm .pct{font-size:13.4px;font-weight:800;color:var(--green);}
 .mm .hbm .pct b{font-family:var(--font-display);font-size:23.1px;font-weight:900;letter-spacing:-.04em;line-height:1;}
 .mm .newbtn{margin-top:9px;width:100%;border:1.5px dashed var(--ter);color:var(--green);background:none;border-radius:999px;padding:9px;font:inherit;font-size:15.69px;font-weight:700;}
@@ -2892,9 +2896,9 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .hcard .hc-tyden{display:flex;gap:6px;margin-top:3px;padding-top:6px;}
 .hcard .hc-d{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
 .hcard .hc-dsl{position:relative;width:100%;aspect-ratio:1;border-radius:5px;background:var(--track);}
-.hcard .hc-dsl i{position:absolute;left:0;right:0;bottom:0;display:block;border-radius:5px;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);transition:height .5s cubic-bezier(.22,1,.36,1);}
-.hcard .hc-nad{position:absolute;left:0;right:0;bottom:100%;display:block;border-radius:5px 5px 0 0;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);-webkit-mask-image:linear-gradient(to top,rgba(0,0,0,.46),rgba(0,0,0,.11));mask-image:linear-gradient(to top,rgba(0,0,0,.46),rgba(0,0,0,.11));}
-.hcard .hc-mark{position:absolute;left:0;right:0;top:0;height:0;z-index:3;pointer-events:none;border-top:1.6px solid rgba(255,255,255,.66);}
+.hcard .hc-dsl i{position:absolute;left:0;right:0;bottom:0;z-index:1;display:block;border-radius:5px;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);transition:height .5s cubic-bezier(.22,1,.36,1);}
+.hcard .hc-nad{position:absolute;left:0;right:0;bottom:calc(100% - 5px);z-index:0;display:block;border-radius:5px 5px 0 0;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);-webkit-mask-image:linear-gradient(to top,rgba(0,0,0,.46),rgba(0,0,0,.11));mask-image:linear-gradient(to top,rgba(0,0,0,.46),rgba(0,0,0,.11));}
+.hcard .hc-mark{position:absolute;left:0;right:0;top:0;height:10px;z-index:3;pointer-events:none;border:1.6px solid rgba(255,255,255,.66);border-bottom:0;border-radius:5px 5px 0 0;-webkit-mask-image:linear-gradient(to bottom,#000 0 46%,transparent 100%);mask-image:linear-gradient(to bottom,#000 0 46%,transparent 100%);}
 .hcard .hc-d.je-dnes span{color:var(--green);font-weight:900;}
 .hcard .hc-dsl u{position:absolute;left:0;right:0;bottom:1px;text-align:center;text-decoration:none;font-size:9.06px;font-weight:800;line-height:1;letter-spacing:-.02em;color:#fff;font-variant-numeric:tabular-nums;pointer-events:none;z-index:4;text-shadow:0 1px 2px rgba(0,0,0,.42);}
 
@@ -3022,6 +3026,8 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .nvk .tsip.vyp{opacity:.3;pointer-events:none;box-shadow:none;background:none;}
 .nvk .tydhl span{font-size:11.2px;font-weight:800;color:var(--label);letter-spacing:-.01em;}
 .nvk .tydhl i{font-style:normal;font-size:9.8px;font-weight:700;color:var(--ter);}
+.nvk .tydbox{position:relative;overflow:hidden;}
+.nvk .tyd.soused{position:absolute;top:0;left:0;right:0;}
 .nvk .tyd{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;}
 /* Prepnuti tydne: dny nastupuji po sobe od strany, ze ktere jsem prejel (Marek 2026-08-25) */
 @keyframes mmDenIn{0%{opacity:0;transform:translateX(var(--dx)) scale(.9)}
@@ -3094,7 +3100,7 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .nvk .zpet{font-size:11.6px;font-weight:800;color:var(--fial2);margin:2px 2px 10px;cursor:pointer;}
 .nvk .nav .right .av{background:linear-gradient(135deg,#8B6FE04d,#8B6FE012)!important;color:#7757d6!important;}
 /* Navyky: stejny design language jako zbytek appky — mensi prvky, jemnejsi stiny (Marek 2026-08-23) */
-.nvk .tabs{margin:4px 0 10px;}.nvk .tabs b{padding:5px 13px;font-size:12.74px;}.nvk .tabs b.on{box-shadow:0 3px 10px -5px color-mix(in srgb,var(--green) 60%,transparent);}.nvk .wks{gap:3px;margin-bottom:9px;}.nvk .wks span{width:26px;height:26px;font-size:10.09px;}.nvk .stat2{gap:6px;}.nvk .stat2 .st{padding:6px;border-radius:14px;}.nvk .stat2 .st .v{font-size:15.09px;}.nvk .stat2 .st .k{font-size:9.06px;}.nvk .sl{margin:10px 3px 5px;}.nvk .hbm{padding:4px 11px;margin-bottom:4px;gap:8px;}.nvk .hbm .hi{width:25px;height:25px;border-radius:8px;font-size:13.28px;}.nvk .hbm .hi .i{width:14px;height:14px;}.nvk .hbm .ht{font-size:12.74px;font-weight:600;letter-spacing:-.005em;color:color-mix(in srgb,var(--label) 78%,var(--sec));line-height:1.25;}.nvk .hbm .ht small{font-size:10.62px;font-weight:500;color:var(--sec);margin-top:0;line-height:1.3;}.nvk .hbm .hc{width:19px;height:19px;border-width:1.8px;}.nvk .newbtn{margin-top:7px;padding:7px;font-size:12.74px;}.nvk .statg{border-radius:16px;padding:10px;} .hbm+.hbm{margin-top:6px;} .hbm .hi{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-size:15.94px;} .hbm .ht{flex:1;font-size:13.81px;font-weight:600;} .hbm .ht small{display:block;color:var(--sec);font-weight:500;font-size:11.15px;} .hbm .hc{width:22px;height:22px;border-radius:50%;border:2px solid var(--ter);} .hbm .hc.on{background:var(--green);border-color:var(--green);display:grid;place-items:center;color:#fff;font-size:11.69px;} .hbm .pct{font-size:11.8px;font-weight:800;color:var(--green);} .hbm .pct b{font-family:var(--font-display);font-size:20.4px;font-weight:900;letter-spacing:-.04em;line-height:1;}
+.nvk .tabs{margin:4px 0 10px;}.nvk .tabs b{padding:5px 13px;font-size:12.74px;}.nvk .tabs b.on{box-shadow:0 3px 10px -5px color-mix(in srgb,var(--green) 60%,transparent);}.nvk .wks{gap:3px;margin-bottom:9px;}.nvk .wks span{width:26px;height:26px;font-size:10.09px;}.nvk .stat2{gap:6px;}.nvk .stat2 .st{padding:6px;border-radius:14px;}.nvk .stat2 .st .v{font-size:15.09px;}.nvk .stat2 .st .k{font-size:9.06px;}.nvk .sl{margin:10px 3px 5px;}.nvk .hbm{padding:4px 11px;margin-bottom:4px;gap:8px;}.nvk .hbm .hi{width:25px;height:25px;border-radius:8px;font-size:13.28px;}.nvk .hbm .hi .i{width:14px;height:14px;}.nvk .hbm .ht{font-size:12.74px;font-weight:600;letter-spacing:-.005em;color:color-mix(in srgb,var(--label) 78%,var(--sec));line-height:1.25;}.nvk .hbm .ht small{font-size:10.62px;font-weight:500;color:var(--sec);margin-top:0;line-height:1.3;}.nvk .hbm .hc{width:19px;height:19px;border-width:1.8px;}.nvk .newbtn{margin-top:7px;padding:7px;font-size:12.74px;}.nvk .statg{border-radius:16px;padding:10px;} .hbm+.hbm{margin-top:6px;} .hbm .hi{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-size:15.94px;} .hbm .ht{flex:1;font-size:13.81px;font-weight:600;} .hbm .ht small{display:block;color:var(--sec);font-weight:500;font-size:11.15px;} .hbm .hc{width:22px;height:22px;border-radius:50%;border:2px solid var(--ter);} .hbm .hc.on{background:var(--green);border-color:var(--green);display:grid;place-items:center;color:#fff;font-size:11.69px;} .hbm .hbsip{display:inline-grid;place-items:center;width:16px;height:16px;margin-left:8px;color:var(--ter);align-self:center;} .hbm .hbsip .i{width:16px;height:16px;stroke-width:2.2;transform:rotate(180deg);} .hbm .pct{font-size:11.8px;font-weight:800;color:var(--green);} .hbm .pct b{font-family:var(--font-display);font-size:20.4px;font-weight:900;letter-spacing:-.04em;line-height:1;}
   .newbtn{margin-top:9px;width:100%;border:1.5px dashed var(--ter);color:var(--green);background:none;border-radius:999px;padding:9px;font:inherit;font-size:13.81px;font-weight:700;}
   .stat2{display:flex;gap:7px;} .st{flex:1;background:var(--card);box-shadow:var(--shadow);border-radius:12px;padding:9px;text-align:center;} .st .v{font-size:16.99px;font-weight:800;} .st .k{font-size:9.56px;color:var(--sec);font-weight:600;}
   .pcard{background:var(--card);box-shadow:var(--shadow);border-radius:15px;padding:12px;display:flex;align-items:center;gap:11px;} .pcard .pav{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:14.87px;font-weight:700;background:#2FB17022;color:#1f8a52;} .pcard .pn{font-size:16.99px;font-weight:800;} .pcard .ps{font-size:12.21px;color:var(--sec);font-weight:600;}
@@ -6495,9 +6501,10 @@ function renderDnesek(){
     const doCile = Math.min(100, v), nadCil = Math.max(0, v-100);
     const dnesek=d.ds===today, budouci=(d.ds>today && !MM_TYDEN_UKAZKA);   // v ukazce vykreslit cely tyden
     return '<div class="hc-d'+(dnesek?' je-dnes':'')+(budouci?' je-pak':'')+(d.b>mCil&&!budouci?' je-nad':'')+'">'
-      +'<div class="hc-dsl">'+((d.b>mCil&&!budouci)?'<i class="hc-mark"></i>':'')
-      +'<i style="height:'+((d.b>0&&!budouci)?doCile:0)+'%'+((nadCil>0&&!budouci)?';border-radius:0 0 5px 5px':'')+'"></i>'
-      +((nadCil>0&&!budouci)?'<b class="hc-nad" style="height:'+nadCil+'%"></b>':'')
+      +'<div class="hc-dsl">'
+      +'<i style="height:'+((d.b>0&&!budouci)?doCile:0)+'%"></i>'
+      +((nadCil>0&&!budouci)?'<b class="hc-nad" style="height:calc('+nadCil+'% + 5px)"></b>':'')
+      +((d.b>mCil&&!budouci)?'<i class="hc-mark"></i>':'')
       +((d.b>0&&!budouci)?'<u>'+fmtNum(d.b)+'</u>':'')+'</div>'
       +'<span>'+_pism[i]+'</span></div>';
   }).join('');
@@ -6557,7 +6564,7 @@ function renderDnesek(){
   // Nadpis zebricku vlevo, odpocet soutezniho obdobi vpravo — stejny vzor jako Kalendar aktivity / Deni.
   const odpocetHtml='<div class="sl slzeb"><span>Žebříček</span><i class="zebodp'+naleh+'">'+odpocetTxt+'</i></div>';
   const tpl=`<div class="hcard"><div class="hc-hd"><span class="hc-poz">${mmGreet()}${me?', '+esc(mmVocative(mmFirst(me.jmeno))):''}</span><span class="hc-dat">${dlKratke}</span></div><div class="hc-top">${mSerie>0?'<span class="hc-serie"><svg class="i"><use href="#i-flame"/></svg>'+mSerie+'</span>':''}<span class="hc-r">${mTrendHtml}<span class="hc-num">${fmtNum(todayPts)}</span><span class="hc-cil">z ${fmtNum(mCil)} b</span></span></div><div class="hc-tyden">${mSloupce}</div></div>
-  <div class="hbm hbnav2" style="margin-top:10px;cursor:pointer" onclick="mmGo('navyky')"><div class="hi hicheck${habTotal>0&&habDone>=habTotal?' hfull':''}" style="--hp:${habTotal>0?Math.round(Math.min(habDone,habTotal)/habTotal*100):0}%"><svg class="i"><use href="#i-check"/></svg></div><div class="ht">Návyky dnes<span class="hdots">${Array.from({length:habTotal},(_,i)=>'<i'+(i<habDone?' class="on"':'')+'></i>').join('')}</span></div><div class="pct" style="display:flex;align-items:baseline;gap:0;align-self:center;position:relative;top:1px"><b>${habDone}</b><span style="color:var(--ter);font-weight:700;margin-left:1.5px;margin-right:7px">/${habTotal}</span><span style="color:var(--ter);font-weight:400">›</span></div></div>
+  <div class="hbm hbnav2" style="margin-top:10px;cursor:pointer" onclick="mmGo('navyky')"><div class="hi hicheck${habTotal>0&&habDone>=habTotal?' hfull':''}" style="--hp:${habTotal>0?Math.round(Math.min(habDone,habTotal)/habTotal*100):0}%"><svg class="i"><use href="#i-check"/></svg></div><div class="ht">Návyky dnes<span class="hdots">${Array.from({length:habTotal},(_,i)=>'<i'+(i<habDone?' class="on"':'')+'></i>').join('')}</span></div><div class="pct" style="display:flex;align-items:baseline;gap:0;align-self:center;position:relative;top:1px"><b>${habDone}</b><span style="color:var(--ter);font-weight:700;margin-left:1.5px;margin-right:7px">/${habTotal}</span><span class="hbsip"><svg class="i" aria-hidden="true"><use href="#i-chev"/></svg></span></div></div>
   ${odpocetHtml}<div class="lcard${mmPartaZalTrida()}">${mmPartaSegBar()}
   <div class="lc">${rows||'<div style="padding:20px;text-align:center;color:var(--ter)">Zatím žádné body</div>'}</div></div>
   <div class="sl" onclick="mmOpenSub('rokparty')" style="cursor:pointer;touch-action:manipulation"><span>Kalendář aktivity</span><a style="pointer-events:none">celý rok →</a></div>
@@ -7951,9 +7958,14 @@ function mmHabitDenKolecko(pct, nahr, dnes, vybrany, klic){
   const dilP=c*(Math.min(100,pct)/100), dilN=c*(Math.min(100,nahr)/100);
   const gid='hg'+klic;
   // Kulicka na konci prstence — o kus siri nez linka, aby bylo videt, kam jsem se dostal (Marek 2026-08-25)
-  const hlava=(uhel, barva)=>{ const a=(uhel/100*360-90)*Math.PI/180;
-    return '<circle cx="'+(stred+r*Math.cos(a)).toFixed(2)+'" cy="'+(stred+r*Math.sin(a)).toFixed(2)+'" r="'+kul.toFixed(2)+'"'
+  const bod=(uhel, polomer, barva)=>{ const a=(uhel/100*360-90)*Math.PI/180;
+    return '<circle cx="'+(stred+r*Math.cos(a)).toFixed(2)+'" cy="'+(stred+r*Math.sin(a)).toFixed(2)+'" r="'+polomer.toFixed(2)+'"'
       +' style="fill:'+barva+'"/>'; };
+  // Kulicka nenasedne na linku skokem — dva mezistupne pred koncem spoj zaobli (Marek 2026-08-25).
+  const hlava=(uhel, barva)=>{ const krok=100*(2.2/c);
+    return bod(Math.max(0,uhel-krok*2), sw/2+(kul-sw/2)*0.34, barva)
+         + bod(Math.max(0,uhel-krok),   sw/2+(kul-sw/2)*0.7,  barva)
+         + bod(uhel, kul, barva); };
   const konec=Math.min(100, pct+nahr);
   return '<svg viewBox="0 0 '+s+' '+s+'" style="width:100%;height:auto;display:block">'
     +'<defs><linearGradient id="'+gid+'v" x1="0" y1="1" x2="1" y2="0">'
@@ -7994,13 +8006,11 @@ function mmHabitDenNahrPct(pid, mine, ds){
   const n=den.filter(h=>habitIsDoneOn(h,pid,ds) && habitNahrazenoOn(h,pid,ds)>0).length;
   return Math.round(n/den.length*100);
 }
-function mmHabitTydenHtml(pid, mine, sel){
+// Radka sedmi dnu pro libovolny tyden — pouziva ji i posun prstem pro sousedni tydny
+function mmHabitDnyHtml(pid, mine, sel){
   const todayS=todayStr();
   const zac=new Date(sel+'T00:00:00'); zac.setDate(zac.getDate()-((zac.getDay()+6)%7));
   const pism=['Po','Út','St','Čt','Pá','So','Ne'];
-  const konec=new Date(zac); konec.setDate(zac.getDate()+6);
-  const rozsah=zac.getDate()+'.–'+konec.getDate()+'. '+(konec.getMonth()+1)+'.';
-  const tentoTyden = (()=>{ const t=new Date(todayS+'T00:00:00'); t.setDate(t.getDate()-((t.getDay()+6)%7)); return dateToStr(t)===dateToStr(zac); })();
   let dny='';
   for(let i=0;i<7;i++){
     const d=new Date(zac); d.setDate(zac.getDate()+i); const ds=dateToStr(d);
@@ -8008,11 +8018,20 @@ function mmHabitTydenHtml(pid, mine, sel){
     const celkem=budouci?0:mmHabitDenPct(pid,mine,ds);
     const nahr=budouci?0:mmHabitDenNahrPct(pid,mine,ds);
     const pct=Math.max(0, celkem-nahr);          // vlastní výkon; nahrazené jde zvlášť
-    // V kolecku je primo nazev dne — procenta nese delka oblouku, cislo uz tam neni (Marek 2026-08-24)
     dny+='<span class="'+(ds===sel?'vyb':'')+(ds===todayS?' dnes':'')+(celkem>=100?' plny':'')+(budouci?' pak':'')
-      +'" style="--i:'+i+';--j:'+(6-i)+'" onclick="mmHabitDen(&quot;'+ds+'&quot;)"><i class="kol">'+mmHabitDenKolecko(pct,nahr,ds===todayS,ds===sel,i)
+      +'" style="--i:'+i+';--j:'+(6-i)+'" onclick="mmHabitDen(&quot;'+ds+'&quot;)"><i class="kol">'+mmHabitDenKolecko(pct,nahr,ds===todayS,ds===sel,ds)
       +'<u>'+pism[i]+'</u></i></span>';
   }
+  return dny;
+}
+function mmHabitTydenHtml(pid, mine, sel){
+  const todayS=todayStr();
+  const zac=new Date(sel+'T00:00:00'); zac.setDate(zac.getDate()-((zac.getDay()+6)%7));
+  const pism=['Po','Út','St','Čt','Pá','So','Ne'];
+  const konec=new Date(zac); konec.setDate(zac.getDate()+6);
+  const rozsah=zac.getDate()+'.–'+konec.getDate()+'. '+(konec.getMonth()+1)+'.';
+  const tentoTyden = (()=>{ const t=new Date(todayS+'T00:00:00'); t.setDate(t.getDate()-((t.getDay()+6)%7)); return dateToStr(t)===dateToStr(zac); })();
+  const dny=mmHabitDnyHtml(pid, mine, sel);
   const zacDnes=new Date(todayS+'T00:00:00'); zacDnes.setDate(zacDnes.getDate()-((zacDnes.getDay()+6)%7));
   const oTydnu=Math.round((zacDnes-zac)/6048e5);
   const popis = oTydnu===0 ? 'Tento týden' : (oTydnu===1 ? 'Minulý týden'
@@ -8023,7 +8042,7 @@ function mmHabitTydenHtml(pid, mine, sel){
     +'<span class="tsip vpred'+(oTydnu<=0?' vyp':'')+'" onclick="mmHabitTydenPosun(1)"><svg class="i" aria-hidden="true"><use href="#i-chev"/></svg></span>'
     +'<i>'+rozsah+'</i>'
     +(jinyDen?'<span class="dnesbtn" onclick="mmHabitDnes()">⟳ Dnes</span>':'')
-    +'</div><div class="tyd'+(window._mmTydSmer? (window._mmTydSmer>0?' in-r':' in-l') : '')+'" data-tyd>'+dny+'</div>';
+    +'</div><div class="tydbox"><div class="tyd'+(window._mmTydSmer? (window._mmTydSmer>0?' in-r':' in-l') : '')+'" data-tyd>'+dny+'</div></div>';
 }
 // Cile za obdobi (X-krat tydne / mesicne / rocne) — vlastni sekce podle horizontu,
 // v nadpisu je kolik cilu je splneno a kolik casu do konce obdobi zbyva (Marek 2026-08-24).
@@ -8050,8 +8069,8 @@ function mmHabitCileHtml(pid, flex, ds){
 }
 function mmHabitDen(ds){ state.habitDay=ds; renderNavykyMM(); }
 function mmHabitDnes(){ state.habitDay=todayStr(); renderNavykyMM(); }
-function mmHabitTydenPosun(smer){
-  window._mmTydSmer=smer;
+function mmHabitTydenPosun(smer, bezNastupu){
+  window._mmTydSmer = bezNastupu ? 0 : smer;
   const sel=state.habitDay||todayStr(); const d=new Date(sel+'T00:00:00');
   d.setDate(d.getDate()+smer*7);
   let ds=dateToStr(d);
@@ -8062,53 +8081,73 @@ function mmHabitTydenPosun(smer){
 // Prejeti prstem po radce dnu: radka jde ZA prstem a teprve pri pusteni se prepne.
 // Reaguje prubezne, aby to pusobilo zive; dopredu za dnesek se jen pruzne odtahne (Marek 2026-08-25).
 function mmHabitSwipe(sh){
-  const el=sh && sh.querySelector('[data-tyd]'); if(!el || el._mmSw) return;
+  const box=sh && sh.querySelector('.tydbox');
+  const el=box && box.querySelector('[data-tyd]'); if(!el || el._mmSw) return;
   el._mmSw=true;
-  const PRAH=52;                       // od kolika px se tyden prepne
-  let x0=null, y0=null, taham=false, sirka=1;
-  const posad=(dx, plynule)=>{
-    el.style.transition = plynule ? 'transform .28s cubic-bezier(.22,.92,.24,1),opacity .28s ease' : 'none';
-    el.style.transform = dx ? 'translateX('+dx.toFixed(1)+'px)' : '';
-    el.style.opacity = dx ? String(Math.max(.35, 1-Math.abs(dx)/(sirka*0.9))) : '';
+  const PRAH=52;
+  let x0=null, y0=null, taham=false, sirka=1, pred=null, po=null;
+  const posun=(uzel, zaklad, dx, plynule)=>{ if(!uzel) return;
+    uzel.style.transition = plynule ? 'transform .24s cubic-bezier(.25,.9,.3,1)' : 'none';
+    uzel.style.transform = 'translateX(calc('+zaklad+'% + '+dx.toFixed(1)+'px))'; };
+  const uklid=()=>{ [el,pred,po].forEach(u=>{ if(!u) return; u.style.transition=''; u.style.transform=''; });
+    if(pred) pred.remove(); if(po) po.remove(); pred=null; po=null; };
+  const soused=(smer)=>{                       // smer -1 = minuly tyden vlevo, +1 = pristi vpravo
+    const pid=state.currentPlayerId; if(!pid) return null;
+    const d=new Date((state.habitDay||todayStr())+'T00:00:00'); d.setDate(d.getDate()+smer*7);
+    const ds=dateToStr(d);
+    const uzel=document.createElement('div');
+    uzel.className='tyd soused';
+    uzel.innerHTML=mmHabitDnyHtml(pid, mmHabitMine(pid), ds);
+    uzel.style.transform='translateX('+(smer*100)+'%)';
+    box.appendChild(uzel); return uzel;
   };
-  const konec=()=>{ el.style.transition=''; el.style.transform=''; el.style.opacity=''; };
   el.addEventListener('touchstart', (e)=>{
     if(e.touches.length!==1) return;
     const t=e.touches[0]; x0=t.clientX; y0=t.clientY; taham=false;
     sirka=el.getBoundingClientRect().width||1;
-    el.style.transition='none';
   }, {passive:true});
   el.addEventListener('touchmove', (e)=>{
     if(x0==null) return;
     const t=e.touches[0], dx=t.clientX-x0, dy=t.clientY-y0;
     if(!taham){
-      if(Math.abs(dy)>Math.abs(dx)){ x0=null; return; }    // svisle gesto necham stranku
+      if(Math.abs(dy)>Math.abs(dx)){ x0=null; return; }
       if(Math.abs(dx)<6) return;
       taham=true;
+      pred=soused(-1);                                   // dozadu se jde vzdy
+      if(mmHabitLzeVpred()) po=soused(1);                // dopredu jen dokud nejsem v tomhle tydnu
     }
     if(e.cancelable) e.preventDefault();
-    // dopredu za dnesek se nedostanu — tam gesto jen pruzne povoli
-    const dopredu = dx<0;
-    const konecTydne = dopredu && !mmHabitLzeVpred();
-    posad(konecTydne ? dx*0.22 : dx, false);
+    const brzda = (dx<0 && !po) ? 0.22 : 1;              // za dnesek gesto jen pruzne povoli
+    const d=dx*brzda;
+    posun(el, 0, d, false); posun(pred, -100, d, false); posun(po, 100, d, false);
   }, {passive:false});
   const pusteno=(e)=>{
     if(x0==null){ taham=false; return; }
     const t=e.changedTouches[0], dx=t.clientX-x0; x0=null;
-    if(!taham){ konec(); return; }
+    if(!taham){ uklid(); return; }
     taham=false;
-    const dopredu = dx<0;
-    if(Math.abs(dx)>=PRAH && !(dopredu && !mmHabitLzeVpred())){
-      posad(dx>0 ? sirka*0.42 : -sirka*0.42, true);        // dokloužat ven...
-      setTimeout(()=>{ konec(); mmHabitTydenPosun(dx>0?-1:1); }, 170);   // ...a nasadit novy tyden
+    const dozadu = dx>0;
+    const jde = Math.abs(dx)>=PRAH && (dozadu ? !!pred : !!po);
+    if(jde){
+      const cil = dozadu ? sirka : -sirka;
+      posun(el, 0, cil, true); posun(pred, -100, cil, true); posun(po, 100, cil, true);
+      setTimeout(()=>{ uklid(); mmHabitTydenPosun(dozadu?-1:1, true); }, 235);
     } else {
-      posad(0, true);
-      setTimeout(konec, 300);
+      posun(el, 0, 0, true); posun(pred, -100, 0, true); posun(po, 100, 0, true);
+      setTimeout(uklid, 260);
     }
   };
   el.addEventListener('touchend', pusteno, {passive:true});
   el.addEventListener('touchcancel', pusteno, {passive:true});
 }
+// Do budoucna se nechodi — dopredu jen dokud nejsem v tomhle tydnu
+function mmHabitLzeVpred(){
+  const sel=state.habitDay||todayStr();
+  const z=new Date(sel+'T00:00:00'); z.setDate(z.getDate()-((z.getDay()+6)%7));
+  const zd=new Date(todayStr()+'T00:00:00'); zd.setDate(zd.getDate()-((zd.getDay()+6)%7));
+  return dateToStr(z) < dateToStr(zd);
+}
+
 // Do budoucna se nechodi — dopredu jen dokud nejsem v tomhle tydnu
 function mmHabitLzeVpred(){
   const sel=state.habitDay||todayStr();
