@@ -23,12 +23,12 @@
 | 2 | Žebříček — rádiusy u krajních filtrů | ✅ |
 | 3 | Přehled — čtverečky dnů jsou čtverce | ✅ |
 | 4 | Přehled — ukázkový týden natvrdo v appce | 🅼 odsouhlasit (odblokováno bodem 5), pak vrátím reálná data |
-| 5 | Přehled — varianta D nasazena v appce: žádná ryska, tmavší hrana na vrcholu každého sloupce, výška zastropovaná na 225 % s pluskem | ⏳ |
+| 5 | Přehled — varianta D: tmavší hrana pevně 7 px pod horní hranou zelené (nezávisle na výšce sloupce), strop 240 % s pluskem, ukázková data v BODECH po 25 | ⏳ |
 | 6 | Návyky — viditelnost výplně koleček | ✅ |
 | 7 | Návyky — prstenec: hladký oblouk, kulička, gradient | ✅ |
 | 8 | Návyky — velikost koleček | ✅ |
 | 9 | Návyky — mezera pod kolečky | ✅ |
-| 10 | Návyky — tlačítko Dnes u data | ⏳ posunuto na 248 px (celkem o 38 px doleva) |
+| 10 | Návyky — tlačítko Dnes u data | ⏳ posunuto na 233 px |
 | 11 | Návyky — proužek dnů Po–Ne u týdenního cíle | ✅ |
 | 12 | Návyky — měřitelné návyky klikem a podržením | ✅ |
 | 13 | Návyky — nahrazení z přebytku | ✅ migrace proběhla na **testovací** DB, funguje na větvi `v2.0-test` s reálnými daty. Produkce (`main` + prod DB) nedotčená |
@@ -37,15 +37,15 @@
 | 16 | Výběr aktivity v tmavém režimu | ✅ |
 | 17 | Plusko ve spodní liště na střed | ✅ |
 | 18 | Bublina Návyky — číslo, šipka, logo s fajfkou | ✅ |
-| 19 | Historie výkonu — mockup v5 | ⏳ dny ze sousedních měsíců doplněné a prouhované; měsíc 669 px a detail týdne 629 px se vejdou na obrazovku (max ~660), **rok vychází 904 px = zhruba 1,4 obrazovky** — dvanáct mini kalendářů se na jednu nevejde, viz otázka pro Marka |
+| 19 | Historie výkonu — mockup v6 | ⏳ čtyři obrazovky: měsíc (669 px ✓), rok pod sebou (scrollovatelný, větší čtverečky), rok ve dvou sloupcích (711 px), detail týdne (629 px ✓). Dny mimo měsíc doladíme až v appce |
 | 20 | Ikony jako textové znaky → SVG | ✅ (křížky `×` v modálech až při jejich předělání) |
 | 21 | Návyky — seznam skákal při přepnutí dne | ✅ |
-| 22 | Návyky — označení dnů | ✅ hotovo; 🔧 zbývá mockup jiného označení splněného dne |
+| 22 | Návyky — jiné označení splněného dne | ⏳ **mockup s 5 variantami:** https://claude.ai/code/artifact/ca3d7dfe-18df-4f29-8a80-57ca668129b8 |
 | 23 | Návyky — hlavička bez iniciál, fialová série | ✅ |
 | 28 | Návyky — menší mezera mezi prstenci a datem pod nimi | ⏳ |
 | 24 | Návyky — poskakování prstenců při přepnutí týdne | ✅ |
-| 25 | Žebříček — skákal samotný plamínek | ⏳ gradient byl definovaný uvnitř symbolu, vytažen ven a ukotven do pevných souřadnic |
-| 26 | Návyky — výraznější označení VYBRANÉHO dne (ne teček splnění — to jsem spletl a vrátil) | ⏳ silnější fialová výplň kolečka, kolečka o kus větší |
+| 25 | Žebříček — skákal samotný plamínek | ⏳ plamínek se kreslí přímo v chipu s vlastním id gradientu, žádné `<use>` na sdílený symbol |
+| 26 | Návyky — vybraný den výrazněji; malé tečky u týdenního cíle už nejdou proklikávat | ⏳ |
 | 27 | **Systémová oprava:** 60 měření DOM ve 20 funkcích, 9 z nich běží při vykreslení — zdroj celé třídy bugů | 🔧 Marek schválil, dělá se |
 
 
