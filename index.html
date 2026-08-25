@@ -1939,9 +1939,8 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .hcard .hc-d{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
 .mm .hcard .hc-dsl{position:relative;width:100%;aspect-ratio:1;border-radius:5px;background:var(--track);}
 .mm .hcard .hc-dsl i{position:absolute;left:0;right:0;bottom:0;display:block;border-radius:5px;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);transition:height .5s cubic-bezier(.22,1,.36,1);}
-.mm .hcard .hc-nad{position:absolute;left:3px;right:3px;bottom:100%;display:block;border-radius:4px 4px 0 0;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);-webkit-mask-image:linear-gradient(to top,rgba(0,0,0,.46),rgba(0,0,0,.11));mask-image:linear-gradient(to top,rgba(0,0,0,.46),rgba(0,0,0,.11));}
-.mm .hcard .hc-mark{position:absolute;left:0;right:0;top:0;height:11px;z-index:3;pointer-events:none;overflow:visible;-webkit-mask-image:linear-gradient(to bottom,#000 0 42%,transparent 100%);mask-image:linear-gradient(to bottom,#000 0 42%,transparent 100%);}
-.mm .hcard .hc-mark path{fill:none;stroke:rgba(255,255,255,.55);stroke-width:0.85;stroke-linecap:round;}
+.mm .hcard .hc-nad{position:absolute;left:0;right:0;bottom:100%;display:block;border-radius:5px 5px 0 0;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);-webkit-mask-image:linear-gradient(to top,rgba(0,0,0,.46),rgba(0,0,0,.11));mask-image:linear-gradient(to top,rgba(0,0,0,.46),rgba(0,0,0,.11));}
+.mm .hcard .hc-mark{position:absolute;left:0;right:0;top:0;height:10px;z-index:3;pointer-events:none;border:1.6px solid rgba(255,255,255,.62);border-bottom:0;border-radius:5px 5px 0 0;-webkit-mask-image:linear-gradient(to bottom,#000 0 34%,transparent 100%);mask-image:linear-gradient(to bottom,#000 0 34%,transparent 100%);}
 .mm .hcard .hc-d.je-dnes span{color:var(--green);font-weight:900;}
 .mm .hcard .hc-dsl u{position:absolute;left:0;right:0;bottom:1px;text-align:center;text-decoration:none;font-size:9.06px;font-weight:800;line-height:1;letter-spacing:-.02em;color:#fff;font-variant-numeric:tabular-nums;pointer-events:none;z-index:4;text-shadow:0 1px 2px rgba(0,0,0,.42);}
 .mm 
@@ -2894,9 +2893,8 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .hcard .hc-d{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
 .hcard .hc-dsl{position:relative;width:100%;aspect-ratio:1;border-radius:5px;background:var(--track);}
 .hcard .hc-dsl i{position:absolute;left:0;right:0;bottom:0;display:block;border-radius:5px;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);transition:height .5s cubic-bezier(.22,1,.36,1);}
-.hcard .hc-nad{position:absolute;left:3px;right:3px;bottom:100%;display:block;border-radius:4px 4px 0 0;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);-webkit-mask-image:linear-gradient(to top,rgba(0,0,0,.46),rgba(0,0,0,.11));mask-image:linear-gradient(to top,rgba(0,0,0,.46),rgba(0,0,0,.11));}
-.hcard .hc-mark{position:absolute;left:0;right:0;top:0;height:11px;z-index:3;pointer-events:none;overflow:visible;-webkit-mask-image:linear-gradient(to bottom,#000 0 42%,transparent 100%);mask-image:linear-gradient(to bottom,#000 0 42%,transparent 100%);}
-.hcard .hc-mark path{fill:none;stroke:rgba(255,255,255,.55);stroke-width:0.85;stroke-linecap:round;}
+.hcard .hc-nad{position:absolute;left:0;right:0;bottom:100%;display:block;border-radius:5px 5px 0 0;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);-webkit-mask-image:linear-gradient(to top,rgba(0,0,0,.46),rgba(0,0,0,.11));mask-image:linear-gradient(to top,rgba(0,0,0,.46),rgba(0,0,0,.11));}
+.hcard .hc-mark{position:absolute;left:0;right:0;top:0;height:10px;z-index:3;pointer-events:none;border:1.6px solid rgba(255,255,255,.62);border-bottom:0;border-radius:5px 5px 0 0;-webkit-mask-image:linear-gradient(to bottom,#000 0 34%,transparent 100%);mask-image:linear-gradient(to bottom,#000 0 34%,transparent 100%);}
 .hcard .hc-d.je-dnes span{color:var(--green);font-weight:900;}
 .hcard .hc-dsl u{position:absolute;left:0;right:0;bottom:1px;text-align:center;text-decoration:none;font-size:9.06px;font-weight:800;line-height:1;letter-spacing:-.02em;color:#fff;font-variant-numeric:tabular-nums;pointer-events:none;z-index:4;text-shadow:0 1px 2px rgba(0,0,0,.42);}
 
@@ -6497,7 +6495,7 @@ function renderDnesek(){
     const doCile = Math.min(100, v), nadCil = Math.max(0, v-100);
     const dnesek=d.ds===today, budouci=(d.ds>today && !MM_TYDEN_UKAZKA);   // v ukazce vykreslit cely tyden
     return '<div class="hc-d'+(dnesek?' je-dnes':'')+(budouci?' je-pak':'')+(d.b>mCil&&!budouci?' je-nad':'')+'">'
-      +'<div class="hc-dsl">'+((d.b>mCil&&!budouci)?'<svg class="hc-mark" preserveAspectRatio="none"><path/></svg>':'')
+      +'<div class="hc-dsl">'+((d.b>mCil&&!budouci)?'<i class="hc-mark"></i>':'')
       +'<i style="height:'+((d.b>0&&!budouci)?doCile:0)+'%"></i>'
       +((nadCil>0&&!budouci)?'<b class="hc-nad" style="height:'+nadCil+'%"></b>':'')
       +((d.b>0&&!budouci)?'<u>'+fmtNum(d.b)+'</u>':'')+'</div>'
@@ -7430,22 +7428,9 @@ function mmAkuzativ(j){
 
 // Znacka cile: cesta se dopocitava az po layoutu, protoze potrebuje skutecnou sirku sloupce.
 // Delka carky se voli tak, aby na cestu vysel cely pocet carek a mezer — pak jsou vsechny stejne.
-function mmZnackyCile(sh){
-  if(!sh) return;
-  const scr=sh.querySelector('.scr');
-  const zoom=(scr&&parseFloat(scr.style.zoom))||1;
-  sh.querySelectorAll('.hc-mark').forEach(svg=>{
-    const box=svg.parentElement; if(!box) return;
-    const w=box.getBoundingClientRect().width/zoom, h=11, r=5;   // desetinna sirka, ne zaokrouhleny clientWidth
-    if(!w) return;
-    svg.removeAttribute('width'); svg.removeAttribute('height');
-    svg.setAttribute('viewBox','0 0 '+w.toFixed(3)+' '+h);
-    const path=svg.querySelector('path'); if(!path) return;
-    path.setAttribute('d','M0.5 '+h+' V'+(0.5+r)+' A'+r+' '+r+' 0 0 1 '+(0.5+r)+' 0.5 H'+(w-0.5-r)
-      +' A'+r+' '+r+' 0 0 1 '+(w-0.5)+' '+(0.5+r)+' V'+h);
-    path.style.strokeDasharray='';   // plna cara — carkovani se pri zoomu 1,258 vyhlazuje nesymetricky
-  });
-}
+// Ryska cile uz se nekresli z mereni — je to CSS ramecek nad sloupcem, takze presne kopiruje
+// ctverec a neztrati se, kdyz se Prehled prekresli ze skryte obrazovky (Marek 2026-08-25).
+function mmZnackyCile(sh){ /* ryska je ciste v CSS, nic se nedopocitava */ }
 // Sloupec se jmenem siroky presne jako nejdelsi jmeno — plaminky pak sedi hned za jmeny
 // a zaroven pod sebou (kazdy radek je vlastni grid, takze se sam nesrovna).
 function mmSrovnejJmena(sh){
