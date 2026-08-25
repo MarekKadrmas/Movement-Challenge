@@ -18,25 +18,26 @@
 | # | Věc | Stav |
 |---|---|---|
 | 1 | Žebříček — animace přepnutí filtru | hotovo |
-| 2 | Žebříček — rádiusy u krajních filtrů | hotovo, opraven kořen (třída karty je v markupu, ne z měření) |
+| 2 | Žebříček — rádiusy u krajních filtrů | ~~uzavřeno~~ |
 | 3 | Přehled — čtverečky dnů jsou čtverce | hotovo |
 | 4 | Přehled — ukázkový týden natvrdo v appce | **čeká na odsouhlasení, pak vrátit na reálná data** |
-| 5 | Přehled — přetečení nad cíl (krček na rysce + vlastní gradient) | hotovo |
-| 6 | Návyky — viditelnost výplně koleček | přitvrzeno, čeká na posouzení |
-| 7 | Návyky — prstenec + kulička na konci oblouku, průsvitná fajfka místo plné výplně | hotovo, čeká na posouzení |
-| 8 | Návyky — velikost koleček | zvětšeno na ~45 px, čeká na posouzení |
-| 9 | Návyky — mezera pod kolečky | zmenšeno na nulu |
-| 10 | Návyky — animace přepnutí týdne (stagger po dnech) | hotovo, čeká na posouzení |
+| 5 | Přehled — přetečení nad cíl | ryska je rovná čára přes celou šířku, přebytek stejně široký jako čtverec, plná výplň má nad cílem hranaté rohy — čeká na posouzení |
+| 6 | Návyky — viditelnost výplně koleček | ~~prozatím ok~~ |
+| 7 | Návyky — kulička na konci oblouku (byla oříznutá viewBoxem) + fajfka průsvitně ZA názvem dne | opraveno, čeká na posouzení |
+| 8 | Návyky — velikost koleček | 46,6 px, čeká na posouzení |
+| 9 | Návyky — mezera pod kolečky | ~~uzavřeno~~ |
+| 10 | Návyky — přepnutí týdne jde za prstem (drag), pak nástup dnů | předěláno, čeká na posouzení |
 | 11 | Návyky — proužek dnů Po–Ne u týdenního cíle | hotovo, Markovi se líbí |
 | 12 | Návyky — měřitelné návyky klikem a podržením | hotovo, Marek zkouší v provozu |
 | 13 | Návyky — nahrazení z přebytku (§13) | hotovo v kódu, **čeká na migraci `F53-nahrazeni.sql`** |
 | 14 | Tmavý režim — světlý pruh vpravo | hotovo |
 | 15 | Vycentrování aplikace (4+4 px) | hotovo |
-| 16 | Výběr aktivity (zelené plus) v tmavém režimu | hotovo |
-| 17 | Plusko ve spodní liště na střed | hotovo |
-| 18 | „2/5" v bublině Návyky — větší, display font | hotovo |
+| 16 | Výběr aktivity (zelené plus) v tmavém režimu | ~~uzavřeno~~ |
+| 17 | Plusko ve spodní liště na střed | ~~uzavřeno~~ |
+| 18 | „2/5" v bublině Návyky — větší (+10 %), svisle na střed | čeká na posouzení |
 | 19 | Přehled — historie čtverečků za týden/měsíc/rok | **mockup se dělá** |
-| 20 | Ikony jako textové znaky (plusko, šipky) → SVG, optický střed změřen | hotovo; křížky `×` v modálech projít při jejich předělání |
+| 20 | Ikony jako textové znaky (plusko, šipky) → SVG, optický střed změřen | ~~uzavřeno~~; křížky `×` v modálech projít při jejich předělání |
+| 21 | Návyky — seznam skákal při přepnutí dne (tlačítko Dnes zvyšovalo hlavičku) | opraveno |
 
 
 ## ⏸️ Rozdělané (schválně odloženo)
