@@ -2185,6 +2185,9 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .nvk .mprouzek{display:inline-block;width:34px;height:5px;border-radius:999px;background:var(--track);overflow:hidden;}
 .nvk .mprouzek i{display:block;height:100%;border-radius:999px;background:var(--nc);}
 .nvk .cilpomer{font-size:11.15px;font-weight:800;color:var(--sec);}
+.nvk .nnahr{flex:0 0 auto;display:inline-flex;align-items:center;gap:3px;font-size:9.4px;font-weight:800;color:#C96A12;background:color-mix(in srgb,#E8902F 16%,transparent);border-radius:999px;padding:3px 7px;cursor:pointer;white-space:nowrap;}
+.nvk .nnahrok{flex:0 0 auto;font-size:9.4px;font-weight:800;color:#C96A12;background:color-mix(in srgb,#E8902F 12%,transparent);border-radius:999px;padding:3px 7px;cursor:pointer;white-space:nowrap;}
+.nvk .nrow.hot .nnahrok{opacity:.9;}
 .nvk .slinfo{font-size:10.2px;font-weight:700;color:var(--ter);text-transform:none;letter-spacing:0;}
 .nvk .nrow .ndet .i{width:12px;height:12px;}
 .nvk .nrow .nchk{width:22px;height:22px;flex:0 0 22px;border-radius:50%;border:none;box-shadow:inset 0 0 0 2px var(--ter);display:grid;place-items:center;color:#fff;cursor:pointer;transition:background .2s ease,box-shadow .2s ease;}
@@ -3054,6 +3057,9 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .nvk .mprouzek{display:inline-block;width:34px;height:5px;border-radius:999px;background:var(--track);overflow:hidden;}
 .nvk .mprouzek i{display:block;height:100%;border-radius:999px;background:var(--nc);}
 .nvk .cilpomer{font-size:11.15px;font-weight:800;color:var(--sec);}
+.nvk .nnahr{flex:0 0 auto;display:inline-flex;align-items:center;gap:3px;font-size:9.4px;font-weight:800;color:#C96A12;background:color-mix(in srgb,#E8902F 16%,transparent);border-radius:999px;padding:3px 7px;cursor:pointer;white-space:nowrap;}
+.nvk .nnahrok{flex:0 0 auto;font-size:9.4px;font-weight:800;color:#C96A12;background:color-mix(in srgb,#E8902F 12%,transparent);border-radius:999px;padding:3px 7px;cursor:pointer;white-space:nowrap;}
+.nvk .nrow.hot .nnahrok{opacity:.9;}
 .nvk .slinfo{font-size:10.2px;font-weight:700;color:var(--ter);text-transform:none;letter-spacing:0;}
 .nvk .nrow .ndet .i{width:12px;height:12px;}
 .nvk .nrow .nchk{width:22px;height:22px;flex:0 0 22px;border-radius:50%;border:none;box-shadow:inset 0 0 0 2px var(--ter);display:grid;place-items:center;color:#fff;cursor:pointer;transition:background .2s ease,box-shadow .2s ease;}
@@ -7701,10 +7707,14 @@ function mmHabitRowHtml(h, pid, ds){
   const flex=(h.frekvence_typ==='weekly'||h.frekvence_typ==='monthly'||h.frekvence_typ==='yearly');
   const done=flex ? mmHabitDoneToday(h,pid,ds) : habitIsDoneOn(h,pid,ds);
   const cerstve = (window._mmNoveId===h.id) ? ' just' : '';
+  const nahr = habitNahrazenoOn(h,pid,ds);                       // §13: den dohnaný z přebytku
+  const lzeNahr = done ? 0 : habitLzeNahraditDen(h,pid,ds);
   return `<div class="nrow${done?' hot':''}${cerstve}" style="--nc:${col}">`
     +`<span class="nic">${habitIconHtml(h.ikona)}</span>`
     +`<span class="nnm" onclick="openHabitModal('${h.id}')">${esc(h.nazev)}</span>`
     +`<span class="ndet">${mmHabitDetailHtml(h,pid,ds)}</span>`
+    +(nahr>0 ? `<span class="nnahrok" title="Zrušit nahrazení" onclick="event.stopPropagation();mmHabitZrusNahrazeni('${h.id}','${ds}')">nahrazeno</span>` : '')
+    +(lzeNahr>0 ? `<span class="nnahr" onclick="event.stopPropagation();mmHabitNahradit('${h.id}','${ds}')">↺ nahradit ${habitFmtNum(lzeNahr)}</span>` : '')
     +`<span class="nchk" data-id="${h.id}" onclick="event.stopPropagation();mmHabitKlik('${h.id}')">${done?'<svg class="i"><use href="#i-check"/></svg>':''}</span></div>`;
 }
 // vpravo v radku jen kratky udaj (hodnota u meritelnych, pomer u flexibilnich cilu)
@@ -7722,7 +7732,7 @@ function mmHabitDetailHtml(h, pid, ds){
   }
   if(habitEffZapis(h)!=='check'){
     const log=habitLogObj(h.id,pid,ds); const cil=Number(h.cil_hodnota)||0;
-    const val=log?(log.hodnota!=null?Number(log.hodnota):cil):0;
+    const val=log?((log.hodnota!=null?Number(log.hodnota):cil)+(Number(log.nahrazeno)||0)):0;
     return habitFmtNum(val)+'/'+habitFmtNum(cil);
   }
   const st=habitDayStreak(h,pid,ds);
@@ -7745,6 +7755,40 @@ async function mmHabitDenTecka(id, ds){
   try{ await toggleHabitToday(id); } finally { state.habitDay=puvodni; }
   renderNavykyMM(); try{ renderDnesek(); }catch(_){}
   clearTimeout(window._mmNoveT); window._mmNoveT=setTimeout(()=>{ window._mmNoveId=null; },450);
+}
+async function mmHabitNahradit(id, ds){
+  const pid=currentHabitPlayer(); if(!pid) return;
+  const h=state.habits.find(x=>x.id===id); if(!h) return;
+  const kolik=habitLzeNahraditDen(h,pid,ds); if(kolik<=0) return;
+  const ex=habitLogObj(id,pid,ds), nove=(ex?(Number(ex.nahrazeno)||0):0)+kolik;
+  if(isDemo()){
+    if(ex) ex.nahrazeno=nove;
+    else state.habitLogs.push({id:'demo-'+Math.random().toString(36).slice(2),habit_id:id,player_id:pid,datum:ds,hodnota:0,nahrazeno:kolik});
+  } else {
+    try{
+      if(ex){ const {error}=await db.from('habit_logs').update({nahrazeno:nove}).eq('id',ex.id); if(error) throw error; ex.nahrazeno=nove; }
+      else { const {data,error}=await db.from('habit_logs').insert({habit_id:id,player_id:pid,datum:ds,hodnota:0,nahrazeno:kolik}).select();
+             if(error) throw error; if(data&&data[0]) state.habitLogs.push(data[0]); }
+    }catch(e){ toast('Nahrazení se nepovedlo: '+(e.message||e),'error'); return; }
+  }
+  toast('Nahrazeno '+habitFmtNum(kolik)+' '+(h.cil_jednotka||'')+' z přebytku');
+  window._mmNoveId=id; renderNavykyMM(); try{ renderDnesek(); }catch(_){}
+  clearTimeout(window._mmNoveT); window._mmNoveT=setTimeout(()=>{ window._mmNoveId=null; },450);
+}
+async function mmHabitZrusNahrazeni(id, ds){
+  const pid=currentHabitPlayer(); if(!pid) return;
+  const ex=habitLogObj(id,pid,ds); if(!ex || !(Number(ex.nahrazeno)||0)) return;
+  const prazdny = !(Number(ex.hodnota)||0);     // nic reálného -> log rovnou zmizí
+  if(isDemo()){
+    if(prazdny) state.habitLogs=state.habitLogs.filter(l=>l.id!==ex.id); else ex.nahrazeno=0;
+  } else {
+    try{
+      if(prazdny){ const {error}=await db.from('habit_logs').delete().eq('id',ex.id); if(error) throw error;
+                   state.habitLogs=state.habitLogs.filter(l=>l.id!==ex.id); }
+      else { const {error}=await db.from('habit_logs').update({nahrazeno:0}).eq('id',ex.id); if(error) throw error; ex.nahrazeno=0; }
+    }catch(e){ toast('Zrušení nahrazení se nepovedlo: '+(e.message||e),'error'); return; }
+  }
+  renderNavykyMM(); try{ renderDnesek(); }catch(_){}
 }
 function mmHabitSetTab(t){ state.habitTab=t; renderNavykyMM(); }
 function mmHabitSetStatRange(r){ state.statRange=r; renderNavykyMM(); }
@@ -7932,6 +7976,13 @@ function mmHabitDenPct(pid, mine, ds){
   const spl=den.filter(h=>habitIsDoneOn(h,pid,ds)).length;
   return Math.round(spl/den.length*100);
 }
+// Kolik z plnění dne pochází z nahrazení — kreslí se oranžově na konec prstence (§13)
+function mmHabitDenNahrPct(pid, mine, ds){
+  const den=mmHabitDenniNavyky(mine, ds);
+  if(!den.length) return 0;
+  const n=den.filter(h=>habitIsDoneOn(h,pid,ds) && habitNahrazenoOn(h,pid,ds)>0).length;
+  return Math.round(n/den.length*100);
+}
 function mmHabitTydenHtml(pid, mine, sel){
   const todayS=todayStr();
   const zac=new Date(sel+'T00:00:00'); zac.setDate(zac.getDate()-((zac.getDay()+6)%7));
@@ -7943,10 +7994,12 @@ function mmHabitTydenHtml(pid, mine, sel){
   for(let i=0;i<7;i++){
     const d=new Date(zac); d.setDate(zac.getDate()+i); const ds=dateToStr(d);
     const budouci=ds>todayS;
-    const pct=budouci?0:mmHabitDenPct(pid,mine,ds);
+    const celkem=budouci?0:mmHabitDenPct(pid,mine,ds);
+    const nahr=budouci?0:mmHabitDenNahrPct(pid,mine,ds);
+    const pct=Math.max(0, celkem-nahr);          // vlastní výkon; nahrazené jde zvlášť
     // V kolecku je primo nazev dne — procenta nese delka oblouku, cislo uz tam neni (Marek 2026-08-24)
-    dny+='<span class="'+(ds===sel?'vyb':'')+(ds===todayS?' dnes':'')+(pct>=100?' plny':'')+(budouci?' pak':'')
-      +'" onclick="mmHabitDen(&quot;'+ds+'&quot;)"><i class="kol">'+mmHabitDenKolecko(pct,0,ds===todayS,ds===sel,i)
+    dny+='<span class="'+(ds===sel?'vyb':'')+(ds===todayS?' dnes':'')+(celkem>=100?' plny':'')+(budouci?' pak':'')
+      +'" onclick="mmHabitDen(&quot;'+ds+'&quot;)"><i class="kol">'+mmHabitDenKolecko(pct,nahr,ds===todayS,ds===sel,i)
       +'<u>'+pism[i]+'</u></i></span>';
   }
   const zacDnes=new Date(todayS+'T00:00:00'); zacDnes.setDate(zacDnes.getDate()-((zacDnes.getDay()+6)%7));
@@ -11278,8 +11331,52 @@ function habitFractionOn(h, pid, ds){
   if (!log) return 0;
   if (habitEffZapis(h) === 'check') return 1;
   const cil = Number(h.cil_hodnota) || 0;
-  const val = log.hodnota != null ? Number(log.hodnota) : cil;
+  const val = (log.hodnota != null ? Number(log.hodnota) : cil) + (Number(log.nahrazeno) || 0);
   return cil > 0 ? Math.min(1, val / cil) : 1;
+}
+// ----- Nahrazení návyku (NAVYKY-NAVRH.md §13) -----
+// `hodnota` = co jsem ten den reálně udělal, `nahrazeno` = kolik jsem dohnal z přebytku jiného dne.
+// Přebytek se počítá jen z reálných hodnot, takže ho nejde utratit dvakrát.
+function habitLzeNahrazovat(h){ return habitEffZapis(h) !== 'check' && (Number(h.cil_hodnota) || 0) > 0; }
+function habitNahrazenoOn(h, pid, ds){ const l = habitLogObj(h.id, pid, ds); return l ? (Number(l.nahrazeno) || 0) : 0; }
+function habitRealneOn(h, pid, ds){
+  const l = habitLogObj(h.id, pid, ds); if (!l) return 0;
+  const cil = Number(h.cil_hodnota) || 0;
+  return l.hodnota != null ? Number(l.hodnota) : cil;
+}
+// Přebytek za týden: co jsem kde udělal nad cíl, minus co už jsem z něj utratil
+function habitPrebytekTydne(h, pid, ds){
+  if (!habitLzeNahrazovat(h)) return 0;
+  const cil = Number(h.cil_hodnota) || 0; if (cil <= 0) return 0;
+  const zac = habitStrToDate(ds); zac.setDate(zac.getDate() - ((zac.getDay() + 6) % 7));
+  let nad = 0, utraceno = 0;
+  for (let i = 0; i < 7; i++){
+    const d = new Date(zac); d.setDate(zac.getDate() + i); const dd = dateToStr(d);
+    if (!habitLogObj(h.id, pid, dd)) continue;
+    nad += Math.max(0, habitRealneOn(h, pid, dd) - cil);
+    utraceno += habitNahrazenoOn(h, pid, dd);
+  }
+  return Math.max(0, nad - utraceno);
+}
+function habitChybiDoCile(h, pid, ds){
+  const cil = Number(h.cil_hodnota) || 0;
+  const mam = habitRealneOn(h, pid, ds) + habitNahrazenoOn(h, pid, ds);
+  return Math.max(0, cil - mam);
+}
+// Dokud neproběhne migrace F53-nahrazeni.sql, sloupec v DB není a nabídka se nesmí ukázat
+function habitNahrazeniPovoleno(){
+  if (isDemo()) return true;
+  const l = state.habitLogs && state.habitLogs[0];
+  return !l || ('nahrazeno' in l);
+}
+// Kolik lze na daný den nahradit (0 = nabídka se neukáže)
+function habitLzeNahraditDen(h, pid, ds){
+  if (!habitNahrazeniPovoleno()) return 0;
+  if (!habitLzeNahrazovat(h)) return 0;
+  if (ds >= todayStr()) return 0;                        // dnešek se plní normálně, nedohání
+  if (!habitDueOn(h, habitStrToDate(ds))) return 0;
+  const chybi = habitChybiDoCile(h, pid, ds); if (chybi <= 0) return 0;
+  return Math.min(chybi, habitPrebytekTydne(h, pid, ds));
 }
 function setHabitCast(k){ state.habitCast = k; renderHabitCastChips(); updateHabitIntent(); }
 function renderHabitCastChips(){
