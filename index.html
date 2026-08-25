@@ -1940,7 +1940,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .hcard .hc-dsl{position:relative;width:100%;aspect-ratio:1;border-radius:5px;background:var(--track);}
 .mm .hcard .hc-dsl i{position:absolute;left:0;right:0;bottom:0;z-index:1;display:block;border-radius:5px;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);transition:height .5s cubic-bezier(.22,1,.36,1);}
 .mm .hcard .hc-nad{position:absolute;left:0;right:0;bottom:calc(100% - 5px);z-index:0;display:block;border-radius:5px 5px 0 0;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);-webkit-mask-image:linear-gradient(to top,rgba(0,0,0,.46),rgba(0,0,0,.11));mask-image:linear-gradient(to top,rgba(0,0,0,.46),rgba(0,0,0,.11));}
-.mm .hcard .hc-mark{position:absolute;left:0;right:0;top:0;height:10px;z-index:3;pointer-events:none;border:1.6px solid rgba(255,255,255,.66);border-bottom:0;border-radius:5px 5px 0 0;-webkit-mask-image:linear-gradient(to bottom,#000 0 46%,transparent 100%);mask-image:linear-gradient(to bottom,#000 0 46%,transparent 100%);}
+.mm .hcard .hc-mark{position:absolute;left:0;right:0;top:0;height:5px;z-index:4;pointer-events:none;border:1px solid rgba(255,255,255,.5);border-bottom:0;border-radius:5px 5px 0 0;}
 .mm .hcard .hc-d.je-dnes span{color:var(--green);font-weight:900;}
 .mm .hcard .hc-dsl u{position:absolute;left:0;right:0;bottom:1px;text-align:center;text-decoration:none;font-size:9.06px;font-weight:800;line-height:1;letter-spacing:-.02em;color:#fff;font-variant-numeric:tabular-nums;pointer-events:none;z-index:4;text-shadow:0 1px 2px rgba(0,0,0,.42);}
 .mm 
@@ -2220,11 +2220,12 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .nvk .tabs{margin:4px 0 10px;}.nvk .tabs b{padding:5px 13px;font-size:12.74px;}.nvk .tabs b.on{box-shadow:0 3px 10px -5px color-mix(in srgb,var(--green) 60%,transparent);}.nvk .wks{gap:3px;margin-bottom:9px;}.nvk .wks span{width:26px;height:26px;font-size:10.09px;}.nvk .stat2{gap:6px;}.nvk .stat2 .st{padding:6px;border-radius:14px;}.nvk .stat2 .st .v{font-size:15.09px;}.nvk .stat2 .st .k{font-size:9.06px;}.nvk .sl{margin:10px 3px 5px;}.nvk .hbm{padding:4px 11px;margin-bottom:4px;gap:8px;}.nvk .hbm .hi{width:25px;height:25px;border-radius:8px;font-size:13.28px;}.nvk .hbm .hi .i{width:14px;height:14px;}.nvk .hbm .ht{font-size:12.74px;font-weight:600;letter-spacing:-.005em;color:color-mix(in srgb,var(--label) 78%,var(--sec));line-height:1.25;}.nvk .hbm .ht small{font-size:10.62px;font-weight:500;color:var(--sec);margin-top:0;line-height:1.3;}.nvk .hbm .hc{width:19px;height:19px;border-width:1.8px;}.nvk .newbtn{margin-top:7px;padding:7px;font-size:12.74px;}.nvk .statg{border-radius:16px;padding:10px;}
 .mm .hbm+.hbm{margin-top:6px;}
 .mm .hbm .hi{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-size:18.11px;}
+.mm .hbm .hi.hikol{width:32px;height:32px;background:none;box-shadow:none;border-radius:0;padding:0;--fial:#8B6FE0;--fial2:#7757d6;}
 .mm .hbm .ht{flex:1;font-size:15.69px;font-weight:600;}
 .mm .hbm .ht small{display:block;color:var(--sec);font-weight:500;font-size:12.67px;}
 .mm .hbm .hc{width:22px;height:22px;border-radius:50%;border:2px solid var(--ter);}
 .mm .hbm .hc.on{background:var(--green);border-color:var(--green);display:grid;place-items:center;color:#fff;font-size:13.28px;}
-.mm .hbm .hbsip{display:inline-grid;place-items:center;width:18px;height:18px;margin-left:9px;color:var(--ter);align-self:center;}
+.mm .hbm .hbsip{display:inline-grid;place-items:center;width:18px;height:18px;margin-left:2px;color:var(--ter);align-self:center;}
 .mm .hbm .hbsip .i{width:18px;height:18px;stroke-width:2.2;transform:rotate(180deg);}
 .mm .hbm .pct{font-size:13.4px;font-weight:800;color:var(--green);}
 .mm .hbm .pct b{font-family:var(--font-display);font-size:23.1px;font-weight:900;letter-spacing:-.04em;line-height:1;}
@@ -2898,7 +2899,7 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .hcard .hc-dsl{position:relative;width:100%;aspect-ratio:1;border-radius:5px;background:var(--track);}
 .hcard .hc-dsl i{position:absolute;left:0;right:0;bottom:0;z-index:1;display:block;border-radius:5px;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);transition:height .5s cubic-bezier(.22,1,.36,1);}
 .hcard .hc-nad{position:absolute;left:0;right:0;bottom:calc(100% - 5px);z-index:0;display:block;border-radius:5px 5px 0 0;background:linear-gradient(180deg,color-mix(in srgb,var(--green) 58%,#fff) 0%,var(--green) 78%);-webkit-mask-image:linear-gradient(to top,rgba(0,0,0,.46),rgba(0,0,0,.11));mask-image:linear-gradient(to top,rgba(0,0,0,.46),rgba(0,0,0,.11));}
-.hcard .hc-mark{position:absolute;left:0;right:0;top:0;height:10px;z-index:3;pointer-events:none;border:1.6px solid rgba(255,255,255,.66);border-bottom:0;border-radius:5px 5px 0 0;-webkit-mask-image:linear-gradient(to bottom,#000 0 46%,transparent 100%);mask-image:linear-gradient(to bottom,#000 0 46%,transparent 100%);}
+.hcard .hc-mark{position:absolute;left:0;right:0;top:0;height:5px;z-index:4;pointer-events:none;border:1px solid rgba(255,255,255,.5);border-bottom:0;border-radius:5px 5px 0 0;}
 .hcard .hc-d.je-dnes span{color:var(--green);font-weight:900;}
 .hcard .hc-dsl u{position:absolute;left:0;right:0;bottom:1px;text-align:center;text-decoration:none;font-size:9.06px;font-weight:800;line-height:1;letter-spacing:-.02em;color:#fff;font-variant-numeric:tabular-nums;pointer-events:none;z-index:4;text-shadow:0 1px 2px rgba(0,0,0,.42);}
 
@@ -3100,7 +3101,7 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .nvk .zpet{font-size:11.6px;font-weight:800;color:var(--fial2);margin:2px 2px 10px;cursor:pointer;}
 .nvk .nav .right .av{background:linear-gradient(135deg,#8B6FE04d,#8B6FE012)!important;color:#7757d6!important;}
 /* Navyky: stejny design language jako zbytek appky — mensi prvky, jemnejsi stiny (Marek 2026-08-23) */
-.nvk .tabs{margin:4px 0 10px;}.nvk .tabs b{padding:5px 13px;font-size:12.74px;}.nvk .tabs b.on{box-shadow:0 3px 10px -5px color-mix(in srgb,var(--green) 60%,transparent);}.nvk .wks{gap:3px;margin-bottom:9px;}.nvk .wks span{width:26px;height:26px;font-size:10.09px;}.nvk .stat2{gap:6px;}.nvk .stat2 .st{padding:6px;border-radius:14px;}.nvk .stat2 .st .v{font-size:15.09px;}.nvk .stat2 .st .k{font-size:9.06px;}.nvk .sl{margin:10px 3px 5px;}.nvk .hbm{padding:4px 11px;margin-bottom:4px;gap:8px;}.nvk .hbm .hi{width:25px;height:25px;border-radius:8px;font-size:13.28px;}.nvk .hbm .hi .i{width:14px;height:14px;}.nvk .hbm .ht{font-size:12.74px;font-weight:600;letter-spacing:-.005em;color:color-mix(in srgb,var(--label) 78%,var(--sec));line-height:1.25;}.nvk .hbm .ht small{font-size:10.62px;font-weight:500;color:var(--sec);margin-top:0;line-height:1.3;}.nvk .hbm .hc{width:19px;height:19px;border-width:1.8px;}.nvk .newbtn{margin-top:7px;padding:7px;font-size:12.74px;}.nvk .statg{border-radius:16px;padding:10px;} .hbm+.hbm{margin-top:6px;} .hbm .hi{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-size:15.94px;} .hbm .ht{flex:1;font-size:13.81px;font-weight:600;} .hbm .ht small{display:block;color:var(--sec);font-weight:500;font-size:11.15px;} .hbm .hc{width:22px;height:22px;border-radius:50%;border:2px solid var(--ter);} .hbm .hc.on{background:var(--green);border-color:var(--green);display:grid;place-items:center;color:#fff;font-size:11.69px;} .hbm .hbsip{display:inline-grid;place-items:center;width:16px;height:16px;margin-left:8px;color:var(--ter);align-self:center;} .hbm .hbsip .i{width:16px;height:16px;stroke-width:2.2;transform:rotate(180deg);} .hbm .pct{font-size:11.8px;font-weight:800;color:var(--green);} .hbm .pct b{font-family:var(--font-display);font-size:20.4px;font-weight:900;letter-spacing:-.04em;line-height:1;}
+.nvk .tabs{margin:4px 0 10px;}.nvk .tabs b{padding:5px 13px;font-size:12.74px;}.nvk .tabs b.on{box-shadow:0 3px 10px -5px color-mix(in srgb,var(--green) 60%,transparent);}.nvk .wks{gap:3px;margin-bottom:9px;}.nvk .wks span{width:26px;height:26px;font-size:10.09px;}.nvk .stat2{gap:6px;}.nvk .stat2 .st{padding:6px;border-radius:14px;}.nvk .stat2 .st .v{font-size:15.09px;}.nvk .stat2 .st .k{font-size:9.06px;}.nvk .sl{margin:10px 3px 5px;}.nvk .hbm{padding:4px 11px;margin-bottom:4px;gap:8px;}.nvk .hbm .hi{width:25px;height:25px;border-radius:8px;font-size:13.28px;}.nvk .hbm .hi .i{width:14px;height:14px;}.nvk .hbm .ht{font-size:12.74px;font-weight:600;letter-spacing:-.005em;color:color-mix(in srgb,var(--label) 78%,var(--sec));line-height:1.25;}.nvk .hbm .ht small{font-size:10.62px;font-weight:500;color:var(--sec);margin-top:0;line-height:1.3;}.nvk .hbm .hc{width:19px;height:19px;border-width:1.8px;}.nvk .newbtn{margin-top:7px;padding:7px;font-size:12.74px;}.nvk .statg{border-radius:16px;padding:10px;} .hbm+.hbm{margin-top:6px;} .hbm .hi{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-size:15.94px;} .hbm .hi.hikol{width:30px;height:30px;background:none;box-shadow:none;border-radius:0;padding:0;--fial:#8B6FE0;--fial2:#7757d6;} .hbm .ht{flex:1;font-size:13.81px;font-weight:600;} .hbm .ht small{display:block;color:var(--sec);font-weight:500;font-size:11.15px;} .hbm .hc{width:22px;height:22px;border-radius:50%;border:2px solid var(--ter);} .hbm .hc.on{background:var(--green);border-color:var(--green);display:grid;place-items:center;color:#fff;font-size:11.69px;} .hbm .hbsip{display:inline-grid;place-items:center;width:16px;height:16px;margin-left:2px;color:var(--ter);align-self:center;} .hbm .hbsip .i{width:16px;height:16px;stroke-width:2.2;transform:rotate(180deg);} .hbm .pct{font-size:11.8px;font-weight:800;color:var(--green);} .hbm .pct b{font-family:var(--font-display);font-size:20.4px;font-weight:900;letter-spacing:-.04em;line-height:1;}
   .newbtn{margin-top:9px;width:100%;border:1.5px dashed var(--ter);color:var(--green);background:none;border-radius:999px;padding:9px;font:inherit;font-size:13.81px;font-weight:700;}
   .stat2{display:flex;gap:7px;} .st{flex:1;background:var(--card);box-shadow:var(--shadow);border-radius:12px;padding:9px;text-align:center;} .st .v{font-size:16.99px;font-weight:800;} .st .k{font-size:9.56px;color:var(--sec);font-weight:600;}
   .pcard{background:var(--card);box-shadow:var(--shadow);border-radius:15px;padding:12px;display:flex;align-items:center;gap:11px;} .pcard .pav{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:14.87px;font-weight:700;background:#2FB17022;color:#1f8a52;} .pcard .pn{font-size:16.99px;font-weight:800;} .pcard .ps{font-size:12.21px;color:var(--sec);font-weight:600;}
@@ -6564,7 +6565,7 @@ function renderDnesek(){
   // Nadpis zebricku vlevo, odpocet soutezniho obdobi vpravo — stejny vzor jako Kalendar aktivity / Deni.
   const odpocetHtml='<div class="sl slzeb"><span>Žebříček</span><i class="zebodp'+naleh+'">'+odpocetTxt+'</i></div>';
   const tpl=`<div class="hcard"><div class="hc-hd"><span class="hc-poz">${mmGreet()}${me?', '+esc(mmVocative(mmFirst(me.jmeno))):''}</span><span class="hc-dat">${dlKratke}</span></div><div class="hc-top">${mSerie>0?'<span class="hc-serie"><svg class="i"><use href="#i-flame"/></svg>'+mSerie+'</span>':''}<span class="hc-r">${mTrendHtml}<span class="hc-num">${fmtNum(todayPts)}</span><span class="hc-cil">z ${fmtNum(mCil)} b</span></span></div><div class="hc-tyden">${mSloupce}</div></div>
-  <div class="hbm hbnav2" style="margin-top:10px;cursor:pointer" onclick="mmGo('navyky')"><div class="hi hicheck${habTotal>0&&habDone>=habTotal?' hfull':''}" style="--hp:${habTotal>0?Math.round(Math.min(habDone,habTotal)/habTotal*100):0}%"><svg class="i"><use href="#i-check"/></svg></div><div class="ht">Návyky dnes<span class="hdots">${Array.from({length:habTotal},(_,i)=>'<i'+(i<habDone?' class="on"':'')+'></i>').join('')}</span></div><div class="pct" style="display:flex;align-items:baseline;gap:0;align-self:center;position:relative;top:1px"><b>${habDone}</b><span style="color:var(--ter);font-weight:700;margin-left:1.5px;margin-right:7px">/${habTotal}</span><span class="hbsip"><svg class="i" aria-hidden="true"><use href="#i-chev"/></svg></span></div></div>
+  <div class="hbm hbnav2" style="margin-top:10px;cursor:pointer" onclick="mmGo('navyky')"><div class="hi hikol nvk">${mmHabitDenKolecko(habTotal>0?Math.round(Math.min(habDone,habTotal)/habTotal*100):0,0,false,false,'bub')}</div><div class="ht">Návyky dnes<span class="hdots">${Array.from({length:habTotal},(_,i)=>'<i'+(i<habDone?' class="on"':'')+'></i>').join('')}</span></div><div class="pct" style="display:flex;align-items:baseline;gap:0;align-self:center;position:relative;top:1px"><b>${habDone}</b><span style="color:var(--ter);font-weight:700;margin-left:1.5px;margin-right:7px">/${habTotal}</span><span class="hbsip"><svg class="i" aria-hidden="true"><use href="#i-chev"/></svg></span></div></div>
   ${odpocetHtml}<div class="lcard${mmPartaZalTrida()}">${mmPartaSegBar()}
   <div class="lc">${rows||'<div style="padding:20px;text-align:center;color:var(--ter)">Zatím žádné body</div>'}</div></div>
   <div class="sl" onclick="mmOpenSub('rokparty')" style="cursor:pointer;touch-action:manipulation"><span>Kalendář aktivity</span><a style="pointer-events:none">celý rok →</a></div>
@@ -7958,14 +7959,21 @@ function mmHabitDenKolecko(pct, nahr, dnes, vybrany, klic){
   const dilP=c*(Math.min(100,pct)/100), dilN=c*(Math.min(100,nahr)/100);
   const gid='hg'+klic;
   // Kulicka na konci prstence — o kus siri nez linka, aby bylo videt, kam jsem se dostal (Marek 2026-08-25)
-  const bod=(uhel, polomer, barva)=>{ const a=(uhel/100*360-90)*Math.PI/180;
-    return '<circle cx="'+(stred+r*Math.cos(a)).toFixed(2)+'" cy="'+(stred+r*Math.sin(a)).toFixed(2)+'" r="'+polomer.toFixed(2)+'"'
-      +' style="fill:'+barva+'"/>'; };
-  // Kulicka nenasedne na linku skokem — dva mezistupne pred koncem spoj zaobli (Marek 2026-08-25).
-  const hlava=(uhel, barva)=>{ const krok=100*(2.2/c);
-    return bod(Math.max(0,uhel-krok*2), sw/2+(kul-sw/2)*0.34, barva)
-         + bod(Math.max(0,uhel-krok),   sw/2+(kul-sw/2)*0.7,  barva)
-         + bod(uhel, kul, barva); };
+  // Konec oblouku se plynule rozsiri do kulicky — jeden tvar, ne navlekane kolecka (Marek 2026-08-25).
+  const hlava=(uhel, barva)=>{
+    const kroku=12, rozsah=100*(6/c);                 // po jak dlouhe vyseci se linka rozsiruje
+    const uhl=(t)=>((uhel-rozsah*(1-t))/100*360-90)*Math.PI/180;
+    const sirka=(t)=>sw/2+(kul-sw/2)*(t*t*(3-2*t));   // smoothstep
+    let ven='', dovnitr=[];
+    for(let i=0;i<=kroku;i++){
+      const t=i/kroku, a=uhl(t), h=sirka(t);
+      ven += (i?'L':'M')+(stred+(r+h)*Math.cos(a)).toFixed(2)+' '+(stred+(r+h)*Math.sin(a)).toFixed(2)+' ';
+      dovnitr.push((stred+(r-h)*Math.cos(a)).toFixed(2)+' '+(stred+(r-h)*Math.sin(a)).toFixed(2));
+    }
+    const cap='A'+kul.toFixed(2)+' '+kul.toFixed(2)+' 0 0 1 '+dovnitr[dovnitr.length-1]+' ';
+    const zpet=dovnitr.slice(0,-1).reverse().map(x=>'L'+x+' ').join('');
+    return '<path d="'+ven+cap+zpet+'Z" style="fill:'+barva+'"/>';
+  };
   const konec=Math.min(100, pct+nahr);
   return '<svg viewBox="0 0 '+s+' '+s+'" style="width:100%;height:auto;display:block">'
     +'<defs><linearGradient id="'+gid+'v" x1="0" y1="1" x2="1" y2="0">'
@@ -8085,9 +8093,11 @@ function mmHabitSwipe(sh){
   const el=box && box.querySelector('[data-tyd]'); if(!el || el._mmSw) return;
   el._mmSw=true;
   const PRAH=52;
+  const scr=sh.querySelector('.scr');
+  const zoom=()=>(scr&&parseFloat(scr.style.zoom))||1;
   let x0=null, y0=null, taham=false, sirka=1, pred=null, po=null;
   const posun=(uzel, zaklad, dx, plynule)=>{ if(!uzel) return;
-    uzel.style.transition = plynule ? 'transform .24s cubic-bezier(.25,.9,.3,1)' : 'none';
+    uzel.style.transition = plynule ? 'transform .21s cubic-bezier(.32,.86,.28,1)' : 'none';
     uzel.style.transform = 'translateX(calc('+zaklad+'% + '+dx.toFixed(1)+'px))'; };
   const uklid=()=>{ [el,pred,po].forEach(u=>{ if(!u) return; u.style.transition=''; u.style.transform=''; });
     if(pred) pred.remove(); if(po) po.remove(); pred=null; po=null; };
@@ -8104,7 +8114,7 @@ function mmHabitSwipe(sh){
   el.addEventListener('touchstart', (e)=>{
     if(e.touches.length!==1) return;
     const t=e.touches[0]; x0=t.clientX; y0=t.clientY; taham=false;
-    sirka=el.getBoundingClientRect().width||1;
+    sirka=(el.getBoundingClientRect().width||1)/zoom();
   }, {passive:true});
   el.addEventListener('touchmove', (e)=>{
     if(x0==null) return;
@@ -8118,7 +8128,7 @@ function mmHabitSwipe(sh){
     }
     if(e.cancelable) e.preventDefault();
     const brzda = (dx<0 && !po) ? 0.22 : 1;              // za dnesek gesto jen pruzne povoli
-    const d=dx*brzda;
+    const d=dx*brzda/zoom();
     posun(el, 0, d, false); posun(pred, -100, d, false); posun(po, 100, d, false);
   }, {passive:false});
   const pusteno=(e)=>{
@@ -8131,7 +8141,7 @@ function mmHabitSwipe(sh){
     if(jde){
       const cil = dozadu ? sirka : -sirka;
       posun(el, 0, cil, true); posun(pred, -100, cil, true); posun(po, 100, cil, true);
-      setTimeout(()=>{ uklid(); mmHabitTydenPosun(dozadu?-1:1, true); }, 235);
+      setTimeout(()=>{ mmHabitTydenPosun(dozadu?-1:1, true); uklid(); }, 210);
     } else {
       posun(el, 0, 0, true); posun(pred, -100, 0, true); posun(po, 100, 0, true);
       setTimeout(uklid, 260);
