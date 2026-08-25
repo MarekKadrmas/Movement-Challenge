@@ -88,3 +88,7 @@ Marek chce, aby se **řádky mezi sebou prohodily** — hráč, který stoupá, 
 a ten, kdo klesá, dolů. Technicky: zapamatovat si pozice řádků před překreslením, po překreslení
 je nasadit zpět transformem a nechat dojet na nové místo (FLIP). Pozor na to, že transform
 na řádcích rozbíjí rastrování SVG v Safari — plamínky jsou proto rastr, ne SVG.
+
+## Návyky — animace přírůstku prstence (Marek 25. 8. 2026)
+Po odkliknutí návyku má prstenec dne dorůst animací, ne skočit. Marek to bere jako **finální polish** —
+až bude koncept funkční, projdeme celou appku a všemu dodáme život a prémiovost.
