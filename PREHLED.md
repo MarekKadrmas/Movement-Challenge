@@ -52,9 +52,9 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 30 | Řádek nad kolečky — datum, W35, šipky, Dnes | Návyky | ✅ |
 | 31 | Budoucí dny nejdou odškrtnout | Návyky | ✅ |
 | 32 | Další nápady na prstenec — mockup | Návyky | 🔧 |
-| 33 | Bílý proužek pod posledním řádkem žebříčku | Přehled | ⏳ odsazení karty pryč, všechny řádky stejné, zvýraznění sedí až k okraji |
-| 34 | Bublina série zasahovala do porovnávací lišty | Přehled, žebříček | ⏳ vůle byla 1,28 px, teď 6,31 px na všech řádcích |
-| 35 | Barevné odlišení hráčů v žebříčku | Přehled, žebříček | ⏳ jméno v barvě hráče, stejně jako v kalendáři aktivity |
+| 33 | Bílý proužek pod posledním řádkem žebříčku | Přehled | ✅ |
+| 34 | Bublina série — vůle nad lištou a posun doleva | Přehled, žebříček | ⏳ vůle 6,31 px, bubliny o 6 px blíž ke jménům |
+| 35 | Barevné odlišení hráčů v žebříčku | Přehled, žebříček | ✅ |
 
 
 ## ⏸️ Rozdělané (schválně odloženo)
