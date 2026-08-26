@@ -8313,7 +8313,10 @@ function mmHabitDenKolecko(pct, nahr, dnes, vybrany, klic, vzdyFajfka){
   const doP=Math.min(100, pct), doN=Math.min(100, pct+nahr);
   // Vnitrni cast prstence nese barvu plneni a do fialove prechazi mekce (varianta C, Marek 2026-08-25)
   const progBarva=(x)=> x>=100 ? '#2FB170' : (x>=70 ? '#E8C33D' : (x>=40 ? '#E8902F' : '#E0584B'));
-  const prog=progBarva(Math.min(100, pct+nahr));
+  // Bublina na Prehledu zije ve fialovem systemu Navyku — semafor by se tam bil.
+  const prog=(klic==='bub')
+    ? (Math.min(100, pct+nahr)>=100 ? '#2FB170' : 'var(--fial)')
+    : progBarva(Math.min(100, pct+nahr));
   const odR=r-sw/2, doR=r+sw/2;
   const pr0=((odR+sw*0.10)/doR).toFixed(4), pr1=((odR+sw*0.46)/doR).toFixed(4);
   return '<svg viewBox="0 0 '+s+' '+s+'" style="width:100%;height:auto;display:block">'

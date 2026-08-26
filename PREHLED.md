@@ -86,6 +86,9 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 64 | Vítěz týdne, síň slávy, odznaky | Parta | 🆕 |
 | 65 | Tréninkový a protahovací deník | Add-on | 🆕 |
 | 66 | Flashcards | Add-on | 🆕 |
+| 67 | Logo návyků v bublině podle progresu | Přehled | 📱 |
+| 68 | Crash „Moje záznamy" a detailu dne (`sub` nebyl definován) | Já, Historie | 📱 |
+| 69 | Nástěnka — všechny obrazovky vedle sebe na PC | nastenka.html | 📱 |
 
 
 

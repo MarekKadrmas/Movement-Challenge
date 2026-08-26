@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Nástěnka obrazovek</title>
+<style>
+  :root{
+    --bg:#EEF0EE; --panel:#FFFFFF; --ink:#141A16; --sec:#5B6660; --ter:#98A29B;
+    --line:#DCE1DD; --green:#0FA968; --fial:#7A5CD6; --stin:0 2px 14px rgba(16,24,20,.09);
+  }
+  :root:not([data-theme="light"]){}
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#121613; --panel:#1B211D; --ink:#EDF2EE; --sec:#A7B2AB; --ter:#77837B;
+      --line:#2A322C; --stin:0 2px 16px rgba(0,0,0,.4);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#121613; --panel:#1B211D; --ink:#EDF2EE; --sec:#A7B2AB; --ter:#77837B;
+    --line:#2A322C; --stin:0 2px 16px rgba(0,0,0,.4);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;}
+
+  header{position:sticky;top:0;z-index:20;background:var(--panel);border-bottom:1px solid var(--line);
+         padding:11px 18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;box-shadow:var(--stin);}
+  h1{margin:0;font-size:15px;font-weight:800;letter-spacing:-.02em;white-space:nowrap;}
+  h1 small{display:block;font-size:11px;font-weight:600;color:var(--ter);letter-spacing:0;}
+  .ovl{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-left:auto;}
+  button,select{font:inherit;font-size:12.5px;font-weight:700;color:var(--ink);background:var(--bg);
+        border:1px solid var(--line);border-radius:9px;padding:6px 11px;cursor:pointer;}
+  button:hover{border-color:var(--ter);}
+  button.hl{background:var(--green);border-color:var(--green);color:#fff;}
+  label.pr{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--sec);cursor:pointer;}
+
+  .zed{display:flex;flex-wrap:wrap;gap:20px;padding:20px;align-items:flex-start;}
+  .dlazdice{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--stin);
+            padding:10px 10px 12px;display:flex;flex-direction:column;gap:8px;}
+  .hlava{display:flex;align-items:center;gap:8px;padding:0 2px;}
+  .hlava select{flex:1;min-width:0;padding:5px 8px;font-size:12px;}
+  .hlava .x{border:0;background:none;color:var(--ter);padding:2px 5px;font-size:15px;line-height:1;}
+  .ramecek{position:relative;border-radius:13px;overflow:hidden;background:#000;flex:0 0 auto;}
+  iframe{display:block;border:0;background:#fff;transform-origin:0 0;}
+  .stav{font-size:11px;font-weight:700;color:var(--ter);padding:0 3px;display:flex;justify-content:space-between;gap:8px;}
+  .stav b{color:var(--sec);font-weight:800;}
+  .prazdno{padding:34px 20px;color:var(--ter);font-size:13px;}
+  code{background:var(--bg);border:1px solid var(--line);border-radius:5px;padding:1px 5px;font-size:12px;}
+  .pozn{padding:0 20px 24px;color:var(--ter);font-size:12px;max-width:760px;line-height:1.6;}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Nástěnka obrazovek<small>Movement Challenge — všechny obrazovky vedle sebe</small></h1>
+  <div class="ovl">
+    <label class="pr"><input type="checkbox" id="demo" checked> demo data</label>
+    <label class="pr">měřítko
+      <select id="mer">
+        <option value="0.5">50 %</option>
+        <option value="0.6" selected>60 %</option>
+        <option value="0.75">75 %</option>
+        <option value="1">100 %</option>
+      </select>
+    </label>
+    <label class="pr">motiv
+      <select id="motiv">
+        <option value="">systém</option>
+        <option value="light">světlý</option>
+        <option value="dark">tmavý</option>
+      </select>
+    </label>
+    <button id="pridat">+ obrazovka</button>
+    <button id="znovu">Načíst znovu</button>
+    <button id="vychozi" class="hl">Výchozí sada</button>
+  </div>
+</header>
+
+<div class="zed" id="zed"></div>
+<div class="pozn" id="pozn"></div>
+
+<script>
+(function(){
+  'use strict';
+
+  // Co všechno appka umí zobrazit. hlavni = záložka spodní lišty, sub = podobrazovka.
+  var OBRAZOVKY = [
+    { id:'prehled',      nazev:'Přehled',            hlavni:'prehled' },
+    { id:'navyky',       nazev:'Návyky',             hlavni:'navyky' },
+    { id:'ja',           nazev:'Já',                 hlavni:'historie' },
+    { id:'vykon',        nazev:'Historie výkonu',    hlavni:'prehled', sub:'vykon' },
+    { id:'zaznamy',      nazev:'Moje záznamy',       hlavni:'historie', sub:'zaznamy' },
+    { id:'historie',     nazev:'Celá historie',      hlavni:'historie', sub:'historie' },
+    { id:'rekordy',      nazev:'Rekordy',            hlavni:'historie', sub:'rekordy' },
+    { id:'rekordyparty', nazev:'Rekordy party',      hlavni:'prehled',  sub:'rekordyparty' },
+    { id:'rokparty',     nazev:'Rok party',          hlavni:'prehled',  sub:'rokparty' },
+    { id:'feed',         nazev:'Dění v partě',       hlavni:'prehled',  sub:'feed' },
+    { id:'profil',       nazev:'Profil hráče',       hlavni:'historie', sub:'profil' },
+    { id:'bodovani',     nazev:'Jak se boduje',      hlavni:'historie', sub:'bodovani' },
+    { id:'cile',         nazev:'Cíle a ochrana série',hlavni:'historie', sub:'cile' },
+    { id:'notifikace',   nazev:'Notifikace',         hlavni:'historie', sub:'notifikace' },
+    { id:'pozvat',       nazev:'Pozvat kamaráda',    hlavni:'historie', sub:'pozvat' },
+    { id:'zapis',        nazev:'Zápis aktivity',     hlavni:'prehled',  akce:'zapis' },
+    { id:'novynavyk',    nazev:'Nový návyk',         hlavni:'navyky',   akce:'novynavyk' },
+    { id:'upravanavyku', nazev:'Úprava návyku',      hlavni:'navyky',   akce:'upravanavyku' }
+  ];
+
+  var VYCHOZI = ['prehled','navyky','ja','vykon','upravanavyku','zapis'];
+  var SIRKA = 393, VYSKA = 852;
+
+  var zed = document.getElementById('zed');
+  var poznEl = document.getElementById('pozn');
+  var mer = document.getElementById('mer');
+  var motiv = document.getElementById('motiv');
+  var demo = document.getElementById('demo');
+
+  function adresa(){
+    var q = [];
+    if (demo.checked) q.push('demo=1');
+    return 'index.html' + (q.length ? '?' + q.join('&') : '');
+  }
+
+  function meritko(){ return parseFloat(mer.value) || 0.6; }
+
+  // Nastaví obrazovku uvnitř rámečku. Vyžaduje stejný původ (http/https),
+  // přes file:// prohlížeč do iframu nepustí — proto ta poznámka dole.
+  function nastav(ramec, def){
+    var w;
+    try { w = ramec.contentWindow; } catch (e) { return 'jiný původ'; }
+    if (!w || !w.mmGo) return 'appka se ještě načítá';
+    try {
+      if (def.hlavni) w.mmGo(def.hlavni);
+      if (def.sub && w.mmOpenSub) w.mmOpenSub(def.sub, def.sub === 'profil' && w.state ? w.state.currentPlayerId : undefined);
+      // Okna se otviraji az po prekresleni zalozky, jinak je mmGo hned zase zavre.
+      if (def.akce) setTimeout(function(){
+        try {
+          if (def.akce === 'zapis' && w.openModal) w.openModal();
+          if (def.akce === 'novynavyk' && w.openHabitModal) w.openHabitModal();
+          if (def.akce === 'upravanavyku') {
+            // Klikneme na skutecny prvek v appce (jako uzivatel) — spolehlivejsi nez
+            // sahat na state, ktery je v demu plnen jinudy.
+            var host = w.document.getElementById('navyky-mm');
+            var sh = host && host.shadowRoot;
+            var cil = sh && sh.querySelector('[onclick*="openHabitModal"]');
+            if (cil) cil.click();
+          }
+        } catch (e) {}
+      }, 500);
+      return 'ok';
+    } catch (e) { return 'chyba: ' + (e.message || e).slice(0, 40); }
+  }
+
+  function najdi(id){
+    for (var i = 0; i < OBRAZOVKY.length; i++) if (OBRAZOVKY[i].id === id) return OBRAZOVKY[i];
+    return OBRAZOVKY[0];
+  }
+
+  function dlazdice(id){
+    var def = najdi(id);
+    var m = meritko();
+
+    var box = document.createElement('div');
+    box.className = 'dlazdice';
+    box.style.width = Math.round(SIRKA * m + 20) + 'px';
+
+    var hlava = document.createElement('div');
+    hlava.className = 'hlava';
+    var sel = document.createElement('select');
+    OBRAZOVKY.forEach(function(o){
+      var op = document.createElement('option');
+      op.value = o.id; op.textContent = o.nazev;
+      if (o.id === def.id) op.selected = true;
+      sel.appendChild(op);
+    });
+    var zavri = document.createElement('button');
+    zavri.className = 'x'; zavri.textContent = '×'; zavri.title = 'Odebrat';
+    hlava.appendChild(sel); hlava.appendChild(zavri);
+
+    var ramecek = document.createElement('div');
+    ramecek.className = 'ramecek';
+    ramecek.style.width = Math.round(SIRKA * m) + 'px';
+    ramecek.style.height = Math.round(VYSKA * m) + 'px';
+
+    var ramec = document.createElement('iframe');
+    ramec.width = SIRKA; ramec.height = VYSKA;
+    ramec.style.width = SIRKA + 'px'; ramec.style.height = VYSKA + 'px';
+    ramec.style.transform = 'scale(' + m + ')';
+    ramec.src = adresa();
+    ramecek.appendChild(ramec);
+
+    var stav = document.createElement('div');
+    stav.className = 'stav';
+    stav.innerHTML = '<b></b><span></span>';
+
+    box.appendChild(hlava); box.appendChild(ramecek); box.appendChild(stav);
+    box._def = def; box._ramec = ramec; box._stav = stav; box._sel = sel;
+
+    var pokusy = 0;
+    function zkusit(){
+      var vysledek = nastav(ramec, box._def);
+      stav.querySelector('b').textContent = box._def.nazev;
+      stav.querySelector('span').textContent = vysledek;
+      if (vysledek !== 'ok' && ++pokusy < 40) setTimeout(zkusit, 400);
+    }
+    ramec.addEventListener('load', function(){
+      pokusy = 0;
+      var w; try { w = ramec.contentWindow; } catch (e) { w = null; }
+      if (w && motiv.value) {
+        try { w.document.documentElement.setAttribute('data-theme', motiv.value); } catch (e) {}
+      }
+      setTimeout(zkusit, 1400);
+    });
+
+    sel.addEventListener('change', function(){
+      box._def = najdi(sel.value);
+      pokusy = 0; zkusit();
+    });
+    zavri.addEventListener('click', function(){ box.remove(); uloz(); });
+    sel.addEventListener('change', uloz);
+
+    return box;
+  }
+
+  function seznam(){
+    return Array.prototype.map.call(zed.children, function(b){ return b._def.id; });
+  }
+  function uloz(){
+    try { localStorage.setItem('mc-nastenka', JSON.stringify(seznam())); } catch (e) {}
+  }
+  function nacti(){
+    try {
+      var v = JSON.parse(localStorage.getItem('mc-nastenka') || 'null');
+      if (v && v.length) return v;
+    } catch (e) {}
+    return VYCHOZI.slice();
+  }
+
+  function postav(ids){
+    zed.innerHTML = '';
+    ids.forEach(function(id){ zed.appendChild(dlazdice(id)); });
+    uloz();
+  }
+
+  document.getElementById('pridat').addEventListener('click', function(){
+    var ids = seznam();
+    var volne = OBRAZOVKY.filter(function(o){ return ids.indexOf(o.id) < 0; })[0] || OBRAZOVKY[0];
+    zed.appendChild(dlazdice(volne.id)); uloz();
+  });
+  document.getElementById('znovu').addEventListener('click', function(){ postav(seznam()); });
+  document.getElementById('vychozi').addEventListener('click', function(){ postav(VYCHOZI.slice()); });
+  mer.addEventListener('change', function(){ postav(seznam()); });
+  motiv.addEventListener('change', function(){ postav(seznam()); });
+  demo.addEventListener('change', function(){ postav(seznam()); });
+
+  poznEl.innerHTML = (location.protocol === 'file:')
+    ? 'Otevřeno přes <code>file://</code> — prohlížeč v tomhle režimu nepustí stránku dovnitř rámečků, takže se obrazovky nepřepnou samy. Otevři nástěnku z nasazené adresy (GitHub Pages), nebo si pusť lokální server: <code>python -m http.server 8000</code> a jdi na <code>localhost:8000/nastenka.html</code>.'
+    : 'Každý rámeček je živá appka — dá se v něm normálně klikat. Rozbalovátkem nahoře přepneš, kterou obrazovku má ukazovat. Sestava se pamatuje do příště.';
+
+  postav(nacti());
+})();
+</script>
+</body>
+</html>
