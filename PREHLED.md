@@ -57,8 +57,8 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 35 | Barevné odlišení hráčů v žebříčku | Přehled, žebříček | ✅ |
 | 19 | Historie výkonu — prémiový redesign | Přehled → horní karta | 🔨 |
 | 32 | Prstenec — další nápady na progres a splněný den | Mockup | 🔨 |
-| 36 | Úprava a mazání záznamu přímo v appce | Já, Dění, Záznamy | ⏳ |
-| 37 | Admin kolečko s iniciálami + zápis za jiného hráče | Horní lišta | ⏳ |
+| 36 | Úprava a mazání záznamu přímo v appce | Já, Dění, Záznamy | 📱 |
+| 37 | Admin kolečko s iniciálami + zápis za jiného hráče | Přehled, nahoře | 📱 |
 | 38 | Maximálky — nejtěžší váha na cvik | Rekordy | ⏳ |
 | 39 | Rekordy pro všechny cviky, ne jen 4 | Rekordy | ⏳ |
 | 40 | Úprava návyku — nový design, odladit chování | Návyky | ⏳ |
