@@ -1892,7 +1892,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .rplbl{font-size:14.48px;font-weight:700;color:var(--sec);text-transform:uppercase;letter-spacing:.06em;margin-bottom:11px;}
 .mm .body{flex:1;overflow:hidden;padding:13px 14px 78px;color:var(--label);}
 .mm .formb{position:static;}
-.mm .body.formb .ff{position:absolute;left:0;right:0;bottom:0;margin-top:0;padding:16px 14px 12px;background:linear-gradient(to top,var(--bg) 74%,transparent);}
+.mm .body.formb .ff{position:sticky;left:0;right:0;bottom:0;margin-top:auto;padding:16px 14px 12px;background:linear-gradient(to top,var(--bg) 74%,var(--bg) 86%,transparent);}
 .mm .notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:116px;height:24px;background:#111;border-radius:0 0 15px 15px;z-index:5;}
 .mm .nav{display:flex;justify-content:space-between;align-items:center;padding:15px 2px 7px;}
 .mm .nav .ttl{font-size:27.76px;font-weight:800;letter-spacing:-.03em;}
@@ -2244,6 +2244,8 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .nvk .serchip b{font-family:var(--font-display);font-size:14px;font-weight:900;color:var(--fial2);letter-spacing:-.02em;}
 .nvk .nav .right{display:flex;align-items:center;}
 
+.scr>.body.formb{flex:1 1 auto;min-height:0;}
+.scr>.ff{position:static;flex:0 0 auto;margin-top:0;padding:11px 14px 13px;background:var(--bg);border-top:1px solid var(--sep);}
 .smazbox{display:flex;justify-content:center;margin:10px 0 2px;}
 .smazbox span{font-size:13.28px;font-weight:800;color:var(--red,#E05C5C);padding:8px 16px;border-radius:999px;background:color-mix(in srgb,var(--red,#E05C5C) 10%,transparent);cursor:pointer;}
 .nvk .nrow{display:flex;align-items:center;gap:10px;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:7px 14px 7px 8px;margin-bottom:6px;}
@@ -2594,7 +2596,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .pickrow.lvlrow .pk{padding:8px 0;text-align:center;font-size:11.47px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;}
 .mm .pk.lvl{padding:8px 0;text-align:center;font-size:11.47px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;}
 .mm .pk.on{background:var(--green);color:#fff;}
-.mm .emojirow{display:flex;gap:6px;flex-wrap:wrap;}
+.mm .emojirow{display:flex;gap:6px;flex-wrap:wrap;max-height:132px;overflow-y:auto;overscroll-behavior:contain;padding:2px 2px 4px;margin:0 -2px;-webkit-overflow-scrolling:touch;scrollbar-width:thin;}
 .mm .emojirow.sm{flex-wrap:nowrap;gap:5px;}
 .mm .emojirow.sm .em{width:28px;height:28px;font-size:16.9px;flex:0 0 28px;}
 .mm .em{width:34px;height:34px;border-radius:50%;background:var(--card);box-shadow:var(--shadow);display:grid;place-items:center;font-size:20.52px;}
@@ -2891,7 +2893,7 @@ body.mm-full{background:var(--bg);padding-bottom:0;}
 <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20.3S3.8 15 3.8 9.2A4.2 4.2 0 0 1 12 6.8a4.2 4.2 0 0 1 8.2 2.4C20.2 15 12 20.3 12 20.3Z" fill="currentColor" fill-opacity=".2"/></symbol>
 <symbol id="i-clap" viewBox="0 0 24 24"><path d="M11 8.5 8.8 4.8a1.4 1.4 0 0 1 2.4-1.4L13 6"/><path d="M8.3 8.2 7 6a1.4 1.4 0 0 1 2.4-1.4l1.8 3"/><path d="M7.5 20.5a5.5 5.5 0 0 1-1.8-3l-1.4-4a1.4 1.4 0 0 1 2.5-1.2l1 1.8"/><path d="M14.5 20.5c3-1 4.7-3.8 4-7l-.9-4a1.4 1.4 0 0 0-2.7.5l-.6 2.4"/></symbol>
 <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6.5 9.2 17 4 11.8"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol><symbol id="i-chev" viewBox="0 0 24 24"><path d="M14.5 5.5 8 12l6.5 6.5"/></symbol>
-<symbol id="i-edit" viewBox="0 0 24 24"><path d="M12.5 20H21"/><path d="M16.5 3.6a2.1 2.1 0 0 1 3 3L7.4 18.7 3.5 20l1.3-3.9Z"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 6.5h16"/><path d="M9.5 6.5V4.6a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v1.9"/><path d="M6.4 6.5 7.3 19a1.4 1.4 0 0 0 1.4 1.3h6.6a1.4 1.4 0 0 0 1.4-1.3l.9-12.5"/><path d="M10.4 10.2v6.2"/><path d="M13.6 10.2v6.2"/></symbol>
+<symbol id="i-edit" viewBox="0 0 24 24"><path d="M12.5 20H21"/><path d="M16.5 3.6a2.1 2.1 0 0 1 3 3L7.4 18.7 3.5 20l1.3-3.9Z"/></symbol><symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="11.5" height="11.5" rx="2.2"/><path d="M5.6 15H4.9A1.4 1.4 0 0 1 3.5 13.6V4.9A1.4 1.4 0 0 1 4.9 3.5h8.7A1.4 1.4 0 0 1 15 4.9v.7"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 6.5h16"/><path d="M9.5 6.5V4.6a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v1.9"/><path d="M6.4 6.5 7.3 19a1.4 1.4 0 0 0 1.4 1.3h6.6a1.4 1.4 0 0 0 1.4-1.3l.9-12.5"/><path d="M10.4 10.2v6.2"/><path d="M13.6 10.2v6.2"/></symbol>
 <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/></symbol>
 <symbol id="i-comment" viewBox="0 0 24 24"><path d="M20.5 12a8 8 0 0 1-11.3 7.3L4 20.5l1.2-5.2A8 8 0 1 1 20.5 12Z"/></symbol>
 <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 4v16h16"/><path d="m7.5 14.5 3-3 2.5 2 4.5-5.5"/></symbol>
@@ -2953,7 +2955,7 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
   .rootpair{display:flex;gap:34px;justify-content:center;align-items:flex-start;flex-wrap:wrap;margin-bottom:6px;} .rp{display:flex;flex-direction:column;align-items:center;} .rplbl{font-size:12.74px;font-weight:700;color:var(--sec);text-transform:uppercase;letter-spacing:.06em;margin-bottom:11px;}
   .scr{width:100%;height:100%;background-color:var(--bg);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");border-radius:31px;overflow:hidden;position:relative;display:flex;flex-direction:column;}
   .body{flex:1;overflow:hidden;padding:13px 14px 78px;color:var(--label);}
-  .formb{position:static;} .body.formb .ff{position:absolute;left:0;right:0;bottom:0;margin-top:0;padding:16px 14px 12px;background:linear-gradient(to top,var(--bg) 74%,transparent);}
+  .formb{position:static;} .body.formb .ff{position:sticky;left:0;right:0;bottom:0;margin-top:auto;padding:16px 14px 12px;background:linear-gradient(to top,var(--bg) 74%,var(--bg) 86%,transparent);}
   .notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:116px;height:24px;background:#111;border-radius:0 0 15px 15px;z-index:5;} [data-theme="dark"] .notch{background:#000;}
   .nav{display:flex;justify-content:space-between;align-items:center;padding:15px 2px 7px;} .nav:not(:has(.date)){padding-top:20px;} .nav:has(.date){padding-top:10px;} .lc .lr{padding-top:6px;padding-bottom:6px;} .lc ~ .sl:has(+ .hl){margin-top:21px;} .nav .ttl{font-size:24.43px;font-weight:800;letter-spacing:-.03em;} .nav .date{font-size:12.74px;font-weight:600;color:var(--sec);}
   .nav .right{display:flex;align-items:center;gap:9px;} .av{width:29px;height:29px;border-radius:50%;display:grid;place-items:center;font-size:11.15px;font-weight:700;background:#2FB17022;color:#1f8a52;}
@@ -3228,6 +3230,8 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .nvk .serchip b{font-family:var(--font-display);font-size:14px;font-weight:900;color:var(--fial2);letter-spacing:-.02em;}
 .nvk .nav .right{display:flex;align-items:center;}
 
+.scr>.body.formb{flex:1 1 auto;min-height:0;}
+.scr>.ff{position:static;flex:0 0 auto;margin-top:0;padding:11px 14px 13px;background:var(--bg);border-top:1px solid var(--sep);}
 .smazbox{display:flex;justify-content:center;margin:10px 0 2px;}
 .smazbox span{font-size:13.28px;font-weight:800;color:var(--red,#E05C5C);padding:8px 16px;border-radius:999px;background:color-mix(in srgb,var(--red,#E05C5C) 10%,transparent);cursor:pointer;}
 .nvk .nrow{display:flex;align-items:center;gap:10px;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:7px 14px 7px 8px;margin-bottom:6px;}
@@ -3461,7 +3465,7 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .lvlends{display:flex;justify-content:space-between;margin-top:6px;font-size:9.66px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--ter);}
 .pickrow.lvlrow .pk{padding:8px 0;text-align:center;font-size:11.47px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;}
 .pk.lvl{padding:8px 0;text-align:center;font-size:11.47px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;} .pk.on{background:var(--green);color:#fff;}
-  .emojirow{display:flex;gap:6px;flex-wrap:wrap;} .emojirow.sm{flex-wrap:nowrap;gap:5px;} .emojirow.sm .em{width:28px;height:28px;font-size:14.87px;flex:0 0 28px;} .em{width:34px;height:34px;border-radius:50%;background:var(--card);box-shadow:var(--shadow);display:grid;place-items:center;font-size:18.06px;} .em.on{outline:2px solid var(--green);}
+  .emojirow{display:flex;gap:6px;flex-wrap:wrap;max-height:132px;overflow-y:auto;overscroll-behavior:contain;padding:2px 2px 4px;margin:0 -2px;-webkit-overflow-scrolling:touch;scrollbar-width:thin;} .emojirow.sm{flex-wrap:nowrap;gap:5px;} .emojirow.sm .em{width:28px;height:28px;font-size:14.87px;flex:0 0 28px;} .em{width:34px;height:34px;border-radius:50%;background:var(--card);box-shadow:var(--shadow);display:grid;place-items:center;font-size:18.06px;} .em.on{outline:2px solid var(--green);}
   .colors{display:flex;gap:8px;} .col{width:26px;height:26px;border-radius:50%;} .col.on{outline:2px solid var(--label);outline-offset:2px;}
   .dp{background:var(--card);box-shadow:var(--shadow);border-radius:14px;padding:12px;} .dphdr{display:flex;justify-content:space-between;align-items:center;font-size:13.81px;font-weight:700;margin-bottom:9px;} .dpgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;text-align:center;} .dpgrid .d{font-size:11.69px;aspect-ratio:1;display:grid;place-items:center;border-radius:50%;} .dpgrid .d.on{background:var(--green);color:#fff;font-weight:700;} .dpgrid .hh{font-size:9.56px;color:var(--sec);font-weight:700;} .dpgrid .d.fut{color:var(--ter);} .dpgrid .d.empty{visibility:hidden;}
   .statg{background:var(--card);box-shadow:var(--shadow);border-radius:12px;padding:11px;} .statg .gr{display:grid;grid-template-columns:82px 1fr auto;align-items:center;gap:8px;margin-bottom:7px;} .statg .nm2{font-size:10.62px;font-weight:600;line-height:1.25;overflow-wrap:anywhere;} .statg .ct2{font-size:11.69px;font-weight:800;color:var(--green);} .yg{display:grid;grid-template-columns:repeat(20,1fr);gap:1.5px;} .yg i{aspect-ratio:1;border-radius:1px;background:var(--track);} .ygr{gap:2px;} .ygr i{aspect-ratio:1;height:auto;border-radius:1px;}
@@ -4785,7 +4789,7 @@ const HABIT_ICON_ALL = ['pushup','pullup','squat','dips','run','bike','swim','st
   'mail','lock','note','search','dot','sun'];
 const HABIT_ICON_KEYS = new Set(HABIT_ICON_ALL);
 const HABIT_ICONS = HABIT_ICON_ALL;
-const HABIT_COLORS = ['#0A84FF','#34C759','#FF9F0A','#8B6FE0'];
+const HABIT_COLORS = ['#0A84FF','#34C759','#FF9F0A','#8B6FE0','#E0584B','#E8629F','#2FB1A8','#7A8B99','#C9902F','#5B6EE8'];
 // Zpetna kompatibilita: existujici navyky v DB maji h.ikona jako EMOJI (stary format) → premapuj na i-* klic.
 // Jista mapovani primo z mockupu; ostatni best-effort (sprite nema food/household ikony) — cokoli nenamapovane => target.
 const EMOJI_TO_ICON = {
@@ -9965,8 +9969,18 @@ function mmBpMount(host, tpl, extraCss){
 }
 // Obsah tece nad absolutni .ff — rezervuj jeji vysku (stejny fix jako mmMountZapis).
 function mmBpFfPad(sh){
-  const bodyEl = sh.querySelector('.body.formb'); const ffEl = sh.querySelector('.ff');
-  if (bodyEl && ffEl) bodyEl.style.paddingBottom = (ffEl.offsetHeight + 16) + 'px';
+  // Ukol 40: paticka byla POSLEDNI potomek scrollovaci .body a jeji vyska se
+  // dopocitavala z offsetHeight (ukol 27 — geometrie z mereni). Kdyz okno jeste
+  // nabihalo, vyslo mereni spatne a formular mizel pod patickou: chybel Typ
+  // navyku, Denni cil i Jak casto. Ted je paticka SOUROZENEC scrollu ve flex
+  // sloupci .scr — nic se nemeri a prekryt nemuze nastat z principu.
+  const bodyEl = sh.querySelector('.body.formb');
+  const ffEl = sh.querySelector('.ff');
+  if (bodyEl){
+    bodyEl.style.paddingBottom = '';
+    const scr = bodyEl.parentElement;
+    if (ffEl && scr && ffEl.parentElement !== scr) scr.appendChild(ffEl);
+  }
   mmNoTinyScroll(bodyEl);   // zadny „gumovy" 1-2px scroll na formulari, ktery se cely vejde
 }
 
@@ -9974,6 +9988,30 @@ function mmBpFfPad(sh){
 const MM_HABIT_FREQ_KEYS = { daily:'tvorba', specific_days:'tvorba2', weekly:'tvorba3', monthly:'tvorba4', yearly:'tvorbad' };
 const MM_HABIT_FREQ_LABELS = { 'Každý den':'daily', 'Vybrané':'specific_days', 'Týdně':'weekly', 'Měsíčně':'monthly', 'Ročně':'yearly' };
 
+// Ukol 40: paticka formulare navyku nesla 265 px — krome ulozeni v ni bylo i pole
+// "Platnost", Duplikovat a DRUHE tlacitko Smazat (prvni uz je v tele jako .smazbox).
+// Pole a sekundarni akce patri do formulare; v paticce zustava jen ulozeni.
+function mmHabitFormUklid(sh){
+  const ff = sh.querySelector('.ff'); const body = sh.querySelector('.body.formb');
+  if (!ff || !body) return;
+  const smaz = body.querySelector('.smazbox');
+  const kam = (el) => { if (!el) return; if (smaz) body.insertBefore(el, smaz); else body.appendChild(el); };
+  kam(ff.querySelector(':scope > .fld'));            // Platnost · od — do
+  const dup = ff.querySelector(':scope > [data-mmdup]');
+  if (dup){
+    dup.style.marginTop = '';
+    dup.innerHTML = '<svg class="i"><use href="#i-copy"/></svg>Duplikovat návyk';   // byl tam glyf 📋
+    kam(dup);
+  }
+  const rada = ff.querySelector(':scope > .pickrow');
+  if (rada){
+    const del = rada.querySelector('[data-mmdel]');
+    if (del && smaz) del.remove();                   // dve tlacitka Smazat na jedne obrazovce
+    const ulozit = rada.querySelector('.submit');
+    if (ulozit) ulozit.style.flex = '1';
+    rada.style.marginTop = '';
+  }
+}
 function mmMountHabit(){
   const host = document.getElementById('habit-shadow'); if (!host) return;
   const key = state.habitView === 'catalog' ? 'knihovna' : (MM_HABIT_FREQ_KEYS[state.habitFreq] || 'tvorba');
@@ -9981,6 +10019,7 @@ function mmMountHabit(){
   if (!sh) return;
   mmHabitSync(sh);
   mmBpFfPad(sh);
+  mmHabitFormUklid(sh);
   if (!host._mmBound){
     host._mmBound = true;
     sh.addEventListener('click', mmHabitClick);
