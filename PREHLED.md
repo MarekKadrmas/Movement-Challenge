@@ -55,11 +55,11 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 33 | Bílý proužek pod posledním řádkem žebříčku | Přehled | ✅ |
 | 34 | Bublina série — vůle nad lištou a posun doleva | Přehled, žebříček | ✅ |
 | 35 | Barevné odlišení hráčů v žebříčku | Přehled, žebříček | ✅ |
-| 36 | Úprava a mazání záznamu — akce v rozbaleném řádku | Já, Dění, Záznamy | 📱 |
-| 37 | Admin kolečko — plovoucí, nulový vliv na layout | Přehled, u spodní lišty | 📱 |
+| 36 | Úprava a mazání záznamu — široké akce v řádku | Já, Dění, Záznamy | 📱 |
+| 37 | Admin kolečko — plovoucí vpravo u pluska | Přehled, u spodní lišty | 📱 |
 | 38 | Maximálky — nejtěžší váha na cvik | Rekordy | ⏳ |
 | 39 | Rekordy pro všechny cviky, ne jen 4 | Rekordy | ⏳ |
-| 40 | Úprava návyku — patička překrývala půlku formuláře | Návyky | 📱 |
+| 40 | Úprava návyku — přestavba do designu appky | Návyky | 📱 |
 | 41 | Upravit profil — pořád stará modálka | Já → Nastavení | ⏳ |
 | 42 | Emoji reakce se neukládají do DB (komentáře už ano) | Dění v partě | ⏳ |
 | 43 | Notifikace — přepínače nic nedělají | Já → Notifikace | ⏳ |
