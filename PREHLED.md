@@ -38,7 +38,7 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 16 | Výběr aktivity v tmavém režimu | Zelené plus | ✅ |
 | 17 | Plusko ve spodní liště na střed | Spodní lišta | ✅ |
 | 18 | Bublina Návyky — číslo, šipka, logo | Přehled | ✅ |
-| 19 | Obrazovka Historie výkonu | Nová obrazovka | 🔧 mockup hotový, staví se do appky |
+| 19 | Obrazovka Historie výkonu | Nová obrazovka | ⏳ postavená v appce: proklik z horní karty, měsíc / rok / detail týdne |
 | 20 | Ikony jako textové znaky → SVG | Celá appka | ✅ |
 | 21 | Seznam skákal při přepnutí dne | Návyky | ✅ |
 | 22 | Barva prstence podle plnění | Návyky, kolečka dnů | ✅ kulička se nevrací |
@@ -53,7 +53,7 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 31 | Budoucí dny nejdou odškrtnout | Návyky | ✅ |
 | 32 | Další nápady na prstenec — mockup | Návyky | 🔧 |
 | 33 | Bílý proužek pod posledním řádkem žebříčku | Přehled | ✅ |
-| 34 | Bublina série — vůle nad lištou a posun doleva | Přehled, žebříček | ⏳ vůle 6,31 px, bubliny o 6 px blíž ke jménům |
+| 34 | Bublina série — vůle nad lištou a posun doleva | Přehled, žebříček | ✅ |
 | 35 | Barevné odlišení hráčů v žebříčku | Přehled, žebříček | ✅ |
 
 
