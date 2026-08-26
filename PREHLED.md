@@ -73,31 +73,22 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 51 | Kategorie a ruční řazení návyků | Návyky | ⏳ |
 | 52 | Vypnout demo čísla v hero kartě | Přehled | ⏳ |
 | 53 | Ukotvení spodní lišty | Celá appka | ✅ |
+| 54 | Vzhled komentářů — předělat design | Dění, Přehled | 📌 |
+| 55 | Animace přehození pořadí hráčů | Přehled, žebříček | 📌 |
+| 56 | Animace přírůstku prstence | Návyky | 📌 |
+| 57 | Kdo dal reakci — ťuknutí ukáže jména | Dění v partě | 📌 |
+| 58 | Kalendář událostí + ankety pro partu | Nová obrazovka | 📌 |
+| 59 | Tělesné údaje hráče | Profil | 📌 |
+| 60 | Modulární appky — přidávání modulů z profilu | Profil | 📌 |
+| 61 | Kalorické tabulky | Nový modul | 🆕 |
+| 62 | Učení slovíček a jazyků | Nový modul | 🆕 |
+| 63 | Widget na plochu | Systém | 🆕 |
+| 64 | Vítěz týdne, síň slávy, odznaky | Parta | 🆕 |
+| 65 | Tréninkový a protahovací deník | Add-on | 🆕 |
+| 66 | Flashcards | Add-on | 🆕 |
 
 
-## ⏸️ Rozdělané (schválně odloženo)
-- **Vzhled komentářů** — Marek 26. 8. 2026: „je to nic moc", předělat design
-- **Systém zápisu** — rozhodnout A/B ([mockup](https://claude.ai/code/artifact/f3760cb0-7d1d-4cb7-8c8c-dca2d18f7cfa)), doladit výběr aktivity, kategorie, srdíčko oblíbených
-- **Šablony do gymu** — „Push den / Pull den / Nohy" bez hledání cviků pokaždé
-- **Rozpis cviků ve feedu** — Gym se 3 cviky se v dění ukáže jen jako „Gym"
-- **Lezení** — cesty jsou jednodušší verze než karty cviků
-- **Vlastní ikony** — 103 aktivit sdílí 14 ikon, některé dvojice jsou identické
-- **Demo čísla v hero kartě** (`MM_UKAZKA_KARTA = true`) — vypnout, až bude bodování sedět
 
----
-
-## 🆕 Nové moduly (nezačaté)
-- **Kalorické tabulky** — jídlo, makra, databáze potravin, spálené vs. přijaté
-- **Tělesné údaje** — váha, výška, obvody + historie a graf (nová tabulka `body_metrics`)
-- **Kalendář akcí + ankety** — společný trénink, hlasování o termínu (styl Doodle), export .ics
-- **Modulární appky (Marek 25. 8.)** — appka nebude jeden monolit. Na **profilu** si hráč přidá moduly,
-  které chce používat: kalorické tabulky, učení slovíček / jazyků, návyky, tréninkový deník, protahovací deník,
-  flashcards… Kdo chce počítat kalorie, přidá si kalorie; kdo se učí jazyk, přidá si jazyky.
-  **Dopad na stavbu už teď:** každou featuru držet jako samostatný modul (vlastní obrazovka, vlastní data,
-  vlastní render), aby šla zapnout a vypnout bez zásahu do zbytku. Otevřené otázky na potom: co ve spodní liště
-  (pevné 4 sloty vs. dynamické), jestli moduly sypou body do žebříčku, a kde se drží seznam zapnutých modulů
-  (sloupec u hráče v DB).
-- **Widget na plochu** — zápis na jedno kliknutí (PWA shortcuts + deep-linky jako první krok)
 
 ## 👥 Sociální / retence
 - **Kdo dal reakci** — tuknutí na pilulku ukáže jména
