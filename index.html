@@ -2246,6 +2246,22 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 
 .scr>.body.formb{flex:1 1 auto;min-height:0;}
 .scr>.ff{position:static;flex:0 0 auto;margin-top:0;padding:11px 14px 13px;background:var(--bg);border-top:1px solid var(--sep);}
+/* Ukol 40: formular navyku vypadal jako cizi aplikace — holé pilulky na šedé ploše.
+   Sekce jsou ted karty jako zbytek appky; vnorene prvky uz nemaji vlastni stin. */
+.body.formb .fld{background:var(--card);box-shadow:var(--shadow);border-radius:16px;padding:10px 12px 12px;margin-bottom:9px;}
+.body.formb .fld>label{font-size:9.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ter);display:block;margin-bottom:8px;}
+.body.formb .fld .inp,.body.formb .fld .inpc,.body.formb .fld .drange,.body.formb .fld .pill,.body.formb .fld .em{box-shadow:none;background:var(--track);}
+.body.formb .fld .inp input,.body.formb .fld .inpc input{background:transparent;}
+.body.formb .fld .em.on{outline:2px solid var(--green);outline-offset:-2px;background:color-mix(in srgb,var(--green) 12%,var(--track));}
+.body.formb .fld .col{flex:0 0 28px;width:28px;height:28px;}
+.body.formb .fld .colors{flex-wrap:wrap;gap:9px;}
+.body.formb .fld .col.on{outline:2.2px solid var(--label);outline-offset:2.5px;}
+.body.formb .fld .seg{margin:0;background:var(--track);}
+.body.formb .fld .pill.on{background:var(--green);color:#fff;}
+.body.formb .fld .emojirow{max-height:120px;-webkit-mask-image:linear-gradient(to bottom,#000 0,#000 82%,transparent 100%);mask-image:linear-gradient(to bottom,#000 0,#000 82%,transparent 100%);}
+.body.formb .newbtn{border:0;background:var(--track);color:var(--sec);display:flex;align-items:center;justify-content:center;gap:7px;font-weight:800;padding:11px;}
+.body.formb .newbtn .i{width:13px;height:13px;stroke-width:2.2;}
+.body.formb .fhd{margin-bottom:11px;}
 .smazbox{display:flex;justify-content:center;margin:10px 0 2px;}
 .smazbox span{font-size:13.28px;font-weight:800;color:var(--red,#E05C5C);padding:8px 16px;border-radius:999px;background:color-mix(in srgb,var(--red,#E05C5C) 10%,transparent);cursor:pointer;}
 .nvk .nrow{display:flex;align-items:center;gap:10px;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:7px 14px 7px 8px;margin-bottom:6px;}
@@ -2697,14 +2713,14 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .fdcom{font-size:14.48px;}
 .mm .fdcom b{color:var(--label);}
 /* F59 (ukol 36): akce Upravit / Smazat v rozbalenem radku zaznamu */
-.mm .zakce{display:flex;justify-content:flex-end;gap:6px;margin:1px 0 8px;}
-.mm .zak{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--sep);cursor:pointer;font-family:inherit;font-size:10.4px;font-weight:800;letter-spacing:-.01em;color:var(--sec);background:transparent;border-radius:999px;padding:4.5px 11px 4.5px 9px;-webkit-tap-highlight-color:transparent;transition:background .16s ease,color .16s ease,border-color .16s ease;}
+.mm .zakce{display:flex;gap:6px;margin:1px 0 8px 4px;}
+.mm .zak{flex:1 1 0;display:inline-flex;align-items:center;justify-content:center;gap:5px;border:1px solid var(--sep);cursor:pointer;font-family:inherit;font-size:10.4px;font-weight:800;letter-spacing:-.01em;color:var(--sec);background:transparent;border-radius:999px;padding:4.5px 11px 4.5px 9px;-webkit-tap-highlight-color:transparent;transition:background .16s ease,color .16s ease,border-color .16s ease;}
 .mm .zak .i{width:11.5px;height:11.5px;stroke-width:2.3;opacity:.85;}
 .mm .zak:active{background:color-mix(in srgb,var(--sec) 12%,transparent);}
 .mm .zak.zsmaz{color:#C4483C;border-color:color-mix(in srgb,#C4483C 32%,transparent);}
 .mm .zak.zsmaz:active{background:color-mix(in srgb,#C4483C 13%,transparent);}
 /* F59 (ukol 37): plovouci admin kolecko — position:fixed, NULOVY vliv na layout obsahu */
-.mm .zkflo{position:fixed;left:10px;bottom:20px;z-index:40;display:flex;flex-direction:column;align-items:flex-start;gap:7px;pointer-events:none;}
+.mm .zkflo{position:fixed;right:10px;bottom:20px;z-index:40;display:flex;flex-direction:column;align-items:flex-end;gap:7px;pointer-events:none;}
 .mm .zkflo>*{pointer-events:auto;}
 .mm .zkbtn{position:relative;width:31px;height:31px;flex:0 0 31px;border:0;padding:0;cursor:pointer;border-radius:50%;display:grid;place-items:center;font-family:inherit;font-size:10.4px;font-weight:900;letter-spacing:-.02em;background:var(--card);color:var(--zc);box-shadow:0 3px 12px rgba(0,0,0,.16);-webkit-tap-highlight-color:transparent;transition:transform .16s ease;}
 .mm .zkbtn::after{content:'';position:absolute;inset:-1.6px;border-radius:50%;border:1.6px solid var(--zc);opacity:.5;}
@@ -3232,6 +3248,22 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 
 .scr>.body.formb{flex:1 1 auto;min-height:0;}
 .scr>.ff{position:static;flex:0 0 auto;margin-top:0;padding:11px 14px 13px;background:var(--bg);border-top:1px solid var(--sep);}
+/* Ukol 40: formular navyku vypadal jako cizi aplikace — holé pilulky na šedé ploše.
+   Sekce jsou ted karty jako zbytek appky; vnorene prvky uz nemaji vlastni stin. */
+.body.formb .fld{background:var(--card);box-shadow:var(--shadow);border-radius:16px;padding:10px 12px 12px;margin-bottom:9px;}
+.body.formb .fld>label{font-size:9.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ter);display:block;margin-bottom:8px;}
+.body.formb .fld .inp,.body.formb .fld .inpc,.body.formb .fld .drange,.body.formb .fld .pill,.body.formb .fld .em{box-shadow:none;background:var(--track);}
+.body.formb .fld .inp input,.body.formb .fld .inpc input{background:transparent;}
+.body.formb .fld .em.on{outline:2px solid var(--green);outline-offset:-2px;background:color-mix(in srgb,var(--green) 12%,var(--track));}
+.body.formb .fld .col{flex:0 0 28px;width:28px;height:28px;}
+.body.formb .fld .colors{flex-wrap:wrap;gap:9px;}
+.body.formb .fld .col.on{outline:2.2px solid var(--label);outline-offset:2.5px;}
+.body.formb .fld .seg{margin:0;background:var(--track);}
+.body.formb .fld .pill.on{background:var(--green);color:#fff;}
+.body.formb .fld .emojirow{max-height:120px;-webkit-mask-image:linear-gradient(to bottom,#000 0,#000 82%,transparent 100%);mask-image:linear-gradient(to bottom,#000 0,#000 82%,transparent 100%);}
+.body.formb .newbtn{border:0;background:var(--track);color:var(--sec);display:flex;align-items:center;justify-content:center;gap:7px;font-weight:800;padding:11px;}
+.body.formb .newbtn .i{width:13px;height:13px;stroke-width:2.2;}
+.body.formb .fhd{margin-bottom:11px;}
 .smazbox{display:flex;justify-content:center;margin:10px 0 2px;}
 .smazbox span{font-size:13.28px;font-weight:800;color:var(--red,#E05C5C);padding:8px 16px;border-radius:999px;background:color-mix(in srgb,var(--red,#E05C5C) 10%,transparent);cursor:pointer;}
 .nvk .nrow{display:flex;align-items:center;gap:10px;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:7px 14px 7px 8px;margin-bottom:6px;}
@@ -3497,7 +3529,7 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
   .hlkoms:not(:last-child)::after{content:"";position:absolute;left:40px;right:0;bottom:0;height:1px;background:var(--sep);}
   .hlkoms .fdadd{margin-top:3px;}
 /* F59 (ukol 37): plovouci admin kolecko — position:fixed, NULOVY vliv na layout obsahu */
-  .zkflo{position:fixed;left:10px;bottom:20px;z-index:40;display:flex;flex-direction:column;align-items:flex-start;gap:7px;pointer-events:none;}
+  .zkflo{position:fixed;right:10px;bottom:20px;z-index:40;display:flex;flex-direction:column;align-items:flex-end;gap:7px;pointer-events:none;}
   .zkflo>*{pointer-events:auto;}
   .zkbtn{position:relative;width:31px;height:31px;flex:0 0 31px;border:0;padding:0;cursor:pointer;border-radius:50%;display:grid;place-items:center;font-family:inherit;font-size:10.4px;font-weight:900;letter-spacing:-.02em;background:var(--card);color:var(--zc);box-shadow:0 3px 12px rgba(0,0,0,.16);-webkit-tap-highlight-color:transparent;transition:transform .16s ease;}
   .zkbtn::after{content:'';position:absolute;inset:-1.6px;border-radius:50%;border:1.6px solid var(--zc);opacity:.5;}
@@ -3516,8 +3548,8 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
   .zkav.on>em{color:var(--zc);font-weight:900;}
   .zkav:active{background:color-mix(in srgb,var(--sec) 12%,transparent);}
 /* F59 (ukol 36): akce Upravit / Smazat v rozbalenem radku zaznamu */
-  .zakce{display:flex;justify-content:flex-end;gap:6px;margin:1px 0 8px;}
-  .zak{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--sep);cursor:pointer;font-family:inherit;font-size:10.4px;font-weight:800;letter-spacing:-.01em;color:var(--sec);background:transparent;border-radius:999px;padding:4.5px 11px 4.5px 9px;-webkit-tap-highlight-color:transparent;transition:background .16s ease,color .16s ease,border-color .16s ease;}
+  .zakce{display:flex;gap:6px;margin:1px 0 8px 4px;}
+  .zak{flex:1 1 0;display:inline-flex;align-items:center;justify-content:center;gap:5px;border:1px solid var(--sep);cursor:pointer;font-family:inherit;font-size:10.4px;font-weight:800;letter-spacing:-.01em;color:var(--sec);background:transparent;border-radius:999px;padding:4.5px 11px 4.5px 9px;-webkit-tap-highlight-color:transparent;transition:background .16s ease,color .16s ease,border-color .16s ease;}
   .zak .i{width:11.5px;height:11.5px;stroke-width:2.3;opacity:.85;}
   .zak:active{background:color-mix(in srgb,var(--sec) 12%,transparent);}
   .zak.zsmaz{color:#C4483C;border-color:color-mix(in srgb,#C4483C 32%,transparent);}
@@ -10003,6 +10035,12 @@ function mmHabitFormUklid(sh){
     dup.innerHTML = '<svg class="i"><use href="#i-copy"/></svg>Duplikovat návyk';   // byl tam glyf 📋
     kam(dup);
   }
+  body.querySelectorAll('.seg b').forEach(b => {          // byly tam glyfy „Splnit ✓" / „Změřit #"
+    const t = (b.textContent||'').replace(/[✓#]/g,'').trim();
+    if (t && t !== b.textContent) b.textContent = t;
+  });
+  const zvolena = body.querySelector('.emojirow .em.on');   // at je videt, ktera ikona je vybrana
+  if (zvolena && zvolena.scrollIntoView) zvolena.scrollIntoView({block:'nearest'});
   const rada = ff.querySelector(':scope > .pickrow');
   if (rada){
     const del = rada.querySelector('[data-mmdel]');
