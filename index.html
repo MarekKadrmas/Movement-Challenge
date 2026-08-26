@@ -7472,7 +7472,7 @@ function mmSirkaJmen(){
   let nej=0;
   (state.players||[]).forEach(hr=>{ nej=Math.max(nej, (hr.jmeno||'').length); });
   if(!nej) nej=7;
-  window._mmLnw = Math.round(Math.min(14, nej)*6.5) + 6;
+  window._mmLnw = Math.round(Math.min(14, nej)*6.2) + 6;
   return window._mmLnw;
 }
 function mmSrovnejJmena(sh){
