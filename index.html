@@ -6851,7 +6851,10 @@ function mmPartaHeatHtml(){
     const gridTpl=cols.map(c=>c.sp?'2px':'1fr').join(' ');
     // predel tydnu je vzdy presne v pulce stranky; dnesek dostane ramecek pres cely sloupec.
     // Sirka dne = (100% - predel 5px - 14 mezer po 2px) / 14 — v procentech, takze to sedi i pri zoomu.
+    // Carka je na kazdem predelu tydnu. Predel se sousedni strankou kreslime na jejim LEVEM
+    // okraji a celou dovnitr (transform:none) — driv sedela pulkou ven a vypadala useknute.
     let divs='<i class="hdiv" style="left:50%"></i>';
+    if(wi>0) divs+='<i class="hdiv" style="left:0;transform:none"></i>';
 
     let cells='';
     players.forEach(p=>{
@@ -13110,8 +13113,9 @@ function applyDemoData(){
   const cviky=[], aktivity=[];
   // created_at nikdy v budoucnu (budoucí dny týdne dostanou dnešní ráno) — jinak by feedy řadily budoucnost nahoru
   const caDef=n=> n<0 ? CA(0,6,(seq*7)%55) : CA(n,8,(seq*7)%55);
-  const akt=(pid,n,body,o)=>{ o=o||{}; aktivity.push({id:'demo-a'+(++seq),player_id:pid,nazev:o.nazev||'Posilovna',uroven:o.uroven||3,km:o.km!=null?o.km:null,body:body,datum:D(n),created_at:o.ca||caDef(n),je_stretching:!!o.stretch,poznamka:o.poznamka||null}); };
-  const cvik=(pid,n,typ,ops,body,o)=>{ o=o||{}; cviky.push({id:'demo-c'+(++seq),player_id:pid,cvik:typ,opakovani:ops,pridana_vaha:0,body:body,datum:D(n),created_at:o.ca||caDef(n),poznamka:null}); };
+  // Demo neplni budouci dny — cvicit zitra nejde a v kalendari to svitilo zelene (Marek 2026-08-26)
+  const akt=(pid,n,body,o)=>{ if(n<0) return; o=o||{}; aktivity.push({id:'demo-a'+(++seq),player_id:pid,nazev:o.nazev||'Posilovna',uroven:o.uroven||3,km:o.km!=null?o.km:null,body:body,datum:D(n),created_at:o.ca||caDef(n),je_stretching:!!o.stretch,poznamka:o.poznamka||null}); };
+  const cvik=(pid,n,typ,ops,body,o)=>{ if(n<0) return; o=o||{}; cviky.push({id:'demo-c'+(++seq),player_id:pid,cvik:typ,opakovani:ops,pridana_vaha:0,body:body,datum:D(n),created_at:o.ca||caDef(n),poznamka:null}); };
 
   // ---- hráči (pořadí pole = created_at asc; barvy a maximálky dle mockupu) ----
   const mk=(id,jmeno,barva,pohlavi,vaha,vyska,ms,md,mkl,mdp,mb,i)=>({id:id,jmeno:jmeno,pohlavi:pohlavi,vaha:vaha,vyska:vyska,max_shyby:ms,max_drep:md,max_kliky:mkl,max_dipy:mdp,max_boulder:mb,max_lano:null,barva:barva,aktivni:true,created_at:new Date(2026,0,1,10,i).toISOString(),is_admin:id==='demo-mara',auth_user_id:null});
