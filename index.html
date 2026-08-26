@@ -2002,7 +2002,8 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .lcard .psegt{transform:none!important;transition:left .3s cubic-bezier(.55,1.3,.2,1),width .3s cubic-bezier(.55,1.3,.2,1);}
 .lcard .psegt.prvni{margin-left:-8px;width:calc(33.3333% + 8px)!important;}
 .lcard .psegt.posledni{width:calc(33.3333% + 8px)!important;}
-.mm .lcard .lc{background:var(--card);box-shadow:none;border-radius:8px 8px 22px 22px;padding-top:3px;margin-top:-8px;position:relative;}
+.mm .lcard .lc{background:var(--card);box-shadow:none;border-radius:8px 8px 22px 22px;padding-top:0;margin-top:-8px;position:relative;}
+.lcard .lc > .lr:first-child{padding-top:9px;}
 .mm .lcard .lc{transition:border-top-left-radius .3s ease,border-top-right-radius .3s ease;}
 @keyframes mmLcR{0%{opacity:.35}100%{opacity:1}}
 @keyframes mmLcL{0%{opacity:.35}100%{opacity:1}}
@@ -2958,7 +2959,8 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .lcard .psegt{transform:none!important;transition:left .3s cubic-bezier(.55,1.3,.2,1),width .3s cubic-bezier(.55,1.3,.2,1);}
 .lcard .psegt.prvni{margin-left:-8px;width:calc(33.3333% + 8px)!important;}
 .lcard .psegt.posledni{width:calc(33.3333% + 8px)!important;}
-.lcard .lc{background:var(--card);box-shadow:none;border-radius:8px 8px 22px 22px;padding-top:3px;margin-top:-8px;position:relative;}
+.lcard .lc{background:var(--card);box-shadow:none;border-radius:8px 8px 22px 22px;padding-top:0;margin-top:-8px;position:relative;}
+.lcard .lc > .lr:first-child{padding-top:9px;}
 .lcard .lc{transition:border-top-left-radius .3s ease,border-top-right-radius .3s ease;}
 @keyframes mmLcR{0%{opacity:.35}100%{opacity:1}}
 @keyframes mmLcL{0%{opacity:.35}100%{opacity:1}}
@@ -6594,7 +6596,7 @@ function renderDnesek(){
   const ov=document.createElement('style');
   /* .lc padding-bottom 5.9px = kompenzace tesnejsiho renderovani pisma na iOS (zmereno z Markova
      screenshotu 2026-07-20: karta zebricku koncila o 7.4pt vys nez v mockup nahledu) — jen Dnesek. */
-  ov.textContent=':host{-webkit-text-size-adjust:100%;display:block;font-family:var(--font-ui);font-size:19.31px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:calc(66px + env(safe-area-inset-bottom));}.tb{position:fixed;}.tbveil{display:block;position:fixed;left:0;right:0;bottom:0;height:14px;background:var(--bg);pointer-events:none;}.nav{position:relative;}.nav .right{position:absolute;right:2px;top:16.5px;}.lc{padding-bottom:5.9px;}'+(document.documentElement.classList.contains('pwa-standalone')?'.nav:not(:has(.date)){padding-top:15px;}':'');
+  ov.textContent=':host{-webkit-text-size-adjust:100%;display:block;font-family:var(--font-ui);font-size:19.31px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:calc(66px + env(safe-area-inset-bottom));}.tb{position:fixed;}.tbveil{display:block;position:fixed;left:0;right:0;bottom:0;height:14px;background:var(--bg);pointer-events:none;}.nav{position:relative;}.nav .right{position:absolute;right:2px;top:16.5px;}.lc{padding-bottom:0;}.lc > .lr:last-child{padding-bottom:11.9px;}.lc > .lr:last-child .lbar{bottom:10.9px;}'+(document.documentElement.classList.contains('pwa-standalone')?'.nav:not(:has(.date)){padding-top:15px;}':'');
   sh.appendChild(ov);
   if(sprite) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(0)}</div>`;

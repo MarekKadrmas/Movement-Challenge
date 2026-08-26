@@ -46,12 +46,13 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 24 | Poskakování prstenců při přepnutí týdne | Návyky | ✅ |
 | 25 | Plamínky se ořezávaly a skákaly | Žebříček | ✅ |
 | 26 | Označení vybraného dne | Návyky | ✅ |
-| 27 | Systémová oprava měření rozměrů | Celá appka | 🔧 hotové 4 ze 4 míst, která běžela při každém vykreslení; zbylá měření běží až při dotyku, kde je obrazovka vidět |
+| 27 | Systémová oprava měření rozměrů | Celá appka | ✅ |
 | 28 | Mezera mezi prstenci a datem | Návyky | ✅ |
 | 29 | Logo Návyků a bubliny se sérií | Přehled + Návyky | ✅ |
 | 30 | Řádek nad kolečky — datum, W35, šipky, Dnes | Návyky | ✅ |
 | 31 | Budoucí dny nejdou odškrtnout | Návyky | ✅ |
 | 32 | Další nápady na prstenec — mockup | Návyky | 🔧 |
+| 33 | Bílý proužek pod posledním řádkem žebříčku | Přehled | ⏳ odsazení karty přesunuto do krajních řádků, zvýraznění teď sedí až k okraji |
 
 
 ## ⏸️ Rozdělané (schválně odloženo)
