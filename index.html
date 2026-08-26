@@ -2701,6 +2701,19 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .zak:active{background:color-mix(in srgb,var(--sec) 16%,transparent);}
 .mm .zak.zsmaz{color:#C4483C;background:color-mix(in srgb,#C4483C 10%,transparent);}
 .mm .zak.zsmaz:active{background:color-mix(in srgb,#C4483C 20%,transparent);}
+/* F59 (ukol 37): admin lista "Zapisujes za" nad hero kartou */
+.mm .zkpruh{margin:0 2px 9px;}
+.mm .zkhl{display:flex;align-items:center;gap:8px;width:100%;border:0;cursor:pointer;font-family:inherit;text-align:left;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:5px 12px 5px 5px;-webkit-tap-highlight-color:transparent;}
+.mm .zktxt{flex:1;font-size:11.6px;font-weight:700;color:var(--ter);letter-spacing:-.01em;}
+.mm .zktxt b{font-weight:900;}
+.mm .zkchev{width:12px;height:12px;flex:0 0 12px;color:var(--ter);stroke-width:2.6;transform:rotate(-90deg);transition:transform .2s ease;}
+.mm .zkpruh.otevreno .zkchev{transform:rotate(90deg);}
+.mm .zkav{position:relative;flex:0 0 28px;width:28px;height:28px;border:0;padding:0;cursor:pointer;border-radius:50%;display:grid;place-items:center;font-family:inherit;font-size:10.2px;font-weight:900;letter-spacing:-.02em;background:color-mix(in srgb,var(--zc) 22%,transparent);color:var(--zc);-webkit-tap-highlight-color:transparent;transition:transform .16s ease;}
+.mm .zkav>span{line-height:1;}
+.mm .zkav.on::after{content:'';position:absolute;inset:-2.5px;border-radius:50%;border:1.8px solid var(--zc);}
+.mm .zkrada{display:none;flex-wrap:wrap;gap:7px;padding:9px 4px 2px;}
+.mm .zkpruh.otevreno .zkrada{display:flex;}
+.mm .zkrada .zkav:active{transform:scale(.92);}
 .mm .fdadd{font-size:14.48px;color:var(--ter);background:var(--track);border-radius:999px;padding:7px 13px;margin-top:3px;}
 .mm .rwbar{display:flex;align-items:center;justify-content:space-between;padding:9px 18px;border-radius:999px;margin-top:11px;border:1.5px solid transparent;background-image:linear-gradient(var(--card),var(--card)),linear-gradient(115deg,#D6A23A,#0FA968,#3FAEC2,#8A7BCB);background-origin:border-box;background-clip:padding-box,border-box;}
 .mm .rwbar span{font-size:14.48px;font-weight:700;color:var(--sec);}
@@ -3473,6 +3486,19 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
   .hlkoms{position:relative;padding:9px 12px 11px 41px;display:flex;flex-direction:column;gap:6px;}
   .hlkoms:not(:last-child)::after{content:"";position:absolute;left:40px;right:0;bottom:0;height:1px;background:var(--sep);}
   .hlkoms .fdadd{margin-top:3px;}
+/* F59 (ukol 37): admin lista "Zapisujes za" nad hero kartou */
+  .zkpruh{margin:0 2px 9px;}
+  .zkhl{display:flex;align-items:center;gap:8px;width:100%;border:0;cursor:pointer;font-family:inherit;text-align:left;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:5px 12px 5px 5px;-webkit-tap-highlight-color:transparent;}
+  .zktxt{flex:1;font-size:11.6px;font-weight:700;color:var(--ter);letter-spacing:-.01em;}
+  .zktxt b{font-weight:900;}
+  .zkchev{width:12px;height:12px;flex:0 0 12px;color:var(--ter);stroke-width:2.6;transform:rotate(-90deg);transition:transform .2s ease;}
+  .zkpruh.otevreno .zkchev{transform:rotate(90deg);}
+  .zkav{position:relative;flex:0 0 28px;width:28px;height:28px;border:0;padding:0;cursor:pointer;border-radius:50%;display:grid;place-items:center;font-family:inherit;font-size:10.2px;font-weight:900;letter-spacing:-.02em;background:color-mix(in srgb,var(--zc) 22%,transparent);color:var(--zc);-webkit-tap-highlight-color:transparent;transition:transform .16s ease;}
+  .zkav>span{line-height:1;}
+  .zkav.on::after{content:'';position:absolute;inset:-2.5px;border-radius:50%;border:1.8px solid var(--zc);}
+  .zkrada{display:none;flex-wrap:wrap;gap:7px;padding:9px 4px 2px;}
+  .zkpruh.otevreno .zkrada{display:flex;}
+  .zkrada .zkav:active{transform:scale(.92);}
 /* F59 (ukol 36): akce Upravit / Smazat v rozbalenem radku zaznamu */
   .zakce{display:flex;gap:6px;margin:0 0 7px;}
   .zak{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:5px;border:0;cursor:pointer;font-family:inherit;font-size:11.4px;font-weight:800;letter-spacing:-.01em;color:var(--sec);background:var(--track);border-radius:10px;padding:7px 10px;-webkit-tap-highlight-color:transparent;transition:background .16s ease,color .16s ease;}
@@ -4841,6 +4867,7 @@ let state = {
   // F52: habit tracker
   habits: [], habitLogs: [],
   habitEditId: null, habitView: 'catalog', habitCat: 'dop', habitSearch: '',
+  mmZaKoho: null, mmZaKohoOpen: false,        // F59 (37): admin — za koho se zapisuje
   habitFreq: 'daily', habitIcon: 'water', habitColor: '#0A84FF',
   habitZapis: 'check', habitDays: 0, habitCast: '',
   habitDay: null,    // vybraný den v tabu Návyky (null = dnes)
@@ -6597,6 +6624,53 @@ function mmLbarAlign(sh){ /* geometrie je v CSS, nic se nedopocitava */ }
 // Struktura shora dolu: kompaktni hlavicka (pozdrav + MALY kruh ~64px misto velkeho banneru),
 // zebricek (JEDINY v appce, filtry z Party + liga chip), kalendar aktivity (heatmapa z Party),
 // DENI (slouceny feed - mmPrehledFeedHtml), navyky dnes, rekordy karta. Host #dnesek-mm zustava.
+// ---- F59 (ukol 37): admin lista "Zapisujes za" s kolecky inicial ----
+// Viditelna jen v admin rezimu. Kolecko = hrac, za ktereho se zapisuje novy zaznam.
+// Formular uz vyber hrace umel (player-select-field), jen nebyl videt driv nez se otevrel.
+function mmZaKohoId(){
+  const id = state.mmZaKoho || state.currentPlayerId;
+  return (state.players||[]).some(p=>p.id===id) ? id : state.currentPlayerId;
+}
+function mmZaKohoHrac(){ return (state.players||[]).find(p=>p.id===mmZaKohoId()) || null; }
+function mmAdminPruhHtml(){
+  if(typeof isAdmin!=='function' || !isAdmin()) return '';
+  const hraci = (state.players||[]);
+  if(hraci.length < 2) return '';
+  const akt = mmZaKohoId();
+  const rozbaleno = !!state.mmZaKohoOpen;
+  const h = mmZaKohoHrac();
+  const col = h ? safeColor(h.barva) : 'var(--green)';
+  const jmeno = h ? mmFirst(h.jmeno) : '?';
+  const sam = akt === state.currentPlayerId;
+  const kolecka = hraci.map(x=>{
+    const c = safeColor(x.barva);
+    const on = x.id===akt ? ' on' : '';
+    return `<button type="button" class="zkav${on}" style="--zc:${c}" title="${esc(x.jmeno)}" onclick="mmZaKohoVyber(event,&#39;${x.id}&#39;)"><span>${esc(initials(x.jmeno))}</span></button>`;
+  }).join('');
+  return `<div class="zkpruh${rozbaleno?' otevreno':''}">`
+    + `<button type="button" class="zkhl" onclick="mmZaKohoToggle(event)">`
+    +   `<span class="zkav on" style="--zc:${col}"><span>${esc(h?initials(h.jmeno):'?')}</span></span>`
+    +   `<span class="zktxt">Zapisuješ za <b style="color:${col}">${sam?'sebe':esc(mmAkuzativ(jmeno))}</b></span>`
+    +   `<svg class="i zkchev"><use href="#i-chev"/></svg>`
+    + `</button>`
+    + `<div class="zkrada">${kolecka}</div>`
+    + `</div>`;
+}
+function mmZaKohoToggle(ev){
+  if(ev){ ev.preventDefault(); ev.stopPropagation(); }
+  state.mmZaKohoOpen = !state.mmZaKohoOpen;
+  renderDnesek();
+}
+function mmZaKohoVyber(ev, id){
+  if(ev){ ev.preventDefault(); ev.stopPropagation(); }
+  state.mmZaKoho = id;
+  state.mmZaKohoOpen = false;
+  const h = (state.players||[]).find(p=>p.id===id);
+  if(typeof toast==='function' && h){
+    toast(id===state.currentPlayerId ? 'Zapisuješ za sebe' : ('Zapisuješ za ' + mmAkuzativ(mmFirst(h.jmeno))), 'success');
+  }
+  renderDnesek();
+}
 function renderDnesek(){
   const host=document.getElementById('dnesek-mm'); if(!host) return;
   const me=state.players.find(p=>p.id===state.currentPlayerId);
@@ -6716,7 +6790,7 @@ function renderDnesek(){
   const naleh = zbyvaObd<=H ? ' odp4' : (zbyvaObd<=4*H ? ' odp3' : (zbyvaObd<=12*H ? ' odp2' : (zbyvaObd<=24*H ? ' odp1' : '')));
   // Nadpis zebricku vlevo, odpocet soutezniho obdobi vpravo — stejny vzor jako Kalendar aktivity / Deni.
   const odpocetHtml='<div class="sl slzeb"><span>Žebříček</span><i class="zebodp'+naleh+'">'+odpocetTxt+'</i></div>';
-  const tpl=`<div class="hcard" style="cursor:pointer;touch-action:manipulation" onclick="mmOpenSub('vykon')"><div class="hc-hd"><span class="hc-poz">${mmGreet()}${me?', '+esc(mmVocative(mmFirst(me.jmeno))):''}</span><span class="hc-dat">${dlKratke}</span></div><div class="hc-top">${mSerie>0?'<span class="hc-serie"><svg class="i"><use href="#i-flame"/></svg>'+mSerie+'</span>':''}<span class="hc-r">${mTrendHtml}<span class="hc-num">${fmtNum(todayPts)}</span><span class="hc-cil">z ${fmtNum(mCil)} b</span></span></div><div class="hc-tyden">${mSloupce}</div></div>
+  const tpl=`${mmAdminPruhHtml()}<div class="hcard" style="cursor:pointer;touch-action:manipulation" onclick="mmOpenSub('vykon')"><div class="hc-hd"><span class="hc-poz">${mmGreet()}${me?', '+esc(mmVocative(mmFirst(me.jmeno))):''}</span><span class="hc-dat">${dlKratke}</span></div><div class="hc-top">${mSerie>0?'<span class="hc-serie"><svg class="i"><use href="#i-flame"/></svg>'+mSerie+'</span>':''}<span class="hc-r">${mTrendHtml}<span class="hc-num">${fmtNum(todayPts)}</span><span class="hc-cil">z ${fmtNum(mCil)} b</span></span></div><div class="hc-tyden">${mSloupce}</div></div>
   <div class="hbm hbnav2" style="margin-top:10px;cursor:pointer" onclick="mmGo('navyky')"><div class="hi hikol nvk">${mmHabitDenKolecko(100,0,false,false,'bub',true)}</div><div class="ht">Návyky dnes<span class="hdots">${Array.from({length:habTotal},(_,i)=>'<i'+(i<habDone?' class="on"':'')+'></i>').join('')}</span></div><div class="pct" style="display:flex;align-items:baseline;gap:0;align-self:center;position:relative;top:1px"><b>${habDone}</b><span style="color:var(--ter);font-weight:700;margin-left:1.5px;margin-right:2px">/${habTotal}</span><span class="hbsip"><svg class="i" aria-hidden="true"><use href="#i-chev"/></svg></span></div></div>
   ${odpocetHtml}<div class="lcard${mmPartaZalTrida()}">${mmPartaSegBar()}
   <div class="lc">${rows||'<div style="padding:20px;text-align:center;color:var(--ter)">Zatím žádné body</div>'}</div></div>
@@ -12092,6 +12166,12 @@ function openModal() {
     state.selectedPlayer = state.currentPlayerId;
   } else {
     selField.style.display = '';
+    // F59 (37): admin lista na Prehledu urcuje, za koho se zapisuje — predvyplnime ji
+    state.selectedPlayer = mmZaKohoId();
+    setTimeout(() => {
+      const pill = document.querySelector(`#player-pills .player-pill[data-player-id="${state.selectedPlayer}"]`);
+      if (pill) pill.click();
+    }, 50);
   }
   updateSubmitLabel();  // Ukol 3 (formadmin): "Zapsat" vs "Zapsat za X"
   // Marek 2026-07-20: mezikrok "Co jsi delal?" zrusen — + otevre rovnou formular
