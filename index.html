@@ -2695,25 +2695,31 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .fdcom{font-size:14.48px;}
 .mm .fdcom b{color:var(--label);}
 /* F59 (ukol 36): akce Upravit / Smazat v rozbalenem radku zaznamu */
-.mm .zakce{display:flex;gap:6px;margin:0 0 7px;}
-.mm .zak{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:5px;border:0;cursor:pointer;font-family:inherit;font-size:11.4px;font-weight:800;letter-spacing:-.01em;color:var(--sec);background:var(--track);border-radius:10px;padding:7px 10px;-webkit-tap-highlight-color:transparent;transition:background .16s ease,color .16s ease;}
-.mm .zak .i{width:12.5px;height:12.5px;stroke-width:2.2;}
-.mm .zak:active{background:color-mix(in srgb,var(--sec) 16%,transparent);}
-.mm .zak.zsmaz{color:#C4483C;background:color-mix(in srgb,#C4483C 10%,transparent);}
-.mm .zak.zsmaz:active{background:color-mix(in srgb,#C4483C 20%,transparent);}
-/* F59 (ukol 37): admin lista "Zapisujes za" nad hero kartou */
-.mm .zkpruh{margin:0 2px 9px;}
-.mm .zkhl{display:flex;align-items:center;gap:8px;width:100%;border:0;cursor:pointer;font-family:inherit;text-align:left;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:5px 12px 5px 5px;-webkit-tap-highlight-color:transparent;}
-.mm .zktxt{flex:1;font-size:11.6px;font-weight:700;color:var(--ter);letter-spacing:-.01em;}
-.mm .zktxt b{font-weight:900;}
-.mm .zkchev{width:12px;height:12px;flex:0 0 12px;color:var(--ter);stroke-width:2.6;transform:rotate(-90deg);transition:transform .2s ease;}
-.mm .zkpruh.otevreno .zkchev{transform:rotate(90deg);}
-.mm .zkav{position:relative;flex:0 0 28px;width:28px;height:28px;border:0;padding:0;cursor:pointer;border-radius:50%;display:grid;place-items:center;font-family:inherit;font-size:10.2px;font-weight:900;letter-spacing:-.02em;background:color-mix(in srgb,var(--zc) 22%,transparent);color:var(--zc);-webkit-tap-highlight-color:transparent;transition:transform .16s ease;}
-.mm .zkav>span{line-height:1;}
-.mm .zkav.on::after{content:'';position:absolute;inset:-2.5px;border-radius:50%;border:1.8px solid var(--zc);}
-.mm .zkrada{display:none;flex-wrap:wrap;gap:7px;padding:9px 4px 2px;}
-.mm .zkpruh.otevreno .zkrada{display:flex;}
-.mm .zkrada .zkav:active{transform:scale(.92);}
+.mm .zakce{display:flex;justify-content:flex-end;gap:6px;margin:1px 0 8px;}
+.mm .zak{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--sep);cursor:pointer;font-family:inherit;font-size:10.4px;font-weight:800;letter-spacing:-.01em;color:var(--sec);background:transparent;border-radius:999px;padding:4.5px 11px 4.5px 9px;-webkit-tap-highlight-color:transparent;transition:background .16s ease,color .16s ease,border-color .16s ease;}
+.mm .zak .i{width:11.5px;height:11.5px;stroke-width:2.3;opacity:.85;}
+.mm .zak:active{background:color-mix(in srgb,var(--sec) 12%,transparent);}
+.mm .zak.zsmaz{color:#C4483C;border-color:color-mix(in srgb,#C4483C 32%,transparent);}
+.mm .zak.zsmaz:active{background:color-mix(in srgb,#C4483C 13%,transparent);}
+/* F59 (ukol 37): plovouci admin kolecko — position:fixed, NULOVY vliv na layout obsahu */
+.mm .zkflo{position:fixed;left:10px;bottom:20px;z-index:40;display:flex;flex-direction:column;align-items:flex-start;gap:7px;pointer-events:none;}
+.mm .zkflo>*{pointer-events:auto;}
+.mm .zkbtn{position:relative;width:31px;height:31px;flex:0 0 31px;border:0;padding:0;cursor:pointer;border-radius:50%;display:grid;place-items:center;font-family:inherit;font-size:10.4px;font-weight:900;letter-spacing:-.02em;background:var(--card);color:var(--zc);box-shadow:0 3px 12px rgba(0,0,0,.16);-webkit-tap-highlight-color:transparent;transition:transform .16s ease;}
+.mm .zkbtn::after{content:'';position:absolute;inset:-1.6px;border-radius:50%;border:1.6px solid var(--zc);opacity:.5;}
+.mm .zkbtn.cizi::after{opacity:1;border-width:2px;}
+.mm .zkbtn.cizi{background:color-mix(in srgb,var(--zc) 16%,var(--card));}
+.mm .zkbtn:active{transform:scale(.9);}
+.mm .zkpanel{display:none;max-height:none;background:var(--card);box-shadow:0 8px 26px rgba(0,0,0,.18);border:1px solid var(--sep);border-radius:15px;padding:9px 10px 10px;}
+.mm .zkflo.otevreno .zkpanel{display:block;}
+.mm .zktit{font-size:8.8px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ter);margin:0 2px 7px;}
+.mm .zkrada{display:flex;flex-direction:column;gap:2px;}
+.mm .zkav{display:flex;align-items:center;gap:8px;width:100%;border:0;padding:3px 6px 3px 3px;cursor:pointer;border-radius:999px;background:transparent;font-family:inherit;-webkit-tap-highlight-color:transparent;}
+.mm .zkav>span{position:relative;flex:0 0 25px;width:25px;height:25px;border-radius:50%;display:grid;place-items:center;font-size:9.4px;font-weight:900;letter-spacing:-.02em;background:color-mix(in srgb,var(--zc) 20%,transparent);color:var(--zc);}
+.mm .zkav>em{font-style:normal;font-size:11.2px;font-weight:700;color:var(--sec);letter-spacing:-.01em;white-space:nowrap;}
+.mm .zkav.on{background:color-mix(in srgb,var(--zc) 11%,transparent);}
+.mm .zkav.on>span::after{content:'';position:absolute;inset:-2.2px;border-radius:50%;border:1.7px solid var(--zc);}
+.mm .zkav.on>em{color:var(--zc);font-weight:900;}
+.mm .zkav:active{background:color-mix(in srgb,var(--sec) 12%,transparent);}
 .mm .fdadd{font-size:14.48px;color:var(--ter);background:var(--track);border-radius:999px;padding:7px 13px;margin-top:3px;}
 .mm .rwbar{display:flex;align-items:center;justify-content:space-between;padding:9px 18px;border-radius:999px;margin-top:11px;border:1.5px solid transparent;background-image:linear-gradient(var(--card),var(--card)),linear-gradient(115deg,#D6A23A,#0FA968,#3FAEC2,#8A7BCB);background-origin:border-box;background-clip:padding-box,border-box;}
 .mm .rwbar span{font-size:14.48px;font-weight:700;color:var(--sec);}
@@ -3486,26 +3492,32 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
   .hlkoms{position:relative;padding:9px 12px 11px 41px;display:flex;flex-direction:column;gap:6px;}
   .hlkoms:not(:last-child)::after{content:"";position:absolute;left:40px;right:0;bottom:0;height:1px;background:var(--sep);}
   .hlkoms .fdadd{margin-top:3px;}
-/* F59 (ukol 37): admin lista "Zapisujes za" nad hero kartou */
-  .zkpruh{margin:0 2px 9px;}
-  .zkhl{display:flex;align-items:center;gap:8px;width:100%;border:0;cursor:pointer;font-family:inherit;text-align:left;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:5px 12px 5px 5px;-webkit-tap-highlight-color:transparent;}
-  .zktxt{flex:1;font-size:11.6px;font-weight:700;color:var(--ter);letter-spacing:-.01em;}
-  .zktxt b{font-weight:900;}
-  .zkchev{width:12px;height:12px;flex:0 0 12px;color:var(--ter);stroke-width:2.6;transform:rotate(-90deg);transition:transform .2s ease;}
-  .zkpruh.otevreno .zkchev{transform:rotate(90deg);}
-  .zkav{position:relative;flex:0 0 28px;width:28px;height:28px;border:0;padding:0;cursor:pointer;border-radius:50%;display:grid;place-items:center;font-family:inherit;font-size:10.2px;font-weight:900;letter-spacing:-.02em;background:color-mix(in srgb,var(--zc) 22%,transparent);color:var(--zc);-webkit-tap-highlight-color:transparent;transition:transform .16s ease;}
-  .zkav>span{line-height:1;}
-  .zkav.on::after{content:'';position:absolute;inset:-2.5px;border-radius:50%;border:1.8px solid var(--zc);}
-  .zkrada{display:none;flex-wrap:wrap;gap:7px;padding:9px 4px 2px;}
-  .zkpruh.otevreno .zkrada{display:flex;}
-  .zkrada .zkav:active{transform:scale(.92);}
+/* F59 (ukol 37): plovouci admin kolecko — position:fixed, NULOVY vliv na layout obsahu */
+  .zkflo{position:fixed;left:10px;bottom:20px;z-index:40;display:flex;flex-direction:column;align-items:flex-start;gap:7px;pointer-events:none;}
+  .zkflo>*{pointer-events:auto;}
+  .zkbtn{position:relative;width:31px;height:31px;flex:0 0 31px;border:0;padding:0;cursor:pointer;border-radius:50%;display:grid;place-items:center;font-family:inherit;font-size:10.4px;font-weight:900;letter-spacing:-.02em;background:var(--card);color:var(--zc);box-shadow:0 3px 12px rgba(0,0,0,.16);-webkit-tap-highlight-color:transparent;transition:transform .16s ease;}
+  .zkbtn::after{content:'';position:absolute;inset:-1.6px;border-radius:50%;border:1.6px solid var(--zc);opacity:.5;}
+  .zkbtn.cizi::after{opacity:1;border-width:2px;}
+  .zkbtn.cizi{background:color-mix(in srgb,var(--zc) 16%,var(--card));}
+  .zkbtn:active{transform:scale(.9);}
+  .zkpanel{display:none;max-height:none;background:var(--card);box-shadow:0 8px 26px rgba(0,0,0,.18);border:1px solid var(--sep);border-radius:15px;padding:9px 10px 10px;}
+  .zkflo.otevreno .zkpanel{display:block;}
+  .zktit{font-size:8.8px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ter);margin:0 2px 7px;}
+  .zkrada{display:flex;flex-direction:column;gap:2px;}
+  .zkav{display:flex;align-items:center;gap:8px;width:100%;border:0;padding:3px 6px 3px 3px;cursor:pointer;border-radius:999px;background:transparent;font-family:inherit;-webkit-tap-highlight-color:transparent;}
+  .zkav>span{position:relative;flex:0 0 25px;width:25px;height:25px;border-radius:50%;display:grid;place-items:center;font-size:9.4px;font-weight:900;letter-spacing:-.02em;background:color-mix(in srgb,var(--zc) 20%,transparent);color:var(--zc);}
+  .zkav>em{font-style:normal;font-size:11.2px;font-weight:700;color:var(--sec);letter-spacing:-.01em;white-space:nowrap;}
+  .zkav.on{background:color-mix(in srgb,var(--zc) 11%,transparent);}
+  .zkav.on>span::after{content:'';position:absolute;inset:-2.2px;border-radius:50%;border:1.7px solid var(--zc);}
+  .zkav.on>em{color:var(--zc);font-weight:900;}
+  .zkav:active{background:color-mix(in srgb,var(--sec) 12%,transparent);}
 /* F59 (ukol 36): akce Upravit / Smazat v rozbalenem radku zaznamu */
-  .zakce{display:flex;gap:6px;margin:0 0 7px;}
-  .zak{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:5px;border:0;cursor:pointer;font-family:inherit;font-size:11.4px;font-weight:800;letter-spacing:-.01em;color:var(--sec);background:var(--track);border-radius:10px;padding:7px 10px;-webkit-tap-highlight-color:transparent;transition:background .16s ease,color .16s ease;}
-  .zak .i{width:12.5px;height:12.5px;stroke-width:2.2;}
-  .zak:active{background:color-mix(in srgb,var(--sec) 16%,transparent);}
-  .zak.zsmaz{color:#C4483C;background:color-mix(in srgb,#C4483C 10%,transparent);}
-  .zak.zsmaz:active{background:color-mix(in srgb,#C4483C 20%,transparent);}
+  .zakce{display:flex;justify-content:flex-end;gap:6px;margin:1px 0 8px;}
+  .zak{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--sep);cursor:pointer;font-family:inherit;font-size:10.4px;font-weight:800;letter-spacing:-.01em;color:var(--sec);background:transparent;border-radius:999px;padding:4.5px 11px 4.5px 9px;-webkit-tap-highlight-color:transparent;transition:background .16s ease,color .16s ease,border-color .16s ease;}
+  .zak .i{width:11.5px;height:11.5px;stroke-width:2.3;opacity:.85;}
+  .zak:active{background:color-mix(in srgb,var(--sec) 12%,transparent);}
+  .zak.zsmaz{color:#C4483C;border-color:color-mix(in srgb,#C4483C 32%,transparent);}
+  .zak.zsmaz:active{background:color-mix(in srgb,#C4483C 13%,transparent);}
   /* Přehled (2026-08-18 redesign): sekce DĚNÍ — .deni je jediný obal, aby se přestylování
      NEDOTKLO ostatních ploch se stejnými třídami (.frow/.rec na Historii party a ve Feedu).
      Den = jemný uppercase oddělovač s linkou (.fday), řádek = avatar · Jméno tučně + co dělal
@@ -6637,32 +6649,26 @@ function mmAdminPruhHtml(){
   const hraci = (state.players||[]);
   if(hraci.length < 2) return '';
   const akt = mmZaKohoId();
-  const rozbaleno = !!state.mmZaKohoOpen;
   const h = mmZaKohoHrac();
   const col = h ? safeColor(h.barva) : 'var(--green)';
-  const jmeno = h ? mmFirst(h.jmeno) : '?';
   const sam = akt === state.currentPlayerId;
   const kolecka = hraci.map(x=>{
     const c = safeColor(x.barva);
     const on = x.id===akt ? ' on' : '';
-    return `<button type="button" class="zkav${on}" style="--zc:${c}" title="${esc(x.jmeno)}" onclick="mmZaKohoVyber(event,&#39;${x.id}&#39;)"><span>${esc(initials(x.jmeno))}</span></button>`;
+    return `<button type="button" class="zkav${on}" style="--zc:${c}" onclick="mmZaKohoVyber(event,&#39;${x.id}&#39;)"><span>${esc(initials(x.jmeno))}</span><em>${esc(mmFirst(x.jmeno))}</em></button>`;
   }).join('');
-  return `<div class="zkpruh${rozbaleno?' otevreno':''}">`
-    + `<button type="button" class="zkhl" onclick="mmZaKohoToggle(event)">`
-    +   `<span class="zkav on" style="--zc:${col}"><span>${esc(h?initials(h.jmeno):'?')}</span></span>`
-    +   `<span class="zktxt">Zapisuješ za <b style="color:${col}">${sam?'sebe':esc(mmAkuzativ(jmeno))}</b></span>`
-    +   `<svg class="i zkchev"><use href="#i-chev"/></svg>`
+  // Plove nad obsahem (position:fixed) — nesmi posunout ani o pixel to, co je pod nim.
+  return `<div class="zkflo${state.mmZaKohoOpen?' otevreno':''}">`
+    + `<div class="zkpanel"><div class="zktit">Zapisuješ za</div><div class="zkrada">${kolecka}</div></div>`
+    + `<button type="button" class="zkbtn${sam?'':' cizi'}" style="--zc:${col}" aria-label="Za koho zapisuješ" onclick="mmZaKohoToggle(event)">`
+    +   `<span>${esc(h?initials(h.jmeno):'?')}</span>`
     + `</button>`
-    + `<div class="zkrada">${kolecka}</div>`
     + `</div>`;
 }
-// Lista se prekresluje NA MISTE, ne pres renderDnesek(). Plny re-render vyhazuje cely
-// shadow root (sh.innerHTML='') a iOS Safari pak fixed spodni listu prekresli na stare
-// pozici, dokud neprijde dalsi scroll — coz vypadalo jako "rozbite ukotveni".
 function mmZaKohoPrekresli(){
   const host = document.getElementById('dnesek-mm');
   const sh = host && host.shadowRoot; if(!sh) return false;
-  const stary = sh.querySelector('.zkpruh'); if(!stary) return false;
+  const stary = sh.querySelector('.zkflo'); if(!stary) return false;
   const html = mmAdminPruhHtml(); if(!html){ stary.remove(); return true; }
   const obal = document.createElement('div'); obal.innerHTML = html;
   const novy = obal.firstElementChild; if(!novy) return false;
