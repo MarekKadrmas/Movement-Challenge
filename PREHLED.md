@@ -15,39 +15,43 @@
 
 ## 🔢 Co právě řešíme
 
-**Čísla jsou stálá.** Marek odpovídá „7-ok, 10-ne". Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno (Marek potvrdil) · 🅼 na Markovi
+**Čísla jsou stálá a každé číslo je JEDEN task.** Marek odpovídá „7-ok, 22-ne".
+Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 na Markovi
 
-| # | Věc | Stav |
-|---|---|---|
-| 1 | Žebříček — animace přepnutí filtru | ✅ |
-| 2 | Žebříček — rádiusy u krajních filtrů | ✅ |
-| 3 | Přehled — čtverečky dnů jsou čtverce | ✅ |
-| 4 | Přehled — ukázkový týden natvrdo v appce | 🅼 odsouhlasit (odblokováno bodem 5), pak vrátím reálná data |
-| 5 | Přehled — varianta D | ⏳ strop 336 % (plusko vyjde do mezery nad pozdravem), plusko 15 px tmavě zelené, sytější zeleň, ukázka 400 b v pondělí, úterý i sobotu |
-| 6 | Návyky — viditelnost výplně koleček | ✅ |
-| 7 | Návyky — prstenec: hladký oblouk, kulička, gradient | ✅ |
-| 8 | Návyky — velikost koleček | ✅ |
-| 9 | Návyky — mezera pod kolečky | ✅ |
-| 10 | Návyky — tlačítko Dnes u data | ✅ |
-| 11 | Návyky — proužek dnů Po–Ne u týdenního cíle | ✅ |
-| 12 | Návyky — měřitelné návyky klikem a podržením | ✅ |
-| 13 | Návyky — nahrazení z přebytku | ✅ migrace proběhla na **testovací** DB, funguje na větvi `v2.0-test` s reálnými daty. Produkce (`main` + prod DB) nedotčená |
-| 14 | Tmavý režim — světlý pruh vpravo | ✅ |
-| 15 | Vycentrování aplikace | ✅ |
-| 16 | Výběr aktivity v tmavém režimu | ✅ |
-| 17 | Plusko ve spodní liště na střed | ✅ |
-| 18 | Bublina Návyky — číslo, šipka, logo s fajfkou | ✅ |
-| 19 | Historie výkonu — mockup v9 | ⏳ mezery u MĚSÍCE vráceny; zmenšeny u ROKU — mini kalendář využívá celou šířku, sloupec s názvem měsíce zúžen |
-| 20 | Ikony jako textové znaky → SVG | ✅ (křížky `×` v modálech až při jejich předělání) |
-| 21 | Návyky — seznam skákal při přepnutí dne | ✅ |
-| 22 | Návyky — barva prstence podle plnění | ⏳ **varianta C nasazena v appce** — vnitřní část prstence nese barvu plnění a do fialové přechází měkce |
-| 23 | Návyky — hlavička bez iniciál, fialová série | ✅ |
-| 28 | Návyky — menší mezera mezi prstenci a datem pod nimi | ⏳ |
-| 24 | Návyky — poskakování prstenců při přepnutí týdne | ✅ |
-| 25 | Žebříček — skákal samotný plamínek | ⏳ **příčina nalezena porovnáním snímků videa: plamínek neměnil pozici, ale VELIKOST** — Safari SVG po překreslení znovu rastrizuje. Plamínek je teď rastrový obrázek, který se přerastrizovat nemůže |
-| 26 | Návyky — vybraný den výrazněji; tečky u týdenního cíle nejdou proklikávat | ✅ |
-| 29 | Přehled — logo Návyků v bublině sladit s novými prstenci | 🔧 až Marek odsouhlasí prstence (bod 22) |
-| 27 | **Systémová oprava:** 60 měření DOM ve 20 funkcích, 9 z nich běží při vykreslení — zdroj celé třídy bugů | 🔧 Marek schválil, dělá se |
+| # | Název | Kde | Stav |
+|---|---|---|---|
+| 1 | Animace přepnutí filtru žebříčku | Přehled | ✅ |
+| 2 | Rádiusy u krajních filtrů | Přehled | ✅ |
+| 3 | Čtverečky dnů jsou opravdu čtverce | Přehled, horní karta | ✅ |
+| 4 | Ukázkový týden natvrdo v appce | Přehled, horní karta | 🅼 odsouhlasit, pak vrátím reálná data |
+| 5 | Sloupce dnů — tmavší hrana, strop, plusko | Přehled, horní karta | ⏳ |
+| 6 | Viditelnost výplně koleček | Návyky | ✅ |
+| 7 | Prstenec — hladký oblouk a gradient | Návyky | ✅ |
+| 8 | Velikost koleček | Návyky | ✅ |
+| 9 | Mezera pod kolečky | Návyky | ✅ |
+| 10 | Tlačítko Dnes u data | Návyky | ✅ |
+| 11 | Proužek dnů Po–Ne u týdenního cíle | Návyky | ✅ |
+| 12 | Měřitelné návyky klikem a podržením | Návyky | ✅ |
+| 13 | Nahrazení návyku z přebytku | Návyky | ✅ migrace na TEST DB hotová |
+| 14 | Světlý pruh u pravého okraje | Tmavý režim | ✅ |
+| 15 | Vycentrování aplikace | Celá appka | ✅ |
+| 16 | Výběr aktivity v tmavém režimu | Zelené plus | ✅ |
+| 17 | Plusko ve spodní liště na střed | Spodní lišta | ✅ |
+| 18 | Bublina Návyky — číslo, šipka, logo | Přehled | ✅ |
+| 19 | Obrazovka Historie výkonu | Nová obrazovka | 🔧 mockup hotový, staví se do appky |
+| 20 | Ikony jako textové znaky → SVG | Celá appka | ✅ |
+| 21 | Seznam skákal při přepnutí dne | Návyky | ✅ |
+| 22 | Barva prstence podle plnění | Návyky, kolečka dnů | ⏳ |
+| 23 | Hlavička bez iniciál, fialová série | Návyky | ✅ |
+| 24 | Poskakování prstenců při přepnutí týdne | Návyky | ✅ |
+| 25 | Plamínky se ořezávaly a skákaly | Žebříček | ✅ |
+| 26 | Označení vybraného dne | Návyky | ✅ |
+| 27 | Systémová oprava měření rozměrů | Celá appka | 🔧 zdroj většiny bugů, 60 míst v kódu |
+| 28 | Mezera mezi prstenci a datem | Návyky | ✅ |
+| 29 | Logo Návyků a bubliny se sérií | Přehled + Návyky | ⏳ |
+| 30 | Řádek nad kolečky — datum, W35, šipky, Dnes | Návyky | ⏳ |
+| 31 | Budoucí dny nejdou odškrtnout | Návyky | ⏳ |
+| 32 | Další nápady na prstenec — mockup | Návyky | 🔧 |
 
 
 ## ⏸️ Rozdělané (schválně odloženo)
