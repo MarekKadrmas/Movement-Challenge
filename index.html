@@ -2694,6 +2694,13 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .fdcoms{margin-top:10px;border-top:1px solid var(--sep);padding-top:9px;display:flex;flex-direction:column;gap:6px;}
 .mm .fdcom{font-size:14.48px;}
 .mm .fdcom b{color:var(--label);}
+/* F59 (ukol 36): akce Upravit / Smazat v rozbalenem radku zaznamu */
+.mm .zakce{display:flex;gap:6px;margin:0 0 7px;}
+.mm .zak{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:5px;border:0;cursor:pointer;font-family:inherit;font-size:11.4px;font-weight:800;letter-spacing:-.01em;color:var(--sec);background:var(--track);border-radius:10px;padding:7px 10px;-webkit-tap-highlight-color:transparent;transition:background .16s ease,color .16s ease;}
+.mm .zak .i{width:12.5px;height:12.5px;stroke-width:2.2;}
+.mm .zak:active{background:color-mix(in srgb,var(--sec) 16%,transparent);}
+.mm .zak.zsmaz{color:#C4483C;background:color-mix(in srgb,#C4483C 10%,transparent);}
+.mm .zak.zsmaz:active{background:color-mix(in srgb,#C4483C 20%,transparent);}
 .mm .fdadd{font-size:14.48px;color:var(--ter);background:var(--track);border-radius:999px;padding:7px 13px;margin-top:3px;}
 .mm .rwbar{display:flex;align-items:center;justify-content:space-between;padding:9px 18px;border-radius:999px;margin-top:11px;border:1.5px solid transparent;background-image:linear-gradient(var(--card),var(--card)),linear-gradient(115deg,#D6A23A,#0FA968,#3FAEC2,#8A7BCB);background-origin:border-box;background-clip:padding-box,border-box;}
 .mm .rwbar span{font-size:14.48px;font-weight:700;color:var(--sec);}
@@ -2865,7 +2872,7 @@ body.mm-full{background:var(--bg);padding-bottom:0;}
 <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20.3S3.8 15 3.8 9.2A4.2 4.2 0 0 1 12 6.8a4.2 4.2 0 0 1 8.2 2.4C20.2 15 12 20.3 12 20.3Z" fill="currentColor" fill-opacity=".2"/></symbol>
 <symbol id="i-clap" viewBox="0 0 24 24"><path d="M11 8.5 8.8 4.8a1.4 1.4 0 0 1 2.4-1.4L13 6"/><path d="M8.3 8.2 7 6a1.4 1.4 0 0 1 2.4-1.4l1.8 3"/><path d="M7.5 20.5a5.5 5.5 0 0 1-1.8-3l-1.4-4a1.4 1.4 0 0 1 2.5-1.2l1 1.8"/><path d="M14.5 20.5c3-1 4.7-3.8 4-7l-.9-4a1.4 1.4 0 0 0-2.7.5l-.6 2.4"/></symbol>
 <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6.5 9.2 17 4 11.8"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol><symbol id="i-chev" viewBox="0 0 24 24"><path d="M14.5 5.5 8 12l6.5 6.5"/></symbol>
-<symbol id="i-edit" viewBox="0 0 24 24"><path d="M12.5 20H21"/><path d="M16.5 3.6a2.1 2.1 0 0 1 3 3L7.4 18.7 3.5 20l1.3-3.9Z"/></symbol>
+<symbol id="i-edit" viewBox="0 0 24 24"><path d="M12.5 20H21"/><path d="M16.5 3.6a2.1 2.1 0 0 1 3 3L7.4 18.7 3.5 20l1.3-3.9Z"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 6.5h16"/><path d="M9.5 6.5V4.6a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v1.9"/><path d="M6.4 6.5 7.3 19a1.4 1.4 0 0 0 1.4 1.3h6.6a1.4 1.4 0 0 0 1.4-1.3l.9-12.5"/><path d="M10.4 10.2v6.2"/><path d="M13.6 10.2v6.2"/></symbol>
 <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/></symbol>
 <symbol id="i-comment" viewBox="0 0 24 24"><path d="M20.5 12a8 8 0 0 1-11.3 7.3L4 20.5l1.2-5.2A8 8 0 1 1 20.5 12Z"/></symbol>
 <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 4v16h16"/><path d="m7.5 14.5 3-3 2.5 2 4.5-5.5"/></symbol>
@@ -3466,6 +3473,13 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
   .hlkoms{position:relative;padding:9px 12px 11px 41px;display:flex;flex-direction:column;gap:6px;}
   .hlkoms:not(:last-child)::after{content:"";position:absolute;left:40px;right:0;bottom:0;height:1px;background:var(--sep);}
   .hlkoms .fdadd{margin-top:3px;}
+/* F59 (ukol 36): akce Upravit / Smazat v rozbalenem radku zaznamu */
+  .zakce{display:flex;gap:6px;margin:0 0 7px;}
+  .zak{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:5px;border:0;cursor:pointer;font-family:inherit;font-size:11.4px;font-weight:800;letter-spacing:-.01em;color:var(--sec);background:var(--track);border-radius:10px;padding:7px 10px;-webkit-tap-highlight-color:transparent;transition:background .16s ease,color .16s ease;}
+  .zak .i{width:12.5px;height:12.5px;stroke-width:2.2;}
+  .zak:active{background:color-mix(in srgb,var(--sec) 16%,transparent);}
+  .zak.zsmaz{color:#C4483C;background:color-mix(in srgb,#C4483C 10%,transparent);}
+  .zak.zsmaz:active{background:color-mix(in srgb,#C4483C 20%,transparent);}
   /* Přehled (2026-08-18 redesign): sekce DĚNÍ — .deni je jediný obal, aby se přestylování
      NEDOTKLO ostatních ploch se stejnými třídami (.frow/.rec na Historii party a ve Feedu).
      Den = jemný uppercase oddělovač s linkou (.fday), řádek = avatar · Jméno tučně + co dělal
@@ -10443,9 +10457,42 @@ function mmFeedKomListHtml(id){
   return `<div class="komlist" data-komlist data-n="${koms.length}">${koms.map(k=>`<div class="fdcom"><b style="color:${mmKomBarva(k)}">${esc(k.jmeno)}:</b> ${esc(k.text)}${k.ikona?` <svg class="i"><use href="#${k.ikona}"/></svg>`:''}</div>`).join('')}</div>`;
 }
 // Rozbalený blok komentářů: ctx 'feed' → .fdcoms uvnitř karty, ctx 'dnesek' → .hlkoms jako sourozenec POD .hlr řádkem.
+// ---- F59 (ukol 36): Upravit / Smazat zaznam primo z rozbaleneho radku ----
+// Radky zaznamu maji id ve tvaru "e:<uuid>". Backend (openEditModal / deleteEntry) uz existoval,
+// jen z noveho UI k nemu nevedla zadna cesta — sla jen stara light-DOM appka.
+function mmZazNajdi(id){
+  if(!/^e:/.test(String(id||''))) return null;
+  const eid=String(id).slice(2);
+  const c=(state.cviky||[]).find(x=>String(x.id)===eid);
+  if(c) return {e:c, id:eid, typ:'cvik'};
+  const a=(state.aktivity||[]).find(x=>String(x.id)===eid);
+  if(a) return {e:a, id:eid, typ:'aktivita'};
+  return null;
+}
+function mmZazAkceHtml(id){
+  const z=mmZazNajdi(id); if(!z) return '';
+  if(typeof canEditEntry==='function' && !canEditEntry(z.e)) return '';
+  return `<div class="zakce">`
+    + `<button type="button" class="zak" onclick="mmZazUprav(event,&#39;${z.id}&#39;,&#39;${z.typ}&#39;)"><svg class="i"><use href="#i-edit"/></svg>Upravit</button>`
+    + `<button type="button" class="zak zsmaz" onclick="mmZazSmaz(event,&#39;${z.id}&#39;,&#39;${z.typ}&#39;)"><svg class="i"><use href="#i-trash"/></svg>Smazat</button>`
+    + `</div>`;
+}
+function mmZazUprav(ev, eid, typ){
+  if(ev){ ev.preventDefault(); ev.stopPropagation(); }
+  if(typeof demoGuard==='function' && demoGuard()) return;
+  openEditModal(eid, typ);
+}
+async function mmZazSmaz(ev, eid, typ){
+  if(ev){ ev.preventDefault(); ev.stopPropagation(); }
+  if(typeof demoGuard==='function' && demoGuard()) return;
+  const z=mmZazNajdi('e:'+eid); if(!z) return;
+  const co=(typeof mmEntryLabel==='function') ? mmEntryLabel(z.e) : 'tento záznam';
+  if(!confirm(`Smazat záznam „${co}“?`)) return;
+  await deleteEntry(eid, typ);
+}
 function mmFeedKomsHtml(id, ctx){
   const cls=(ctx==='dnesek'||ctx==='prehled')?'hlkoms':'fdcoms';   // Prehled/DENI = radkovy seznam, ne karta
-  return `<div class="${cls}" data-koms="${id}">${mmFeedKomListHtml(id)}<div class="fdadd"><input type="text" placeholder="Napiš komentář…" maxlength="200" data-mmfeed="${id}" onkeydown="mmFeedKey(event,'${id}','${ctx}')"></div></div>`;
+  return `<div class="${cls}" data-koms="${id}">${mmZazAkceHtml(id)}${mmFeedKomListHtml(id)}<div class="fdadd"><input type="text" placeholder="Napiš komentář…" maxlength="200" data-mmfeed="${id}" onkeydown="mmFeedKey(event,'${id}','${ctx}')"></div></div>`;
 }
 // Dnešek: uvede DOM feedu v shadow rootu do souladu se state.mmFeed PŘÍMO (bez full re-renderu → memo-mount
 // host._mmTpl zůstává platný). Idempotentní: volá se po mountu, při memo-hitu i po každé interakci.
