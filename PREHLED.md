@@ -56,7 +56,7 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 34 | Bublina série — vůle nad lištou a posun doleva | Přehled, žebříček | ✅ |
 | 35 | Barevné odlišení hráčů v žebříčku | Přehled, žebříček | ✅ |
 | 36 | Úprava a mazání záznamu — široké akce v řádku | Já, Dění, Záznamy | 📱 |
-| 37 | Admin kolečko — plovoucí vpravo u pluska | Přehled, u spodní lišty | 📱 |
+| 37 | Admin kolečko — plovoucí vpravo u pluska | vpravo od spodní lišty | ✅ |
 | 38 | Maximálky — nejtěžší váha na cvik | Rekordy | ⏳ |
 | 39 | Rekordy pro všechny cviky, ne jen 4 | Rekordy | ⏳ |
 | 40 | Úprava návyku — přestavba do designu appky | Návyky | 📱 |
@@ -87,8 +87,10 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 65 | Tréninkový a protahovací deník | Add-on | 🆕 |
 | 66 | Flashcards | Add-on | 🆕 |
 | 67 | Logo návyků podle progresu + dvě řady čárek | Přehled → bublina „Návyky dnes" | 📱 |
-| 68 | Crash „Moje záznamy" a detailu dne | Já → Moje záznamy; Přehled → kalendář → den | 📱 |
+| 68 | Crash „Moje záznamy" a detailu dne | Já → Moje záznamy | 📱 |
 | 69 | Nástěnka — všechny obrazovky vedle sebe na PC | na PC: adresa appky + `/nastenka.html` | 📱 |
+| 70 | Detail dne — nevedlo k němu žádné tlačítko | Přehled → Kalendář aktivity → ťukni na čtvereček | 📱 |
+| 71 | Stránky šly scrollovat do nekonečna | Celá appka | 📱 |
 
 
 

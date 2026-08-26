@@ -2713,8 +2713,8 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .fdcom{font-size:14.48px;}
 .mm .fdcom b{color:var(--label);}
 /* F59 (ukol 36): akce Upravit / Smazat v rozbalenem radku zaznamu */
-.mm .zakce{display:flex;gap:6px;margin:0 0 1px 4px;}
-.hlkoms:has(.zakce){padding-top:2px;}
+.mm .zakce{display:flex;gap:6px;margin:-2px 0 1px 4px;}
+.hlkoms:has(.zakce){padding-top:0;}
 .mm .zak{flex:1 1 0;display:inline-flex;align-items:center;justify-content:center;gap:5px;border:1px solid var(--sep);cursor:pointer;font-family:inherit;font-size:10.4px;font-weight:800;letter-spacing:-.01em;color:var(--sec);background:transparent;border-radius:999px;padding:4.5px 11px 4.5px 9px;-webkit-tap-highlight-color:transparent;transition:background .16s ease,color .16s ease,border-color .16s ease;}
 .mm .zak .i{width:11.5px;height:11.5px;stroke-width:2.3;opacity:.85;}
 .mm .zak:active{background:color-mix(in srgb,var(--sec) 12%,transparent);}
@@ -3549,8 +3549,8 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
   .zkav.on>em{color:var(--zc);font-weight:900;}
   .zkav:active{background:color-mix(in srgb,var(--sec) 12%,transparent);}
 /* F59 (ukol 36): akce Upravit / Smazat v rozbalenem radku zaznamu */
-  .zakce{display:flex;gap:6px;margin:0 0 1px 4px;}
-.hlkoms:has(.zakce){padding-top:2px;}
+  .zakce{display:flex;gap:6px;margin:-2px 0 1px 4px;}
+.hlkoms:has(.zakce){padding-top:0;}
   .zak{flex:1 1 0;display:inline-flex;align-items:center;justify-content:center;gap:5px;border:1px solid var(--sep);cursor:pointer;font-family:inherit;font-size:10.4px;font-weight:800;letter-spacing:-.01em;color:var(--sec);background:transparent;border-radius:999px;padding:4.5px 11px 4.5px 9px;-webkit-tap-highlight-color:transparent;transition:background .16s ease,color .16s ease,border-color .16s ease;}
   .zak .i{width:11.5px;height:11.5px;stroke-width:2.3;opacity:.85;}
   .zak:active{background:color-mix(in srgb,var(--sec) 12%,transparent);}
@@ -6715,6 +6715,10 @@ function mmAdminFloat(){
     obal = document.createElement('div');
     obal.id = 'mm-admin-float';
     obal.className = 'mm';
+    // Obal MUSI mit nulovou stopu: trida .mm nese vysku cele appky, takze
+    // v toku <body> pridal celou dalsi stranku a vsechno slo scrollovat
+    // do prazdna (Marek 26. 8.). Fixed potomek se stejne pozicuje k oknu.
+    obal.style.cssText = 'position:fixed;left:0;top:0;width:0;height:0;min-height:0;padding:0;margin:0;overflow:visible;';
     document.body.appendChild(obal);
   }
   obal.innerHTML = html;
@@ -6883,7 +6887,7 @@ function renderDnesek(){
   mmDeniBindReakce(sh, host);
   mmPsegAnim(sh);
   mmLbarAlign(sh);
-  mmHeatInit(sh);
+  mmHeatInit(sh); mmHeatDenBind(sh);   // ukol 70: proklik na detail dne
   // Po usazeni layoutu (fonty/iOS text-size-adjust) dorovnej pilulku filtru i indikator
   // spodniho baru — mmBarPos jinak bezi jen z mmGo, takze po re-renderu bez navigace
   // zustala zelena pilulka baru na levem okraji (Marek 2026-08-18).
@@ -7145,7 +7149,11 @@ function mmPartaHeatHtml(){
         let lv=0; if(v>0){ const r=v/max; lv=r>0.66?3:(r>0.33?2:1); }
         const op=[0,.3,.55,.8][lv];
         const budouci=c.ds>tds;   // dny do konce tydne, ktere jeste nebyly
-        cells+='<i class="'+(budouci?'hfut':'')+'" style="background:'+(lv?col+Math.round(op*255).toString(16).padStart(2,'0'):'var(--track)')+'"></i>';
+        // Ukol 70: detail dne byl hotovy, ale nevedlo k nemu zadne tlacitko — otevreme ho
+        // z kalendare. Budouci dny nemaji co ukazat, ty zustavaji bez akce.
+        const akce = budouci ? '' : ' data-den="'+p.id+'|'+c.ds+'"';
+        const kurzor = budouci ? '' : ';cursor:pointer';
+        cells+='<i class="'+(budouci?'hfut':'')+'"'+akce+' style="background:'+(lv?col+Math.round(op*255).toString(16).padStart(2,'0'):'var(--track)')+kurzor+'"></i>';
       });
     });
     const last=(wi===weeks.length-1);
@@ -7167,6 +7175,21 @@ function mmPartaHeatHtml(){
     blocks+='<div class="hweek'+(last?' hwlast':'')+'" data-w0="'+days[0]+'" data-w6="'+days[days.length-1]+'">'+labs+'<div class="hwcells" style="'+gridCols+'" data-w0="'+days[0]+'" data-w6="'+days[days.length-1]+'">'+cells+divs+'</div></div>';
   });
   return '<div class="heathb">'+names+'<div class="heatscroll" data-heatscroll>'+blocks+'</div></div>';
+}
+// Ukol 70: tuknuti na ctverecek v kalendari otevre detail dne. Kalendar se
+// vodorovne tahne, takze klik bereme jen kdyz se prst temer nepohnul.
+function mmHeatDenBind(sh){
+  const sc = sh && sh.querySelector('[data-heatscroll]');
+  if (!sc || sc._mmDenBind) return;
+  sc._mmDenBind = true;
+  let x0 = 0, y0 = 0;
+  sc.addEventListener('pointerdown', e => { x0 = e.clientX; y0 = e.clientY; });
+  sc.addEventListener('click', e => {
+    if (Math.abs(e.clientX - x0) > 6 || Math.abs(e.clientY - y0) > 6) return;   // byl to tah
+    const bunka = e.target.closest('[data-den]');
+    if (!bunka) return;
+    mmOpenSub('den', bunka.getAttribute('data-den'));
+  });
 }
 function mmHeatFmt(ds){ const d=new Date(ds+'T00:00:00'); return d.getDate()+'. '+(d.getMonth()+1)+'.'; }
 function mmHeatLabelsPos(){ /* pozici popisku resi CSS position:sticky */ }
