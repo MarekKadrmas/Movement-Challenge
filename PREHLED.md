@@ -55,11 +55,11 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 33 | Bílý proužek pod posledním řádkem žebříčku | Přehled | ✅ |
 | 34 | Bublina série — vůle nad lištou a posun doleva | Přehled, žebříček | ✅ |
 | 35 | Barevné odlišení hráčů v žebříčku | Přehled, žebříček | ✅ |
-| 36 | Úprava a mazání záznamu přímo v appce | Já, Dění, Záznamy | 📱 |
-| 37 | Admin kolečko s iniciálami + zápis za jiného hráče | Přehled, nahoře | 📱 |
+| 36 | Úprava a mazání záznamu — akce v rozbaleném řádku | Já, Dění, Záznamy | 📱 |
+| 37 | Admin kolečko — plovoucí, nulový vliv na layout | Přehled, u spodní lišty | 📱 |
 | 38 | Maximálky — nejtěžší váha na cvik | Rekordy | ⏳ |
 | 39 | Rekordy pro všechny cviky, ne jen 4 | Rekordy | ⏳ |
-| 40 | Úprava návyku — nový design, odladit chování | Návyky | ⏳ |
+| 40 | Úprava návyku — patička překrývala půlku formuláře | Návyky | 📱 |
 | 41 | Upravit profil — pořád stará modálka | Já → Nastavení | ⏳ |
 | 42 | Emoji reakce se neukládají do DB (komentáře už ano) | Dění v partě | ⏳ |
 | 43 | Notifikace — přepínače nic nedělají | Já → Notifikace | ⏳ |
@@ -72,9 +72,11 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 50 | Vlastní ikony — 103 aktivit sdílí 14 ikon | Celá appka | ⏳ |
 | 51 | Kategorie a ruční řazení návyků | Návyky | ⏳ |
 | 52 | Vypnout demo čísla v hero kartě | Přehled | ⏳ |
+| 53 | Ukotvení spodní lišty | Celá appka | ✅ |
 
 
 ## ⏸️ Rozdělané (schválně odloženo)
+- **Vzhled komentářů** — Marek 26. 8. 2026: „je to nic moc", předělat design
 - **Systém zápisu** — rozhodnout A/B ([mockup](https://claude.ai/code/artifact/f3760cb0-7d1d-4cb7-8c8c-dca2d18f7cfa)), doladit výběr aktivity, kategorie, srdíčko oblíbených
 - **Šablony do gymu** — „Push den / Pull den / Nohy" bez hledání cviků pokaždé
 - **Rozpis cviků ve feedu** — Gym se 3 cviky se v dění ukáže jen jako „Gym"
