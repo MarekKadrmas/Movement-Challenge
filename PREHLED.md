@@ -23,8 +23,8 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 1 | Animace přepnutí filtru žebříčku | Přehled | ✅ |
 | 2 | Rádiusy u krajních filtrů | Přehled | ✅ |
 | 3 | Čtverečky dnů jsou opravdu čtverce | Přehled, horní karta | ✅ |
-| 4 | Ukázkový týden natvrdo v appce | Přehled, horní karta | 🅼 odsouhlasit, pak vrátím reálná data |
-| 5 | Sloupce dnů — tmavší hrana, strop, plusko | Přehled, horní karta | ⏳ |
+| 4 | Ukázkový týden natvrdo v appce | Přehled, horní karta | ✅ vráceno na reálná data |
+| 5 | Sloupce dnů — tmavší hrana, strop, plusko | Přehled, horní karta | ✅ |
 | 6 | Viditelnost výplně koleček | Návyky | ✅ |
 | 7 | Prstenec — hladký oblouk a gradient | Návyky | ✅ |
 | 8 | Velikost koleček | Návyky | ✅ |
@@ -41,16 +41,16 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 19 | Obrazovka Historie výkonu | Nová obrazovka | 🔧 mockup hotový, staví se do appky |
 | 20 | Ikony jako textové znaky → SVG | Celá appka | ✅ |
 | 21 | Seznam skákal při přepnutí dne | Návyky | ✅ |
-| 22 | Barva prstence podle plnění | Návyky, kolečka dnů | ⏳ |
+| 22 | Barva prstence podle plnění | Návyky, kolečka dnů | ✅ kulička se nevrací |
 | 23 | Hlavička bez iniciál, fialová série | Návyky | ✅ |
 | 24 | Poskakování prstenců při přepnutí týdne | Návyky | ✅ |
 | 25 | Plamínky se ořezávaly a skákaly | Žebříček | ✅ |
 | 26 | Označení vybraného dne | Návyky | ✅ |
 | 27 | Systémová oprava měření rozměrů | Celá appka | 🔧 zdroj většiny bugů, 60 míst v kódu |
 | 28 | Mezera mezi prstenci a datem | Návyky | ✅ |
-| 29 | Logo Návyků a bubliny se sérií | Přehled + Návyky | ⏳ |
-| 30 | Řádek nad kolečky — datum, W35, šipky, Dnes | Návyky | ⏳ |
-| 31 | Budoucí dny nejdou odškrtnout | Návyky | ⏳ |
+| 29 | Logo Návyků a bubliny se sérií | Přehled + Návyky | ✅ |
+| 30 | Řádek nad kolečky — datum, W35, šipky, Dnes | Návyky | ⏳ datum má pevný sloupec a je v něm na střed, takže mezery jsou stejné a nic za ním neposkakuje |
+| 31 | Budoucí dny nejdou odškrtnout | Návyky | ✅ |
 | 32 | Další nápady na prstenec — mockup | Návyky | 🔧 |
 
 
