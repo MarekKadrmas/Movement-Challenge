@@ -2262,6 +2262,9 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .body.formb .newbtn{border:0;background:var(--track);color:var(--sec);display:flex;align-items:center;justify-content:center;gap:7px;font-weight:800;padding:11px;}
 .body.formb .newbtn .i{width:13px;height:13px;stroke-width:2.2;}
 .body.formb .fhd{margin-bottom:11px;}
+.kolwrap{position:relative;display:block;}
+.koldn{position:absolute;inset:0;display:grid;place-items:center;font-style:normal;font-size:8.7px;font-weight:900;letter-spacing:-.02em;color:var(--fial);pointer-events:none;}
+.koldn.hot{color:var(--green);}
 .smazbox{display:flex;justify-content:center;margin:10px 0 2px;}
 .smazbox span{font-size:13.28px;font-weight:800;color:var(--red,#E05C5C);padding:8px 16px;border-radius:999px;background:color-mix(in srgb,var(--red,#E05C5C) 10%,transparent);cursor:pointer;}
 .nvk .nrow{display:flex;align-items:center;gap:10px;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:7px 14px 7px 8px;margin-bottom:6px;}
@@ -2713,7 +2716,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .fdcom{font-size:14.48px;}
 .mm .fdcom b{color:var(--label);}
 /* F59 (ukol 36): akce Upravit / Smazat v rozbalenem radku zaznamu */
-.mm .zakce{display:flex;gap:6px;margin:-2px 0 1px 4px;}
+.mm .zakce{display:flex;gap:6px;margin:-7px 0 1px 4px;}
 .hlkoms:has(.zakce){padding-top:0;}
 .mm .zak{flex:1 1 0;display:inline-flex;align-items:center;justify-content:center;gap:5px;border:1px solid var(--sep);cursor:pointer;font-family:inherit;font-size:10.4px;font-weight:800;letter-spacing:-.01em;color:var(--sec);background:transparent;border-radius:999px;padding:4.5px 11px 4.5px 9px;-webkit-tap-highlight-color:transparent;transition:background .16s ease,color .16s ease,border-color .16s ease;}
 .mm .zak .i{width:11.5px;height:11.5px;stroke-width:2.3;opacity:.85;}
@@ -3265,6 +3268,9 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .body.formb .newbtn{border:0;background:var(--track);color:var(--sec);display:flex;align-items:center;justify-content:center;gap:7px;font-weight:800;padding:11px;}
 .body.formb .newbtn .i{width:13px;height:13px;stroke-width:2.2;}
 .body.formb .fhd{margin-bottom:11px;}
+.kolwrap{position:relative;display:block;}
+.koldn{position:absolute;inset:0;display:grid;place-items:center;font-style:normal;font-size:8.7px;font-weight:900;letter-spacing:-.02em;color:var(--fial);pointer-events:none;}
+.koldn.hot{color:var(--green);}
 .smazbox{display:flex;justify-content:center;margin:10px 0 2px;}
 .smazbox span{font-size:13.28px;font-weight:800;color:var(--red,#E05C5C);padding:8px 16px;border-radius:999px;background:color-mix(in srgb,var(--red,#E05C5C) 10%,transparent);cursor:pointer;}
 .nvk .nrow{display:flex;align-items:center;gap:10px;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:7px 14px 7px 8px;margin-bottom:6px;}
@@ -3549,7 +3555,7 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
   .zkav.on>em{color:var(--zc);font-weight:900;}
   .zkav:active{background:color-mix(in srgb,var(--sec) 12%,transparent);}
 /* F59 (ukol 36): akce Upravit / Smazat v rozbalenem radku zaznamu */
-  .zakce{display:flex;gap:6px;margin:-2px 0 1px 4px;}
+  .zakce{display:flex;gap:6px;margin:-7px 0 1px 4px;}
 .hlkoms:has(.zakce){padding-top:0;}
   .zak{flex:1 1 0;display:inline-flex;align-items:center;justify-content:center;gap:5px;border:1px solid var(--sep);cursor:pointer;font-family:inherit;font-size:10.4px;font-weight:800;letter-spacing:-.01em;color:var(--sec);background:transparent;border-radius:999px;padding:4.5px 11px 4.5px 9px;-webkit-tap-highlight-color:transparent;transition:background .16s ease,color .16s ease,border-color .16s ease;}
   .zak .i{width:11.5px;height:11.5px;stroke-width:2.3;opacity:.85;}
@@ -8344,7 +8350,8 @@ function mmHabitDenKolecko(pct, nahr, dnes, vybrany, klic, vzdyFajfka, den){
   const prog=progBarva(Math.min(100, pct+nahr));
   const odR=r-sw/2, doR=r+sw/2;
   const pr0=((odR+sw*0.10)/doR).toFixed(4), pr1=((odR+sw*0.46)/doR).toFixed(4);
-  return '<svg viewBox="0 0 '+s+' '+s+'" style="width:100%;height:auto;display:block">'
+  return (den?'<span class="kolwrap">':'')
+    +'<svg viewBox="0 0 '+s+' '+s+'" style="width:100%;height:auto;display:block">'
     // gradient v souradnicich cele kresby, aby oblouk i kulicka vzorkovaly TOTEZ
     +'<defs><linearGradient id="'+gid+'p" gradientUnits="userSpaceOnUse" x1="'+(s*0.08)+'" y1="0" x2="'+(s*0.92)+'" y2="'+s+'">'
       +'<stop offset="0" style="stop-color:color-mix(in srgb,var(--fial) 34%,#fff)"/>'
@@ -8357,7 +8364,7 @@ function mmHabitDenKolecko(pct, nahr, dnes, vybrany, klic, vzdyFajfka, den){
       +'<stop offset="0" stop-color="#F5BC63"/><stop offset="1" stop-color="#D06E12"/></linearGradient>'
     +'<linearGradient id="'+gid+'v" x1="0" y1="1" x2="1" y2="0">'
       +'<stop offset="0" style="stop-color:color-mix(in srgb,var(--green) 72%,#fff)"/><stop offset="1" style="stop-color:var(--green)"/></linearGradient></defs>'
-    +'<circle cx="'+stred+'" cy="'+stred+'" r="'+(r-sw/2)+'" style="fill:'+(vzdyFajfka&&plny?'color-mix(in srgb,var(--green) 18%,transparent)':'color-mix(in srgb,var(--fial) 11%,transparent)')+'"/>'
+    +'<circle cx="'+stred+'" cy="'+stred+'" r="'+(r-sw/2)+'" style="fill:'+(vzdyFajfka&&plny?'color-mix(in srgb,var(--green) 18%,transparent)':'transparent')+'"/>'
     +'<circle cx="'+stred+'" cy="'+stred+'" r="'+r+'" fill="none" style="stroke:color-mix(in srgb,var(--fial) 20%,var(--track))" stroke-width="'+sw+'"/>'
     +((plny||vzdyFajfka)&&!den?'<path class="fajf" d="M'+(stred-(vzdyFajfka&&!plny?5.6:6.45))+' '+(stred-(vzdyFajfka&&!plny?0.25:0.3))+' l'
       +(vzdyFajfka&&!plny?'4 4 l7.2-7.6':'4.6 4.6 l8.3-8.7')+'" fill="none" style="stroke:'
@@ -8368,10 +8375,11 @@ function mmHabitDenKolecko(pct, nahr, dnes, vybrany, klic, vzdyFajfka, den){
     +(nahr>0 ? oblouk(doP, doN, 'url(#'+gid+'n)', !plny) : '')
     // Ukol 67: zkratka dne uprostred prstence (Marek 26. 8.). Kdyz je den splneny,
     // zezelena stejne jako prstenec — fajfka by se s textem v 34px kolecku prala.
-    +(den ? '<text x="'+stred+'" y="'+stred+'" text-anchor="middle" dominant-baseline="central"'
-        +' style="font-family:inherit;font-size:'+(r*0.62).toFixed(2)+'px;font-weight:900;letter-spacing:-.02em;fill:'
-        +(plny?'var(--green)':'var(--fial)')+'">'+den+'</text>' : '')
-    +'</svg>';
+    +'</svg>'
+    // Ukol 67: popisek dne NENI v SVG — baseline se mezi Chrome a Safari lisi a text
+    // vychazel mimo stred. HTML prvek vystredi CSS grid stejne v obou (Marek 30. 8.).
+    +(den ? '<i class="koldn'+(plny?' hot':'')+'">'+den+'</i>' : '')
+    +(den?'</span>':'');
 }
 
 

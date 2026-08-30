@@ -87,10 +87,10 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 65 | Tréninkový a protahovací deník | Add-on | 🆕 |
 | 66 | Flashcards | Add-on | 🆕 |
 | 67 | Logo návyků podle progresu + dvě řady čárek | Přehled → bublina „Návyky dnes" | 📱 |
-| 68 | Crash „Moje záznamy" a detailu dne | Já → Moje záznamy | 📱 |
+| 68 | Crash „Moje záznamy" a detailu dne | Já → Moje záznamy | ✅ |
 | 69 | Nástěnka — všechny obrazovky vedle sebe na PC | na PC: adresa appky + `/nastenka.html` | 📱 |
-| 70 | Detail dne — nevedlo k němu žádné tlačítko | Přehled → Kalendář aktivity → ťukni na čtvereček | 📱 |
-| 71 | Stránky šly scrollovat do nekonečna | Celá appka | 📱 |
+| 70 | Detail dne — nevedlo k němu žádné tlačítko | Přehled → Kalendář aktivity → ťukni na čtvereček | ✅ |
+| 71 | Stránky šly scrollovat do nekonečna | Celá appka | ✅ |
 
 
 
