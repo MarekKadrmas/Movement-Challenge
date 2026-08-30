@@ -71,7 +71,7 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 49 | Lezení — cesty dotáhnout na úroveň karet cviků | Zápis | ⏳ |
 | 50 | Vlastní ikony — 103 aktivit sdílí 14 ikon | Celá appka | ⏳ |
 | 51 | Kategorie a ruční řazení návyků | Návyky | ⏳ |
-| 52 | Demo — viditelný odznak a vypnutí jedním klepnutím | Nahoře uprostřed, když demo běží | 📱 |
+| 52 | Demo — přepínač v nastavení + odznak když běží | Já → Nastavení → Demo režim | 📱 |
 | 53 | Ukotvení spodní lišty | Celá appka | ✅ |
 | 54 | Vzhled komentářů — předělat design | Dění, Přehled | 📌 |
 | 55 | Animace přehození pořadí hráčů | Přehled, žebříček | 📌 |
