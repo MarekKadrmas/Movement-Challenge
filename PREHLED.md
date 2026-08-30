@@ -57,7 +57,7 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 35 | Barevné odlišení hráčů v žebříčku | Přehled, žebříček | ✅ |
 | 36 | Úprava a mazání záznamu — široké akce v řádku | Já, Dění, Záznamy | 📱 |
 | 37 | Admin kolečko — plovoucí vpravo u pluska | vpravo od spodní lišty | ✅ |
-| 38 | Maximálky — vidět a upravit v appce | Já → Rekordy | 📱 |
+| 38 | Maximálky — vidět a upravit v appce | Já → Rekordy | 🔧 vzhled a funkčnost k přepracování |
 | 39 | Rekordy pro všechny cviky + nejtěžší váha | Já → Rekordy | 📱 |
 | 40 | Úprava návyku — přestavba do designu appky | Návyky | 📱 |
 | 41 | Upravit profil — pořád stará modálka | Já → Nastavení | ⏳ |
@@ -71,7 +71,7 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 49 | Lezení — cesty dotáhnout na úroveň karet cviků | Zápis | ⏳ |
 | 50 | Vlastní ikony — 103 aktivit sdílí 14 ikon | Celá appka | ⏳ |
 | 51 | Kategorie a ruční řazení návyků | Návyky | ⏳ |
-| 52 | Vypnout demo čísla v hero kartě | Přehled | ⏳ |
+| 52 | Vypnout demo čísla v hero kartě | Přehled → horní karta | 📱 |
 | 53 | Ukotvení spodní lišty | Celá appka | ✅ |
 | 54 | Vzhled komentářů — předělat design | Dění, Přehled | 📌 |
 | 55 | Animace přehození pořadí hráčů | Přehled, žebříček | 📌 |
@@ -91,6 +91,8 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 69 | Nástěnka — všechny obrazovky vedle sebe na PC | na PC: adresa appky + `/nastenka.html` | 📱 |
 | 70 | Detail dne — nevedlo k němu žádné tlačítko | Přehled → Kalendář aktivity → ťukni na čtvereček | ✅ |
 | 71 | Stránky šly scrollovat do nekonečna | Celá appka | ✅ |
+| 72 | Bodují cviky, nebo ne? — rozpor v kódu | Zápis cviku, žebříček | ❓ |
+| 73 | Profil — maximálky a rekordy přímo v profilu | Já → Profil | ⏳ |
 
 
 

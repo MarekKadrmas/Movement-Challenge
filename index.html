@@ -2409,10 +2409,11 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .deni .frow:not(.fsub):has(+.fsub)::before{top:calc(50% + 12px);}
 /* Na hranici tonovaneho bloku zadny oddelovac — barevny schod tam uz jeden je (jinak dvojita, ragged hrana) */
 .mm .deni .frow:not(.fsub):has(+.fsub)::after,.mm .deni .fsub:has(+.frow:not(.fsub))::after,.mm .deni .hlkoms.ksub:has(+.frow:not(.fsub))::after{display:none;}
-.mm .deni .hlkoms{padding:6px 12px 9px 43px;gap:4px;}
+.mm .deni .hlkoms{padding:0 12px 8px 43px;gap:2px;}
+.deni .frow:has(+.hlkoms){padding-bottom:1px;}
 .mm .deni .hlkoms.ksub{padding-left:63px;background:color-mix(in srgb,var(--track) 26%,transparent);}
 .mm .deni .hlkoms.ksub::after{left:63px;}
-.mm .deni .komlist{gap:3px;}
+.mm .deni .komlist{gap:1px;}
 .mm .deni .fdcom{font-size:12.84px;line-height:1.42;}
 .mm .deni .fdadd{font-size:12.84px;padding:8px 12px;margin-top:2px;;margin-top:-3px;}   /* padding drzi tap-target inputu >= 40 pt */
 .mm .deni .fempty{padding:19px 14px;text-align:center;font-size:13.88px;font-weight:600;color:var(--ter);}
@@ -3630,10 +3631,11 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
   .deni .frow:not(.fsub):has(+.fsub)::before{top:calc(50% + 12px);}
   /* Na hranici tónovaného bloku žádný oddělovač — barevný schod tam už jeden je (jinak dvojitá, ragged hrana) */
   .deni .frow:not(.fsub):has(+.fsub)::after,.deni .hlkoms.ksub:has(+.frow:not(.fsub))::after{display:none;}
-  .deni .hlkoms{padding:6px 12px 9px 43px;gap:4px;}
+  .deni .hlkoms{padding:0 12px 8px 43px;gap:2px;}
+.deni .frow:has(+.hlkoms){padding-bottom:1px;}
   .deni .hlkoms.ksub{padding-left:63px;background:color-mix(in srgb,var(--track) 26%,transparent);}
   .deni .hlkoms.ksub::after{left:63px;}
-  .deni .komlist{gap:3px;}
+  .deni .komlist{gap:1px;}
   .deni .fdcom{font-size:11.3px;line-height:1.42;}
   .deni .fdadd{font-size:11.3px;padding:8px 12px;margin-top:2px;;margin-top:-3px;}   /* padding drží tap-target inputu >= 40 pt */
   .deni .fempty{padding:19px 14px;text-align:center;font-size:12.21px;font-weight:600;color:var(--ter);}
@@ -7750,7 +7752,7 @@ const MM_CIL_MIN=40, MM_CIL_MAX=400;
 const MM_TYDEN_VYCHOZI = null;
 const MM_TYDEN_UKAZKA = (function(){ try{ const m=location.search.match(/[?&]tyden=([0-9,]+)/);
   return m ? m[1].split(',').map(x=>Number(x)||0).slice(0,7) : MM_TYDEN_VYCHOZI; }catch(_){ return MM_TYDEN_VYCHOZI; } })();
-const MM_UKAZKA_KARTA = true;
+const MM_UKAZKA_KARTA = false;
 const MM_UKAZKA_CIL = 75;    // realny cil v nove skale (nasobek 25)
 const MM_UKAZKA_DNY = [50, 150, 25, 100, 0, 0, 0];   // Po-Ne; vse nasobky 25, Ct = dnesek
 function mmNejdelsiSerie(pid){
@@ -8401,7 +8403,7 @@ function mmHabitDenKolecko(pct, nahr, dnes, vybrany, klic, vzdyFajfka, den){
   const odR=r-sw/2, doR=r+sw/2;
   // Marek 30. 8.: pomer otocen — barva progresu drzi vnitrni DVE tretiny sirky
   // prstence, fialova zustava jen na vnejsi tretine (drive to bylo obracene).
-  const pr0=((odR+sw*0.58)/doR).toFixed(4), pr1=((odR+sw*0.80)/doR).toFixed(4);
+  const pr0=((odR+sw*0.30)/doR).toFixed(4), prS=((odR+sw*0.66)/doR).toFixed(4), pr1=((odR+sw*0.96)/doR).toFixed(4);
   return (den?'<span class="kolwrap">':'')
     +'<svg viewBox="0 0 '+s+' '+s+'" style="width:100%;height:auto;display:block">'
     // gradient v souradnicich cele kresby, aby oblouk i kulicka vzorkovaly TOTEZ
@@ -8411,6 +8413,7 @@ function mmHabitDenKolecko(pct, nahr, dnes, vybrany, klic, vzdyFajfka, den){
       +'<stop offset="1" style="stop-color:color-mix(in srgb,var(--fial2) 58%,#1B0D46)"/></linearGradient>'
     +'<radialGradient id="'+gid+'r" gradientUnits="userSpaceOnUse" cx="'+stred+'" cy="'+stred+'" r="'+doR+'">'
       +'<stop offset="'+pr0+'" stop-color="'+prog+'" stop-opacity="1"/>'
+      +'<stop offset="'+prS+'" stop-color="'+prog+'" stop-opacity="0.62"/>'
       +'<stop offset="'+pr1+'" stop-color="'+prog+'" stop-opacity="0"/></radialGradient>'
     +'<linearGradient id="'+gid+'n" gradientUnits="userSpaceOnUse" x1="'+(s*0.08)+'" y1="0" x2="'+(s*0.92)+'" y2="'+s+'">'
       +'<stop offset="0" stop-color="#F5BC63"/><stop offset="1" stop-color="#D06E12"/></linearGradient>'
@@ -10577,7 +10580,7 @@ function mmMaximalkyHtml(me){
   };
   const chybejici = pole.filter(f => me[f.k] == null || me[f.k] === '').length;
   const pozn = chybejici
-    ? '<div class="maxpozn"><svg class="i"><use href="#i-bolt"/></svg>Doplň si maximálky — počítají se z nich body za cviky.</div>'
+    ? '<div class="maxpozn"><svg class="i"><use href="#i-bolt"/></svg>Doplň si maximálky — jsou to tvoje osobáky.</div>'
     : '';
   return '<div class="sl"><span>Maximálky</span><i class="maxupr" onclick="openPlayerEdit(&#39;'+me.id+'&#39;)">Upravit</i></div>'
     + '<div class="maxkart">' + pole.map(bunka).join('') + '</div>' + pozn;
