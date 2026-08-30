@@ -71,7 +71,7 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 49 | Lezení — cesty dotáhnout na úroveň karet cviků | Zápis | ⏳ |
 | 50 | Vlastní ikony — 103 aktivit sdílí 14 ikon | Celá appka | ⏳ |
 | 51 | Kategorie a ruční řazení návyků | Návyky | ⏳ |
-| 52 | Vypnout demo čísla v hero kartě | Přehled → horní karta | 📱 |
+| 52 | Demo — viditelný odznak a vypnutí jedním klepnutím | Nahoře uprostřed, když demo běží | 📱 |
 | 53 | Ukotvení spodní lišty | Celá appka | ✅ |
 | 54 | Vzhled komentářů — předělat design | Dění, Přehled | 📌 |
 | 55 | Animace přehození pořadí hráčů | Přehled, žebříček | 📌 |
@@ -91,7 +91,7 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 69 | Nástěnka — všechny obrazovky vedle sebe na PC | na PC: adresa appky + `/nastenka.html` | 📱 |
 | 70 | Detail dne — nevedlo k němu žádné tlačítko | Přehled → Kalendář aktivity → ťukni na čtvereček | ✅ |
 | 71 | Stránky šly scrollovat do nekonečna | Celá appka | ✅ |
-| 72 | Bodují cviky, nebo ne? — rozpor v kódu | Zápis cviku, žebříček | ❓ |
+| 72 | Cviky nebodují — podle Bodování 2.0 | Zápis cviku, Dění | 📱 |
 | 73 | Profil — maximálky a rekordy přímo v profilu | Já → Profil | ⏳ |
 
 
