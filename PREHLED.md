@@ -57,8 +57,8 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 35 | Barevné odlišení hráčů v žebříčku | Přehled, žebříček | ✅ |
 | 36 | Úprava a mazání záznamu — široké akce v řádku | Já, Dění, Záznamy | 📱 |
 | 37 | Admin kolečko — plovoucí vpravo u pluska | vpravo od spodní lišty | ✅ |
-| 38 | Maximálky — nejtěžší váha na cvik | Rekordy | ⏳ |
-| 39 | Rekordy pro všechny cviky, ne jen 4 | Rekordy | ⏳ |
+| 38 | Maximálky — vidět a upravit v appce | Já → Rekordy | 📱 |
+| 39 | Rekordy pro všechny cviky + nejtěžší váha | Já → Rekordy | 📱 |
 | 40 | Úprava návyku — přestavba do designu appky | Návyky | 📱 |
 | 41 | Upravit profil — pořád stará modálka | Já → Nastavení | ⏳ |
 | 42 | Emoji reakce se neukládají do DB (komentáře už ano) | Dění v partě | ⏳ |

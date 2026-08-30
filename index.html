@@ -2263,8 +2263,19 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .body.formb .newbtn .i{width:13px;height:13px;stroke-width:2.2;}
 .body.formb .fhd{margin-bottom:11px;}
 .kolwrap{position:relative;display:block;}
-.koldn{position:absolute;inset:0;display:grid;place-items:center;font-style:normal;font-size:8.7px;font-weight:900;letter-spacing:-.02em;color:var(--fial);pointer-events:none;}
+.koldn{position:absolute;inset:0;display:grid;place-items:center;font-style:normal;font-size:8.7px;font-weight:900;letter-spacing:-.02em;color:var(--label);pointer-events:none;}
 .koldn.hot{color:var(--green);}
+/* Ukol 38: karta maximalek na obrazovce Rekordy */
+.maxupr{font-style:normal;font-size:10.4px;font-weight:800;color:var(--green);cursor:pointer;text-transform:none;letter-spacing:0;}
+.maxkart{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;background:var(--card);box-shadow:var(--shadow);border-radius:16px;padding:11px 10px;}
+.maxb{display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 2px;border-radius:11px;background:var(--track);}
+.maxb .maxi{width:19px;height:19px;display:grid;place-items:center;color:var(--sec);}
+.maxb .maxi .i{width:15px;height:15px;stroke-width:2;}
+.maxb b{font-family:var(--font-display);font-size:15.4px;font-weight:900;letter-spacing:-.03em;color:var(--label);line-height:1.1;}
+.maxb em{font-style:normal;font-size:8.6px;font-weight:700;color:var(--ter);}
+.maxb.chybi b{color:var(--ter);}
+.maxpozn{display:flex;align-items:flex-start;gap:6px;margin:8px 3px 2px;font-size:9.8px;line-height:1.45;font-weight:600;color:var(--ter);}
+.maxpozn .i{width:12px;height:12px;flex:0 0 12px;margin-top:1px;color:var(--green);}
 .smazbox{display:flex;justify-content:center;margin:10px 0 2px;}
 .smazbox span{font-size:13.28px;font-weight:800;color:var(--red,#E05C5C);padding:8px 16px;border-radius:999px;background:color-mix(in srgb,var(--red,#E05C5C) 10%,transparent);cursor:pointer;}
 .nvk .nrow{display:flex;align-items:center;gap:10px;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:7px 14px 7px 8px;margin-bottom:6px;}
@@ -2913,7 +2924,7 @@ body.mm-full{background:var(--bg);padding-bottom:0;}
 <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20.3S3.8 15 3.8 9.2A4.2 4.2 0 0 1 12 6.8a4.2 4.2 0 0 1 8.2 2.4C20.2 15 12 20.3 12 20.3Z" fill="currentColor" fill-opacity=".2"/></symbol>
 <symbol id="i-clap" viewBox="0 0 24 24"><path d="M11 8.5 8.8 4.8a1.4 1.4 0 0 1 2.4-1.4L13 6"/><path d="M8.3 8.2 7 6a1.4 1.4 0 0 1 2.4-1.4l1.8 3"/><path d="M7.5 20.5a5.5 5.5 0 0 1-1.8-3l-1.4-4a1.4 1.4 0 0 1 2.5-1.2l1 1.8"/><path d="M14.5 20.5c3-1 4.7-3.8 4-7l-.9-4a1.4 1.4 0 0 0-2.7.5l-.6 2.4"/></symbol>
 <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6.5 9.2 17 4 11.8"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol><symbol id="i-chev" viewBox="0 0 24 24"><path d="M14.5 5.5 8 12l6.5 6.5"/></symbol>
-<symbol id="i-edit" viewBox="0 0 24 24"><path d="M12.5 20H21"/><path d="M16.5 3.6a2.1 2.1 0 0 1 3 3L7.4 18.7 3.5 20l1.3-3.9Z"/></symbol><symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="11.5" height="11.5" rx="2.2"/><path d="M5.6 15H4.9A1.4 1.4 0 0 1 3.5 13.6V4.9A1.4 1.4 0 0 1 4.9 3.5h8.7A1.4 1.4 0 0 1 15 4.9v.7"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 6.5h16"/><path d="M9.5 6.5V4.6a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v1.9"/><path d="M6.4 6.5 7.3 19a1.4 1.4 0 0 0 1.4 1.3h6.6a1.4 1.4 0 0 0 1.4-1.3l.9-12.5"/><path d="M10.4 10.2v6.2"/><path d="M13.6 10.2v6.2"/></symbol>
+<symbol id="i-edit" viewBox="0 0 24 24"><path d="M12.5 20H21"/><path d="M16.5 3.6a2.1 2.1 0 0 1 3 3L7.4 18.7 3.5 20l1.3-3.9Z"/></symbol><symbol id="i-weight" viewBox="0 0 24 24"><path d="M3.2 9.6v4.8"/><path d="M6.2 7.4v9.2"/><path d="M17.8 7.4v9.2"/><path d="M20.8 9.6v4.8"/><path d="M6.2 12h11.6"/></symbol><symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="11.5" height="11.5" rx="2.2"/><path d="M5.6 15H4.9A1.4 1.4 0 0 1 3.5 13.6V4.9A1.4 1.4 0 0 1 4.9 3.5h8.7A1.4 1.4 0 0 1 15 4.9v.7"/></symbol><symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 6.5h16"/><path d="M9.5 6.5V4.6a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v1.9"/><path d="M6.4 6.5 7.3 19a1.4 1.4 0 0 0 1.4 1.3h6.6a1.4 1.4 0 0 0 1.4-1.3l.9-12.5"/><path d="M10.4 10.2v6.2"/><path d="M13.6 10.2v6.2"/></symbol>
 <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/></symbol>
 <symbol id="i-comment" viewBox="0 0 24 24"><path d="M20.5 12a8 8 0 0 1-11.3 7.3L4 20.5l1.2-5.2A8 8 0 1 1 20.5 12Z"/></symbol>
 <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 4v16h16"/><path d="m7.5 14.5 3-3 2.5 2 4.5-5.5"/></symbol>
@@ -3269,8 +3280,19 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .body.formb .newbtn .i{width:13px;height:13px;stroke-width:2.2;}
 .body.formb .fhd{margin-bottom:11px;}
 .kolwrap{position:relative;display:block;}
-.koldn{position:absolute;inset:0;display:grid;place-items:center;font-style:normal;font-size:8.7px;font-weight:900;letter-spacing:-.02em;color:var(--fial);pointer-events:none;}
+.koldn{position:absolute;inset:0;display:grid;place-items:center;font-style:normal;font-size:8.7px;font-weight:900;letter-spacing:-.02em;color:var(--label);pointer-events:none;}
 .koldn.hot{color:var(--green);}
+/* Ukol 38: karta maximalek na obrazovce Rekordy */
+.maxupr{font-style:normal;font-size:10.4px;font-weight:800;color:var(--green);cursor:pointer;text-transform:none;letter-spacing:0;}
+.maxkart{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;background:var(--card);box-shadow:var(--shadow);border-radius:16px;padding:11px 10px;}
+.maxb{display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 2px;border-radius:11px;background:var(--track);}
+.maxb .maxi{width:19px;height:19px;display:grid;place-items:center;color:var(--sec);}
+.maxb .maxi .i{width:15px;height:15px;stroke-width:2;}
+.maxb b{font-family:var(--font-display);font-size:15.4px;font-weight:900;letter-spacing:-.03em;color:var(--label);line-height:1.1;}
+.maxb em{font-style:normal;font-size:8.6px;font-weight:700;color:var(--ter);}
+.maxb.chybi b{color:var(--ter);}
+.maxpozn{display:flex;align-items:flex-start;gap:6px;margin:8px 3px 2px;font-size:9.8px;line-height:1.45;font-weight:600;color:var(--ter);}
+.maxpozn .i{width:12px;height:12px;flex:0 0 12px;margin-top:1px;color:var(--green);}
 .smazbox{display:flex;justify-content:center;margin:10px 0 2px;}
 .smazbox span{font-size:13.28px;font-weight:800;color:var(--red,#E05C5C);padding:8px 16px;border-radius:999px;background:color-mix(in srgb,var(--red,#E05C5C) 10%,transparent);cursor:pointer;}
 .nvk .nrow{display:flex;align-items:center;gap:10px;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:7px 14px 7px 8px;margin-bottom:6px;}
@@ -3532,7 +3554,7 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
   .fdadd input{border:0;outline:0;background:transparent;font:inherit;color:var(--label);width:100%;min-width:0;padding:0;margin:0;} .fdadd input::placeholder{color:var(--ter);opacity:1;}
   .hlr.hlc{cursor:pointer;-webkit-tap-highlight-color:rgba(15,169,104,.12);touch-action:manipulation;padding-top:11px;padding-bottom:11px;}
   .hlr .ctog{margin-left:8px;flex:0 0 auto;font-size:11.15px;font-weight:700;color:var(--sec);letter-spacing:0;}
-  .hlkoms{position:relative;padding:9px 12px 11px 41px;display:flex;flex-direction:column;gap:6px;}
+  .hlkoms{position:relative;padding:1px 12px 11px 41px;display:flex;flex-direction:column;gap:6px;}
   .hlkoms:not(:last-child)::after{content:"";position:absolute;left:40px;right:0;bottom:0;height:1px;background:var(--sep);}
   .hlkoms .fdadd{margin-top:3px;}
 /* F59 (ukol 37): plovouci admin kolecko — position:fixed, NULOVY vliv na layout obsahu */
@@ -5475,32 +5497,60 @@ function longestStreakEver(playerId) {
 // Vraci pole { id, label, value, valueFmt, when } seřazené tak jak chceme zobrazit
 function computePersonalRecords(playerId) {
   const records = [];
+  const moje = state.cviky.filter(c => c.player_id === playerId);
 
-  // 1-4: max ops 1 cviku v 1 dni (per cvik typ)
-  const cvikTypes = [
-    { type: 'Shyby', emoji: '💪', singular: 'shyb' },
-    { type: 'Dřep',  emoji: '🦵', singular: 'dřep' },
-    { type: 'Kliky', emoji: '💥', singular: 'klik' },
-    { type: 'Dipy',  emoji: '🤸', singular: 'dip' }
-  ];
-  for (const ct of cvikTypes) {
-    const perDay = {};
-    state.cviky.filter(c => c.player_id === playerId && c.cvik === ct.type).forEach(c => {
-      const ops = Number(c.opakovani) || 0;
-      perDay[c.datum] = (perDay[c.datum] || 0) + ops;
-    });
-    let maxDay = null, maxOps = 0;
-    for (const [date, ops] of Object.entries(perDay)) {
-      if (ops > maxOps) { maxOps = ops; maxDay = date; }
-    }
-    if (maxOps > 0) {
+  // Ukol 39 (Marek 30. 8.): rekordy uz nejsou natvrdo pro ctyri cviky — projdou se
+  // vsechny cviky, ktere hrac skutecne zapsal. Ukol 38: k nim pribyla maximalka,
+  // tedy nejtezsi vaha na dane cviceni (vahu jsi do zapisu zadaval, ale nikde se
+  // neukazovala).
+  const druhy = [...new Set(moje.map(c => c.cvik).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'cs'));
+  for (const druh of druhy) {
+    const rady = moje.filter(c => c.cvik === druh);
+    const maly = druh.toLowerCase();
+
+    // nejvic opakovani za jeden den
+    const zaDen = {};
+    rady.forEach(c => { zaDen[c.datum] = (zaDen[c.datum] || 0) + (Number(c.opakovani) || 0); });
+    let denMax = null, opsMax = 0;
+    for (const [d, o] of Object.entries(zaDen)) if (o > opsMax) { opsMax = o; denMax = d; }
+    if (opsMax > 0) {
       records.push({
-        id: `most_${ct.type.toLowerCase()}_day`,
-        emoji: ct.emoji,
-        label: `Nejvíc ${ct.type.toLowerCase()} v jeden den`,
-        value: maxOps,
-        valueFmt: `${maxOps}× ${ct.type.toLowerCase()}`,
-        when: maxDay
+        id: 'most_' + maly + '_day',
+        label: 'Nejvíc ' + maly + ' v jeden den',
+        value: opsMax,
+        valueFmt: opsMax + '× ' + maly,
+        when: denMax,
+        cvik: druh
+      });
+    }
+
+    // maximalka — nejtezsi zvednuta vaha
+    let vahaMax = 0, vahaDen = null, vahaOps = 0;
+    rady.forEach(c => {
+      const v = Number(c.pridana_vaha) || 0;
+      if (v > vahaMax) { vahaMax = v; vahaDen = c.datum; vahaOps = Number(c.opakovani) || 0; }
+      // serie ulozene v poznamce (mode 'same' / 'varied') nesou vlastni vahy
+      if (c.poznamka) {
+        try {
+          const p = JSON.parse(c.poznamka);
+          const kandidati = p && p.mode === 'varied' && Array.isArray(p.list) ? p.list
+                          : (p && p.mode === 'same' ? [{ vaha: p.vaha, op: p.ops }] : []);
+          kandidati.forEach(x => {
+            const vv = Number(x.vaha) || 0;
+            if (vv > vahaMax) { vahaMax = vv; vahaDen = c.datum; vahaOps = Number(x.op) || 0; }
+          });
+        } catch (_) {}
+      }
+    });
+    if (vahaMax > 0) {
+      records.push({
+        id: 'max_vaha_' + maly,
+        label: 'Maximálka — ' + maly,
+        value: vahaMax,
+        valueFmt: vahaMax + ' kg' + (vahaOps ? ' × ' + vahaOps : ''),
+        when: vahaDen,
+        cvik: druh,
+        maximalka: true
       });
     }
   }
@@ -8349,7 +8399,9 @@ function mmHabitDenKolecko(pct, nahr, dnes, vybrany, klic, vzdyFajfka, den){
   // dal fialovou, hrana splynula a barva progresu zmizela (Marek 26. 8.).
   const prog=progBarva(Math.min(100, pct+nahr));
   const odR=r-sw/2, doR=r+sw/2;
-  const pr0=((odR+sw*0.10)/doR).toFixed(4), pr1=((odR+sw*0.46)/doR).toFixed(4);
+  // Marek 30. 8.: pomer otocen — barva progresu drzi vnitrni DVE tretiny sirky
+  // prstence, fialova zustava jen na vnejsi tretine (drive to bylo obracene).
+  const pr0=((odR+sw*0.58)/doR).toFixed(4), pr1=((odR+sw*0.80)/doR).toFixed(4);
   return (den?'<span class="kolwrap">':'')
     +'<svg viewBox="0 0 '+s+' '+s+'" style="width:100%;height:auto;display:block">'
     // gradient v souradnicich cele kresby, aby oblouk i kulicka vzorkovaly TOTEZ
@@ -8856,7 +8908,21 @@ function mmBackHdr(title){
 }
 // Sdilena ikona pro typ osobniho rekordu (renderJaMM badges + renderSubRekordy)
 function mmBadgeIcon(id){
-  return ({ most_shyby_day:'i-pullup', 'most_dřep_day':'i-squat', most_kliky_day:'i-pushup', most_dipy_day:'i-dips', most_points_day:'i-trophy', longest_run:'i-run', longest_streak:'i-flame' })[id] || 'i-medal';
+  const presne = { most_shyby_day:'i-pullup', 'most_dřep_day':'i-squat', most_kliky_day:'i-pushup',
+                   most_dipy_day:'i-dips', most_points_day:'i-trophy', longest_run:'i-run', longest_streak:'i-flame' };
+  if (presne[id]) return presne[id];
+  // Ukol 38/39: rekordy uz vznikaji pro libovolny cvik, takze ikonu odvodime z nazvu.
+  if (/^max_vaha_/.test(id)) return 'i-weight';
+  const n = String(id || '').replace(/^most_|_day$/g, '');
+  if (/shyb|pullup/.test(n)) return 'i-pullup';
+  if (/dřep|drep|squat|nohy/.test(n)) return 'i-squat';
+  if (/klik|pushup|tlak|bench|prsa|hrudn/.test(n)) return 'i-pushup';
+  if (/dip/.test(n)) return 'i-dips';
+  if (/běh|beh|sprint/.test(n)) return 'i-run';
+  if (/plav|swim/.test(n)) return 'i-swim';
+  if (/kolo|cykl|bike/.test(n)) return 'i-bike';
+  if (/břich|brich|plank|sed/.test(n)) return 'i-bolt';
+  return 'i-medal';
 }
 // Datum zaznamu/rekordu -> "dnes" / "včera" / "27. 6." / "27. 6. 2025" (rok jen kdyz ne letos)
 function mmFmtWhen(ds){
@@ -10479,8 +10545,42 @@ function renderSubRekordy(){
     const rows=records.map(r=>`<div class="hlr"><span class="ic" style="background:#E0A23A22;color:#b9701f"><svg class="i"><use href="#${mmBadgeIcon(r.id)}"/></svg></span><div>${esc(r.label)}<small style="display:block;font-size:12.67px;color:var(--sec);font-weight:600">${mmFmtWhen(r.when)}</small></div><b style="margin-left:auto;font-size:15.09px;white-space:nowrap">${esc(r.valueFmt)}</b></div>`).join('');
     body=`<div class="sl"><span>Všechny tvoje osobní rekordy</span></div><div class="hl">${rows}</div>`;
   }
-  const tpl = mmBackHdr('Rekordy') + body;
+  const tpl = mmBackHdr('Rekordy') + mmMaximalkyHtml(me) + body;
   mmMountSub(host, tpl, 2);
+}
+
+// Ukol 38 (Marek 30. 8.): maximalky jsou v DB (max_shyby, max_drep, max_kliky, max_dipy,
+// max_boulder, max_lano) a POHANEJI BODOVANI, ale v nove appce je nebylo kde videt ani
+// nastavit — sly jen ve stare light-DOM kartce hrace.
+function mmMaximalkyHtml(me){
+  if (!me) return '';
+  const pole = [
+    { k:'max_shyby',   n:'Shyby',   ik:'i-pullup', jed:'×' },
+    { k:'max_drep',    n:'Dřep',    ik:'i-squat',  jed:'×' },
+    { k:'max_kliky',   n:'Kliky',   ik:'i-pushup', jed:'×' },
+    { k:'max_dipy',    n:'Dipy',    ik:'i-dips',   jed:'×' },
+    { k:'max_boulder', n:'Boulder', ik:'i-boulder', lez:'boulder' },
+    { k:'max_lano',    n:'Lano',    ik:'i-climb',   lez:'lano' }
+  ];
+  const bunka = f => {
+    const v = me[f.k];
+    let txt = '—';
+    if (v != null && v !== '') {
+      if (f.lez && typeof lezeniRowAt === 'function') {
+        try { const rw = lezeniRowAt(f.lez, v); txt = rw ? (rw[defaultLezeniSys()] || String(v)) : String(v); }
+        catch(_) { txt = String(v); }
+      } else txt = v + (f.jed || '');
+    }
+    const chybi = txt === '—' ? ' chybi' : '';
+    return '<div class="maxb'+chybi+'"><span class="maxi"><svg class="i"><use href="#'+f.ik+'"/></svg></span>'
+      + '<b>'+txt+'</b><em>'+f.n+'</em></div>';
+  };
+  const chybejici = pole.filter(f => me[f.k] == null || me[f.k] === '').length;
+  const pozn = chybejici
+    ? '<div class="maxpozn"><svg class="i"><use href="#i-bolt"/></svg>Doplň si maximálky — počítají se z nich body za cviky.</div>'
+    : '';
+  return '<div class="sl"><span>Maximálky</span><i class="maxupr" onclick="openPlayerEdit(&#39;'+me.id+'&#39;)">Upravit</i></div>'
+    + '<div class="maxkart">' + pole.map(bunka).join('') + '</div>' + pozn;
 }
 
 // ----- Jak se boduje (mockup S.bodovani) — staticke vysvetleni + priklady, s realnymi konstantami kde to jde -----
