@@ -62,7 +62,7 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 40 | Úprava návyku — přestavba do designu appky | Návyky | 📱 |
 | 41 | Upravit profil — pořád stará modálka | Já → Nastavení | ⏳ |
 | 42 | Emoji reakce se neukládají do DB (komentáře už ano) | Dění v partě | ⏳ |
-| 43 | Notifikace — přepínače se pamatují | Já → Nastavení → Notifikace | 📱 |
+| 43 | Notifikace — přepínače se pamatují | Já → Nastavení → Notifikace | ⏸️ na finální polish |
 | 44 | Cíle a ochrana série — skutečná data | Já → Nastavení → Cíle | 📱 |
 | 45 | Pozvat kamaráda — kód z mockupu, sdílení bez akce | Já → Pozvat | ⏳ |
 | 46 | Zápis — výběr aktivity, kategorie, oblíbené | Zápis | ⏳ |
@@ -70,7 +70,7 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 48 | Rozpis cviků ve feedu místo holého „Gym" | Dění v partě | ⏳ |
 | 49 | Lezení — cesty dotáhnout na úroveň karet cviků | Zápis | ⏳ |
 | 50 | Vlastní ikony — 103 aktivit sdílí 14 ikon | Celá appka | ⏳ |
-| 51 | Kategorie a ruční řazení návyků | Návyky | ⏳ |
+| 51 | Řazení návyků pod sebou + pojmenované rozdělovníky | Návyky | 🔨 |
 | 52 | Demo — přepínač v nastavení + odznak když běží | Já → Nastavení → Demo režim | ✅ |
 | 53 | Ukotvení spodní lišty | Celá appka | ✅ |
 | 54 | Vzhled komentářů — předělat design | Dění, Přehled | 📌 |
@@ -94,6 +94,8 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 72 | Cviky nebodují — podle Bodování 2.0 | Zápis cviku, Dění | ✅ |
 | 73 | Profil — maximálky a rekordy přímo v profilu | Já → Profil | ⏳ |
 | 74 | Nabídka Upravit/Smazat — jiné řešení (finální polish) | Dění → rozbalený záznam | 📌 |
+| 75 | Dění — načíst starší období | Přehled → Dění, dole | 📱 |
+| 76 | Denní cíl nastavitelný přímo z Přehledu | Přehled → ťukni na „z 40 b" | 📱 |
 
 
 
