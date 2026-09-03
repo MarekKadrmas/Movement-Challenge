@@ -100,8 +100,9 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 78 | Zelený řádek prvního místa navazuje na filtr | Přehled → žebříček | ✅ |
 | 79 | Zlozvyky nejsou nijak odlišené od návyků | Návyky | ⏳ |
 | 80 | Kolečka návyků měla nerovnoměrnou tloušťku | Návyky → odškrtávací kolečka | ✅ |
-| 81 | Odškrtnutí návyku — prodleva a animace zpět | Návyky | 📱 |
-| 82 | Písmo a ikony poskočily po načtení starších | Přehled → Dění | 📱 |
+| 81 | Odškrtávání návyků — prodleva, animace, spolehlivost | Návyky | 📱 |
+| 82 | Písmo a ikony poskakovaly při animaci | Přehled → Dění | 📱 |
+| 83 | Pulzující kolečko při přepnutí na Návyky | Návyky | 📱 |
 
 
 

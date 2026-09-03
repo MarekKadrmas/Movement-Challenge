@@ -2303,8 +2303,8 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .nvk .nrow.zpet .nchk{animation:mmChkZpet .48s cubic-bezier(.3,.9,.4,1);}
 @keyframes mmChkZpet{0%{transform:scale(1.1)}55%{transform:scale(.88)}100%{transform:scale(1)}}
 /* Ukol 75: nove nactene bloky lehce najedou, at je videt, ze se neco stalo */
-.deni .pblok.nove{animation:mmDeniNajed .5s cubic-bezier(.2,.85,.3,1) both;}
-@keyframes mmDeniNajed{0%{opacity:0;transform:translateY(16px)}100%{opacity:1;transform:none}}
+.deni .pblok.nove{animation:mmDeniNajed .55s ease both;}
+@keyframes mmDeniNajed{from{opacity:0}to{opacity:1}}
 @media (prefers-reduced-motion: reduce){ .deni .pblok.nove{animation:none;} }
 .smazbox{display:flex;justify-content:center;margin:10px 0 2px;}
 .smazbox span{font-size:13.28px;font-weight:800;color:var(--red,#E05C5C);padding:8px 16px;border-radius:999px;background:color-mix(in srgb,var(--red,#E05C5C) 10%,transparent);cursor:pointer;}
@@ -3389,8 +3389,8 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .nvk .nrow.zpet .nchk{animation:mmChkZpet .48s cubic-bezier(.3,.9,.4,1);}
 @keyframes mmChkZpet{0%{transform:scale(1.1)}55%{transform:scale(.88)}100%{transform:scale(1)}}
 /* Ukol 75: nove nactene bloky lehce najedou, at je videt, ze se neco stalo */
-.deni .pblok.nove{animation:mmDeniNajed .5s cubic-bezier(.2,.85,.3,1) both;}
-@keyframes mmDeniNajed{0%{opacity:0;transform:translateY(16px)}100%{opacity:1;transform:none}}
+.deni .pblok.nove{animation:mmDeniNajed .55s ease both;}
+@keyframes mmDeniNajed{from{opacity:0}to{opacity:1}}
 @media (prefers-reduced-motion: reduce){ .deni .pblok.nove{animation:none;} }
 .smazbox{display:flex;justify-content:center;margin:10px 0 2px;}
 .smazbox span{font-size:13.28px;font-weight:800;color:var(--red,#E05C5C);padding:8px 16px;border-radius:999px;background:color-mix(in srgb,var(--red,#E05C5C) 10%,transparent);cursor:pointer;}
@@ -6816,7 +6816,11 @@ function mmBarPos(sh, idx, fromIdx){
   if(svg && fromIdx!=null && fromIdx!==idx){ svg.style.animation='none'; void svg.offsetWidth; svg.style.animation='mm-tabpop .38s cubic-bezier(.34,1.56,.64,1)'; }
 }
 
-function mmGo(v){ if(v==='hraci') v='prehled'; mmCloseSub(); const b=document.querySelector(".tb-btn[data-view=\""+v+"\"]"); if(b){ const prev=(window._mmTabIdx!=null?window._mmTabIdx:null); b.click(); window._mmTabIdx=MM_TAB_IDX[v]; requestAnimationFrame(()=>{ const h=mmBarHost(v); mmBarPos(h&&h.shadowRoot, MM_TAB_IDX[v], prev); mmLbarAlign(h&&h.shadowRoot); if(v==='prehled') mmHeatInit(h&&h.shadowRoot); }); } }
+function mmGo(v){ if(v==='hraci') v='prehled'; mmCloseSub();
+  // Ukol 83 (Marek 3. 9.): priznak animace odskrtnuti nesmi prezit prepnuti obrazovky,
+  // jinak pri prichodu na Navyky pulzne kolecko u navyku, se kterym uzivatel nic nedelal.
+  window._mmNoveId=null; window._mmOdskrtId=null;
+  clearTimeout(window._mmNoveT); clearTimeout(window._mmOdskrtT); const b=document.querySelector(".tb-btn[data-view=\""+v+"\"]"); if(b){ const prev=(window._mmTabIdx!=null?window._mmTabIdx:null); b.click(); window._mmTabIdx=MM_TAB_IDX[v]; requestAnimationFrame(()=>{ const h=mmBarHost(v); mmBarPos(h&&h.shadowRoot, MM_TAB_IDX[v], prev); mmLbarAlign(h&&h.shadowRoot); if(v==='prehled') mmHeatInit(h&&h.shadowRoot); }); } }
 function mmChrome(){ const full=state.view==='prehled'||state.view==='hraci'||state.view==='navyky'||state.view==='historie'; document.body.classList.toggle('mm-full', full); const tb=document.getElementById('mc-tabbar'); if(tb) tb.style.display=full?'none':''; const h=document.querySelector('.header'); if(h) h.style.display=full?'none':''; const f=document.querySelector('.fab-group'); if(f) f.style.display=full?'none':''; }
 function mmFirst(n){ return String(n||'').split(' ')[0]; }
 
@@ -8398,6 +8402,13 @@ function mmHabitDrzeni(sh){
   sh.addEventListener('mousedown', start);
   sh.addEventListener('mouseup', konec);
   sh.addEventListener('mouseleave', ()=>clearTimeout(t), true);
+}
+// Kazdy navyk ma vlastni frontu operaci, aby se rychle klikani neprekryvalo.
+const _mmFronty = {};
+function mmHabitFronta(id, prace){
+  const dalsi = (_mmFronty[id] || Promise.resolve()).then(prace, prace);
+  _mmFronty[id] = dalsi.catch(() => {});
+  return dalsi;
 }
 // Ukol 81: prekresli VSECHNY pohledy vcetne stinove obrazovky Navyku — ta je ta,
 // kterou uzivatel vidi. Drive se volala az po awaitu, takze prodleva zustala.
@@ -12114,25 +12125,26 @@ async function toggleHabitToday(id){
   const z = habitEffZapis(h);
   const existing = habitLogObj(id, pid, sel);
   const isDone = habitIsDoneOn(h, pid, sel);
-  // Ukol 81 (Marek 3. 9.): drive se cekalo na odpoved databaze a AZ POTOM se prekreslilo —
-  // na mobilu z toho byla znatelna prodleva. Ted se stav zmeni hned, zapis jde na pozadi
-  // a kdyz selze, vrati se to zpet a rekne se to.
+  // Ukol 81: zapis jde na pozadi, obrazovka reaguje hned. KAZDY navyk ma vlastni
+  // frontu — bez ni se stavalo, ze rychle odskrtnuti smazalo jeste neulozeny zaznam
+  // s docasnym id, server hlasil chybu a radek se vratil zpet ("nekdy to nejde
+  // odskrtnout", Marek 3. 9.). Skutecne id se navic cte az ve chvili mazani.
   if (isDone){
     if (!existing) return;
     const zaloha = existing;
-    state.habitLogs = state.habitLogs.filter(l => l.id !== existing.id);
-    window._mmOdskrtId = id;                       // pro animaci odskrtnuti
+    state.habitLogs = state.habitLogs.filter(l => l !== existing);
+    window._mmOdskrtId = id;
     clearTimeout(window._mmOdskrtT);
     window._mmOdskrtT = setTimeout(() => { window._mmOdskrtId = null; }, 700);
     mmHabitPrekresli();
-    try {
+    return mmHabitFronta(id, async () => {
+      if (String(zaloha.id).startsWith('tmp-')) return;   // insert neprosel, neni co mazat
       const { error } = await db.from('habit_logs').delete().eq('id', zaloha.id);
-      if (error) throw error;
-    } catch(e){
-      state.habitLogs.push(zaloha); mmHabitPrekresli();
-      toast('Nepovedlo se odškrtnout: ' + e.message, 'error');
-    }
-    return;
+      if (error){
+        state.habitLogs.push(zaloha); mmHabitPrekresli();
+        toast('Nepovedlo se odškrtnout: ' + error.message, 'error');
+      }
+    });
   }
   // u meritelneho s JIZ zadanou castecnou hodnotou -> otevri detail misto prepsani naslepo
   if (z !== 'check' && existing){ openHabitValue(id); return; }
@@ -12140,15 +12152,21 @@ async function toggleHabitToday(id){
   const docasne = { id: 'tmp-' + Math.random().toString(36).slice(2), habit_id: id, player_id: pid, datum: sel, hodnota: full };
   state.habitLogs.push(docasne);
   mmHabitPrekresli();
-  try {
+  return mmHabitFronta(id, async () => {
+    if (!state.habitLogs.includes(docasne)) return;      // mezitim uz zase odskrtnuto
     const { data, error } = await db.from('habit_logs').insert({ habit_id: id, player_id: pid, datum: sel, hodnota: full }).select();
-    if (error) throw error;
-    if (data && data[0]) docasne.id = data[0].id;   // vymen docasne id za skutecne
-  } catch(e){
-    state.habitLogs = state.habitLogs.filter(l => l.id !== docasne.id);
-    mmHabitPrekresli();
-    toast('Nepovedlo se zapsat: ' + e.message, 'error');
-  }
+    if (error){
+      state.habitLogs = state.habitLogs.filter(l => l !== docasne);
+      mmHabitPrekresli();
+      toast('Nepovedlo se zapsat: ' + error.message, 'error');
+      return;
+    }
+    if (data && data[0]) docasne.id = data[0].id;        // docasne id -> skutecne
+    if (!state.habitLogs.includes(docasne) && data && data[0]){
+      // uzivatel stihl odskrtnout driv, nez insert dobehl -> uklidime po sobe
+      try { await db.from('habit_logs').delete().eq('id', data[0].id); } catch(_) {}
+    }
+  });
 }
 // proklik čtverečku ve statistikách (Týden / Měsíc / Rok) → otevře DIALOG na úpravu (check i měřitelný)
 function editHabitCell(id, ds){
