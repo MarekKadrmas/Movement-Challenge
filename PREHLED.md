@@ -94,14 +94,14 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 72 | Cviky nebodují — podle Bodování 2.0 | Zápis cviku, Dění | ✅ |
 | 73 | Profil — maximálky a rekordy přímo v profilu | Já → Profil | ⏳ |
 | 74 | Nabídka Upravit/Smazat — jiné řešení (finální polish) | Dění → rozbalený záznam | 📌 |
-| 75 | Dění — načíst starší i skrýt, s najetím | Přehled → Dění, dole | 📱 |
-| 76 | Denní cíl — pole k přepsání + jasné, že jde kliknout | Přehled → ťukni na „z 40 b" | 📱 |
+| 75 | Dění — načíst starší i skrýt, s najetím | Přehled → Dění, dole | ✅ |
+| 76 | Denní cíl — pole k přepsání, zelená pilulka | Přehled → horní karta | ✅ |
 | 77 | Týdenní přehled bodů v horní kartě | Přehled → horní karta | ✅ |
 | 78 | Zelený řádek prvního místa navazuje na filtr | Přehled → žebříček | ✅ |
 | 79 | Zlozvyky nejsou nijak odlišené od návyků | Návyky | ⏳ |
 | 80 | Kolečka návyků měla nerovnoměrnou tloušťku | Návyky → odškrtávací kolečka | ✅ |
 | 81 | Odškrtnutí návyku — prodleva a animace zpět | Návyky | 📱 |
-| 82 | Písmo poskočilo po načtení starších záznamů | Celá appka | 📱 |
+| 82 | Písmo a ikony poskočily po načtení starších | Přehled → Dění | 📱 |
 
 
 
