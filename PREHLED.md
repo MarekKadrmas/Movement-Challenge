@@ -55,7 +55,7 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 33 | Bílý proužek pod posledním řádkem žebříčku | Přehled | ✅ |
 | 34 | Bublina série — vůle nad lištou a posun doleva | Přehled, žebříček | ✅ |
 | 35 | Barevné odlišení hráčů v žebříčku | Přehled, žebříček | ✅ |
-| 36 | Úprava a mazání záznamu — široké akce v řádku | Já, Dění, Záznamy | 📱 |
+| 36 | Úprava a mazání záznamu — široké akce v řádku | Já, Dění, Záznamy | ✅ |
 | 37 | Admin kolečko — plovoucí vpravo u pluska | vpravo od spodní lišty | ✅ |
 | 38 | Maximálky — vidět a upravit v appce | Já → Rekordy | 🔧 vzhled a funkčnost k přepracování |
 | 39 | Rekordy pro všechny cviky + nejtěžší váha | Já → Rekordy | 📱 |
@@ -63,7 +63,7 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 41 | Upravit profil — pořád stará modálka | Já → Nastavení | ⏳ |
 | 42 | Emoji reakce se neukládají do DB (komentáře už ano) | Dění v partě | ⏳ |
 | 43 | Notifikace — přepínače se pamatují | Já → Nastavení → Notifikace | ⏸️ na finální polish |
-| 44 | Cíle a ochrana série — skutečná data | Já → Nastavení → Cíle | 📱 |
+| 44 | Cíle a ochrana série — skutečná data | Já → Nastavení → Cíle | ✅ |
 | 45 | Pozvat kamaráda — kód z mockupu, sdílení bez akce | Já → Pozvat | ⏳ |
 | 46 | Zápis — výběr aktivity, kategorie, oblíbené | Zápis | ⏳ |
 | 47 | Šablony do gymu (Push / Pull / Nohy) | Zápis | ⏳ |
@@ -94,8 +94,13 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 72 | Cviky nebodují — podle Bodování 2.0 | Zápis cviku, Dění | ✅ |
 | 73 | Profil — maximálky a rekordy přímo v profilu | Já → Profil | ⏳ |
 | 74 | Nabídka Upravit/Smazat — jiné řešení (finální polish) | Dění → rozbalený záznam | 📌 |
-| 75 | Dění — načíst starší období | Přehled → Dění, dole | 📱 |
-| 76 | Denní cíl nastavitelný přímo z Přehledu | Přehled → ťukni na „z 40 b" | 📱 |
+| 75 | Dění — načíst starší období | Přehled → Dění, dole | 📱 bez bubliny |
+| 76 | Denní cíl — vlastní panel místo systémové tabulky | Přehled → ťukni na „z 40 b" | 📱 |
+| 77 | Týdenní přehled bodů v horní kartě | Přehled → horní karta, pod dnešním | 📱 |
+| 78 | Zelený řádek prvního místa navazuje na filtr | Přehled → žebříček, když jsi první | 📱 |
+| 79 | Zlozvyky nejsou nijak odlišené od návyků | Návyky | ⏳ |
+| 80 | Kolečka návyků měla nerovnoměrnou tloušťku | Návyky → odškrtávací kolečka | 📱 |
+| 81 | Odškrtnutí návyku mělo prodlevu | Návyky | 📱 |
 
 
 
