@@ -6820,7 +6820,8 @@ function mmGo(v){ if(v==='hraci') v='prehled'; mmCloseSub();
   // Ukol 83 (Marek 3. 9.): priznak animace odskrtnuti nesmi prezit prepnuti obrazovky,
   // jinak pri prichodu na Navyky pulzne kolecko u navyku, se kterym uzivatel nic nedelal.
   window._mmNoveId=null; window._mmOdskrtId=null;
-  clearTimeout(window._mmNoveT); clearTimeout(window._mmOdskrtT); const b=document.querySelector(".tb-btn[data-view=\""+v+"\"]"); if(b){ const prev=(window._mmTabIdx!=null?window._mmTabIdx:null); b.click(); window._mmTabIdx=MM_TAB_IDX[v]; requestAnimationFrame(()=>{ const h=mmBarHost(v); mmBarPos(h&&h.shadowRoot, MM_TAB_IDX[v], prev); mmLbarAlign(h&&h.shadowRoot); if(v==='prehled') mmHeatInit(h&&h.shadowRoot); }); } }
+  clearTimeout(window._mmNoveT); clearTimeout(window._mmOdskrtT);
+  mmDozenPrekresleni(v); const b=document.querySelector(".tb-btn[data-view=\""+v+"\"]"); if(b){ const prev=(window._mmTabIdx!=null?window._mmTabIdx:null); b.click(); window._mmTabIdx=MM_TAB_IDX[v]; requestAnimationFrame(()=>{ const h=mmBarHost(v); mmBarPos(h&&h.shadowRoot, MM_TAB_IDX[v], prev); mmLbarAlign(h&&h.shadowRoot); if(v==='prehled') mmHeatInit(h&&h.shadowRoot); }); } }
 function mmChrome(){ const full=state.view==='prehled'||state.view==='hraci'||state.view==='navyky'||state.view==='historie'; document.body.classList.toggle('mm-full', full); const tb=document.getElementById('mc-tabbar'); if(tb) tb.style.display=full?'none':''; const h=document.querySelector('.header'); if(h) h.style.display=full?'none':''; const f=document.querySelector('.fab-group'); if(f) f.style.display=full?'none':''; }
 function mmFirst(n){ return String(n||'').split(' ')[0]; }
 
@@ -7042,14 +7043,17 @@ function renderDnesek(){
     <div class="hbm" style="margin-top:6px;padding:6px 12px;cursor:pointer" onclick="mmOpenSub('rekordyparty')"><div class="hi" style="background:#E0A23A22;width:27px;height:27px;font-size:16.9px"><svg class="i"><use href="#i-medal"/></svg></div><div class="ht">Rekordy & maximálky všech<small>všichni hráči na jednom místě</small></div><span class="rx" style="color:var(--ter);font-size:19.31px">›</span></div>`;
   const _mmK=tpl+'|'+(document.documentElement.getAttribute('data-theme')||'light'); if(host._mmTpl===_mmK&&host.shadowRoot){const s=host.shadowRoot.querySelector('.scr'); if(s){const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; s.style.zoom=z; s.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(s,z);} mmDeniApplyFeedState(host.shadowRoot,'prehled'); mmBarSnap(host.shadowRoot,0); mmZnackyCile(host.shadowRoot); mmDeniBindReakce(host.shadowRoot, host); mmPsegAnim(host.shadowRoot); mmPsegPrepocet(host.shadowRoot); mmLbarAlign(host.shadowRoot); mmHeatInit(host.shadowRoot); return;} host._mmTpl=_mmK; const sh=host.shadowRoot||host.attachShadow({mode:'open'});
   const tplEl=document.getElementById('mm-tpl'); const sprite=document.getElementById('momentum-sprite');
+  const _sprStary = sh.querySelector('#momentum-sprite');
+  if (_sprStary) _sprStary.remove();          // ukol 82: sprite prezije prestavbu
   sh.innerHTML='';
+  if (_sprStary) sh.appendChild(_sprStary);
   if(tplEl) sh.appendChild(tplEl.content.cloneNode(true));
   const ov=document.createElement('style');
   /* .lc padding-bottom 5.9px = kompenzace tesnejsiho renderovani pisma na iOS (zmereno z Markova
      screenshotu 2026-07-20: karta zebricku koncila o 7.4pt vys nez v mockup nahledu) — jen Dnesek. */
   ov.textContent=':host{-webkit-text-size-adjust:100%;display:block;font-family:var(--font-ui);font-size:19.31px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:calc(66px + env(safe-area-inset-bottom));}.tb{position:fixed;transform:translateZ(0);will-change:transform;backface-visibility:hidden;}.tbveil{display:block;position:fixed;left:0;right:0;bottom:0;height:14px;background:var(--bg);pointer-events:none;}.nav{position:relative;}.nav .right{position:absolute;right:2px;top:16.5px;}.lc{padding-bottom:0;}'+(document.documentElement.classList.contains('pwa-standalone')?'.nav:not(:has(.date)){padding-top:15px;}':'');
   sh.appendChild(ov);
-  if(sprite) sh.appendChild(sprite.cloneNode(true));
+  if(sprite && !sh.querySelector('#momentum-sprite')) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(0)}</div>`;
   sh.appendChild(w);
   mmSrovnejJmena(sh); const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin='0 auto';
@@ -8208,12 +8212,15 @@ function renderParta(){
 
   const _mmK=tpl+'|'+(document.documentElement.getAttribute('data-theme')||'light'); if(host._mmTpl===_mmK&&host.shadowRoot){const s=host.shadowRoot.querySelector('.scr'); if(s){const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; s.style.zoom=z; s.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(s,z);} mmDeniApplyFeedState(host.shadowRoot, (host.id==='parta-mm'?'parta':'dnesek')); mmLbarAlign(host.shadowRoot); return;} host._mmTpl=_mmK; const sh=host.shadowRoot||host.attachShadow({mode:'open'});
   const tplEl=document.getElementById('mm-tpl'); const sprite=document.getElementById('momentum-sprite');
+  const _sprStary = sh.querySelector('#momentum-sprite');
+  if (_sprStary) _sprStary.remove();          // ukol 82: sprite prezije prestavbu
   sh.innerHTML='';
+  if (_sprStary) sh.appendChild(_sprStary);
   if(tplEl) sh.appendChild(tplEl.content.cloneNode(true));
   const ov=document.createElement('style');
   ov.textContent=':host{-webkit-text-size-adjust:100%;display:block;font-family:var(--font-ui);font-size:19.31px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:calc(66px + env(safe-area-inset-bottom));}.tb{position:fixed;transform:translateZ(0);will-change:transform;backface-visibility:hidden;}.tbveil{display:block;position:fixed;left:0;right:0;bottom:0;height:14px;background:var(--bg);pointer-events:none;}.nav{position:relative;}.nav .right{position:absolute;right:2px;top:16.5px;}'+(document.documentElement.classList.contains('pwa-standalone')?'.nav:not(:has(.date)){padding-top:15px;}':'');
   sh.appendChild(ov);
-  if(sprite) sh.appendChild(sprite.cloneNode(true));
+  if(sprite && !sh.querySelector('#momentum-sprite')) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(1)}</div>`;
   sh.appendChild(w);
   mmSrovnejJmena(sh); const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin='0 auto'; mmDeniApplyFeedState(sh,'parta'); mmPsegAnim(sh); mmLbarAlign(sh); mmHeatInit(sh);
@@ -8413,9 +8420,19 @@ function mmHabitFronta(id, prace){
 // Ukol 81: prekresli VSECHNY pohledy vcetne stinove obrazovky Navyku — ta je ta,
 // kterou uzivatel vidi. Drive se volala az po awaitu, takze prodleva zustala.
 function mmHabitPrekresli(){
-  try { renderNavyky(); } catch(_) {}
-  try { renderNavykyMM(); } catch(_) {}
-  try { renderDnesek(); } catch(_) {}
+  // Prekresluj jen to, co je opravdu videt. Drive se pri kazdem tuknuti stavely
+  // tri shadow DOMy vcetne celeho Prehledu (kalendar, zebricek) — na telefonu se
+  // to scitalo a odskrtavani zacalo drhnout (Marek 3. 9.).
+  const kde = (typeof state !== 'undefined' && state.view) ? state.view : 'navyky';
+  try { renderNavyky(); } catch(_) {}                  // light-DOM protejsek, levny
+  if (kde === 'navyky'){ try { renderNavykyMM(); } catch(_) {} _mmDnesekSpinavy = true; }
+  else { try { renderDnesek(); } catch(_) {} _mmNavykySpinave = true; }
+}
+// Obrazovka, ktera nebyla videt, se dozene az pri prichodu na ni.
+let _mmDnesekSpinavy = false, _mmNavykySpinave = false;
+function mmDozenPrekresleni(v){
+  if (v === 'prehled' && _mmDnesekSpinavy){ _mmDnesekSpinavy = false; try { renderDnesek(); } catch(_) {} }
+  if (v === 'navyky' && _mmNavykySpinave){ _mmNavykySpinave = false; try { renderNavykyMM(); } catch(_) {} }
 }
 async function mmHabitToggle(id){ window._mmNoveId=id; await toggleHabitToday(id); renderNavykyMM();
   clearTimeout(window._mmNoveT); window._mmNoveT=setTimeout(()=>{ window._mmNoveId=null; },700); }
@@ -8885,12 +8902,15 @@ function renderNavykyMM(){
   const tpl=nav+body;
   const _mmK=tpl+'|'+(document.documentElement.getAttribute('data-theme')||'light'); if(host._mmTpl===_mmK&&host.shadowRoot){const s=host.shadowRoot.querySelector('.scr'); if(s){const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; s.style.zoom=z; s.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(s,z);} mmBarSnap(host.shadowRoot,1); return;} host._mmTpl=_mmK; const sh=host.shadowRoot||host.attachShadow({mode:'open'});
   const tplEl=document.getElementById('mm-tpl'); const sprite=document.getElementById('momentum-sprite');
+  const _sprStary = sh.querySelector('#momentum-sprite');
+  if (_sprStary) _sprStary.remove();          // ukol 82: sprite prezije prestavbu
   sh.innerHTML='';
+  if (_sprStary) sh.appendChild(_sprStary);
   if(tplEl) sh.appendChild(tplEl.content.cloneNode(true));
   const ov=document.createElement('style');
   ov.textContent=':host{-webkit-text-size-adjust:100%;display:block;font-family:var(--font-ui);font-size:19.31px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:calc(66px + env(safe-area-inset-bottom));}.tb{position:fixed;transform:translateZ(0);will-change:transform;backface-visibility:hidden;}.tbveil{display:block;position:fixed;left:0;right:0;bottom:0;height:14px;background:var(--bg);pointer-events:none;}.nav{position:relative;}.nav .right{position:absolute;right:2px;top:16.5px;}'+(document.documentElement.classList.contains('pwa-standalone')?'.nav:not(:has(.date)){padding-top:15px;}':'');
   sh.appendChild(ov);
-  if(sprite) sh.appendChild(sprite.cloneNode(true));
+  if(sprite && !sh.querySelector('#momentum-sprite')) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr nvk" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(1)}</div>`;
   sh.appendChild(w);
   mmSrovnejJmena(sh); const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin='0 auto'; mmBarSnap(sh,1); mmHabitSwipe(sh); mmHabitDrzeni(sh); window._mmTydSmer=0;
@@ -9012,12 +9032,15 @@ function renderJaMM(){
   <div class="hl"><div class="hlr"><span class="ic"><svg class="i"><use href="#i-shield"/></svg></span><div>Admin režim<small style="display:block;font-size:12.67px;color:var(--sec);font-weight:600">zapisovat a upravovat za druhé</small></div><div class="sw ${adminOn?'on':''}" onclick="toggleAdminActive()"><i></i></div></div>${(isAdmin()||isAdminDevice()) ? '<div class="hlr"><span class="ic"><svg class="i"><use href="#i-eye"/></svg></span><div>Demo režim<small style="display:block;font-size:12.67px;color:var(--sec);font-weight:600">ukázková data, nic se neukládá</small></div><div class="sw '+(isDemo()?'on':'')+'" onclick="mmDemoPrepni()"><i></i></div></div>' : ''}<div class="hlr" onclick="mmOpenSub('pozvat')"><span class="ic"><svg class="i"><use href="#i-users"/></svg></span><div>Pozvat kamaráda<small style="display:block;font-size:12.67px;color:var(--sec);font-weight:600">vytvoř profil + párovací kód</small></div><span class="rx" style="color:var(--ter);font-size:19.31px">›</span></div><div class="hlr" onclick="mmOpenSub('cile')"><span class="ic"><svg class="i"><use href="#i-target"/></svg></span><div>Cíle & ochrana série</div><span class="rx" style="color:var(--ter);font-size:19.31px">›</span></div><div class="hlr" onclick="openPlayerEdit('${me?me.id:''}')"><span class="ic"><svg class="i"><use href="#i-edit"/></svg></span><div>Upravit profil</div><span class="rx" style="color:var(--ter);font-size:19.31px">›</span></div><div class="hlr" onclick="mmOpenSub('bodovani')"><span class="ic"><svg class="i"><use href="#i-calc"/></svg></span><div>Jak se boduje</div><span class="rx" style="color:var(--ter);font-size:19.31px">›</span></div><div class="hlr" onclick="mmOpenSub('notifikace')"><span class="ic"><svg class="i"><use href="#i-bell"/></svg></span><div>Notifikace</div><span class="rx" style="color:var(--ter);font-size:19.31px">›</span></div><div class="hlr" onclick="logoutPlayer()"><span class="ic"><svg class="i"><use href="#i-logout"/></svg></span><div>Odhlásit se</div><span class="rx" style="color:var(--ter);font-size:19.31px">›</span></div></div>`;
   const _mmK=tpl+'|'+(document.documentElement.getAttribute('data-theme')||'light'); if(host._mmTpl===_mmK&&host.shadowRoot){const s=host.shadowRoot.querySelector('.scr'); if(s){const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; s.style.zoom=z; s.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(s,z);} mmBarSnap(host.shadowRoot,2); return;} host._mmTpl=_mmK; const sh=host.shadowRoot||host.attachShadow({mode:'open'});
   const tplEl=document.getElementById('mm-tpl'); const sprite=document.getElementById('momentum-sprite');
+  const _sprStary = sh.querySelector('#momentum-sprite');
+  if (_sprStary) _sprStary.remove();          // ukol 82: sprite prezije prestavbu
   sh.innerHTML='';
+  if (_sprStary) sh.appendChild(_sprStary);
   if(tplEl) sh.appendChild(tplEl.content.cloneNode(true));
   const ov=document.createElement('style');
   ov.textContent=':host{-webkit-text-size-adjust:100%;display:block;font-family:var(--font-ui);font-size:19.31px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:calc(66px + env(safe-area-inset-bottom));}.tb{position:fixed;transform:translateZ(0);will-change:transform;backface-visibility:hidden;}.tbveil{display:block;position:fixed;left:0;right:0;bottom:0;height:14px;background:var(--bg);pointer-events:none;}.nav{position:relative;}.nav .right{position:absolute;right:2px;top:16.5px;}'+(document.documentElement.classList.contains('pwa-standalone')?'.nav:not(:has(.date)){padding-top:15px;}':'');
   sh.appendChild(ov);
-  if(sprite) sh.appendChild(sprite.cloneNode(true));
+  if(sprite && !sh.querySelector('#momentum-sprite')) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(2)}</div>`;
   sh.appendChild(w);
   mmSrovnejJmena(sh); const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin='0 auto'; mmBarSnap(sh,2);
@@ -9104,12 +9127,15 @@ function mmRecordCountLabel(n){ if(n===1) return 'záznam'; if(n>=2&&n<=4) retur
 function mmMountSub(host, tpl, barIdx){
   const _mmK=tpl+'|'+(document.documentElement.getAttribute('data-theme')||'light'); if(host._mmTpl===_mmK&&host.shadowRoot){const s=host.shadowRoot.querySelector('.scr'); if(s){const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; s.style.zoom=z; s.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(s,z);} return;} host._mmTpl=_mmK; const sh=host.shadowRoot||host.attachShadow({mode:'open'});
   const tplEl=document.getElementById('mm-tpl'); const sprite=document.getElementById('momentum-sprite');
+  const _sprStary = sh.querySelector('#momentum-sprite');
+  if (_sprStary) _sprStary.remove();          // ukol 82: sprite prezije prestavbu
   sh.innerHTML='';
+  if (_sprStary) sh.appendChild(_sprStary);
   if(tplEl) sh.appendChild(tplEl.content.cloneNode(true));
   const ov=document.createElement('style');
   ov.textContent=':host{-webkit-text-size-adjust:100%;display:block;font-family:var(--font-ui);font-size:19.31px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:calc(66px + env(safe-area-inset-bottom));}.tb{position:fixed;transform:translateZ(0);will-change:transform;backface-visibility:hidden;}.tbveil{display:block;position:fixed;left:0;right:0;bottom:0;height:14px;background:var(--bg);pointer-events:none;}.nav{position:relative;}.nav .right{position:absolute;right:2px;top:16.5px;}'+(document.documentElement.classList.contains('pwa-standalone')?'.fhd{padding-top:15px;}':'');
   sh.appendChild(ov);
-  if(sprite) sh.appendChild(sprite.cloneNode(true));
+  if(sprite && !sh.querySelector('#momentum-sprite')) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(barIdx)}</div>`;
   sh.appendChild(w);
   mmSrovnejJmena(sh); const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin='0 auto'; mmBarSnap(sh, barIdx);
@@ -9881,7 +9907,10 @@ function mmMountZapis(){
   const tpl = MM_FORMS[mmZapisTplKey()] || '';
   const sh = host.shadowRoot || host.attachShadow({mode:'open'});
   const tplEl = document.getElementById('mm-tpl'); const sprite = document.getElementById('momentum-sprite');
+  const _sprStary = sh.querySelector('#momentum-sprite');
+  if (_sprStary) _sprStary.remove();          // ukol 82: sprite prezije prestavbu
   sh.innerHTML='';
+  if (_sprStary) sh.appendChild(_sprStary);
   if(tplEl) sh.appendChild(tplEl.content.cloneNode(true));
   const ov = document.createElement('style');
   // Skryj cerveny ramecek "konec displeje" (.scr::before/::after z mockupu) + zplosti scr do formulare.
@@ -9893,7 +9922,7 @@ function mmMountZapis(){
     +'.inpc input::-webkit-outer-spin-button,.inpc input::-webkit-inner-spin-button,.inp input::-webkit-outer-spin-button,.inp input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}'
     +'.inp select{border:0;outline:0;background:transparent;font:inherit;color:var(--label);appearance:none;-webkit-appearance:none;-moz-appearance:none;padding:0;margin:0;}';
   sh.appendChild(ov);
-  if(sprite) sh.appendChild(sprite.cloneNode(true));
+  if(sprite && !sh.querySelector('#momentum-sprite')) sh.appendChild(sprite.cloneNode(true));
   // Sablona MM_FORMS je uz cely `<div class="body formb">…` — jde primo do .scr (bez extra .body, bez tabbaru).
   const w = document.createElement('div');
   w.innerHTML = `<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}">${tpl}</div>`;
