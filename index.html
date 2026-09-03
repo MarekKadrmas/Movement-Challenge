@@ -2276,7 +2276,9 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .maxb.chybi b{color:var(--ter);}
 .maxpozn{display:flex;align-items:flex-start;gap:6px;margin:8px 3px 2px;font-size:9.8px;line-height:1.45;font-weight:600;color:var(--ter);}
 .maxpozn .i{width:12px;height:12px;flex:0 0 12px;margin-top:1px;color:var(--green);}
-.hc-cilk{cursor:pointer;-webkit-tap-highlight-color:transparent;text-decoration:underline;text-decoration-style:dotted;text-decoration-color:color-mix(in srgb,var(--ter) 60%,transparent);text-underline-offset:3px;}
+.hc-cilk{display:inline-flex;align-items:center;gap:3px;cursor:pointer;-webkit-tap-highlight-color:transparent;background:var(--track);border-radius:999px;padding:2px 7px 2px 8px;text-decoration:none;}
+.hc-cilk .i{width:9.5px;height:9.5px;stroke-width:2.4;opacity:.75;}
+.hc-cilk:active{background:color-mix(in srgb,var(--sec) 16%,transparent);}
 .vicdeni{margin:10px 4px 2px;padding:4px;text-align:center;font-size:11.4px;font-weight:800;color:var(--green);cursor:pointer;-webkit-tap-highlight-color:transparent;}
 .vicdeni:active{opacity:.55;}
 /* Ukol 77: tydenni soucet pod dennim — karta se nesmi zvetsit, proto uzsi radek */
@@ -2295,6 +2297,13 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .lcard.ja-prvni .psegt{background:color-mix(in srgb,var(--green) 8%,var(--card));}
 .lcard.ja-prvni .psegt::before{box-shadow:4px 4px 0 4px color-mix(in srgb,var(--green) 8%,var(--card));}
 .lcard.ja-prvni .psegt::after{box-shadow:-4px 4px 0 4px color-mix(in srgb,var(--green) 8%,var(--card));}
+/* Ukol 81: odskrtnuti ma zrcadlovou animaci ke skrtnuti (Marek 3. 9.) */
+.nvk .nrow.zpet .nchk{animation:mmChkZpet .3s cubic-bezier(.3,.9,.4,1);}
+@keyframes mmChkZpet{0%{transform:scale(1.1)}55%{transform:scale(.88)}100%{transform:scale(1)}}
+/* Ukol 75: nove nactene bloky lehce najedou, at je videt, ze se neco stalo */
+.deni .pblok.nove{animation:mmDeniNajed .34s cubic-bezier(.22,.9,.3,1) both;}
+@keyframes mmDeniNajed{0%{opacity:0;transform:translateY(7px)}100%{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){ .deni .pblok.nove{animation:none;} }
 .smazbox{display:flex;justify-content:center;margin:10px 0 2px;}
 .smazbox span{font-size:13.28px;font-weight:800;color:var(--red,#E05C5C);padding:8px 16px;border-radius:999px;background:color-mix(in srgb,var(--red,#E05C5C) 10%,transparent);cursor:pointer;}
 .nvk .nrow{display:flex;align-items:center;gap:10px;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:7px 14px 7px 8px;margin-bottom:6px;}
@@ -2786,16 +2795,17 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 #mm-cil-sheet .cs-uch{width:38px;height:4px;border-radius:999px;background:var(--sep,#DCE1DD);margin:0 auto 12px;}
 #mm-cil-sheet .cs-nad{font-family:var(--font-display,inherit);font-size:21px;font-weight:900;letter-spacing:-.03em;text-align:center;}
 #mm-cil-sheet .cs-pod{font-size:12.6px;font-weight:600;color:var(--ter,#98A29B);text-align:center;margin:2px 0 16px;}
-#mm-cil-sheet .cs-rada{display:flex;align-items:center;justify-content:center;gap:16px;}
-#mm-cil-sheet .cs-kr{width:44px;height:44px;flex:0 0 44px;border:0;border-radius:50%;cursor:pointer;
-  font:inherit;font-size:23px;font-weight:800;line-height:1;color:var(--green,#0FA968);
-  background:color-mix(in srgb,var(--green,#0FA968) 12%,transparent);-webkit-tap-highlight-color:transparent;
-  transition:transform .14s ease,opacity .14s ease;}
-#mm-cil-sheet .cs-kr:active{transform:scale(.92);}
-#mm-cil-sheet .cs-kr:disabled{opacity:.32;cursor:default;}
-#mm-cil-sheet .cs-hod{min-width:118px;text-align:center;}
-#mm-cil-sheet .cs-hod b{display:block;font-family:var(--font-display,inherit);font-size:44px;font-weight:900;letter-spacing:-.05em;line-height:1;font-variant-numeric:tabular-nums;}
-#mm-cil-sheet .cs-hod span{font-size:11.4px;font-weight:700;color:var(--ter,#98A29B);}
+#mm-cil-sheet .cs-pole{display:flex;align-items:baseline;justify-content:center;gap:8px;
+  background:var(--track,#EEF0EE);border-radius:16px;padding:14px 18px;border:2px solid transparent;
+  transition:border-color .16s ease;}
+#mm-cil-sheet .cs-pole.spatne{border-color:#C4483C;}
+#mm-cil-sheet .cs-pole input{width:120px;border:0;background:none;outline:none;text-align:right;
+  font-family:var(--font-display,inherit);font-size:40px;font-weight:900;letter-spacing:-.05em;
+  color:var(--label,#141A16);font-variant-numeric:tabular-nums;-moz-appearance:textfield;}
+#mm-cil-sheet .cs-pole input::-webkit-outer-spin-button,
+#mm-cil-sheet .cs-pole input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+#mm-cil-sheet .cs-pole span{font-size:12.4px;font-weight:700;color:var(--ter,#98A29B);}
+#mm-cil-sheet .cs-ulozit:disabled{opacity:.4;cursor:default;}
 #mm-cil-sheet .cs-tyd{text-align:center;font-size:12.4px;font-weight:700;color:var(--ter,#98A29B);margin:12px 0 16px;}
 #mm-cil-sheet .cs-tyd b{color:var(--sec,#5B6660);font-weight:900;}
 #mm-cil-sheet .cs-rychle{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin-bottom:18px;}
@@ -3350,7 +3360,9 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .maxb.chybi b{color:var(--ter);}
 .maxpozn{display:flex;align-items:flex-start;gap:6px;margin:8px 3px 2px;font-size:9.8px;line-height:1.45;font-weight:600;color:var(--ter);}
 .maxpozn .i{width:12px;height:12px;flex:0 0 12px;margin-top:1px;color:var(--green);}
-.hc-cilk{cursor:pointer;-webkit-tap-highlight-color:transparent;text-decoration:underline;text-decoration-style:dotted;text-decoration-color:color-mix(in srgb,var(--ter) 60%,transparent);text-underline-offset:3px;}
+.hc-cilk{display:inline-flex;align-items:center;gap:3px;cursor:pointer;-webkit-tap-highlight-color:transparent;background:var(--track);border-radius:999px;padding:2px 7px 2px 8px;text-decoration:none;}
+.hc-cilk .i{width:9.5px;height:9.5px;stroke-width:2.4;opacity:.75;}
+.hc-cilk:active{background:color-mix(in srgb,var(--sec) 16%,transparent);}
 .vicdeni{margin:10px 4px 2px;padding:4px;text-align:center;font-size:11.4px;font-weight:800;color:var(--green);cursor:pointer;-webkit-tap-highlight-color:transparent;}
 .vicdeni:active{opacity:.55;}
 /* Ukol 77: tydenni soucet pod dennim — karta se nesmi zvetsit, proto uzsi radek */
@@ -3369,6 +3381,13 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .lcard.ja-prvni .psegt{background:color-mix(in srgb,var(--green) 8%,var(--card));}
 .lcard.ja-prvni .psegt::before{box-shadow:4px 4px 0 4px color-mix(in srgb,var(--green) 8%,var(--card));}
 .lcard.ja-prvni .psegt::after{box-shadow:-4px 4px 0 4px color-mix(in srgb,var(--green) 8%,var(--card));}
+/* Ukol 81: odskrtnuti ma zrcadlovou animaci ke skrtnuti (Marek 3. 9.) */
+.nvk .nrow.zpet .nchk{animation:mmChkZpet .3s cubic-bezier(.3,.9,.4,1);}
+@keyframes mmChkZpet{0%{transform:scale(1.1)}55%{transform:scale(.88)}100%{transform:scale(1)}}
+/* Ukol 75: nove nactene bloky lehce najedou, at je videt, ze se neco stalo */
+.deni .pblok.nove{animation:mmDeniNajed .34s cubic-bezier(.22,.9,.3,1) both;}
+@keyframes mmDeniNajed{0%{opacity:0;transform:translateY(7px)}100%{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){ .deni .pblok.nove{animation:none;} }
 .smazbox{display:flex;justify-content:center;margin:10px 0 2px;}
 .smazbox span{font-size:13.28px;font-weight:800;color:var(--red,#E05C5C);padding:8px 16px;border-radius:999px;background:color-mix(in srgb,var(--red,#E05C5C) 10%,transparent);cursor:pointer;}
 .nvk .nrow{display:flex;align-items:center;gap:10px;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:7px 14px 7px 8px;margin-bottom:6px;}
@@ -7004,7 +7023,7 @@ function renderDnesek(){
   const naleh = zbyvaObd<=H ? ' odp4' : (zbyvaObd<=4*H ? ' odp3' : (zbyvaObd<=12*H ? ' odp2' : (zbyvaObd<=24*H ? ' odp1' : '')));
   // Nadpis zebricku vlevo, odpocet soutezniho obdobi vpravo — stejny vzor jako Kalendar aktivity / Deni.
   const odpocetHtml='<div class="sl slzeb"><span>Žebříček</span><i class="zebodp'+naleh+'">'+odpocetTxt+'</i></div>';
-  const tpl=`<div class="hcard" style="cursor:pointer;touch-action:manipulation" onclick="mmOpenSub('vykon')"><div class="hc-hd"><span class="hc-poz">${mmGreet()}${me?', '+esc(mmVocative(mmFirst(me.jmeno))):''}</span><span class="hc-dat">${dlKratke}</span></div><div class="hc-top">${mSerie>0?'<span class="hc-serie"><svg class="i"><use href="#i-flame"/></svg>'+mSerie+'</span>':''}<span class="hc-rcol"><span class="hc-r">${mTrendHtml}<span class="hc-num">${fmtNum(todayPts)}</span><span class="hc-cil hc-cilk" onclick="event.stopPropagation();mmZmenCil()">z ${fmtNum(mCil)} b</span></span><span class="hc-wk">${(() => { const ct = mCil*7, zb = Math.max(0, ct - tydenPts); return (zb ? `<i>chybí ${fmtNum(zb)} b</i>` : `<i class="ok">splněno</i>`) + `<b>${fmtNum(tydenPts)}</b><em>z ${fmtNum(ct)} b za týden</em>`; })()}</span></span></div><div class="hc-tyden">${mSloupce}</div></div>
+  const tpl=`<div class="hcard" style="cursor:pointer;touch-action:manipulation" onclick="mmOpenSub('vykon')"><div class="hc-hd"><span class="hc-poz">${mmGreet()}${me?', '+esc(mmVocative(mmFirst(me.jmeno))):''}</span><span class="hc-dat">${dlKratke}</span></div><div class="hc-top">${mSerie>0?'<span class="hc-serie"><svg class="i"><use href="#i-flame"/></svg>'+mSerie+'</span>':''}<span class="hc-rcol"><span class="hc-r">${mTrendHtml}<span class="hc-num">${fmtNum(todayPts)}</span><span class="hc-cil hc-cilk" onclick="event.stopPropagation();mmZmenCil()">z ${fmtNum(mCil)} b<svg class="i"><use href="#i-edit"/></svg></span></span><span class="hc-wk">${(() => { const ct = mCil*7, zb = Math.max(0, ct - tydenPts); return (zb ? `<i>chybí ${fmtNum(zb)} b</i>` : `<i class="ok">splněno</i>`) + `<b>${fmtNum(tydenPts)}</b><em>z ${fmtNum(ct)} b za týden</em>`; })()}</span></span></div><div class="hc-tyden">${mSloupce}</div></div>
   <div class="hbm hbnav2" style="margin-top:10px;cursor:pointer" onclick="mmGo('navyky')"><div class="hi hikol nvk">${mmHabitDenKolecko(habTotal?Math.round(habDone/habTotal*100):0,0,false,false,'bub',false,['Po','Út','St','Čt','Pá','So','Ne'][(new Date(todayStr()+'T00:00:00').getDay()+6)%7])}</div><div class="ht">Návyky dnes<span class="hdots" style="--dw:${(()=>{const n=Math.max(1,habTotal);const naRadu=n<=8?n:Math.ceil(n/2);return Math.min(13,(136-(naRadu-1)*2.5)/naRadu).toFixed(2);})()}px">${Array.from({length:habTotal},(_,i)=>'<i'+(i<habDone?' class="on"':'')+'></i>').join('')}</span></div><div class="pct" style="display:flex;align-items:baseline;gap:0;align-self:center;position:relative;top:1px"><b>${habDone}</b><span style="color:var(--ter);font-weight:700;margin-left:1.5px;margin-right:2px">/${habTotal}</span><span class="hbsip"><svg class="i" aria-hidden="true"><use href="#i-chev"/></svg></span></div></div>
   ${odpocetHtml}<div class="lcard${mmPartaZalTrida()}">${mmPartaSegBar()}
   <div class="lc">${rows||'<div style="padding:20px;text-align:center;color:var(--ter)">Zatím žádné body</div>'}</div></div>
@@ -8059,6 +8078,7 @@ window.MM_FEED_VAR = 2;   // varianta 2 (Marek 2026-08-19): bublina s iniciálam
 // a dal se nedalo dostat. Ted se da nacitat do minulosti po peti.
 let mmPrehledBloku = 5;
 function mmPrehledVic(){
+  window._mmDeniOd = mmPrehledBloku;   // od tohoto bloku dal jsou nove -> dostanou animaci
   mmPrehledBloku += 5;
   renderDnesek();
   // po prekresleni drz pohled u tlacitka, at neskocis nahoru
@@ -8098,13 +8118,15 @@ function mmPrehledFeedHtml(){
         const col=safeColor(pl.barva);
         const av='<div class="pav" style="background:linear-gradient(135deg,'+col+'4d,'+col+'12);color:'+col+'">'+esc(initials(pl.jmeno))+'</div>';
         const radky=g.items.map(e=>mmPrehledEntryRow(e,pl,V===2)).join('');
-        if(V===2) return '<div class="pblok v2">'+radky+'</div>';
-        return '<div class="pblok">'+av+'<div class="prows">'+radky+'</div></div>';
+        const jeNovy = (window._mmDeniOd != null && bloky.indexOf(g) >= window._mmDeniOd) ? ' nove' : '';
+        if(V===2) return '<div class="pblok v2'+jeNovy+'">'+radky+'</div>';
+        return '<div class="pblok'+jeNovy+'">'+av+'<div class="prows">'+radky+'</div></div>';
       }).join('')+'</div>';
     }
     dd.evs.forEach(ev=>{ html+='<div class="evb ev-'+(ev.kind||'gold')+'"><span class="ee">'+(ev.ee||'🏅')+'</span><span>'+ev.html+'</span></div>'; });
   });
   if(jesteJsou) html+='<div class="vicdeni" data-vicdeni onclick="mmPrehledVic()">Načíst starší ↓</div>';
+  setTimeout(() => { window._mmDeniOd = null; }, 0);   // animace jen pri tomhle jednom vykresleni
   return html+'</div>';
 }
 function renderParta(){
@@ -8223,7 +8245,8 @@ function mmHabitRowHtml(h, pid, ds){
   const col=safeColor(h.barva);
   const flex=(h.frekvence_typ==='weekly'||h.frekvence_typ==='monthly'||h.frekvence_typ==='yearly');
   const done=flex ? mmHabitDoneToday(h,pid,ds) : habitIsDoneOn(h,pid,ds);
-  const cerstve = (window._mmNoveId===h.id) ? ' just' : '';
+  const cerstve = (window._mmNoveId===h.id) ? ' just'
+    : ((window._mmOdskrtId===h.id) ? ' zpet' : '');
   const budouci = ds > todayStr();
   const nahr = habitNahrazenoOn(h,pid,ds);                       // §13: den dohnaný z přebytku
   const lzeNahr = done ? 0 : habitLzeNahraditDen(h,pid,ds);
@@ -8359,6 +8382,13 @@ function mmHabitDrzeni(sh){
   sh.addEventListener('mousedown', start);
   sh.addEventListener('mouseup', konec);
   sh.addEventListener('mouseleave', ()=>clearTimeout(t), true);
+}
+// Ukol 81: prekresli VSECHNY pohledy vcetne stinove obrazovky Navyku — ta je ta,
+// kterou uzivatel vidi. Drive se volala az po awaitu, takze prodleva zustala.
+function mmHabitPrekresli(){
+  try { renderNavyky(); } catch(_) {}
+  try { renderNavykyMM(); } catch(_) {}
+  try { renderDnesek(); } catch(_) {}
 }
 async function mmHabitToggle(id){ window._mmNoveId=id; await toggleHabitToday(id); renderNavykyMM();
   clearTimeout(window._mmNoveT); window._mmNoveT=setTimeout(()=>{ window._mmNoveId=null; },450); }
@@ -11027,11 +11057,10 @@ function renderSubPozvat(){
 // ukazkova cisla z mockupu. Ted pocita ze skutecnych dat: denni cil (mmDenniCil,
 // medial bodu na aktivni den za 28 dni, prepsatelny) a body za tenhle tyden.
 function mmTydenniCil(pid){ return mmDenniCil(pid) * 7; }
-// Ukol 76 (Marek 3. 9.): misto systemoveho prompt() vlastni panel v designu appky.
+// Ukol 76 (Marek 3. 9.): zadny stepper — proste pole, do ktereho se cislo prepise.
 function mmZmenCil(){
   const pid = state.currentPlayerId; if (!pid) return;
   if (document.getElementById('mm-cil-sheet')) return;
-  let hod = mmDenniCil(pid);
 
   const obal = document.createElement('div');
   obal.id = 'mm-cil-sheet';
@@ -11041,51 +11070,47 @@ function mmZmenCil(){
     +   '<div class="cs-uch"></div>'
     +   '<div class="cs-nad">Denní cíl</div>'
     +   '<div class="cs-pod">Kolik bodů chceš zvládnout každý den</div>'
-    +   '<div class="cs-rada">'
-    +     '<button type="button" class="cs-kr" data-krok="-10" aria-label="Míň">−</button>'
-    +     '<div class="cs-hod"><b>0</b><span>b / den</span></div>'
-    +     '<button type="button" class="cs-kr" data-krok="10" aria-label="Víc">+</button>'
-    +   '</div>'
-    +   '<div class="cs-tyd">za týden <b>0 b</b></div>'
-    +   '<div class="cs-rychle">' + [40,70,100,150,200,280].map(v =>
-          '<button type="button" class="cs-p" data-hod="' + v + '">' + v + '</button>').join('') + '</div>'
+    +   '<div class="cs-pole"><input type="number" inputmode="numeric" min="' + MM_CIL_MIN + '" max="' + MM_CIL_MAX + '" step="1" value="' + mmDenniCil(pid) + '"><span>b / den</span></div>'
+    +   '<div class="cs-tyd">za týden <b></b></div>'
     +   '<button type="button" class="cs-ulozit">Uložit</button>'
     +   '<button type="button" class="cs-zrusit">Zrušit</button>'
     + '</div>';
   document.body.appendChild(obal);
 
-  const bHod = obal.querySelector('.cs-hod b');
+  const pole = obal.querySelector('.cs-pole input');
   const bTyd = obal.querySelector('.cs-tyd b');
-  const kresli = () => {
-    bHod.textContent = fmtNum(hod);
-    bTyd.textContent = fmtNum(hod * 7) + ' b';
-    obal.querySelectorAll('.cs-p').forEach(x => x.classList.toggle('on', Number(x.dataset.hod) === hod));
-    obal.querySelectorAll('.cs-kr').forEach(x => {
-      const c = hod + Number(x.dataset.krok);
-      x.disabled = c < MM_CIL_MIN || c > MM_CIL_MAX;
-    });
+  const platne = () => {
+    const n = Math.round(Number(pole.value));
+    return (n >= MM_CIL_MIN && n <= MM_CIL_MAX) ? n : null;
   };
-  const nastav = v => { hod = Math.min(MM_CIL_MAX, Math.max(MM_CIL_MIN, Math.round(v))); kresli(); };
+  const kresli = () => {
+    const n = platne();
+    bTyd.textContent = n ? (fmtNum(n * 7) + ' b') : '—';
+    obal.querySelector('.cs-ulozit').disabled = !n;
+    obal.querySelector('.cs-pole').classList.toggle('spatne', pole.value !== '' && !n);
+  };
   const zavri = () => { obal.remove(); document.removeEventListener('keydown', naKlavesu); };
-  const naKlavesu = e => { if (e.key === 'Escape') zavri(); };
+  const naKlavesu = e => {
+    if (e.key === 'Escape') zavri();
+    if (e.key === 'Enter' && platne()) uloz();
+  };
+  const uloz = () => {
+    const n = platne(); if (!n) return;
+    try { localStorage.setItem('mc_cil_' + pid + '_' + todayStr().slice(0,7), String(n)); } catch(_) {}
+    zavri();
+    toast('Denní cíl je ' + n + ' b', 'success');
+    renderDnesek();
+    if (typeof mmSubOpen !== 'undefined' && mmSubOpen === 'cile') renderSubCile();
+  };
 
-  obal.querySelectorAll('.cs-kr').forEach(x =>
-    x.addEventListener('click', () => nastav(hod + Number(x.dataset.krok))));
-  obal.querySelectorAll('.cs-p').forEach(x =>
-    x.addEventListener('click', () => nastav(Number(x.dataset.hod))));
+  pole.addEventListener('input', kresli);
+  obal.querySelector('.cs-ulozit').addEventListener('click', uloz);
   obal.querySelector('.cs-zrusit').addEventListener('click', zavri);
   obal.querySelector('.cs-stin').addEventListener('click', zavri);
   document.addEventListener('keydown', naKlavesu);
-  obal.querySelector('.cs-ulozit').addEventListener('click', () => {
-    try { localStorage.setItem('mc_cil_' + pid + '_' + todayStr().slice(0,7), String(hod)); } catch(_) {}
-    zavri();
-    toast('Denní cíl je ' + hod + ' b', 'success');
-    renderDnesek();
-    if (typeof mmSubOpen !== 'undefined' && mmSubOpen === 'cile') renderSubCile();
-  });
 
   kresli();
-  requestAnimationFrame(() => obal.classList.add('je'));
+  requestAnimationFrame(() => { obal.classList.add('je'); pole.focus(); pole.select(); });
 }
 function renderSubCile(){
   const host=document.getElementById('sub-cile'); if(!host) return;
@@ -12064,12 +12089,15 @@ async function toggleHabitToday(id){
     if (!existing) return;
     const zaloha = existing;
     state.habitLogs = state.habitLogs.filter(l => l.id !== existing.id);
-    renderNavyky();
+    window._mmOdskrtId = id;                       // pro animaci odskrtnuti
+    clearTimeout(window._mmOdskrtT);
+    window._mmOdskrtT = setTimeout(() => { window._mmOdskrtId = null; }, 450);
+    mmHabitPrekresli();
     try {
       const { error } = await db.from('habit_logs').delete().eq('id', zaloha.id);
       if (error) throw error;
     } catch(e){
-      state.habitLogs.push(zaloha); renderNavyky();
+      state.habitLogs.push(zaloha); mmHabitPrekresli();
       toast('Nepovedlo se odškrtnout: ' + e.message, 'error');
     }
     return;
@@ -12079,14 +12107,14 @@ async function toggleHabitToday(id){
   const full = z === 'check' ? null : (Number(h.cil_hodnota) || null);
   const docasne = { id: 'tmp-' + Math.random().toString(36).slice(2), habit_id: id, player_id: pid, datum: sel, hodnota: full };
   state.habitLogs.push(docasne);
-  renderNavyky();
+  mmHabitPrekresli();
   try {
     const { data, error } = await db.from('habit_logs').insert({ habit_id: id, player_id: pid, datum: sel, hodnota: full }).select();
     if (error) throw error;
     if (data && data[0]) docasne.id = data[0].id;   // vymen docasne id za skutecne
   } catch(e){
     state.habitLogs = state.habitLogs.filter(l => l.id !== docasne.id);
-    renderNavyky();
+    mmHabitPrekresli();
     toast('Nepovedlo se zapsat: ' + e.message, 'error');
   }
 }

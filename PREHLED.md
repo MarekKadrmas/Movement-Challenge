@@ -94,13 +94,13 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 72 | Cviky nebodují — podle Bodování 2.0 | Zápis cviku, Dění | ✅ |
 | 73 | Profil — maximálky a rekordy přímo v profilu | Já → Profil | ⏳ |
 | 74 | Nabídka Upravit/Smazat — jiné řešení (finální polish) | Dění → rozbalený záznam | 📌 |
-| 75 | Dění — načíst starší období | Přehled → Dění, dole | 📱 bez bubliny |
-| 76 | Denní cíl — vlastní panel místo systémové tabulky | Přehled → ťukni na „z 40 b" | 📱 |
-| 77 | Týdenní přehled bodů v horní kartě | Přehled → horní karta, pod dnešním | 📱 |
-| 78 | Zelený řádek prvního místa navazuje na filtr | Přehled → žebříček, když jsi první | 📱 |
+| 75 | Dění — načíst starší období, s najetím | Přehled → Dění, dole | 📱 |
+| 76 | Denní cíl — pole k přepsání + jasné, že jde kliknout | Přehled → ťukni na „z 40 b" | 📱 |
+| 77 | Týdenní přehled bodů v horní kartě | Přehled → horní karta | ✅ |
+| 78 | Zelený řádek prvního místa navazuje na filtr | Přehled → žebříček | ✅ |
 | 79 | Zlozvyky nejsou nijak odlišené od návyků | Návyky | ⏳ |
-| 80 | Kolečka návyků měla nerovnoměrnou tloušťku | Návyky → odškrtávací kolečka | 📱 |
-| 81 | Odškrtnutí návyku mělo prodlevu | Návyky | 📱 |
+| 80 | Kolečka návyků měla nerovnoměrnou tloušťku | Návyky → odškrtávací kolečka | ✅ |
+| 81 | Odškrtnutí návyku — prodleva a animace zpět | Návyky | 📱 |
 
 
 
