@@ -2409,7 +2409,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .deni .frow:not(.fsub):has(+.fsub)::before{top:calc(50% + 12px);}
 /* Na hranici tonovaneho bloku zadny oddelovac — barevny schod tam uz jeden je (jinak dvojita, ragged hrana) */
 .mm .deni .frow:not(.fsub):has(+.fsub)::after,.mm .deni .fsub:has(+.frow:not(.fsub))::after,.mm .deni .hlkoms.ksub:has(+.frow:not(.fsub))::after{display:none;}
-.mm .deni .hlkoms{padding:0 12px 8px 43px;gap:2px;margin-top:-5px;}
+.mm .deni .hlkoms{padding:0 12px 8px 43px;gap:2px;margin-top:-1px;}
 .deni .frow:has(+.hlkoms){padding-bottom:1px;}
 .mm .deni .hlkoms.ksub{padding-left:63px;background:color-mix(in srgb,var(--track) 26%,transparent);}
 .mm .deni .hlkoms.ksub::after{left:63px;}
@@ -2728,7 +2728,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .fdcom{font-size:14.48px;}
 .mm .fdcom b{color:var(--label);}
 /* F59 (ukol 36): akce Upravit / Smazat v rozbalenem radku zaznamu */
-.mm .zakce{display:flex;gap:6px;margin:-7px 0 1px 4px;}
+.mm .zakce{display:flex;gap:6px;margin:1px 0 5px 4px;}
 .hlkoms:has(.zakce){padding-top:0;}
 .mm .zak{flex:1 1 0;display:inline-flex;align-items:center;justify-content:center;gap:5px;border:1px solid var(--sep);cursor:pointer;font-family:inherit;font-size:10.4px;font-weight:800;letter-spacing:-.01em;color:var(--sec);background:transparent;border-radius:999px;padding:4.5px 11px 4.5px 9px;-webkit-tap-highlight-color:transparent;transition:background .16s ease,color .16s ease,border-color .16s ease;}
 .mm .zak .i{width:11.5px;height:11.5px;stroke-width:2.3;opacity:.85;}
@@ -3578,7 +3578,7 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
   .zkav.on>em{color:var(--zc);font-weight:900;}
   .zkav:active{background:color-mix(in srgb,var(--sec) 12%,transparent);}
 /* F59 (ukol 36): akce Upravit / Smazat v rozbalenem radku zaznamu */
-  .zakce{display:flex;gap:6px;margin:-7px 0 1px 4px;}
+  .zakce{display:flex;gap:6px;margin:1px 0 5px 4px;}
 .hlkoms:has(.zakce){padding-top:0;}
   .zak{flex:1 1 0;display:inline-flex;align-items:center;justify-content:center;gap:5px;border:1px solid var(--sep);cursor:pointer;font-family:inherit;font-size:10.4px;font-weight:800;letter-spacing:-.01em;color:var(--sec);background:transparent;border-radius:999px;padding:4.5px 11px 4.5px 9px;-webkit-tap-highlight-color:transparent;transition:background .16s ease,color .16s ease,border-color .16s ease;}
   .zak .i{width:11.5px;height:11.5px;stroke-width:2.3;opacity:.85;}
@@ -3631,7 +3631,7 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
   .deni .frow:not(.fsub):has(+.fsub)::before{top:calc(50% + 12px);}
   /* Na hranici tónovaného bloku žádný oddělovač — barevný schod tam už jeden je (jinak dvojitá, ragged hrana) */
   .deni .frow:not(.fsub):has(+.fsub)::after,.deni .hlkoms.ksub:has(+.frow:not(.fsub))::after{display:none;}
-  .deni .hlkoms{padding:0 12px 8px 43px;gap:2px;margin-top:-5px;}
+  .deni .hlkoms{padding:0 12px 8px 43px;gap:2px;margin-top:-1px;}
 .deni .frow:has(+.hlkoms){padding-bottom:1px;}
   .deni .hlkoms.ksub{padding-left:63px;background:color-mix(in srgb,var(--track) 26%,transparent);}
   .deni .hlkoms.ksub::after{left:63px;}
@@ -10928,18 +10928,92 @@ function renderSubPozvat(){
 
 // ----- Cíle & ochrana série (mockup S.cile, 4.5) — VIZUÁLNÍ PLACEHOLDER 1:1, týdenní cíle/streak-freeze zatím neexistují (net-new backend, Fáze 6) -----
 // Vstup: Já → Nastavení → Cíle & ochrana série. Progress/toggle jsou ukázková data; přepínač "Ochrana série" je čistě vizuální (lokální toggle, nic se neukládá).
+// Ukol 44 (Marek 30. 8.): obrazovka mela natvrdo "380 / 500 b" a "1 ochranu" —
+// ukazkova cisla z mockupu. Ted pocita ze skutecnych dat: denni cil (mmDenniCil,
+// medial bodu na aktivni den za 28 dni, prepsatelny) a body za tenhle tyden.
+function mmTydenniCil(pid){ return mmDenniCil(pid) * 7; }
+function mmZmenCil(){
+  const pid = state.currentPlayerId; if (!pid) return;
+  const ted = mmDenniCil(pid);
+  const zadano = prompt('Denní cíl v bodech (' + MM_CIL_MIN + '–' + MM_CIL_MAX + '):', String(ted));
+  if (zadano === null) return;
+  const n = Math.round(Number(String(zadano).replace(',', '.')));
+  if (!n || n < MM_CIL_MIN || n > MM_CIL_MAX){
+    toast('Zadej číslo mezi ' + MM_CIL_MIN + ' a ' + MM_CIL_MAX, 'error'); return;
+  }
+  try { localStorage.setItem('mc_cil_' + pid + '_' + todayStr().slice(0,7), String(n)); } catch(_) {}
+  toast('Denní cíl je ' + n + ' b', 'success');
+  renderSubCile(); renderDnesek();
+}
 function renderSubCile(){
   const host=document.getElementById('sub-cile'); if(!host) return;
-  const body = `<div class="sl"><span>Týdenní cíl</span></div><div style="background:var(--card);box-shadow:var(--shadow);border-radius:16px;padding:14px"><div style="display:flex;justify-content:space-between;font-size:15.69px;font-weight:700"><span>Tento týden</span><span>380 / 500 b</span></div><div class="pbtrack" style="margin-top:9px"><div class="pbfill" style="width:76%"></div></div><div class="pbcap">Ještě 120 b do splnění cíle <svg class="i"><use href="#i-target"/></svg></div></div><div class="hbm" style="margin-top:10px"><div class="hi" style="background:#2FB17022;width:27px;height:27px;font-size:16.9px"><svg class="i"><use href="#i-target"/></svg></div><div class="ht">Změnit týdenní cíl<small>teď 500 b / týden</small></div><span class="rx" style="color:var(--ter);font-size:19.31px">›</span></div><div class="sl" style="margin-top:14px"><span>Ochrana série</span></div><div class="hl"><div class="hlr"><span class="ic"><svg class="i"><use href="#i-snow"/></svg></span><div>Zapnuto<small style="display:block;font-size:12.67px;color:var(--sec);font-weight:600">když vynecháš den, série se nezlomí</small></div><div class="sw on" onclick="this.classList.toggle('on')"><i></i></div></div></div><div class="info" style="margin-top:8px">Máš <b>1 ochranu</b> na tento týden — použije se automaticky. Doplní se každé pondělí.</div>`;
+  const pid = state.currentPlayerId;
+  const wk = mmWeek();
+  const od = dateToStr(wk.start), doo = dateToStr(wk.end);
+  const vTydnu = pid ? sumRoundedBody([
+      ...state.cviky.filter(c => c.player_id===pid && c.datum>=od && c.datum<=doo),
+      ...state.aktivity.filter(a => a.player_id===pid && a.datum>=od && a.datum<=doo)]) : 0;
+  const cilD = pid ? mmDenniCil(pid) : MM_CIL_MIN;
+  const cilT = cilD * 7;
+  const pct = cilT ? Math.min(100, Math.round(vTydnu / cilT * 100)) : 0;
+  const zbyva = Math.max(0, cilT - vTydnu);
+  const hotovo = zbyva === 0;
+  const serie = (pid && typeof computeStreak==='function') ? computeStreak(pid) : 0;
+  const ochrana = mmNotifZap('ochrana');   // stejne uloziste jako u notifikaci
+
+  const body = '<div class="sl"><span>Týdenní cíl</span></div>'
+    + '<div style="background:var(--card);box-shadow:var(--shadow);border-radius:16px;padding:14px">'
+    +   '<div style="display:flex;justify-content:space-between;font-size:15.69px;font-weight:700">'
+    +     '<span>Tento týden</span><span>' + fmtNum(vTydnu) + ' / ' + fmtNum(cilT) + ' b</span></div>'
+    +   '<div class="pbtrack" style="margin-top:9px"><div class="pbfill" style="width:' + pct + '%"></div></div>'
+    +   '<div class="pbcap">' + (hotovo
+          ? 'Cíl je splněný <svg class="i"><use href="#i-check"/></svg>'
+          : ('Ještě ' + fmtNum(zbyva) + ' b do splnění cíle <svg class="i"><use href="#i-target"/></svg>')) + '</div></div>'
+    + '<div class="hbm" style="margin-top:10px;cursor:pointer" onclick="mmZmenCil()">'
+    +   '<div class="hi" style="background:#2FB17022;width:27px;height:27px;font-size:16.9px"><svg class="i"><use href="#i-target"/></svg></div>'
+    +   '<div class="ht">Změnit denní cíl<small>teď ' + fmtNum(cilD) + ' b / den · ' + fmtNum(cilT) + ' b za týden</small></div>'
+    +   '<span class="rx" style="color:var(--ter);font-size:19.31px">›</span></div>'
+    + '<div class="sl" style="margin-top:14px"><span>Ochrana série</span></div>'
+    + '<div class="hl"><div class="hlr"><span class="ic"><svg class="i"><use href="#i-snow"/></svg></span>'
+    +   '<div>Ochrana série<small style="display:block;font-size:12.67px;color:var(--sec);font-weight:600">když vynecháš den, série se nezlomí</small></div>'
+    +   '<div class="sw ' + (ochrana ? 'on' : '') + '" onclick="mmNotifPrepni(&#39;ochrana&#39;, this)"><i></i></div></div></div>'
+    + '<div class="info" style="margin-top:8px">Tvoje série je <b>' + serie + ' ' + (serie===1?'den':(serie>=2&&serie<=4?'dny':'dní')) + '</b>. '
+    +   'Samotné zmrazení dne ještě nefunguje — přepínač si zatím jen pamatuje, že ho chceš.</div>';
   const tpl = mmBackHdr('Cíle & ochrana série') + body;
   mmMountSub(host, tpl, 2);
 }
 
 // ----- Notifikace (mockup S.notifikace, 4.4) — VIZUÁLNÍ PLACEHOLDER 1:1, push notifikace / service worker zatím neexistují (Fáze 7) -----
 // Vstup: Já → Nastavení → Notifikace. Přepínače jsou čistě vizuální (lokální toggle, nic se neukládá, žádný skutečný push).
+// Ukol 43 (Marek 30. 8.): prepinace byly ciste vizualni — po odchodu z obrazovky
+// se stav ztratil. Ted se pamatuji v zarizeni. Samotne rozesilani upozorneni
+// je zvlast (potrebuje service worker a backend) — tohle je volba, co si hrac preje.
+const MM_NOTIF = [
+  { k:'liga',    ik:'i-trophy',  n:'Liga týdne končí',   p:'den před uzávěrkou' },
+  { k:'predbeh', ik:'i-bolt',    n:'Parťák tě dohnal',   p:'někdo tě v žebříčku předběhl' },
+  { k:'reakce',  ik:'i-comment', n:'Reakce a komentáře', p:'na tvoje záznamy' },
+  { k:'vitez',   ik:'i-crown',   n:'Vítěz týdne',        p:'kdo vyhrál ligu' },
+  { k:'navyky',  ik:'i-bell',    n:'Připomínka návyků',  p:'když máš na dnešek nesplněné' }
+];
+function mmNotifZap(k){
+  try { const v = localStorage.getItem('mc_notif_' + k); return v === null ? true : v === '1'; }
+  catch(_) { return true; }
+}
+function mmNotifPrepni(k, el){
+  const nove = !mmNotifZap(k);
+  try { localStorage.setItem('mc_notif_' + k, nove ? '1' : '0'); } catch(_) {}
+  if (el) el.classList.toggle('on', nove);
+}
 function renderSubNotifikace(){
   const host=document.getElementById('sub-notifikace'); if(!host) return;
-  const body = `<div class="sl"><span>Co ti má appka hlásit</span></div><div class="hl"><div class="hlr"><span class="ic"><svg class="i"><use href="#i-trophy"/></svg></span><div>Liga týdne končí<small style="display:block;font-size:12.67px;color:var(--sec);font-weight:600">den před uzávěrkou</small></div><div class="sw on" onclick="this.classList.toggle('on')"><i></i></div></div><div class="hlr"><span class="ic"><svg class="i"><use href="#i-bolt"/></svg></span><div>Parťák tě dohnal<small style="display:block;font-size:12.67px;color:var(--sec);font-weight:600">někdo tě v žebříčku předběhl</small></div><div class="sw on" onclick="this.classList.toggle('on')"><i></i></div></div><div class="hlr"><span class="ic"><svg class="i"><use href="#i-comment"/></svg></span><div>Reakce a komentáře<small style="display:block;font-size:12.67px;color:var(--sec);font-weight:600">na tvoje záznamy</small></div><div class="sw on" onclick="this.classList.toggle('on')"><i></i></div></div><div class="hlr"><span class="ic"><svg class="i"><use href="#i-crown"/></svg></span><div>Vítěz týdne<small style="display:block;font-size:12.67px;color:var(--sec);font-weight:600">kdo vyhrál ligu</small></div><div class="sw on" onclick="this.classList.toggle('on')"><i></i></div></div><div class="hlr"><span class="ic"><svg class="i"><use href="#i-bell"/></svg></span><div>Připomínka návyků<small style="display:block;font-size:12.67px;color:var(--sec);font-weight:600">každý den ve 20:00</small></div><div class="sw" onclick="this.classList.toggle('on')"><i></i></div></div></div>`;
+  const radky = MM_NOTIF.map(o =>
+    '<div class="hlr"><span class="ic"><svg class="i"><use href="#' + o.ik + '"/></svg></span>'
+    + '<div>' + esc(o.n) + '<small style="display:block;font-size:12.67px;color:var(--sec);font-weight:600">' + esc(o.p) + '</small></div>'
+    + '<div class="sw ' + (mmNotifZap(o.k) ? 'on' : '') + '" onclick="mmNotifPrepni(&#39;' + o.k + '&#39;, this)"><i></i></div></div>'
+  ).join('');
+  const body = '<div class="sl"><span>Co ti má appka hlásit</span></div><div class="hl">' + radky + '</div>'
+    + '<div class="vpozn" style="margin-bottom:78px"><svg class="i"><use href="#i-bolt"/></svg>'
+    + 'Volba se ukládá do tohohle zařízení. Samotné posílání upozornění zapneme, až bude hotové.</div>';
   const tpl = mmBackHdr('Notifikace') + body;
   mmMountSub(host, tpl, 2);
 }

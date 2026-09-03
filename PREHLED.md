@@ -62,8 +62,8 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 40 | Úprava návyku — přestavba do designu appky | Návyky | 📱 |
 | 41 | Upravit profil — pořád stará modálka | Já → Nastavení | ⏳ |
 | 42 | Emoji reakce se neukládají do DB (komentáře už ano) | Dění v partě | ⏳ |
-| 43 | Notifikace — přepínače nic nedělají | Já → Notifikace | ⏳ |
-| 44 | Cíle a ochrana série — ukázková data, nic se neukládá | Já → Cíle | ⏳ |
+| 43 | Notifikace — přepínače se pamatují | Já → Nastavení → Notifikace | 📱 |
+| 44 | Cíle a ochrana série — skutečná data | Já → Nastavení → Cíle | 📱 |
 | 45 | Pozvat kamaráda — kód z mockupu, sdílení bez akce | Já → Pozvat | ⏳ |
 | 46 | Zápis — výběr aktivity, kategorie, oblíbené | Zápis | ⏳ |
 | 47 | Šablony do gymu (Push / Pull / Nohy) | Zápis | ⏳ |
@@ -71,7 +71,7 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 49 | Lezení — cesty dotáhnout na úroveň karet cviků | Zápis | ⏳ |
 | 50 | Vlastní ikony — 103 aktivit sdílí 14 ikon | Celá appka | ⏳ |
 | 51 | Kategorie a ruční řazení návyků | Návyky | ⏳ |
-| 52 | Demo — přepínač v nastavení + odznak když běží | Já → Nastavení → Demo režim | 📱 |
+| 52 | Demo — přepínač v nastavení + odznak když běží | Já → Nastavení → Demo režim | ✅ |
 | 53 | Ukotvení spodní lišty | Celá appka | ✅ |
 | 54 | Vzhled komentářů — předělat design | Dění, Přehled | 📌 |
 | 55 | Animace přehození pořadí hráčů | Přehled, žebříček | 📌 |
@@ -91,8 +91,9 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 69 | Nástěnka — všechny obrazovky vedle sebe na PC | na PC: adresa appky + `/nastenka.html` | 📱 |
 | 70 | Detail dne — nevedlo k němu žádné tlačítko | Přehled → Kalendář aktivity → ťukni na čtvereček | ✅ |
 | 71 | Stránky šly scrollovat do nekonečna | Celá appka | ✅ |
-| 72 | Cviky nebodují — podle Bodování 2.0 | Zápis cviku, Dění | 📱 |
+| 72 | Cviky nebodují — podle Bodování 2.0 | Zápis cviku, Dění | ✅ |
 | 73 | Profil — maximálky a rekordy přímo v profilu | Já → Profil | ⏳ |
+| 74 | Nabídka Upravit/Smazat — jiné řešení (finální polish) | Dění → rozbalený záznam | 📌 |
 
 
 
