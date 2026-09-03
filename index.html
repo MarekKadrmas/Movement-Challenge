@@ -2276,11 +2276,13 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .maxb.chybi b{color:var(--ter);}
 .maxpozn{display:flex;align-items:flex-start;gap:6px;margin:8px 3px 2px;font-size:9.8px;line-height:1.45;font-weight:600;color:var(--ter);}
 .maxpozn .i{width:12px;height:12px;flex:0 0 12px;margin-top:1px;color:var(--green);}
-.hc-cilk{display:inline-flex;align-items:center;gap:3px;cursor:pointer;-webkit-tap-highlight-color:transparent;background:var(--track);border-radius:999px;padding:2px 7px 2px 8px;text-decoration:none;}
+.hc-cilk{display:inline-flex;align-items:center;gap:3px;cursor:pointer;-webkit-tap-highlight-color:transparent;background:color-mix(in srgb,var(--green) 13%,transparent);color:color-mix(in srgb,var(--green) 78%,var(--sec));border-radius:999px;padding:2px 7px 2px 8px;text-decoration:none;}
 .hc-cilk .i{width:9.5px;height:9.5px;stroke-width:2.4;opacity:.75;}
-.hc-cilk:active{background:color-mix(in srgb,var(--sec) 16%,transparent);}
-.vicdeni{margin:10px 4px 2px;padding:4px;text-align:center;font-size:11.4px;font-weight:800;color:var(--green);cursor:pointer;-webkit-tap-highlight-color:transparent;}
-.vicdeni:active{opacity:.55;}
+.hc-cilk:active{background:color-mix(in srgb,var(--green) 24%,transparent);}
+.vicdeni{margin:10px 4px 2px;display:flex;justify-content:center;gap:18px;}
+.vicdeni .vd-a{padding:4px 2px;font-size:11.4px;font-weight:800;color:var(--green);cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.vicdeni .vd-a.vd-min{color:var(--ter);}
+.vicdeni .vd-a:active{opacity:.5;}
 /* Ukol 77: tydenni soucet pod dennim — karta se nesmi zvetsit, proto uzsi radek */
 .hcard .hc-rcol{margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:0;min-width:0;}
 .hcard .hc-rcol .hc-r{margin-left:0;}
@@ -2301,8 +2303,8 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .nvk .nrow.zpet .nchk{animation:mmChkZpet .3s cubic-bezier(.3,.9,.4,1);}
 @keyframes mmChkZpet{0%{transform:scale(1.1)}55%{transform:scale(.88)}100%{transform:scale(1)}}
 /* Ukol 75: nove nactene bloky lehce najedou, at je videt, ze se neco stalo */
-.deni .pblok.nove{animation:mmDeniNajed .34s cubic-bezier(.22,.9,.3,1) both;}
-@keyframes mmDeniNajed{0%{opacity:0;transform:translateY(7px)}100%{opacity:1;transform:none}}
+.deni .pblok.nove{animation:mmDeniNajed .5s cubic-bezier(.2,.85,.3,1) both;}
+@keyframes mmDeniNajed{0%{opacity:0;transform:translateY(16px) scale(.985)}100%{opacity:1;transform:none}}
 @media (prefers-reduced-motion: reduce){ .deni .pblok.nove{animation:none;} }
 .smazbox{display:flex;justify-content:center;margin:10px 0 2px;}
 .smazbox span{font-size:13.28px;font-weight:800;color:var(--red,#E05C5C);padding:8px 16px;border-radius:999px;background:color-mix(in srgb,var(--red,#E05C5C) 10%,transparent);cursor:pointer;}
@@ -2334,7 +2336,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .nvk .nrow.pak .nchk::after{content:'';position:absolute;inset:0.5px;border-radius:50%;background:repeating-linear-gradient(45deg,color-mix(in srgb,var(--ter) 85%,transparent) 0 1.5px,transparent 1.5px 5.5px);-webkit-mask-image:radial-gradient(circle at 50% 50%,#000 18%,rgba(0,0,0,.42) 60%,transparent 86%);mask-image:radial-gradient(circle at 50% 50%,#000 18%,rgba(0,0,0,.42) 60%,transparent 86%);}
 .nvk .nrow.pak .nic{opacity:.62;}
 .nvk .nrow.hot{background:color-mix(in srgb,var(--card) 62%,transparent);box-shadow:none;}
-.nvk .nrow.hot .nchk{background:linear-gradient(160deg,#9C7BE6,#6B49CF);border-color:transparent;box-shadow:none;}
+.nvk .nrow.hot .nchk{background:linear-gradient(160deg,#9C7BE6,#6B49CF);border:0;box-shadow:none;}
 .nvk .nrow.hot.just .nchk{animation:mmChk .34s cubic-bezier(.2,1.35,.4,1);}
 .nvk .nrow.hot.just .nchk .i{animation:mmChkI .3s ease .04s both;}
 .nvk .nrow.just{animation:mmRow .5s ease;}
@@ -3360,11 +3362,13 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .maxb.chybi b{color:var(--ter);}
 .maxpozn{display:flex;align-items:flex-start;gap:6px;margin:8px 3px 2px;font-size:9.8px;line-height:1.45;font-weight:600;color:var(--ter);}
 .maxpozn .i{width:12px;height:12px;flex:0 0 12px;margin-top:1px;color:var(--green);}
-.hc-cilk{display:inline-flex;align-items:center;gap:3px;cursor:pointer;-webkit-tap-highlight-color:transparent;background:var(--track);border-radius:999px;padding:2px 7px 2px 8px;text-decoration:none;}
+.hc-cilk{display:inline-flex;align-items:center;gap:3px;cursor:pointer;-webkit-tap-highlight-color:transparent;background:color-mix(in srgb,var(--green) 13%,transparent);color:color-mix(in srgb,var(--green) 78%,var(--sec));border-radius:999px;padding:2px 7px 2px 8px;text-decoration:none;}
 .hc-cilk .i{width:9.5px;height:9.5px;stroke-width:2.4;opacity:.75;}
-.hc-cilk:active{background:color-mix(in srgb,var(--sec) 16%,transparent);}
-.vicdeni{margin:10px 4px 2px;padding:4px;text-align:center;font-size:11.4px;font-weight:800;color:var(--green);cursor:pointer;-webkit-tap-highlight-color:transparent;}
-.vicdeni:active{opacity:.55;}
+.hc-cilk:active{background:color-mix(in srgb,var(--green) 24%,transparent);}
+.vicdeni{margin:10px 4px 2px;display:flex;justify-content:center;gap:18px;}
+.vicdeni .vd-a{padding:4px 2px;font-size:11.4px;font-weight:800;color:var(--green);cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.vicdeni .vd-a.vd-min{color:var(--ter);}
+.vicdeni .vd-a:active{opacity:.5;}
 /* Ukol 77: tydenni soucet pod dennim — karta se nesmi zvetsit, proto uzsi radek */
 .hcard .hc-rcol{margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:0;min-width:0;}
 .hcard .hc-rcol .hc-r{margin-left:0;}
@@ -3385,8 +3389,8 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .nvk .nrow.zpet .nchk{animation:mmChkZpet .3s cubic-bezier(.3,.9,.4,1);}
 @keyframes mmChkZpet{0%{transform:scale(1.1)}55%{transform:scale(.88)}100%{transform:scale(1)}}
 /* Ukol 75: nove nactene bloky lehce najedou, at je videt, ze se neco stalo */
-.deni .pblok.nove{animation:mmDeniNajed .34s cubic-bezier(.22,.9,.3,1) both;}
-@keyframes mmDeniNajed{0%{opacity:0;transform:translateY(7px)}100%{opacity:1;transform:none}}
+.deni .pblok.nove{animation:mmDeniNajed .5s cubic-bezier(.2,.85,.3,1) both;}
+@keyframes mmDeniNajed{0%{opacity:0;transform:translateY(16px) scale(.985)}100%{opacity:1;transform:none}}
 @media (prefers-reduced-motion: reduce){ .deni .pblok.nove{animation:none;} }
 .smazbox{display:flex;justify-content:center;margin:10px 0 2px;}
 .smazbox span{font-size:13.28px;font-weight:800;color:var(--red,#E05C5C);padding:8px 16px;border-radius:999px;background:color-mix(in srgb,var(--red,#E05C5C) 10%,transparent);cursor:pointer;}
@@ -3418,7 +3422,7 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .nvk .nrow.pak .nchk::after{content:'';position:absolute;inset:0.5px;border-radius:50%;background:repeating-linear-gradient(45deg,color-mix(in srgb,var(--ter) 85%,transparent) 0 1.5px,transparent 1.5px 5.5px);-webkit-mask-image:radial-gradient(circle at 50% 50%,#000 18%,rgba(0,0,0,.42) 60%,transparent 86%);mask-image:radial-gradient(circle at 50% 50%,#000 18%,rgba(0,0,0,.42) 60%,transparent 86%);}
 .nvk .nrow.pak .nic{opacity:.62;}
 .nvk .nrow.hot{background:color-mix(in srgb,var(--card) 62%,transparent);box-shadow:none;}
-.nvk .nrow.hot .nchk{background:linear-gradient(160deg,#9C7BE6,#6B49CF);border-color:transparent;box-shadow:none;}
+.nvk .nrow.hot .nchk{background:linear-gradient(160deg,#9C7BE6,#6B49CF);border:0;box-shadow:none;}
 .nvk .nrow.hot.just .nchk{animation:mmChk .34s cubic-bezier(.2,1.35,.4,1);}
 .nvk .nrow.hot.just .nchk .i{animation:mmChkI .3s ease .04s both;}
 .nvk .nrow.just{animation:mmRow .5s ease;}
@@ -8077,6 +8081,16 @@ window.MM_FEED_VAR = 2;   // varianta 2 (Marek 2026-08-19): bublina s iniciálam
 // Ukol 75 (Marek 3. 9.): Deni na Prehledu ukazovalo natvrdo 5 poslednich bloku
 // a dal se nedalo dostat. Ted se da nacitat do minulosti po peti.
 let mmPrehledBloku = 5;
+function mmPrehledMin(){
+  mmPrehledBloku = 5;
+  window._mmDeniOd = null;
+  renderDnesek();
+  requestAnimationFrame(() => {
+    const sh = (document.getElementById('dnesek-mm')||{}).shadowRoot;
+    const b = sh && sh.querySelector('[data-vicdeni]');
+    if (b) b.scrollIntoView({block:'center'});
+  });
+}
 function mmPrehledVic(){
   window._mmDeniOd = mmPrehledBloku;   // od tohoto bloku dal jsou nove -> dostanou animaci
   mmPrehledBloku += 5;
@@ -8125,7 +8139,9 @@ function mmPrehledFeedHtml(){
     }
     dd.evs.forEach(ev=>{ html+='<div class="evb ev-'+(ev.kind||'gold')+'"><span class="ee">'+(ev.ee||'🏅')+'</span><span>'+ev.html+'</span></div>'; });
   });
-  if(jesteJsou) html+='<div class="vicdeni" data-vicdeni onclick="mmPrehledVic()">Načíst starší ↓</div>';
+  const vicHtml = jesteJsou ? '<span class="vd-a" onclick="mmPrehledVic()">Načíst starší ↓</span>' : '';
+  const minHtml = (mmPrehledBloku > 5) ? '<span class="vd-a vd-min" onclick="mmPrehledMin()">Skrýt ↑</span>' : '';
+  if(vicHtml || minHtml) html+='<div class="vicdeni" data-vicdeni>'+vicHtml+minHtml+'</div>';
   setTimeout(() => { window._mmDeniOd = null; }, 0);   // animace jen pri tomhle jednom vykresleni
   return html+'</div>';
 }
@@ -11563,7 +11579,23 @@ function renderSubZaznamy(){
   if(host.shadowRoot) mmDeniApplyFeedState(host.shadowRoot, 'zaznamy');
 }
 
+// Ukol 75 (Marek 3. 9.): pismo po nacteni starsich zaznamu "poskocilo". Fonty jsou
+// rozdelene podle unicode-range na latin a latin-ext; ceske znaky (ě, š, č, ř, ž)
+// jsou v latin-ext a ta sada se stahovala az ve chvili, kdy se takovy text poprve
+// vykreslil — font-display:swap pak prehodil pismo pred ocima. Nacteme vsechny
+// pouzivane rezy pri startu, aby uz nebylo co dohanet.
+function mmNahrejFonty(){
+  if (!document.fonts || !document.fonts.load) return;
+  const ceske = 'ěščřžýáíéúůďťňóĚŠČŘŽÝÁÍÉÚŮĎŤŇÓ';
+  const rezy = ['400','500','600','700','800','900'];
+  rezy.forEach(w => {
+    try { document.fonts.load(w + ' 1em Figtree', ceske); } catch(_) {}
+    try { document.fonts.load(w + ' 1em "Space Grotesk"', ceske); } catch(_) {}
+  });
+}
+let _mmFontyNahrany = false;
 function renderAllViews() {
+  if (!_mmFontyNahrany){ _mmFontyNahrany = true; mmNahrejFonty(); }
   mmDemoOdznak();
   mmAdminFloat();          // ukol 37: plovouci kolecko plati pro celou appku
   renderDnesek();
