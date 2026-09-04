@@ -6900,35 +6900,55 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v90';
+const MM_VERZE = 'v91';
 function mmVerzeCas(){ return MM_VERZE; }
 // Diagnostika (Marek 4. 9.): tuknutim na cislo verze se zapne zivy vypis rozmeru
 // radku navyku. Poskakovani bublin se mi nedari vyvolat v prohlizeci, takze potrebuji
 // videt skutecna cisla primo z Markova telefonu — staci, aby byl vypis v zaberu videa.
-let _mmDiagBezi = false, _mmDiagT = null;
+let _mmDiagBezi = false, _mmDiagT = null, _mmDiagZaznam = {};
 function mmDiagPrepni(){
   _mmDiagBezi = !_mmDiagBezi;
   let el = document.getElementById('mm-diag');
-  if (!_mmDiagBezi){ if (el) el.remove(); clearInterval(_mmDiagT); return; }
+  if (!_mmDiagBezi){ if (el) el.remove(); clearInterval(_mmDiagT); _mmDiagZaznam = {}; return; }
+  _mmDiagZaznam = {};
   el = document.createElement('div');
   el.id = 'mm-diag';
   el.style.cssText = 'position:fixed;left:6px;top:calc(env(safe-area-inset-top,0px) + 26px);z-index:60;'
-    + 'font:700 9px/1.35 ui-monospace,Menlo,monospace;color:#0B3;background:rgba(0,0,0,.82);'
-    + 'padding:5px 7px;border-radius:8px;white-space:pre;pointer-events:none;max-width:60vw;';
+    + 'font:700 9px/1.35 ui-monospace,Menlo,monospace;color:#fff;background:rgba(0,0,0,.86);'
+    + 'padding:6px 8px;border-radius:8px;white-space:pre;pointer-events:none;max-width:72vw;';
   document.body.appendChild(el);
+  // Zaznamenava MIN a MAX kazdeho rozmeru za celou dobu mereni. Staci tedy poslat
+  // jediny screenshot po nekolika tuknutich — z rozdilu je hned videt, co se hybe.
   const tik = () => {
     const host = document.getElementById('navyky-mm');
     const sh = host && host.shadowRoot;
-    if (!sh){ el.textContent = 'navyky nejsou videt'; return; }
+    if (!sh){ el.textContent = 'otevri Navyky'; return; }
     const r = [...sh.querySelectorAll('.nrow')];
-    const radky = r.map((x,i) => { const b = x.getBoundingClientRect();
-      const mez = r[i+1] ? (r[i+1].getBoundingClientRect().top - b.bottom) : null;
-      return i + ' v' + b.height.toFixed(1) + ' s' + b.width.toFixed(1)
-        + (mez != null ? ' m' + mez.toFixed(1) : ''); });
-    el.textContent = 'v=vyska s=sirka m=mezera' + String.fromCharCode(10) + radky.join(String.fromCharCode(10));
+    r.forEach((x,i) => {
+      const b = x.getBoundingClientRect();
+      const mez = r[i+1] ? (r[i+1].getBoundingClientRect().top - b.bottom) : 0;
+      const z = _mmDiagZaznam[i] = _mmDiagZaznam[i] || { vMin:1e9, vMax:0, sMin:1e9, sMax:0, mMin:1e9, mMax:0 };
+      z.vMin = Math.min(z.vMin, b.height); z.vMax = Math.max(z.vMax, b.height);
+      z.sMin = Math.min(z.sMin, b.width);  z.sMax = Math.max(z.sMax, b.width);
+      z.mMin = Math.min(z.mMin, mez);      z.mMax = Math.max(z.mMax, mez);
+    });
+    const radky = Object.keys(_mmDiagZaznam).map(i => {
+      const z = _mmDiagZaznam[i];
+      const dv = (z.vMax - z.vMin), ds = (z.sMax - z.sMin), dm = (z.mMax - z.mMin);
+      const zm = (dv > 0.6 || ds > 0.6 || dm > 0.6);
+      return (zm ? '! ' : '  ') + i
+        + ' v' + z.vMin.toFixed(1) + (dv > 0.6 ? '-' + z.vMax.toFixed(1) : '')
+        + ' s' + z.sMin.toFixed(1) + (ds > 0.6 ? '-' + z.sMax.toFixed(1) : '')
+        + ' m' + z.mMin.toFixed(1) + (dm > 0.6 ? '-' + z.mMax.toFixed(1) : '');
+    });
+    const neco = radky.some(x => x[0] === '!');
+    el.style.color = neco ? '#FF6B5E' : '#7CF0A8';
+    el.textContent = (neco ? 'NECO SE MENI:' : 'zatim se nic nemeni')
+      + String.fromCharCode(10) + radky.join(String.fromCharCode(10))
+      + String.fromCharCode(10) + '(v=vyska s=sirka m=mezera, ' + MM_VERZE + ')';
   };
   tik();
-  _mmDiagT = setInterval(tik, 100);
+  _mmDiagT = setInterval(tik, 80);
 }
 function mmVerzeHtml(){
   return '<div class="vpozn" style="justify-content:center;margin:10px 3px 78px">Verze appky: '+MM_VERZE+'</div>';
