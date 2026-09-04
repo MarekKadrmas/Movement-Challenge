@@ -8438,8 +8438,7 @@ function mmNavykyPatch(){
     if (!h) return false;
     const done = habitIsDoneOn(h, pid, ds);
     r.classList.toggle('hot', done);
-    r.classList.toggle('just', window._mmNoveId === h.id);
-    r.classList.toggle('zpet', window._mmOdskrtId === h.id);
+    // animacni tridy resi mmAnimujRadek — tady se na ne nesahá
     const chceme = done ? '<svg class="i"><use href="#i-check"/></svg>' : '';
     if (chk.innerHTML !== chceme) chk.innerHTML = chceme;
     const det = r.querySelector('.ndet');
@@ -8476,6 +8475,18 @@ function mmNavykyPatch(){
       if (pc.textContent !== t) pc.innerHTML = hotovo + '<s>/' + existed.length + '</s>'; }
   }
   return true;
+}
+function mmAnimujRadek(id, trida){
+  const host = document.getElementById('navyky-mm');
+  const sh = host && host.shadowRoot; if (!sh) return;
+  const chk = sh.querySelector('.nchk[data-id="' + id + '"]');
+  const r = chk && chk.closest('.nrow'); if (!r) return;
+  r.classList.remove('just', 'zpet');
+  void r.offsetWidth;                       // restart animace
+  r.classList.add(trida);
+  const konec = () => { r.classList.remove(trida); r.removeEventListener('animationend', konec); };
+  r.addEventListener('animationend', konec);
+  setTimeout(konec, 900);                   // pojistka, kdyby animationend nedorazil
 }
 function mmHabitPrekresli(){
   // Prekresluj jen to, co je opravdu videt. Drive se pri kazdem tuknuti stavely
@@ -12225,10 +12236,8 @@ async function toggleHabitToday(id){
     if (!existing) return;
     const zaloha = existing;
     state.habitLogs = state.habitLogs.filter(l => l !== existing);
-    window._mmOdskrtId = id;
-    clearTimeout(window._mmOdskrtT);
-    window._mmOdskrtT = setTimeout(() => { window._mmOdskrtId = null; }, 700);
     mmHabitPrekresli();
+    mmAnimujRadek(id, 'zpet');
     return mmHabitFronta(id, async () => {
       if (String(zaloha.id).startsWith('tmp-')) return;   // insert neprosel, neni co mazat
       const { error } = await db.from('habit_logs').delete().eq('id', zaloha.id);
@@ -12244,6 +12253,7 @@ async function toggleHabitToday(id){
   const docasne = { id: 'tmp-' + Math.random().toString(36).slice(2), habit_id: id, player_id: pid, datum: sel, hodnota: full };
   state.habitLogs.push(docasne);
   mmHabitPrekresli();
+  mmAnimujRadek(id, 'just');
   return mmHabitFronta(id, async () => {
     if (!state.habitLogs.includes(docasne)) return;      // mezitim uz zase odskrtnuto
     const { data, error } = await db.from('habit_logs').insert({ habit_id: id, player_id: pid, datum: sel, hodnota: full }).select();
