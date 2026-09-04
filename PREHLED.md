@@ -103,6 +103,8 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 81 | Odškrtávání návyků — prodleva, animace, spolehlivost | Návyky | 📱 |
 | 82 | Písmo a ikony poskakovaly při animaci | Přehled → Dění | 📱 |
 | 83 | Pulzující kolečko při přepnutí na Návyky | Návyky | 📱 |
+| 84 | Dění — starý záznam vyskočil mezi čerstvé a udělal díru | Přehled → Dění | 📱 |
+| 85 | Emoji v ikonách aktivit problikávají | Přehled → Dění | ⏳ |
 
 
 

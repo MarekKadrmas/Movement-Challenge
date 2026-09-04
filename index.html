@@ -2308,7 +2308,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 @media (prefers-reduced-motion: reduce){ .deni .pblok.nove{animation:none;} }
 .smazbox{display:flex;justify-content:center;margin:10px 0 2px;}
 .smazbox span{font-size:13.28px;font-weight:800;color:var(--red,#E05C5C);padding:8px 16px;border-radius:999px;background:color-mix(in srgb,var(--red,#E05C5C) 10%,transparent);cursor:pointer;}
-.nvk .nrow{display:flex;align-items:center;gap:10px;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:7px 14px 7px 8px;margin-bottom:6px;}
+.nvk .nrow{display:flex;align-items:center;gap:10px;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:7px 14px 7px 8px;margin-bottom:6px;box-sizing:border-box;min-height:44px;height:44px;overflow:hidden;}
 .nvk .nrow .nic{width:30px;height:30px;flex:0 0 30px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--nc) 15%,transparent);color:var(--nc);font-size:15px;}
 .nvk .nrow .nic .i{width:16px;height:16px;}
 .nvk .nrow .nnm{flex:1;min-width:0;font-size:13.81px;font-weight:600;letter-spacing:-.005em;color:color-mix(in srgb,var(--label) 82%,var(--sec));white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -3394,7 +3394,7 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 @media (prefers-reduced-motion: reduce){ .deni .pblok.nove{animation:none;} }
 .smazbox{display:flex;justify-content:center;margin:10px 0 2px;}
 .smazbox span{font-size:13.28px;font-weight:800;color:var(--red,#E05C5C);padding:8px 16px;border-radius:999px;background:color-mix(in srgb,var(--red,#E05C5C) 10%,transparent);cursor:pointer;}
-.nvk .nrow{display:flex;align-items:center;gap:10px;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:7px 14px 7px 8px;margin-bottom:6px;}
+.nvk .nrow{display:flex;align-items:center;gap:10px;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:7px 14px 7px 8px;margin-bottom:6px;box-sizing:border-box;min-height:44px;height:44px;overflow:hidden;}
 .nvk .nrow .nic{width:30px;height:30px;flex:0 0 30px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--nc) 15%,transparent);color:var(--nc);font-size:15px;}
 .nvk .nrow .nic .i{width:16px;height:16px;}
 .nvk .nrow .nnm{flex:1;min-width:0;font-size:13.81px;font-weight:600;letter-spacing:-.005em;color:color-mix(in srgb,var(--label) 82%,var(--sec));white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -8122,7 +8122,8 @@ function mmPrehledVic(){
 }
 function mmPrehledFeedHtml(){
   const all=[...state.cviky,...state.aktivity].filter(e=>e.datum&&state.players.some(p=>p.id===e.player_id))
-    .sort((a,b)=>String(b.created_at||b.datum).localeCompare(String(a.created_at||a.datum)));
+    .sort((a,b)=> String(b.datum).localeCompare(String(a.datum))
+               || String(b.created_at||'').localeCompare(String(a.created_at||'')));
   // bloky hrac+den v poradi nejnovejsiho zaznamu
   const bloky=[]; const dle={};
   all.forEach(e=>{ const k='g:'+e.player_id+'|'+e.datum; let g=dle[k]; if(!g){ g=dle[k]={key:k,pid:e.player_id,datum:e.datum,items:[]}; bloky.push(g);} g.items.push(e); });
