@@ -8419,13 +8419,76 @@ function mmHabitFronta(id, prace){
 }
 // Ukol 81: prekresli VSECHNY pohledy vcetne stinove obrazovky Navyku — ta je ta,
 // kterou uzivatel vidi. Drive se volala az po awaitu, takze prodleva zustala.
+// Ukol 81/82/83 (Marek 4. 9.): odskrtnuti uz NEPRESTAVUJE celou obrazovku. Prestavba
+// znovu vytvorila vsechny radky, takze <use> odkazy na ikony se musely znovu navazat
+// (ikony probliknuty) a pilulka "nahradit" se objevila/zmizela, cimz se menila vyska
+// radku a skakaly mezery. Ted se meni jen to, co se opravdu zmenilo.
+function mmNavykyPatch(){
+  const host = document.getElementById('navyky-mm');
+  const sh = host && host.shadowRoot; if (!sh) return false;
+  const pid = (typeof currentHabitPlayer === 'function') ? currentHabitPlayer() : null;
+  if (!pid) return false;
+  const ds = state.habitDay || todayStr();
+  const rady = [...sh.querySelectorAll('.nrow')];
+  if (!rady.length) return false;
+
+  for (const r of rady){
+    const chk = r.querySelector('.nchk'); if (!chk) return false;
+    const h = (state.habits || []).find(x => x.id === chk.getAttribute('data-id'));
+    if (!h) return false;
+    const done = habitIsDoneOn(h, pid, ds);
+    r.classList.toggle('hot', done);
+    r.classList.toggle('just', window._mmNoveId === h.id);
+    r.classList.toggle('zpet', window._mmOdskrtId === h.id);
+    const chceme = done ? '<svg class="i"><use href="#i-check"/></svg>' : '';
+    if (chk.innerHTML !== chceme) chk.innerHTML = chceme;
+    const det = r.querySelector('.ndet');
+    if (det){ const nd = mmHabitDetailHtml(h, pid, ds); if (det.innerHTML !== nd) det.innerHTML = nd; }
+    // pilulky nahrazovani — prepocitat, ale bez sahani na zbytek radku
+    const nahr = habitNahrazenoOn(h, pid, ds);
+    const lze = done ? 0 : habitLzeNahraditDen(h, pid, ds);
+    r.querySelectorAll('.nnahrok, .nnahr').forEach(x => x.remove());
+    let vloz = '';
+    if (nahr > 0) vloz += `<span class="nnahrok" title="Zrušit nahrazení" onclick="event.stopPropagation();mmHabitZrusNahrazeni(&#39;${h.id}&#39;,&#39;${ds}&#39;)">nahrazeno</span>`;
+    if (lze > 0)  vloz += `<span class="nnahr" onclick="event.stopPropagation();mmHabitNahradit(&#39;${h.id}&#39;,&#39;${ds}&#39;)">↺ nahradit ${habitFmtNum(lze)}</span>`;
+    if (vloz) chk.insertAdjacentHTML('beforebegin', vloz);
+  }
+
+  // prstenec vybraneho dne nahore — jen jeho vnitrek, at se nesaha na cely proužek
+  const bunka = sh.querySelector(`[data-tyd] span[onclick*="${ds}"] .kol`);
+  if (bunka){
+    const mine = (state.habits || []).filter(h => h.player_id === pid);
+    const celkem = mmHabitDenPct(pid, mine, ds);
+    const nahr = (ds > todayStr()) ? 0 : mmHabitDenNahrPct(pid, mine, ds);
+    const novy = mmHabitDenKolecko(Math.max(0, celkem - nahr), nahr, ds === todayStr(), ds === (state.habitDay || todayStr()), 'p' + ds);
+    if (bunka.innerHTML !== novy) bunka.innerHTML = novy;
+  }
+  const souhrn = sh.querySelector('.souhrn');
+  if (souhrn){
+    const existed = (state.habits || []).filter(h => habitDueOn(h, habitStrToDate(ds)) && mmHabitExisted(h, ds));
+    const hotovo = existed.filter(h => habitIsDoneOn(h, pid, ds)).length;
+    const zbyva = Math.max(0, existed.length - hotovo);
+    const zb = souhrn.querySelector('.szbyva'), pc = souhrn.querySelector('.spocet');
+    const txt = !existed.length ? 'žádný návyk na tento den'
+      : (zbyva === 0 ? 'všechno hotovo' : 'zbývá ' + zbyva + ' ' + (zbyva === 1 ? 'návyk' : (zbyva < 5 ? 'návyky' : 'návyků')));
+    if (zb && zb.textContent !== txt) zb.textContent = txt;
+    if (pc){ const t = hotovo + '/' + existed.length;
+      if (pc.textContent !== t) pc.innerHTML = hotovo + '<s>/' + existed.length + '</s>'; }
+  }
+  return true;
+}
 function mmHabitPrekresli(){
   // Prekresluj jen to, co je opravdu videt. Drive se pri kazdem tuknuti stavely
   // tri shadow DOMy vcetne celeho Prehledu (kalendar, zebricek) — na telefonu se
   // to scitalo a odskrtavani zacalo drhnout (Marek 3. 9.).
   const kde = (typeof state !== 'undefined' && state.view) ? state.view : 'navyky';
   try { renderNavyky(); } catch(_) {}                  // light-DOM protejsek, levny
-  if (kde === 'navyky'){ try { renderNavykyMM(); } catch(_) {} _mmDnesekSpinavy = true; }
+  if (kde === 'navyky'){
+    let hotovo = false;
+    try { hotovo = mmNavykyPatch(); } catch(_) { hotovo = false; }
+    if (!hotovo){ try { renderNavykyMM(); } catch(_) {} }   // zaloha, kdyz se struktura nesejde
+    _mmDnesekSpinavy = true;
+  }
   else { try { renderDnesek(); } catch(_) {} _mmNavykySpinave = true; }
 }
 // Obrazovka, ktera nebyla videt, se dozene az pri prichodu na ni.
@@ -8434,7 +8497,7 @@ function mmDozenPrekresleni(v){
   if (v === 'prehled' && _mmDnesekSpinavy){ _mmDnesekSpinavy = false; try { renderDnesek(); } catch(_) {} }
   if (v === 'navyky' && _mmNavykySpinave){ _mmNavykySpinave = false; try { renderNavykyMM(); } catch(_) {} }
 }
-async function mmHabitToggle(id){ window._mmNoveId=id; await toggleHabitToday(id); renderNavykyMM();
+async function mmHabitToggle(id){ window._mmNoveId=id; await toggleHabitToday(id); mmHabitPrekresli();
   clearTimeout(window._mmNoveT); window._mmNoveT=setTimeout(()=>{ window._mmNoveId=null; },700); }
 
 // ----- Statistiky (3.1) — jednoduchá reálná verze uvnitř root Návyků -----
