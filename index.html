@@ -2830,7 +2830,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 @media (prefers-reduced-motion: reduce){
   #mm-cil-sheet .cs-panel,#mm-cil-sheet .cs-stin{transition:none;}
 }
-.mm .zkver{position:fixed;right:11px;bottom:5px;z-index:41;font-size:8.6px;font-weight:700;color:var(--ter);opacity:.7;letter-spacing:-.01em;pointer-events:none;white-space:nowrap;}
+.mm .zkver{position:fixed;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 2px);z-index:41;font-size:9.4px;font-weight:800;color:var(--ter);opacity:.85;letter-spacing:.02em;cursor:pointer;-webkit-tap-highlight-color:transparent;white-space:nowrap;padding:2px 9px;background:color-mix(in srgb,var(--card) 88%,transparent);border-radius:999px;}
 
 .mm .fdadd{font-size:14.48px;color:var(--ter);background:var(--track);border-radius:999px;padding:7px 13px;margin-top:3px;}
 .mm .rwbar{display:flex;align-items:center;justify-content:space-between;padding:9px 18px;border-radius:999px;margin-top:11px;border:1.5px solid transparent;background-image:linear-gradient(var(--card),var(--card)),linear-gradient(115deg,#D6A23A,#0FA968,#3FAEC2,#8A7BCB);background-origin:border-box;background-clip:padding-box,border-box;}
@@ -6900,8 +6900,36 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v87';
+const MM_VERZE = 'v88';
 function mmVerzeCas(){ return MM_VERZE; }
+// Diagnostika (Marek 4. 9.): tuknutim na cislo verze se zapne zivy vypis rozmeru
+// radku navyku. Poskakovani bublin se mi nedari vyvolat v prohlizeci, takze potrebuji
+// videt skutecna cisla primo z Markova telefonu — staci, aby byl vypis v zaberu videa.
+let _mmDiagBezi = false, _mmDiagT = null;
+function mmDiagPrepni(){
+  _mmDiagBezi = !_mmDiagBezi;
+  let el = document.getElementById('mm-diag');
+  if (!_mmDiagBezi){ if (el) el.remove(); clearInterval(_mmDiagT); return; }
+  el = document.createElement('div');
+  el.id = 'mm-diag';
+  el.style.cssText = 'position:fixed;left:6px;top:calc(env(safe-area-inset-top,0px) + 26px);z-index:60;'
+    + 'font:700 9px/1.35 ui-monospace,Menlo,monospace;color:#0B3;background:rgba(0,0,0,.82);'
+    + 'padding:5px 7px;border-radius:8px;white-space:pre;pointer-events:none;max-width:60vw;';
+  document.body.appendChild(el);
+  const tik = () => {
+    const host = document.getElementById('navyky-mm');
+    const sh = host && host.shadowRoot;
+    if (!sh){ el.textContent = 'navyky nejsou videt'; return; }
+    const r = [...sh.querySelectorAll('.nrow')];
+    const radky = r.map((x,i) => { const b = x.getBoundingClientRect();
+      const mez = r[i+1] ? (r[i+1].getBoundingClientRect().top - b.bottom) : null;
+      return i + ' v' + b.height.toFixed(1) + ' s' + b.width.toFixed(1)
+        + (mez != null ? ' m' + mez.toFixed(1) : ''); });
+    el.textContent = 'v=vyska s=sirka m=mezera' + String.fromCharCode(10) + radky.join(String.fromCharCode(10));
+  };
+  tik();
+  _mmDiagT = setInterval(tik, 100);
+}
 function mmVerzeHtml(){
   return '<div class="vpozn" style="justify-content:center;margin:10px 3px 78px">Verze appky: '+MM_VERZE+'</div>';
 }
@@ -6911,7 +6939,7 @@ function mmAdminFloat(){
   let html = (typeof mmAdminPruhHtml === 'function') ? mmAdminPruhHtml() : '';
   if (typeof isAdminDevice === 'function' && isAdminDevice()){
     const cas = mmVerzeCas();
-    if (cas) html += '<span class="zkver">' + cas + '</span>';
+    if (cas) html += '<span class="zkver" onclick="mmDiagPrepni()">' + cas + '</span>';
   }
   let obal = document.getElementById('mm-admin-float');
   if (!html){ if (obal) obal.remove(); return; }
@@ -7082,7 +7110,7 @@ function renderDnesek(){
   const ov=document.createElement('style');
   /* .lc padding-bottom 5.9px = kompenzace tesnejsiho renderovani pisma na iOS (zmereno z Markova
      screenshotu 2026-07-20: karta zebricku koncila o 7.4pt vys nez v mockup nahledu) — jen Dnesek. */
-  ov.textContent=':host{-webkit-text-size-adjust:100%;display:block;font-family:var(--font-ui);font-size:19.31px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:calc(66px + env(safe-area-inset-bottom));}.tb{position:fixed;transform:translateZ(0);will-change:transform;backface-visibility:hidden;}.tbveil{display:block;position:fixed;left:0;right:0;bottom:0;height:14px;background:var(--bg);pointer-events:none;}.nav{position:relative;}.nav .right{position:absolute;right:2px;top:16.5px;}.lc{padding-bottom:0;}'+(document.documentElement.classList.contains('pwa-standalone')?'.nav:not(:has(.date)){padding-top:15px;}':'');
+  ov.textContent=':host{-webkit-text-size-adjust:100%;display:block;font-family:var(--font-ui);font-size:19.31px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:calc(66px + env(safe-area-inset-bottom));}.tb{position:fixed;transform:translateZ(0);will-change:transform;backface-visibility:hidden;}.tbveil{display:none;}.nav{position:relative;}.nav .right{position:absolute;right:2px;top:16.5px;}.lc{padding-bottom:0;}'+(document.documentElement.classList.contains('pwa-standalone')?'.nav:not(:has(.date)){padding-top:15px;}':'');
   sh.appendChild(ov);
   if(sprite && !sh.querySelector('#momentum-sprite')) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(0)}</div>`;
@@ -8248,7 +8276,7 @@ function renderParta(){
   [...sh.childNodes].forEach(n => { if (n !== _spr) n.remove(); });   // ukol 85: sprite se neodpojuje
   if(tplEl) sh.appendChild(tplEl.content.cloneNode(true));
   const ov=document.createElement('style');
-  ov.textContent=':host{-webkit-text-size-adjust:100%;display:block;font-family:var(--font-ui);font-size:19.31px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:calc(66px + env(safe-area-inset-bottom));}.tb{position:fixed;transform:translateZ(0);will-change:transform;backface-visibility:hidden;}.tbveil{display:block;position:fixed;left:0;right:0;bottom:0;height:14px;background:var(--bg);pointer-events:none;}.nav{position:relative;}.nav .right{position:absolute;right:2px;top:16.5px;}'+(document.documentElement.classList.contains('pwa-standalone')?'.nav:not(:has(.date)){padding-top:15px;}':'');
+  ov.textContent=':host{-webkit-text-size-adjust:100%;display:block;font-family:var(--font-ui);font-size:19.31px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:calc(66px + env(safe-area-inset-bottom));}.tb{position:fixed;transform:translateZ(0);will-change:transform;backface-visibility:hidden;}.tbveil{display:none;}.nav{position:relative;}.nav .right{position:absolute;right:2px;top:16.5px;}'+(document.documentElement.classList.contains('pwa-standalone')?'.nav:not(:has(.date)){padding-top:15px;}':'');
   sh.appendChild(ov);
   if(sprite && !sh.querySelector('#momentum-sprite')) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(1)}</div>`;
@@ -9048,7 +9076,7 @@ function renderNavykyMM(){
   [...sh.childNodes].forEach(n => { if (n !== _spr) n.remove(); });   // ukol 85: sprite se neodpojuje
   if(tplEl) sh.appendChild(tplEl.content.cloneNode(true));
   const ov=document.createElement('style');
-  ov.textContent=':host{-webkit-text-size-adjust:100%;display:block;font-family:var(--font-ui);font-size:19.31px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:calc(66px + env(safe-area-inset-bottom));}.tb{position:fixed;transform:translateZ(0);will-change:transform;backface-visibility:hidden;}.tbveil{display:block;position:fixed;left:0;right:0;bottom:0;height:14px;background:var(--bg);pointer-events:none;}.nav{position:relative;}.nav .right{position:absolute;right:2px;top:16.5px;}'+(document.documentElement.classList.contains('pwa-standalone')?'.nav:not(:has(.date)){padding-top:15px;}':'');
+  ov.textContent=':host{-webkit-text-size-adjust:100%;display:block;font-family:var(--font-ui);font-size:19.31px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:calc(66px + env(safe-area-inset-bottom));}.tb{position:fixed;transform:translateZ(0);will-change:transform;backface-visibility:hidden;}.tbveil{display:none;}.nav{position:relative;}.nav .right{position:absolute;right:2px;top:16.5px;}'+(document.documentElement.classList.contains('pwa-standalone')?'.nav:not(:has(.date)){padding-top:15px;}':'');
   sh.appendChild(ov);
   if(sprite && !sh.querySelector('#momentum-sprite')) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr nvk" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(1)}</div>`;
@@ -9176,7 +9204,7 @@ function renderJaMM(){
   [...sh.childNodes].forEach(n => { if (n !== _spr) n.remove(); });   // ukol 85: sprite se neodpojuje
   if(tplEl) sh.appendChild(tplEl.content.cloneNode(true));
   const ov=document.createElement('style');
-  ov.textContent=':host{-webkit-text-size-adjust:100%;display:block;font-family:var(--font-ui);font-size:19.31px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:calc(66px + env(safe-area-inset-bottom));}.tb{position:fixed;transform:translateZ(0);will-change:transform;backface-visibility:hidden;}.tbveil{display:block;position:fixed;left:0;right:0;bottom:0;height:14px;background:var(--bg);pointer-events:none;}.nav{position:relative;}.nav .right{position:absolute;right:2px;top:16.5px;}'+(document.documentElement.classList.contains('pwa-standalone')?'.nav:not(:has(.date)){padding-top:15px;}':'');
+  ov.textContent=':host{-webkit-text-size-adjust:100%;display:block;font-family:var(--font-ui);font-size:19.31px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:calc(66px + env(safe-area-inset-bottom));}.tb{position:fixed;transform:translateZ(0);will-change:transform;backface-visibility:hidden;}.tbveil{display:none;}.nav{position:relative;}.nav .right{position:absolute;right:2px;top:16.5px;}'+(document.documentElement.classList.contains('pwa-standalone')?'.nav:not(:has(.date)){padding-top:15px;}':'');
   sh.appendChild(ov);
   if(sprite && !sh.querySelector('#momentum-sprite')) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(2)}</div>`;
@@ -9269,7 +9297,7 @@ function mmMountSub(host, tpl, barIdx){
   [...sh.childNodes].forEach(n => { if (n !== _spr) n.remove(); });   // ukol 85: sprite se neodpojuje
   if(tplEl) sh.appendChild(tplEl.content.cloneNode(true));
   const ov=document.createElement('style');
-  ov.textContent=':host{-webkit-text-size-adjust:100%;display:block;font-family:var(--font-ui);font-size:19.31px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:calc(66px + env(safe-area-inset-bottom));}.tb{position:fixed;transform:translateZ(0);will-change:transform;backface-visibility:hidden;}.tbveil{display:block;position:fixed;left:0;right:0;bottom:0;height:14px;background:var(--bg);pointer-events:none;}.nav{position:relative;}.nav .right{position:absolute;right:2px;top:16.5px;}'+(document.documentElement.classList.contains('pwa-standalone')?'.fhd{padding-top:15px;}':'');
+  ov.textContent=':host{-webkit-text-size-adjust:100%;display:block;font-family:var(--font-ui);font-size:19.31px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:calc(66px + env(safe-area-inset-bottom));}.tb{position:fixed;transform:translateZ(0);will-change:transform;backface-visibility:hidden;}.tbveil{display:none;}.nav{position:relative;}.nav .right{position:absolute;right:2px;top:16.5px;}'+(document.documentElement.classList.contains('pwa-standalone')?'.fhd{padding-top:15px;}':'');
   sh.appendChild(ov);
   if(sprite && !sh.querySelector('#momentum-sprite')) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(barIdx)}</div>`;
