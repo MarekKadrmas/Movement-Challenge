@@ -2300,12 +2300,16 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .lcard.ja-prvni .psegt::before{box-shadow:4px 4px 0 4px color-mix(in srgb,var(--green) 8%,var(--card));}
 .lcard.ja-prvni .psegt::after{box-shadow:-4px 4px 0 4px color-mix(in srgb,var(--green) 8%,var(--card));}
 /* Ukol 81: odskrtnuti ma zrcadlovou animaci ke skrtnuti (Marek 3. 9.) */
-.nvk .nrow.zpet .nchk{animation:mmChkZpet .48s cubic-bezier(.3,.9,.4,1);}
+.nvk .nrow.zpet .nchk{animation:none;}
 @keyframes mmChkZpet{0%{transform:scale(1.1)}55%{transform:scale(.88)}100%{transform:scale(1)}}
 /* Ukol 75: nove nactene bloky lehce najedou, at je videt, ze se neco stalo */
 .deni .pblok.nove{animation:mmDeniNajed .55s ease both;}
 @keyframes mmDeniNajed{from{opacity:0}to{opacity:1}}
 @media (prefers-reduced-motion: reduce){ .deni .pblok.nove{animation:none;} }
+/* Ukol 86: zaskrtavatko ma 22 px, na prst je to malo — neviditelne zvetsime
+   dotykovou plochu na 44 px, aniz by se cokoli posunulo (Marek 4. 9.). */
+.nvk .nrow .nchk{position:relative;}
+.nvk .nrow .nchk::before{content:'';position:absolute;top:50%;left:50%;width:44px;height:44px;transform:translate(-50%,-50%);border-radius:50%;}
 .smazbox{display:flex;justify-content:center;margin:10px 0 2px;}
 .smazbox span{font-size:13.28px;font-weight:800;color:var(--red,#E05C5C);padding:8px 16px;border-radius:999px;background:color-mix(in srgb,var(--red,#E05C5C) 10%,transparent);cursor:pointer;}
 .nvk .nrow{display:flex;align-items:center;gap:10px;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:7px 14px 7px 8px;margin-bottom:6px;box-sizing:border-box;min-height:44px;height:44px;overflow:hidden;}
@@ -2337,9 +2341,9 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .nvk .nrow.pak .nic{opacity:.62;}
 .nvk .nrow.hot{background:var(--card);box-shadow:var(--shadow);}
 .nvk .nrow.hot .nchk{background:linear-gradient(160deg,#9C7BE6,#6B49CF);border:0;box-shadow:none;}
-.nvk .nrow.hot.just .nchk{animation:mmChk .55s cubic-bezier(.24,1.3,.36,1);}
-.nvk .nrow.hot.just .nchk .i{animation:mmChkI .42s ease .07s both;}
-.nvk .nrow.just{animation:mmRow .5s ease;}
+.nvk .nrow.hot.just .nchk{animation:none;}
+.nvk .nrow.hot.just .nchk .i{animation:mmChkI .26s ease both;}
+.nvk .nrow.just{animation:none;}
 @keyframes mmChk{0%{transform:scale(.55)}60%{transform:scale(1.14)}100%{transform:scale(1)}}
 @keyframes mmChkI{0%{opacity:0;transform:scale(.4)}100%{opacity:1;transform:scale(1)}}
 @keyframes mmRow{0%{background:color-mix(in srgb,#8B6FE0 14%,var(--card))}100%{}}
@@ -3388,12 +3392,16 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .lcard.ja-prvni .psegt::before{box-shadow:4px 4px 0 4px color-mix(in srgb,var(--green) 8%,var(--card));}
 .lcard.ja-prvni .psegt::after{box-shadow:-4px 4px 0 4px color-mix(in srgb,var(--green) 8%,var(--card));}
 /* Ukol 81: odskrtnuti ma zrcadlovou animaci ke skrtnuti (Marek 3. 9.) */
-.nvk .nrow.zpet .nchk{animation:mmChkZpet .48s cubic-bezier(.3,.9,.4,1);}
+.nvk .nrow.zpet .nchk{animation:none;}
 @keyframes mmChkZpet{0%{transform:scale(1.1)}55%{transform:scale(.88)}100%{transform:scale(1)}}
 /* Ukol 75: nove nactene bloky lehce najedou, at je videt, ze se neco stalo */
 .deni .pblok.nove{animation:mmDeniNajed .55s ease both;}
 @keyframes mmDeniNajed{from{opacity:0}to{opacity:1}}
 @media (prefers-reduced-motion: reduce){ .deni .pblok.nove{animation:none;} }
+/* Ukol 86: zaskrtavatko ma 22 px, na prst je to malo — neviditelne zvetsime
+   dotykovou plochu na 44 px, aniz by se cokoli posunulo (Marek 4. 9.). */
+.nvk .nrow .nchk{position:relative;}
+.nvk .nrow .nchk::before{content:'';position:absolute;top:50%;left:50%;width:44px;height:44px;transform:translate(-50%,-50%);border-radius:50%;}
 .smazbox{display:flex;justify-content:center;margin:10px 0 2px;}
 .smazbox span{font-size:13.28px;font-weight:800;color:var(--red,#E05C5C);padding:8px 16px;border-radius:999px;background:color-mix(in srgb,var(--red,#E05C5C) 10%,transparent);cursor:pointer;}
 .nvk .nrow{display:flex;align-items:center;gap:10px;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:7px 14px 7px 8px;margin-bottom:6px;box-sizing:border-box;min-height:44px;height:44px;overflow:hidden;}
@@ -3425,9 +3433,9 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .nvk .nrow.pak .nic{opacity:.62;}
 .nvk .nrow.hot{background:var(--card);box-shadow:var(--shadow);}
 .nvk .nrow.hot .nchk{background:linear-gradient(160deg,#9C7BE6,#6B49CF);border:0;box-shadow:none;}
-.nvk .nrow.hot.just .nchk{animation:mmChk .55s cubic-bezier(.24,1.3,.36,1);}
-.nvk .nrow.hot.just .nchk .i{animation:mmChkI .42s ease .07s both;}
-.nvk .nrow.just{animation:mmRow .5s ease;}
+.nvk .nrow.hot.just .nchk{animation:none;}
+.nvk .nrow.hot.just .nchk .i{animation:mmChkI .26s ease both;}
+.nvk .nrow.just{animation:none;}
 @keyframes mmChk{0%{transform:scale(.55)}60%{transform:scale(1.14)}100%{transform:scale(1)}}
 @keyframes mmChkI{0%{opacity:0;transform:scale(.4)}100%{opacity:1;transform:scale(1)}}
 @keyframes mmRow{0%{background:color-mix(in srgb,#8B6FE0 14%,var(--card))}100%{}}
@@ -8388,19 +8396,51 @@ async function mmHabitZapisHodnotu(id, val){
   const sel=state.habitDay||todayStr(); if(sel>todayStr()) return;
   const ex=habitLogObj(id,pid,sel);
   window._mmNoveId=id;
+  clearTimeout(window._mmNoveT); window._mmNoveT=setTimeout(()=>{ window._mmNoveId=null; },700);
+
   if(isDemo()){
     if(val>0){ if(ex) ex.hodnota=val; else state.habitLogs.push({id:'demo-'+Math.random().toString(36).slice(2),habit_id:id,player_id:pid,datum:sel,hodnota:val}); }
     else if(ex) state.habitLogs=state.habitLogs.filter(l=>l.id!==ex.id);
-  } else {
-    try{
-      if(val>0){
-        if(ex){ const {error}=await db.from('habit_logs').update({hodnota:val}).eq('id',ex.id); if(error) throw error; ex.hodnota=val; }
-        else { const {data,error}=await db.from('habit_logs').insert({habit_id:id,player_id:pid,datum:sel,hodnota:val}).select(); if(error) throw error; if(data&&data[0]) state.habitLogs.push(data[0]); }
-      } else if(ex){ const {error}=await db.from('habit_logs').delete().eq('id',ex.id); if(error) throw error; state.habitLogs=state.habitLogs.filter(l=>l.id!==ex.id); }
-    }catch(e){ toast('Chyba: '+e.message,'error'); }
+    mmHabitPrekresli();
+    return;
   }
-  renderNavykyMM(); try{ renderDnesek(); }catch(_){}
-  clearTimeout(window._mmNoveT); window._mmNoveT=setTimeout(()=>{ window._mmNoveId=null; },700);
+
+  // Ukol 86 (Marek 4. 9.): meritelne a tydenni navyky (napr. Beh) cekaly na odpoved
+  // databaze a az POTOM se prekreslily — proto "nereaguje hnedka". Ted stejne jako
+  // u jednoduchych navyku: obrazovka reaguje ihned, zapis jde na pozadi ve fronte.
+  if(val>0){
+    if(ex){
+      const puvodni = ex.hodnota;
+      ex.hodnota = val;
+      mmHabitPrekresli();
+      return mmHabitFronta(id, async () => {
+        if(String(ex.id).startsWith('tmp-')) return;
+        const {error}=await db.from('habit_logs').update({hodnota:val}).eq('id',ex.id);
+        if(error){ ex.hodnota = puvodni; mmHabitPrekresli(); toast('Nepovedlo se zapsat: '+error.message,'error'); }
+      });
+    }
+    const docasne={ id:'tmp-'+Math.random().toString(36).slice(2), habit_id:id, player_id:pid, datum:sel, hodnota:val };
+    state.habitLogs.push(docasne);
+    mmHabitPrekresli();
+    return mmHabitFronta(id, async () => {
+      if(!state.habitLogs.includes(docasne)) return;
+      const {data,error}=await db.from('habit_logs').insert({habit_id:id,player_id:pid,datum:sel,hodnota:val}).select();
+      if(error){
+        state.habitLogs=state.habitLogs.filter(l=>l!==docasne); mmHabitPrekresli();
+        toast('Nepovedlo se zapsat: '+error.message,'error'); return;
+      }
+      if(data&&data[0]) docasne.id=data[0].id;
+    });
+  }
+  if(!ex) return;
+  const zaloha = ex;
+  state.habitLogs=state.habitLogs.filter(l=>l!==ex);
+  mmHabitPrekresli();
+  return mmHabitFronta(id, async () => {
+    if(String(zaloha.id).startsWith('tmp-')) return;
+    const {error}=await db.from('habit_logs').delete().eq('id',zaloha.id);
+    if(error){ state.habitLogs.push(zaloha); mmHabitPrekresli(); toast('Nepovedlo se zrusit: '+error.message,'error'); }
+  });
 }
 function mmHabitKrok(h){ const cil=Number(h.cil_hodnota)||0; return cil<=12 ? 1 : Math.max(1, Math.round(cil/4)); }
 async function mmHabitKlik(id){

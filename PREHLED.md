@@ -105,6 +105,7 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 83 | Pulzující kolečko při přepnutí na Návyky | Návyky | 📱 |
 | 84 | Dění — starý záznam vyskočil mezi čerstvé a udělal díru | Přehled → Dění | ✅ |
 | 85 | Emoji v ikonách aktivit problikávají | Přehled → Dění | 📌 backlog |
+| 86 | Týdenní návyk (Běh) — malý cíl a zpožděná reakce | Návyky → Cíle na tento týden | 📱 |
 
 
 
