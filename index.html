@@ -6875,7 +6875,7 @@ function mmAdminPruhHtml(){
     + `<button type="button" class="zkbtn${sam?'':' cizi'}" style="--zc:${col}" aria-label="Za koho zapisuješ" onclick="mmZaKohoToggle(event)">`
     +   `<span>${esc(h?initials(h.jmeno):'?')}</span>`
     + `</button>`
-    + `<span class="zkver">${mmVerzeCas()}</span>`
+
     + `</div>`;
 }
 // Ukol 37 (Marek 26. 8.): kolecko sedelo v shadow rootu Prehledu, takze zmizelo,
@@ -6899,7 +6899,13 @@ function mmVerzeHtml(){
   return '<div class="vpozn" style="justify-content:center;margin:10px 3px 78px">Verze appky: '+t+'</div>';
 }
 function mmAdminFloat(){
-  const html = (typeof mmAdminPruhHtml === 'function') ? mmAdminPruhHtml() : '';
+  // Cas verze vidi Markovo zarizeni i s vypnutym admin rezimem — aby slo vzdy overit,
+  // ze bezi cerstvy build (Marek 4. 9.). Kamaradi ho nevidi.
+  let html = (typeof mmAdminPruhHtml === 'function') ? mmAdminPruhHtml() : '';
+  if (typeof isAdminDevice === 'function' && isAdminDevice()){
+    const cas = mmVerzeCas();
+    if (cas) html += '<span class="zkver">' + cas + '</span>';
+  }
   let obal = document.getElementById('mm-admin-float');
   if (!html){ if (obal) obal.remove(); return; }
   if (!obal){
@@ -8509,7 +8515,8 @@ function mmHabitPrekresli(){
   // Prekresluj jen to, co je opravdu videt. Drive se pri kazdem tuknuti stavely
   // tri shadow DOMy vcetne celeho Prehledu (kalendar, zebricek) — na telefonu se
   // to scitalo a odskrtavani zacalo drhnout (Marek 3. 9.).
-  const kde = (typeof state !== 'undefined' && state.view) ? state.view : 'navyky';
+  const vidim = id => { const e = document.getElementById(id); return !!e && e.getBoundingClientRect().height > 40; };
+  const kde = vidim('navyky-mm') ? 'navyky' : (vidim('dnesek-mm') ? 'prehled' : 'jine');
   try { renderNavyky(); } catch(_) {}                  // light-DOM protejsek, levny
   if (kde === 'navyky'){
     let hotovo = false;
@@ -8517,7 +8524,8 @@ function mmHabitPrekresli(){
     if (!hotovo){ try { renderNavykyMM(); } catch(_) {} }   // zaloha, kdyz se struktura nesejde
     _mmDnesekSpinavy = true;
   }
-  else { try { renderDnesek(); } catch(_) {} _mmNavykySpinave = true; }
+  else if (kde === 'prehled'){ try { renderDnesek(); } catch(_) {} _mmNavykySpinave = true; }
+  else { _mmDnesekSpinavy = true; _mmNavykySpinave = true; }   // nic viditelneho — dozene se pri prichodu
 }
 // Obrazovka, ktera nebyla videt, se dozene az pri prichodu na ni.
 let _mmDnesekSpinavy = false, _mmNavykySpinave = false;
