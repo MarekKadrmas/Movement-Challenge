@@ -6897,22 +6897,13 @@ function mmAdminPruhHtml(){
 // Ukol 37 (Marek 26. 8.): kolecko sedelo v shadow rootu Prehledu, takze zmizelo,
 // jakmile jsi prepnul obrazovku. Ted je to JEDEN prvek v light DOM pripnuty na
 // <body> — plati pro celou appku, dokud admin rezim nevypnes.
-function mmVerzeCas(){
-  try {
-    const d = new Date(document.lastModified);
-    if (isNaN(d)) return '';
-    return d.getDate()+'.'+(d.getMonth()+1)+'. '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
-  } catch(_) { return ''; }
-}
+// Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
+// stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
+// tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
+const MM_VERZE = 'v87';
+function mmVerzeCas(){ return MM_VERZE; }
 function mmVerzeHtml(){
-  let t = '';
-  try {
-    const d = new Date(document.lastModified);
-    if (!isNaN(d)) t = d.getDate()+'. '+(d.getMonth()+1)+'. '+d.getFullYear()
-      + ' · ' + String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
-  } catch(_) {}
-  if (!t) return '';
-  return '<div class="vpozn" style="justify-content:center;margin:10px 3px 78px">Verze appky: '+t+'</div>';
+  return '<div class="vpozn" style="justify-content:center;margin:10px 3px 78px">Verze appky: '+MM_VERZE+'</div>';
 }
 function mmAdminFloat(){
   // Cas verze vidi Markovo zarizeni i s vypnutym admin rezimem — aby slo vzdy overit,
