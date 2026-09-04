@@ -2338,7 +2338,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .nvk .nrow.hot .nnahrok{opacity:.9;}
 .nvk .slinfo{font-size:10.2px;font-weight:700;color:var(--ter);text-transform:none;letter-spacing:0;}
 .nvk .nrow .ndet .i{width:12px;height:12px;}
-.nvk .nrow .nchk{width:22px;height:22px;flex:0 0 22px;box-sizing:border-box;border-radius:50%;border:2px solid var(--ter);box-shadow:none;display:grid;place-items:center;color:#fff;cursor:pointer;transition:background .2s ease,box-shadow .2s ease;}
+.nvk .nrow .nchk{width:22px;height:22px;flex:0 0 22px;box-sizing:border-box;border-radius:50%;border:2px solid var(--ter);box-shadow:none;display:grid;place-items:center;color:#fff;cursor:pointer;}
 .nvk .nrow .nchk .i{width:13px;height:13px;}
 .nvk .nrow.pak .nchk{position:relative;overflow:hidden;border-color:color-mix(in srgb,var(--ter) 78%,var(--card));box-shadow:none;cursor:default;pointer-events:none;}
 .nvk .nrow.pak .nchk::after{content:'';position:absolute;inset:0.5px;border-radius:50%;background:repeating-linear-gradient(45deg,color-mix(in srgb,var(--ter) 85%,transparent) 0 1.5px,transparent 1.5px 5.5px);-webkit-mask-image:radial-gradient(circle at 50% 50%,#000 18%,rgba(0,0,0,.42) 60%,transparent 86%);mask-image:radial-gradient(circle at 50% 50%,#000 18%,rgba(0,0,0,.42) 60%,transparent 86%);}
@@ -3434,7 +3434,7 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .nvk .nrow.hot .nnahrok{opacity:.9;}
 .nvk .slinfo{font-size:10.2px;font-weight:700;color:var(--ter);text-transform:none;letter-spacing:0;}
 .nvk .nrow .ndet .i{width:12px;height:12px;}
-.nvk .nrow .nchk{width:22px;height:22px;flex:0 0 22px;box-sizing:border-box;border-radius:50%;border:2px solid var(--ter);box-shadow:none;display:grid;place-items:center;color:#fff;cursor:pointer;transition:background .2s ease,box-shadow .2s ease;}
+.nvk .nrow .nchk{width:22px;height:22px;flex:0 0 22px;box-sizing:border-box;border-radius:50%;border:2px solid var(--ter);box-shadow:none;display:grid;place-items:center;color:#fff;cursor:pointer;}
 .nvk .nrow .nchk .i{width:13px;height:13px;}
 .nvk .nrow.pak .nchk{position:relative;overflow:hidden;border-color:color-mix(in srgb,var(--ter) 78%,var(--card));box-shadow:none;cursor:default;pointer-events:none;}
 .nvk .nrow.pak .nchk::after{content:'';position:absolute;inset:0.5px;border-radius:50%;background:repeating-linear-gradient(45deg,color-mix(in srgb,var(--ter) 85%,transparent) 0 1.5px,transparent 1.5px 5.5px);-webkit-mask-image:radial-gradient(circle at 50% 50%,#000 18%,rgba(0,0,0,.42) 60%,transparent 86%);mask-image:radial-gradient(circle at 50% 50%,#000 18%,rgba(0,0,0,.42) 60%,transparent 86%);}
@@ -8457,8 +8457,12 @@ async function mmHabitKlik(id){
   const pid=currentHabitPlayer(); const sel=state.habitDay||todayStr();
   const cil=Number(h.cil_hodnota)||0; const log=habitLogObj(id,pid,sel);
   const mam=log?(log.hodnota!=null?Number(log.hodnota):cil):0;
-  if(cil>0 && mam>=cil) return mmHabitZapisHodnotu(id, 0);
-  return mmHabitZapisHodnotu(id, Math.min(cil||9e9, mam+mmHabitKrok(h)));
+  // Ukol 86 (Marek 4. 9.): tydenni cil (napr. Beh 1/3) nema ciselnou hodnotu na den,
+  // takze cil=0 a tuknuti jen porad pricitalo — odskrtnout to neslo. Bez ciselneho
+  // cile se to chova jako obycejne zaskrtnuti: druhe tuknuti den zase zrusi.
+  if(cil<=0) return mmHabitToggle(id);
+  if(mam>=cil) return mmHabitZapisHodnotu(id, 0);
+  return mmHabitZapisHodnotu(id, Math.min(cil, mam+mmHabitKrok(h)));
 }
 async function mmHabitCely(id){
   const h=state.habits.find(x=>x.id===id); if(!h) return;
