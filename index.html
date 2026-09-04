@@ -2346,7 +2346,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .nvk .nrow.hot{background:var(--card);box-shadow:var(--shadow);}
 .nvk .nrow.hot .nchk{background:linear-gradient(160deg,#9C7BE6,#6B49CF);border:0;box-shadow:none;}
 .nvk .nrow.hot.just .nchk{animation:none;}
-.nvk .nrow.hot.just .nchk .i{animation:mmChkI .26s ease both;}
+.nvk .nrow.hot.just .nchk .i{animation:none;}
 .nvk .nrow.just{animation:none;}
 @keyframes mmChk{0%{transform:scale(.55)}60%{transform:scale(1.14)}100%{transform:scale(1)}}
 @keyframes mmChkI{0%{opacity:0;transform:scale(.4)}100%{opacity:1;transform:scale(1)}}
@@ -3442,7 +3442,7 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .nvk .nrow.hot{background:var(--card);box-shadow:var(--shadow);}
 .nvk .nrow.hot .nchk{background:linear-gradient(160deg,#9C7BE6,#6B49CF);border:0;box-shadow:none;}
 .nvk .nrow.hot.just .nchk{animation:none;}
-.nvk .nrow.hot.just .nchk .i{animation:mmChkI .26s ease both;}
+.nvk .nrow.hot.just .nchk .i{animation:none;}
 .nvk .nrow.just{animation:none;}
 @keyframes mmChk{0%{transform:scale(.55)}60%{transform:scale(1.14)}100%{transform:scale(1)}}
 @keyframes mmChkI{0%{opacity:0;transform:scale(.4)}100%{opacity:1;transform:scale(1)}}
@@ -6900,7 +6900,7 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v88';
+const MM_VERZE = 'v90';
 function mmVerzeCas(){ return MM_VERZE; }
 // Diagnostika (Marek 4. 9.): tuknutim na cislo verze se zapne zivy vypis rozmeru
 // radku navyku. Poskakovani bublin se mi nedari vyvolat v prohlizeci, takze potrebuji
@@ -8335,9 +8335,9 @@ function mmHabitRowHtml(h, pid, ds){
   const budouci = ds > todayStr();
   const nahr = habitNahrazenoOn(h,pid,ds);                       // §13: den dohnaný z přebytku
   const lzeNahr = done ? 0 : habitLzeNahraditDen(h,pid,ds);
-  return `<div class="nrow${done?' hot':''}${cerstve}${budouci?' pak':''}" style="--nc:${col}">`
+  return `<div class="nrow${done?' hot':''}${cerstve}${budouci?' pak':''}" style="--nc:${col}"${budouci?'':` onclick="mmHabitKlik(&#39;${h.id}&#39;)"`}>`
     +`<span class="nic">${habitIconHtml(h.ikona)}</span>`
-    +`<span class="nnm" onclick="openHabitModal('${h.id}')">${esc(h.nazev)}</span>`
+    +`<span class="nnm" onclick="event.stopPropagation();openHabitModal('${h.id}')">${esc(h.nazev)}</span>`
     +`<span class="ndet">${mmHabitDetailHtml(h,pid,ds)}</span>`
     +(nahr>0 ? `<span class="nnahrok" title="Zrušit nahrazení" onclick="event.stopPropagation();mmHabitZrusNahrazeni('${h.id}','${ds}')">nahrazeno</span>` : '')
     +(lzeNahr>0 ? `<span class="nnahr" onclick="event.stopPropagation();mmHabitNahradit('${h.id}','${ds}')">↺ nahradit ${habitFmtNum(lzeNahr)}</span>` : '')
@@ -12336,7 +12336,7 @@ async function toggleHabitToday(id){
     });
   }
   // u meritelneho s JIZ zadanou castecnou hodnotou -> otevri detail misto prepsani naslepo
-  if (z !== 'check' && existing){ openHabitValue(id); return; }
+  if (z !== 'check' && (Number(h.cil_hodnota)||0) > 0 && existing){ openHabitValue(id); return; }
   const full = z === 'check' ? null : (Number(h.cil_hodnota) || null);
   const docasne = { id: 'tmp-' + Math.random().toString(36).slice(2), habit_id: id, player_id: pid, datum: sel, hodnota: full };
   state.habitLogs.push(docasne);
