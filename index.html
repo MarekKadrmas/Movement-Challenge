@@ -2310,6 +2310,10 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
    dotykovou plochu na 44 px, aniz by se cokoli posunulo (Marek 4. 9.). */
 .nvk .nrow .nchk{position:relative;}
 .nvk .nrow .nchk::before{content:'';position:absolute;top:50%;left:50%;width:44px;height:44px;transform:translate(-50%,-50%);border-radius:50%;}
+/* Ukol 81 (Marek 4. 9.): pevny rastr seznamu navyku — radek 44 px, mezera 6 px.
+   Rozestupy uz nezavisi na obsahu radku ani na nicem, co by mezi ne spadlo. */
+.nvk .nlist{display:grid;grid-auto-rows:44px;row-gap:6px;align-content:start;}
+.nvk .nlist>.nrow{margin-bottom:0;height:auto;min-height:0;}
 .smazbox{display:flex;justify-content:center;margin:10px 0 2px;}
 .smazbox span{font-size:13.28px;font-weight:800;color:var(--red,#E05C5C);padding:8px 16px;border-radius:999px;background:color-mix(in srgb,var(--red,#E05C5C) 10%,transparent);cursor:pointer;}
 .nvk .nrow{display:flex;align-items:center;gap:10px;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:7px 14px 7px 8px;margin-bottom:6px;box-sizing:border-box;min-height:44px;height:44px;overflow:hidden;}
@@ -3402,6 +3406,10 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
    dotykovou plochu na 44 px, aniz by se cokoli posunulo (Marek 4. 9.). */
 .nvk .nrow .nchk{position:relative;}
 .nvk .nrow .nchk::before{content:'';position:absolute;top:50%;left:50%;width:44px;height:44px;transform:translate(-50%,-50%);border-radius:50%;}
+/* Ukol 81 (Marek 4. 9.): pevny rastr seznamu navyku — radek 44 px, mezera 6 px.
+   Rozestupy uz nezavisi na obsahu radku ani na nicem, co by mezi ne spadlo. */
+.nvk .nlist{display:grid;grid-auto-rows:44px;row-gap:6px;align-content:start;}
+.nvk .nlist>.nrow{margin-bottom:0;height:auto;min-height:0;}
 .smazbox{display:flex;justify-content:center;margin:10px 0 2px;}
 .smazbox span{font-size:13.28px;font-weight:800;color:var(--red,#E05C5C);padding:8px 16px;border-radius:999px;background:color-mix(in srgb,var(--red,#E05C5C) 10%,transparent);cursor:pointer;}
 .nvk .nrow{display:flex;align-items:center;gap:10px;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:7px 14px 7px 8px;margin-bottom:6px;box-sizing:border-box;min-height:44px;height:44px;overflow:hidden;}
@@ -9034,7 +9042,7 @@ function renderNavykyMM(){
     const flexRows=mmHabitCileHtml(pid, flex, sel);
     body=`${mmHabitTydenHtml(pid, mine, sel)}
     ${mmHabitSouhrnHtml(pid, denNavyky, sel)}
-    ${rows||'<div style="padding:16px;text-align:center;color:var(--ter);font-size:12.74px">Na tento den nic naplánováno</div>'}
+    <div class="nlist">${rows||'<div style="padding:16px;text-align:center;color:var(--ter);font-size:12.74px">Na tento den nic naplánováno</div>'}</div>
     ${flexRows}
     <div class="nnew" onclick="openHabitModal()"><span><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg></span> Nový návyk</div>`;
   }
