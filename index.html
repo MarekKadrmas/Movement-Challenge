@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="cs">
+<html lang="cs" class="mm-boot">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
@@ -2832,6 +2832,14 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 }
 .mm .zkver{position:fixed;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 2px);z-index:41;font-size:9.4px;font-weight:800;color:var(--ter);opacity:.85;letter-spacing:.02em;cursor:pointer;-webkit-tap-highlight-color:transparent;white-space:nowrap;padding:2px 9px;background:color-mix(in srgb,var(--card) 88%,transparent);border-radius:999px;}
 
+/* Ukol 91 (Marek 7. 9.): nez se nacetla data, byla vteřinu videt STARA verze
+   rozhrani — hlavicka Momentum, plovouci plusko a stara spodni lista. Do doby,
+   nez je nova obrazovka vykreslena, je vsechno tohle schovane. */
+html.mm-boot .header,
+html.mm-boot #mc-tabbar,
+html.mm-boot .fab-group,
+html.mm-boot .fab{visibility:hidden !important;}
+html.mm-boot body{background:var(--bg,#EEF0EE);}
 .mm .fdadd{font-size:14.48px;color:var(--ter);background:var(--track);border-radius:999px;padding:7px 13px;margin-top:3px;}
 .mm .rwbar{display:flex;align-items:center;justify-content:space-between;padding:9px 18px;border-radius:999px;margin-top:11px;border:1.5px solid transparent;background-image:linear-gradient(var(--card),var(--card)),linear-gradient(115deg,#D6A23A,#0FA968,#3FAEC2,#8A7BCB);background-origin:border-box;background-clip:padding-box,border-box;}
 .mm .rwbar span{font-size:14.48px;font-weight:700;color:var(--sec);}
@@ -6900,7 +6908,7 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v93';
+const MM_VERZE = 'v94';
 function mmVerzeCas(){ return MM_VERZE; }
 // Diagnostika (Marek 4. 9.): tuknutim na cislo verze se zapne zivy vypis rozmeru
 // radku navyku. Poskakovani bublin se mi nedari vyvolat v prohlizeci, takze potrebuji
@@ -6943,9 +6951,10 @@ function mmDiagPrepni(){
     });
     const neco = radky.some(x => x[0] === '!');
     el.style.color = neco ? '#FF6B5E' : '#7CF0A8';
+    const ch = window._mmPosledniChyba ? (String.fromCharCode(10) + 'CHYBA ZAPISU: ' + window._mmPosledniChyba) : '';
     el.textContent = (neco ? 'NECO SE MENI:' : 'zatim se nic nemeni')
       + String.fromCharCode(10) + radky.join(String.fromCharCode(10))
-      + String.fromCharCode(10) + '(v=vyska s=sirka m=mezera, ' + MM_VERZE + ')';
+      + String.fromCharCode(10) + '(v=vyska s=sirka m=mezera, ' + MM_VERZE + ')' + ch;
   };
   tik();
   _mmDiagT = setInterval(tik, 80);
@@ -8497,6 +8506,12 @@ function mmHabitDrzeni(sh){
 }
 // Kazdy navyk ma vlastni frontu operaci, aby se rychle klikani neprekryvalo.
 const _mmFronty = {};
+function mmChybaZapisu(e){
+  // Ukol 94: kdyz zapis do databaze selze, zmena se vrati zpet a vypada to, ze
+  // "to nejde odskrtnout". Duvod si pamatujeme, aby ho slo precist v meraku.
+  window._mmPosledniChyba = (e && e.message ? e.message : String(e)).slice(0, 120);
+  try { toast('Neulozeno: ' + window._mmPosledniChyba, 'error'); } catch(_) {}
+}
 function mmHabitFronta(id, prace){
   const dalsi = (_mmFronty[id] || Promise.resolve()).then(prace, prace);
   _mmFronty[id] = dalsi.catch(() => {});
@@ -11785,10 +11800,15 @@ function mmNahrejFonty(){
   });
 }
 let _mmFontyNahrany = false;
+function mmBootHotovo(){
+  const h = document.getElementById('dnesek-mm');
+  if (h && h.shadowRoot) document.documentElement.classList.remove('mm-boot');
+}
 function renderAllViews() {
   if (!_mmFontyNahrany){ _mmFontyNahrany = true; mmNahrejFonty(); }
   mmDemoOdznak();
-  mmAdminFloat();          // ukol 37: plovouci kolecko plati pro celou appku
+  mmAdminFloat();
+  requestAnimationFrame(mmBootHotovo);          // ukol 37: plovouci kolecko plati pro celou appku
   renderDnesek();
   renderNavykyMM();
   renderJaMM();
@@ -12320,7 +12340,7 @@ async function toggleHabitToday(id){
       const { error } = await db.from('habit_logs').delete().eq('id', zaloha.id);
       if (error){
         state.habitLogs.push(zaloha); mmHabitPrekresli();
-        toast('Nepovedlo se odškrtnout: ' + error.message, 'error');
+        mmChybaZapisu(error);
       }
     });
   }
@@ -12337,7 +12357,7 @@ async function toggleHabitToday(id){
     if (error){
       state.habitLogs = state.habitLogs.filter(l => l !== docasne);
       mmHabitPrekresli();
-      toast('Nepovedlo se zapsat: ' + error.message, 'error');
+      mmChybaZapisu(error);
       return;
     }
     if (data && data[0]) docasne.id = data[0].id;        // docasne id -> skutecne

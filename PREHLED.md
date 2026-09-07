@@ -108,12 +108,12 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 86 | Týdenní návyk (Běh) — malý cíl a zpožděná reakce | Návyky → Cíle na tento týden | 📱 |
 | 87 | Šedý pruh dole ukrajoval obsah | Celá appka, spodní okraj | 📱 |
 | 88 | Číslo verze nahoře uprostřed + živý výpis rozměrů | Nahoře uprostřed | 📱 |
-| 89 | Název dne mizel z kolečka po odškrtnutí | Návyky → proužek dnů | 📱 |
+| 89 | Název dne mizel z kolečka po odškrtnutí | Návyky → proužek dnů | ✅ |
 | 90 | Mrtvý kód — 7 funkcí bylo v souboru dvakrát | Celá appka | 📱 |
-| 91 | Při zapnutí problikne starší verze | Start appky | ⏳ |
+| 91 | Při zapnutí problikla stará verze rozhraní | Start appky | 📱 |
 | 92 | Zápis aktivity — vzhled a dotažení | Zelené plusko | ⏳ |
 | 93 | Vytváření návyku — design + odlišit zlozvyky | Návyky → Nový návyk | ⏳ |
-| 94 | Běh 3× týdně pořád nejde odškrtnout | Návyky → Cíle na tento týden | ⏳ |
+| 94 | Běh — zápis do DB selže a změna se vrátí | Návyky → Cíle na tento týden | 🔍 |
 | 95 | Profil — vzhled a divné informace | Já → Profil | ⏳ |
 
 
