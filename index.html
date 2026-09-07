@@ -6900,7 +6900,7 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v92';
+const MM_VERZE = 'v93';
 function mmVerzeCas(){ return MM_VERZE; }
 // Diagnostika (Marek 4. 9.): tuknutim na cislo verze se zapne zivy vypis rozmeru
 // radku navyku. Poskakovani bublin se mi nedari vyvolat v prohlizeci, takze potrebuji
@@ -7553,36 +7553,7 @@ function mmPrehledCtogHtml(id){
 //  otevre vyber emoji; reakce se zobrazi jako male pilulky u zaznamu.
 //  Ulozeni zatim in-memory (state.mmFeed.reakce) — DB tabulka az bude.
 // ============================================================
-const MM_RX_EMOJI = ['❤️','💪','🔥','👏','🎉','😮'];
-const MM_RX_VIC = ['😂','🥲','😍','🤩','😎','🤝','🙌','👊','🫶','🤯','😱','🥶','🧊','⚡','🏆','🥇','🎯','⛰️','🏃','🚴','🏊','🧘','💤','🍺','☕','🍕','🤢','💀','🫡','🫠'];
-window.MM_FEED_REACTIONS_TABLE = window.MM_FEED_REACTIONS_TABLE || null;
-function mmRxState(){ const fs=mmFeedState(); if(!fs.reakce) fs.reakce={}; return fs.reakce; }
-function mmRxHtml(id){
-  const r=mmRxState()[id]; if(!r) return '';
-  const me=state.currentPlayerId;
-  const parts=Object.keys(r).filter(e=>r[e]&&r[e].length).map(e=>{
-    const mine=r[e].indexOf(me)>=0;
-    return '<b class="rxp'+(mine?' mine':'')+'" data-rx="'+e+'">'+e+(r[e].length>1?'<i>'+r[e].length+'</i>':'')+'</b>';
-  });
-  return parts.length?'<span class="rxrow">'+parts.join('')+'</span>':'';
-}
-function mmRxToggle(id, emoji){
-  const r=mmRxState(); const me=state.currentPlayerId||'me';
-  const m=r[id]=r[id]||{}; const arr=m[emoji]=m[emoji]||[];
-  const i=arr.indexOf(me);
-  if(i>=0) arr.splice(i,1); else arr.push(me);
-  if(!arr.length) delete m[emoji];
-  if(!Object.keys(m).length) delete r[id];
-  try{ mmRxPersist({card_id:id, player_id:me, emoji:emoji, on:i<0}); }catch(_){}
-  renderDnesek();
-}
-async function mmRxPersist(payload){
-  if(typeof isDemo==='function' && isDemo()) return {local:true};
-  const t=window.MM_FEED_REACTIONS_TABLE;
-  if(!t || typeof db==='undefined' || !db) return {local:true};
-  try{ const r=await db.from(t).upsert(payload); if(r&&r.error) throw r.error; return {ok:true}; }catch(e){ return {error:e}; }
-}
-function mmRxZavri(){ const p=sh.querySelector('.rxpick'); if(p) p.remove(); }
+// (Starsi kopie tohoto bloku byla odstranena — byla mrtva, prepisovala ji verze nize.)
 // ---- Emoji sada: kategorie, poradi i ceske nazvy presne jako na ceskem iPhonu ----
 // Format polozky: [nazev, klic ikony, "emoji klicova slova|emoji klicova slova|..."]
 // Klicova slova jsou bez diakritiky (hledani normalizuje dotaz stejne).
@@ -8574,7 +8545,11 @@ function mmNavykyPatch(){
     const celkem = mmHabitDenPct(pid, mine, ds);
     const nahr = (ds > todayStr()) ? 0 : mmHabitDenNahrPct(pid, mine, ds);
     const novy = mmHabitDenKolecko(Math.max(0, celkem - nahr), nahr, ds === todayStr(), ds === (state.habitDay || todayStr()), 'p' + ds);
-    if (bunka.innerHTML !== novy) bunka.innerHTML = novy;
+    const stareSvg = bunka.querySelector('svg');
+    const obal = document.createElement('i'); obal.innerHTML = novy;
+    const noveSvg = obal.querySelector('svg');
+    if (stareSvg && noveSvg && stareSvg.outerHTML !== noveSvg.outerHTML) stareSvg.replaceWith(noveSvg);
+    else if (!stareSvg && noveSvg) bunka.insertBefore(noveSvg, bunka.firstChild);
   }
   const souhrn = sh.querySelector('.souhrn');
   if (souhrn){
@@ -9034,12 +9009,6 @@ function mmHabitSwipe(sh){
   el.addEventListener('touchcancel', pusteno, {passive:true});
 }
 // Do budoucna se nechodi — dopredu jen dokud nejsem v tomhle tydnu
-function mmHabitLzeVpred(){
-  const sel=state.habitDay||todayStr();
-  const z=new Date(sel+'T00:00:00'); z.setDate(z.getDate()-((z.getDay()+6)%7));
-  const zd=new Date(todayStr()+'T00:00:00'); zd.setDate(zd.getDate()-((zd.getDay()+6)%7));
-  return dateToStr(z) < dateToStr(zd);
-}
 
 // Do budoucna se nechodi — dopredu jen dokud nejsem v tomhle tydnu
 function mmHabitLzeVpred(){

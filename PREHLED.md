@@ -100,7 +100,7 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 78 | Zelený řádek prvního místa navazuje na filtr | Přehled → žebříček | ✅ |
 | 79 | Zlozvyky nejsou nijak odlišené od návyků | Návyky | ⏳ |
 | 80 | Kolečka návyků měla nerovnoměrnou tloušťku | Návyky → odškrtávací kolečka | ✅ |
-| 81 | Odškrtávání návyků — velikost bublin a mezery | Návyky | 📱 |
+| 81 | Odškrtávání návyků — velikost bublin a mezery | Návyky | 📌 backlog |
 | 82 | Písmo a ikony poskakovaly při animaci | Přehled → Dění | 📱 |
 | 83 | Pulzující kolečko při přepnutí na Návyky | Návyky | 📱 |
 | 84 | Dění — starý záznam vyskočil mezi čerstvé a udělal díru | Přehled → Dění | ✅ |
@@ -108,6 +108,13 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 86 | Týdenní návyk (Běh) — malý cíl a zpožděná reakce | Návyky → Cíle na tento týden | 📱 |
 | 87 | Šedý pruh dole ukrajoval obsah | Celá appka, spodní okraj | 📱 |
 | 88 | Číslo verze nahoře uprostřed + živý výpis rozměrů | Nahoře uprostřed | 📱 |
+| 89 | Název dne mizel z kolečka po odškrtnutí | Návyky → proužek dnů | 📱 |
+| 90 | Mrtvý kód — 7 funkcí bylo v souboru dvakrát | Celá appka | 📱 |
+| 91 | Při zapnutí problikne starší verze | Start appky | ⏳ |
+| 92 | Zápis aktivity — vzhled a dotažení | Zelené plusko | ⏳ |
+| 93 | Vytváření návyku — design + odlišit zlozvyky | Návyky → Nový návyk | ⏳ |
+| 94 | Běh 3× týdně pořád nejde odškrtnout | Návyky → Cíle na tento týden | ⏳ |
+| 95 | Profil — vzhled a divné informace | Já → Profil | ⏳ |
 
 
 
