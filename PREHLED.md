@@ -113,8 +113,8 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 91 | Při zapnutí problikla stará verze rozhraní | Start appky | ✅ |
 | 92 | Zápis aktivity — vzhled a dotažení | Zelené plusko | ⏳ |
 | 93 | Vytváření návyku — design + odlišit zlozvyky | Návyky → Nový návyk | ⏳ |
-| 94 | Měřitelný návyk chtěl tolik ťuknutí, kolik je cíl | Návyky | 📱 |
-| 95 | Profil — nulové a vymyšlené údaje | Já → Profil | 📱 |
+| 94 | Počítaný návyk — přičítání po částech, podržení splní | Návyky | ✅ |
+| 95 | Profil — nulové a vymyšlené údaje | Já → Profil | 📱 vysvětleno |
 
 
 
