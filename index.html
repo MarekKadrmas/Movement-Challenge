@@ -6908,7 +6908,7 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v94';
+const MM_VERZE = 'v95';
 function mmVerzeCas(){ return MM_VERZE; }
 // Diagnostika (Marek 4. 9.): tuknutim na cislo verze se zapne zivy vypis rozmeru
 // radku navyku. Poskakovani bublin se mi nedari vyvolat v prohlizeci, takze potrebuji
@@ -8476,12 +8476,12 @@ async function mmHabitKlik(id){
   const pid=currentHabitPlayer(); const sel=state.habitDay||todayStr();
   const cil=Number(h.cil_hodnota)||0; const log=habitLogObj(id,pid,sel);
   const mam=log?(log.hodnota!=null?Number(log.hodnota):cil):0;
-  // Ukol 86 (Marek 4. 9.): tydenni cil (napr. Beh 1/3) nema ciselnou hodnotu na den,
-  // takze cil=0 a tuknuti jen porad pricitalo — odskrtnout to neslo. Bez ciselneho
-  // cile se to chova jako obycejne zaskrtnuti: druhe tuknuti den zase zrusi.
+  // Ukol 94 (Marek 8. 9.): u meritelneho navyku (Beh 5 km) pricitalo tuknuti jen
+  // JEDEN krok, takze na splneni bylo potreba pet tuknuti — "Beh reaguje az na pate
+  // tuknuti". Tuknuti ted navyk rovnou SPLNI a dalsi ho zase zrusi; castecnou
+  // hodnotu jde dal zadat pres okno s hodnotou (podrzeni / detail).
   if(cil<=0) return mmHabitToggle(id);
-  if(mam>=cil) return mmHabitZapisHodnotu(id, 0);
-  return mmHabitZapisHodnotu(id, Math.min(cil, mam+mmHabitKrok(h)));
+  return mmHabitZapisHodnotu(id, mam>=cil ? 0 : cil);
 }
 async function mmHabitCely(id){
   const h=state.habits.find(x=>x.id===id); if(!h) return;
@@ -11024,8 +11024,8 @@ function renderSubProfil(playerId){
   <div class="sl"><span>Statistiky</span></div>
   <div class="sgrid"><div class="sgc"><div class="v">${p.max_shyby || '—'}</div><div class="k">max shyby</div></div><div class="sgc"><div class="v">${p.max_drep ? p.max_drep+' kg' : '—'}</div><div class="k">max dřep</div></div><div class="sgc"><div class="v">${p.max_kliky || '—'}</div><div class="k">max kliky</div></div><div class="sgc"><div class="v">${p.max_boulder!=null?esc(lezeniRowAt('boulder',p.max_boulder).v):'—'}</div><div class="k">boulder</div></div></div>
   <div class="sl"><span>Za celou dobu</span></div>
-  <div class="sgrid"><div class="sgc"><div class="v">${fmtNum(totalReps)}</div><div class="k">opakování</div></div><div class="sgc"><div class="v">${mmFmtTons(totalVaha)}</div><div class="k">nazvednuto</div></div><div class="sgc"><div class="v">${fmtNum(stats.totalKm)} km</div><div class="k">naběháno</div></div><div class="sgc"><div class="v">${fmtNum(stats.aktivityCount+stats.stretchingCount)}</div><div class="k">aktivit</div></div></div>
-  <div class="info" style="margin:7px 0">Shyby ${fmtNum(stats.cvikStats['Shyby'].pocet)} · Dřep ${fmtNum(stats.cvikStats['Dřep'].pocet)} · Kliky ${fmtNum(stats.cvikStats['Kliky'].pocet)} · Dipy ${fmtNum(stats.cvikStats['Dipy'].pocet)}</div>
+  <div class="sgrid"><div class="sgc"><div class="v">${fmtNum(totalReps)}</div><div class="k">opakování</div></div><div class="sgc"><div class="v">${totalVaha > 0 ? mmFmtTons(totalVaha) : '—'}</div><div class="k">nazvednuto</div></div><div class="sgc"><div class="v">${fmtNum(stats.totalKm)} km</div><div class="k">naběháno</div></div><div class="sgc"><div class="v">${fmtNum(stats.aktivityCount+stats.stretchingCount)}</div><div class="k">aktivit</div></div></div>
+  ${(() => { const d = Object.entries(stats.cvikStats).filter(([,c]) => c.pocet > 0).sort((a,b) => b[1].pocet - a[1].pocet).map(([n,c]) => esc(n) + ' ' + fmtNum(c.pocet)); return d.length ? '<div class="info" style="margin:7px 0">' + d.join(' · ') + '</div>' : ''; })()}
   <div class="sl"><span>Osobní rekordy</span></div>
   <div class="hl">${recRows}</div>
   <div class="hbm" style="margin-top:9px;cursor:pointer" onclick="mmOpenSub('rekordyparty')"><div class="hi" style="background:#E0A23A22"><svg class="i"><use href="#i-medal"/></svg></div><div class="ht">Rekordy & maximálky všech<small>porovnej všechny hráče</small></div><span class="rx" style="color:var(--ter);font-size:19.31px">›</span></div>`;
