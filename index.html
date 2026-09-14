@@ -2348,7 +2348,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .nvk .nrow.pak .nchk::after{content:'';position:absolute;inset:0.5px;border-radius:50%;background:repeating-linear-gradient(45deg,color-mix(in srgb,var(--ter) 85%,transparent) 0 1.5px,transparent 1.5px 5.5px);-webkit-mask-image:radial-gradient(circle at 50% 50%,#000 18%,rgba(0,0,0,.42) 60%,transparent 86%);mask-image:radial-gradient(circle at 50% 50%,#000 18%,rgba(0,0,0,.42) 60%,transparent 86%);}
 .nvk .nrow.pak .nic{opacity:.62;}
 .nvk .nrow.hot{background:var(--card);box-shadow:var(--shadow);}
-.nvk .nrow.hot .nchk{background:linear-gradient(160deg,#9C7BE6,#6B49CF);border-color:transparent;box-shadow:none;}
+.nvk .nrow.hot .nchk{background:linear-gradient(160deg,#9C7BE6,#6B49CF);border:0;box-shadow:none;}
 .nvk .nrow.hot.just .nchk{animation:none;}
 .nvk .nrow.hot.just .nchk .i{animation:none;}
 .nvk .nrow.just{animation:none;}
@@ -3456,7 +3456,7 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .nvk .nrow.pak .nchk::after{content:'';position:absolute;inset:0.5px;border-radius:50%;background:repeating-linear-gradient(45deg,color-mix(in srgb,var(--ter) 85%,transparent) 0 1.5px,transparent 1.5px 5.5px);-webkit-mask-image:radial-gradient(circle at 50% 50%,#000 18%,rgba(0,0,0,.42) 60%,transparent 86%);mask-image:radial-gradient(circle at 50% 50%,#000 18%,rgba(0,0,0,.42) 60%,transparent 86%);}
 .nvk .nrow.pak .nic{opacity:.62;}
 .nvk .nrow.hot{background:var(--card);box-shadow:var(--shadow);}
-.nvk .nrow.hot .nchk{background:linear-gradient(160deg,#9C7BE6,#6B49CF);border-color:transparent;box-shadow:none;}
+.nvk .nrow.hot .nchk{background:linear-gradient(160deg,#9C7BE6,#6B49CF);border:0;box-shadow:none;}
 .nvk .nrow.hot.just .nchk{animation:none;}
 .nvk .nrow.hot.just .nchk .i{animation:none;}
 .nvk .nrow.just{animation:none;}
@@ -6916,7 +6916,7 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v99';
+const MM_VERZE = 'v100';
 function mmVerzeCas(){ return MM_VERZE; }
 // Diagnostika (Marek 4. 9.): tuknutim na cislo verze se zapne zivy vypis rozmeru
 // radku navyku. Poskakovani bublin se mi nedari vyvolat v prohlizeci, takze potrebuji
@@ -8515,24 +8515,37 @@ async function mmHabitCely(id){
 }
 function mmHabitDrzeni(sh){
   if(!sh || sh._mmDrz) return; sh._mmDrz=true;
-  let t=null, dlouhy=false, odblok=null;
+  let t=null, dlouhy=false, odblok=null, x0=0, y0=0;
   // Ukol 94: po pusteni prstu poslal prohlizec jeste "click" na to same kolecko. Podrzeni
   // navyk splnilo a nasledny klik ho hned zase odskrtnul. preventDefault na touchend na to
   // nestacil (inline onclick v shadow DOM), takze si drzime zamek a klik se po podrzeni zahodi.
-  const zamkni=()=>{ window._mmPoDrzeni=true; clearTimeout(odblok); odblok=setTimeout(()=>{ window._mmPoDrzeni=false; }, 2500); };
+  const zamkni=()=>{ window._mmPoDrzeni=true; clearTimeout(odblok); odblok=setTimeout(()=>{ window._mmPoDrzeni=false; }, 2000); };
   const odemkni=(ms)=>{ clearTimeout(odblok); odblok=setTimeout(()=>{ window._mmPoDrzeni=false; }, ms); };
-  const start=(e)=>{ const chk=e.target.closest && e.target.closest('.nchk[data-id]'); if(!chk) return;
-    dlouhy=false; clearTimeout(t); t=setTimeout(()=>{ dlouhy=true; zamkni(); try{navigator.vibrate&&navigator.vibrate(12);}catch(_){}
+  const zrus=()=>{ clearTimeout(t); t=null; };
+  // Ukol 98: nove tuknuti zacina s cistym stitem. Zamek smi shodit jen opravdovy dotyk —
+  // mys si iPhone po pusteni prstu dogeneruje sam a tim by zamek zrusil driv nez dorazi klik.
+  const start=(e, dotyk)=>{
+    if(dotyk){ window._mmPoDrzeni=false; clearTimeout(odblok); }
+    const chk=e.target.closest && e.target.closest('.nchk[data-id]');
+    zrus(); dlouhy=false; if(!chk) return;
+    const bod=(e.touches&&e.touches[0])||e; x0=bod.clientX; y0=bod.clientY;
+    t=setTimeout(()=>{ dlouhy=true; zamkni(); try{navigator.vibrate&&navigator.vibrate(12);}catch(_){}
       mmHabitCely(chk.dataset.id); }, 550); };
-  const konec=(e)=>{ clearTimeout(t);
-    if(dlouhy){ if(e && e.cancelable && e.preventDefault) e.preventDefault(); if(e && e.stopPropagation) e.stopPropagation(); odemkni(500); }
+  // Ukol 98: posun prstu = scrollovani, ne podrzeni. Bez toho staci pri scrollovani nechat
+  // prst chvili lezet na kolecku a navyk se sam splnil — a nasledna tuknuti se zahazovala.
+  const pohyb=(e)=>{ if(!t) return; const bod=(e.touches&&e.touches[0])||e;
+    if(Math.abs(bod.clientX-x0)>8 || Math.abs(bod.clientY-y0)>8) zrus(); };
+  const konec=(e)=>{ zrus();
+    if(dlouhy){ if(e && e.cancelable && e.preventDefault) e.preventDefault(); if(e && e.stopPropagation) e.stopPropagation(); odemkni(320); }
     dlouhy=false; };
-  sh.addEventListener('touchstart', start, {passive:true});
+  sh.addEventListener('touchstart', e=>start(e,true), {passive:true});
+  sh.addEventListener('touchmove', pohyb, {passive:true});
   sh.addEventListener('touchend', konec, {passive:false});
   sh.addEventListener('touchcancel', konec, {passive:false});
-  sh.addEventListener('mousedown', start);
+  sh.addEventListener('mousedown', e=>start(e,false));
+  sh.addEventListener('mousemove', pohyb);
   sh.addEventListener('mouseup', konec);
-  sh.addEventListener('mouseleave', ()=>clearTimeout(t), true);
+  sh.addEventListener('mouseleave', zrus, true);
 }
 // Kazdy navyk ma vlastni frontu operaci, aby se rychle klikani neprekryvalo.
 const _mmFronty = {};

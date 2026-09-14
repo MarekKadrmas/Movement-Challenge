@@ -117,6 +117,8 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 96 | „Neuloženo: duplicate key" u Běhu — starý částečný záznam blokoval den | Návyky → Cíle na tento týden | 📱 |
 | 97 | Podržení splní návyk, ale po puštění prstu se zase odškrtlo | Návyky → Pít 2 l vody | 📱 |
 | 98 | Obsah bubliny se při ťuknutí přestavoval (Běh) — teď se mění jen barva a číslo | Návyky → Cíle na tento týden | 📱 |
+| 99 | Scrollování s prstem na kolečku samo splnilo návyk a spolklo další ťuknutí | Návyky → seznam | 📱 |
+| 100 | Kolečko s fajfkou mělo tmavý prstenec na okraji (moje regrese ve v99) | Návyky → splněný návyk | 📱 |
 | 95 | Profil — vzhled a údaje | Já → Profil | ⏸️ odloženo (Marek) |
 
 
