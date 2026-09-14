@@ -19,7 +19,12 @@
    usazovani/poskoky). Stejna hodnota je i v 7 shadow :host overlayich (render* funkce) — meni se VZDY vsech 8 mist.
    POZOR: Blink (Chrome desktop, Playwright) tuto vlastnost IGNORUJE, takze v Playwrightu vidis o 20.7 %
    mensi text nez Marek na iPhonu a pretekani se neprojevi. Testuj pres tools/browser/_tmp/ios-emul.js
-   (koeficient 1.207) — merici harness je tools/browser/_tmp/verify.js. */ html{overscroll-behavior:none;}body{overscroll-behavior:none;}
+   (koeficient 1.207) — merici harness je tools/browser/_tmp/verify.js. */ /* Ukol 105 (Marek 14. 9.): 'dojedu na konec, obrazovka stoji, ale prst jede dal — a na
+   zpatecni ceste se obrazovka rozjede az v bode, kde se zastavila'. To dela
+   overscroll-behavior:none — WebKit jim vypne pruzny dojezd, jenze gesto se dal scita,
+   takze cesta zpet zacina mrtvou zonou. 'contain' porad brani tomu, aby scroll utekl
+   do rodice, ale dojezd necha prirozeny. */
+html{overscroll-behavior:contain;}body{overscroll-behavior:contain;}
 html{-webkit-text-size-adjust:100%;}
 /* ===== EMOJI PANEL — 1:1 se systemovou iOS klavesnici (Marek 2026-08-20) =====
    Miry odmerene z referencniho screenshotu iPhonu 15 Pro (1179 px / 393 pt):
@@ -6910,7 +6915,7 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v103';
+const MM_VERZE = 'v104';
 // Ukol 99 (Marek 14. 9.): "obrazovka se zastavi, ale jakoby se to neviditelne scrolluje dal".
 // Stinova obrazovka si rezervovala vysku podle window.innerHeight. Na iPhonu ta hodnota umi
 // byt vetsi nez skutecna viditelna plocha (listy Safari se sbaluji), takze pod obsahem vzniklo
@@ -7008,7 +7013,7 @@ function mmDiagPrepni(){
         const lista = sh.querySelector('.tb');
         const kryje = lista ? Math.max(0, de.clientHeight - lista.getBoundingClientRect().top) : 0;
         volno = Math.round(de.scrollHeight - (posl.bottom + st) - kryje); } }
-    sc.vMax = Math.max(sc.vMax || 0, volno);
+    sc.vMax = volno;
     const scRadek = (sc.vMax > 12 ? 'SCROLL DO PRAZDNA: ' + sc.vMax + ' px' : 'scroll OK (prazdno ' + sc.vMax + ' px)')
       + String.fromCharCode(10) + 'okno' + Math.round(mmVyskaOkna()) + '/' + Math.round(window.innerHeight)
       + '/' + Math.round(de.clientHeight) + ' str' + Math.round(de.scrollHeight)
@@ -9485,23 +9490,25 @@ function mmTrimTail(scrEl, z){
     const over = de.scrollHeight - de.clientHeight;
     if (over <= 1) return;                                  // neni co orezavat
     const st = sub ? sub.scrollTop : (window.scrollY || 0);
-    const br = bodyEl.getBoundingClientRect();
-    if (br.bottom + st < de.scrollHeight - 2) return;        // vysku drzi neco jineho nez .body
     const deti = [...bodyEl.children].filter(e => e.getBoundingClientRect().height > 0.5);
     if (!deti.length) return;
     const posl = deti[deti.length - 1].getBoundingClientRect();
     const lista = scrEl.querySelector('.tb');
     const kryje = lista ? Math.max(0, de.clientHeight - lista.getBoundingClientRect().top) : 0;
-    const zbytecne = de.scrollHeight - (posl.bottom + st) - kryje - 6;
-    if (zbytecne <= 2) return;
+    const volno = de.scrollHeight - (posl.bottom + st) - kryje - 4;   // prazdno pod poslednim prvkem
+    const orez = Math.min(over, volno);
+    if (orez <= 2) return;
     const cur = parseFloat(getComputedStyle(bodyEl).paddingBottom) || 0;
-    const novy = Math.max(10, cur - Math.min(over, zbytecne) / z);
+    const novy = Math.max(6, cur - orez / z);
     if (cur - novy < 0.5) return;
+    const pred = de.scrollHeight;
     bodyEl.style.paddingBottom = novy + 'px';
+    if (de.scrollHeight >= pred) bodyEl.style.paddingBottom = cur + 'px';   // nepomohlo -> vratit zpet
   };
   requestAnimationFrame(run);
   setTimeout(run, 260);   // druhy pokus, az se usadi fonty/kalendar
   setTimeout(run, 700);   // treti, az dobehnou animace listy
+  setTimeout(run, 1500);  // ctvrty, az dorazi data ze serveru
 }
 // Stejny princip jako mmTrimTail, ale pro scrollovaci .body uvnitr oken (formulare, Historie uprav):
 // prasah 1-2 px (zaokrouhleni vysky pripnuteho spodku) delal „gumovy" scroll na oknech, ktera se vejdou.

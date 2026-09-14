@@ -123,6 +123,7 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 102 | Falešné scrollování — výšku appky určovalo 100dvh, teď skutečná viditelná výška | Všechny obrazovky | 📱 |
 | 103 | Podržení návyku vyvolávalo lupu / označování textu na iPhonu | Návyky → podrž prst na návyku | 📱 |
 | 104 | Prázdné místo pod obsahem se teď odřízne celé (dřív jen do 10 px) | Návyky, Přehled | 📱 |
+| 105 | Mrtvá zóna na zpáteční cestě scrollu (overscroll-behavior:none) | Všechny obrazovky | 📱 |
 | 95 | Profil — vzhled a údaje | Já → Profil | ⏸️ odloženo (Marek) |
 
 
