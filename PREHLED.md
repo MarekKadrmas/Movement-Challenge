@@ -126,7 +126,8 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 105 | Mrtvá zóna na zpáteční cestě scrollu (overscroll-behavior:none) | Všechny obrazovky | 📱 |
 | 106 | ~~Pružina jen tam, kde je co scrollovat~~ — VRÁCENO, rozbilo to víc věcí | — | ↩️ vráceno |
 | 107 | Obsah se po pružině nevracel + nešlo ťuknout na lištu (přepočet rozměrů pod prstem) | Návyky, Přehled | 📱 |
-| 108 | ROZHODNOUT: pružina všude (teď), nebo nikde (vrátí se prodleva při návratu) | — | ❓ na Marka |
+| 108 | Návyky měly pár desítek px scrollu navíc — obsah po pružině zůstal posunutý | Návyky | 📱 |
+| 109 | Kde není co scrollovat, je pružina vypnutá (a nemá jak vzniknout prodleva) | Návyky bez pružiny, Přehled s ní | 📱 |
 | 95 | Profil — vzhled a údaje | Já → Profil | ⏸️ odloženo (Marek) |
 
 

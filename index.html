@@ -6855,6 +6855,9 @@ function mmGo(v){ if(v==='hraci') v='prehled'; mmCloseSub();
   window._mmNoveId=null; window._mmOdskrtId=null;
   clearTimeout(window._mmNoveT); clearTimeout(window._mmOdskrtT);
   mmDozenPrekresleni(v); const b=document.querySelector(".tb-btn[data-view=\""+v+"\"]"); if(b){ const prev=(window._mmTabIdx!=null?window._mmTabIdx:null); b.click(); window._mmTabIdx=MM_TAB_IDX[v]; requestAnimationFrame(()=>{ const h=mmBarHost(v); mmBarPos(h&&h.shadowRoot, MM_TAB_IDX[v], prev); mmLbarAlign(h&&h.shadowRoot); if(v==='prehled') mmHeatInit(h&&h.shadowRoot); }); }
+  // Ukol 108: po prepnuti srovnej obrazovku, ktera je prave videt. Behem prepnuti je
+  // v dokumentu chvili stara i nova, takze jedno mereni nestaci.
+  requestAnimationFrame(mmSrovnejObrazovku); [320, 900, 1600].forEach(ms => setTimeout(mmSrovnejObrazovku, ms));
  }
 function mmChrome(){ const full=state.view==='prehled'||state.view==='hraci'||state.view==='navyky'||state.view==='historie'; document.body.classList.toggle('mm-full', full); const tb=document.getElementById('mc-tabbar'); if(tb) tb.style.display=full?'none':''; const h=document.querySelector('.header'); if(h) h.style.display=full?'none':''; const f=document.querySelector('.fab-group'); if(f) f.style.display=full?'none':''; }
 function mmFirst(n){ return String(n||'').split(' ')[0]; }
@@ -6916,7 +6919,7 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v106';
+const MM_VERZE = 'v107';
 // Ukol 99 (Marek 14. 9.): "obrazovka se zastavi, ale jakoby se to neviditelne scrolluje dal".
 // Stinova obrazovka si rezervovala vysku podle window.innerHeight. Na iPhonu ta hodnota umi
 // byt vetsi nez skutecna viditelna plocha (listy Safari se sbaluji), takze pod obsahem vzniklo
@@ -9492,6 +9495,49 @@ function mmZapisTplKey(){
 // spocita, kolik je pod POSLEDNIM prvkem opravdu prazdna (nad ramec toho, co zakryva
 // plovouci lista), a presne to se odrizne. Oreze se jen kdyz vysku stranky opravdu urcuje
 // spodni rezerva .body — jinak by se jen schoval obsah pod listu.
+// Ukol 108 (Marek 14. 9.): "u navyku se obsah nevrati na misto". Obrazovka, ktera se cela
+// vejde, mela porad par desitek pixelu scrollu navic — po pruzine tam zustala viset a nadpis
+// byl ustrizeny. Orez spodni rezervy to nemusi dohnat (vysku muze drzet neco jineho), takze
+// je tu tvrda pojistka: kdyz posledni prvek konci nad listou, obrazovka dostane presne vysku
+// okna a nema uz co scrollovat. A kdyz neni co scrollovat, vypne se i pruzinovy dojezd —
+// tady uz nehrozi mrtva zona z ukolu 105, protoze neni kam pretahovat.
+// Volani je VZDY jen mimo dotyk (viz _mmDotyk v mmTrimTail), takze se nic nemeni pod prstem.
+function mmZadnyZbytecnyScroll(scrEl, host, de){
+  if (_mmDotyk) return;                                              // nikdy pod prstem
+  if (!scrEl || !host || !de) return;
+  if (host.classList && host.classList.contains('mm-sub')) return;   // podobrazovky maji vlastni scroll
+  const bodyEl = scrEl.querySelector('.body'); if (!bodyEl) return;
+  const deti = [...bodyEl.children].filter(e => e.getBoundingClientRect().height > 0.5);
+  if (!deti.length) return;
+  const lista = scrEl.querySelector('.tb');
+  const kryje = lista ? Math.max(0, de.clientHeight - lista.getBoundingClientRect().top) : 0;
+  const spodek = deti[deti.length - 1].getBoundingClientRect().bottom + (window.scrollY || 0);
+  const vejdeSe = spodek <= de.clientHeight - kryje + 4;
+  if (vejdeSe){ host.style.height = de.clientHeight + 'px'; host.style.overflow = 'hidden'; }
+  else { host.style.height = ''; host.style.overflow = ''; }
+  const dojezd = (de.scrollHeight - de.clientHeight > 1) ? 'contain' : 'none';
+  if (window._mmDojezdStav !== dojezd){
+    window._mmDojezdStav = dojezd;
+    [document.documentElement, document.body].forEach(el => { if (!el) return;
+      el.style.setProperty('overscroll-behavior', dojezd);
+      el.style.setProperty('overscroll-behavior-y', dojezd); });
+  }
+}
+// Ukol 108: pri prepnuti obrazovky se render nemusi vubec spustit (kdyz uz je hotovy),
+// takze pojistka nikdy nedosahla na obrazovku, ktera je prave videt. Timhle se zavola
+// primo na ni — a jen mimo dotyk.
+function mmSrovnejObrazovku(){
+  if (_mmDotyk) return;
+  const de = document.scrollingElement; if (!de) return;
+  const host = ['dnesek-mm','navyky-mm','ja-mm','parta-mm']
+    .map(id => document.getElementById(id))
+    .find(h => h && h.isConnected && h.getBoundingClientRect().height > 40);
+  const scr = host && host.shadowRoot && host.shadowRoot.querySelector('.scr');
+  if (!scr) return;
+  // projde i orez spodni rezervy — ten se jinak spousti jen pri prekresleni, a to pri
+  // pouhem prepnuti obrazovky vubec nemusi nastat (pak zbytecny scroll zustal).
+  mmTrimTail(scr, parseFloat(scr.style.zoom) || 1);
+}
 function mmTrimTail(scrEl, z){
   if(!scrEl) return;
   const run = ()=>{
@@ -9501,23 +9547,30 @@ function mmTrimTail(scrEl, z){
     if (host && !host.isConnected) return;
     const sub = (host && host.classList && host.classList.contains('mm-sub')) ? host : null;
     const de = sub || document.scrollingElement; if (!de) return;
-    const over = de.scrollHeight - de.clientHeight;
-    if (over <= 1) return;                                  // neni co orezavat
-    const st = sub ? sub.scrollTop : (window.scrollY || 0);
-    const deti = [...bodyEl.children].filter(e => e.getBoundingClientRect().height > 0.5);
-    if (!deti.length) return;
-    const posl = deti[deti.length - 1].getBoundingClientRect();
-    const lista = scrEl.querySelector('.tb');
-    const kryje = lista ? Math.max(0, de.clientHeight - lista.getBoundingClientRect().top) : 0;
-    const volno = de.scrollHeight - (posl.bottom + st) - kryje - 4;   // prazdno pod poslednim prvkem
-    const orez = Math.min(over, volno);
-    if (orez <= 2) return;
-    const cur = parseFloat(getComputedStyle(bodyEl).paddingBottom) || 0;
-    const novy = Math.max(6, cur - orez / z);
-    if (cur - novy < 0.5) return;
-    const pred = de.scrollHeight;
-    bodyEl.style.paddingBottom = novy + 'px';
-    if (de.scrollHeight >= pred) bodyEl.style.paddingBottom = cur + 'px';   // nepomohlo -> vratit zpet
+    // Orez spodni rezervy ma spoustu duvodu skoncit driv — pojistka se proto vola AZ ZA nim,
+    // vzdy. Drive se pri predcasnem navratu neprepnul dojezd a na scrollovaci obrazovce
+    // zustalo vypnute pruzeni (= mrtva zona z ukolu 105).
+    const orezni = () => {
+      const over = de.scrollHeight - de.clientHeight;
+      if (over <= 1) return;
+      const st = sub ? sub.scrollTop : (window.scrollY || 0);
+      const deti = [...bodyEl.children].filter(e => e.getBoundingClientRect().height > 0.5);
+      if (!deti.length) return;
+      const posl = deti[deti.length - 1].getBoundingClientRect();
+      const lista = scrEl.querySelector('.tb');
+      const kryje = lista ? Math.max(0, de.clientHeight - lista.getBoundingClientRect().top) : 0;
+      const volno = de.scrollHeight - (posl.bottom + st) - kryje - 4;   // prazdno pod poslednim prvkem
+      const orez = Math.min(over, volno);
+      if (orez <= 2) return;
+      const cur = parseFloat(getComputedStyle(bodyEl).paddingBottom) || 0;
+      const novy = Math.max(6, cur - orez / z);
+      if (cur - novy < 0.5) return;
+      const pred = de.scrollHeight;
+      bodyEl.style.paddingBottom = novy + 'px';
+      if (de.scrollHeight >= pred) bodyEl.style.paddingBottom = cur + 'px';   // nepomohlo -> vratit
+    };
+    orezni();
+    mmZadnyZbytecnyScroll(scrEl, host, de);
   };
   requestAnimationFrame(run);
   setTimeout(run, 260);   // druhy pokus, az se usadi fonty/kalendar
