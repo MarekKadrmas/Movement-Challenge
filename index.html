@@ -2323,10 +2323,10 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .nvk .nrow .nic .i{width:16px;height:16px;}
 .nvk .nrow .nnm{flex:1;min-width:0;font-size:13.81px;font-weight:600;letter-spacing:-.005em;color:color-mix(in srgb,var(--label) 82%,var(--sec));white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .nvk .nrow .ndet{font-size:11.15px;font-weight:800;color:var(--sec);white-space:nowrap;display:inline-flex;align-items:center;gap:3px;font-variant-numeric:tabular-nums;}
-.nvk .tecky{display:inline-flex;gap:3px;align-items:center;}
+.nvk .tecky{display:inline-flex;gap:3px;align-items:center;flex:0 0 auto;}
 .nvk .tecky i{width:6px;height:6px;border-radius:50%;background:var(--track);}
 .nvk .tecky i.on{background:var(--nc);}
-.nvk .tydny{display:inline-flex;gap:2.5px;align-items:center;}
+.nvk .tydny{display:inline-flex;gap:2.5px;align-items:center;flex:0 0 auto;width:78px;box-sizing:content-box;}
 .nvk .tydny i{width:9px;height:9px;border-radius:50%;background:var(--track);transition:background .18s ease;}
 .nvk .tydny i.on{background:var(--fial);}
 .nvk .tydny i.pak{opacity:.4;cursor:default;}
@@ -2334,7 +2334,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .nvk .tydny i.on.ten{box-shadow:0 0 0 1.5px color-mix(in srgb,var(--fial) 45%,transparent);}
 .nvk .mprouzek{display:inline-block;width:34px;height:5px;border-radius:999px;background:var(--track);overflow:hidden;}
 .nvk .mprouzek i{display:block;height:100%;border-radius:999px;background:var(--nc);}
-.nvk .cilpomer{font-size:11.15px;font-weight:800;color:var(--sec);font-variant-numeric:tabular-nums;}
+.nvk .cilpomer{font-size:11.15px;font-weight:800;color:var(--sec);font-variant-numeric:tabular-nums;flex:0 0 auto;min-width:19px;text-align:right;}
 .nvk .nnahr{flex:0 0 auto;display:inline-flex;align-items:center;gap:3px;font-size:9.4px;font-weight:800;color:#C96A12;background:color-mix(in srgb,#E8902F 16%,transparent);border-radius:999px;padding:3px 7px;cursor:pointer;white-space:nowrap;}
 .nvk .nnahrok{flex:0 0 auto;font-size:9.4px;font-weight:800;color:#C96A12;background:color-mix(in srgb,#E8902F 12%,transparent);border-radius:999px;padding:3px 7px;cursor:pointer;white-space:nowrap;}
 .nvk .nrow.hot .nnahrok{opacity:.9;}
@@ -2342,11 +2342,13 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .nvk .nrow .ndet .i{width:12px;height:12px;}
 .nvk .nrow .nchk{width:22px;height:22px;flex:0 0 22px;box-sizing:border-box;border-radius:50%;border:2px solid var(--ter);box-shadow:none;display:grid;place-items:center;color:#fff;cursor:pointer;}
 .nvk .nrow .nchk .i{width:13px;height:13px;}
+/* Ukol 98: fajfka je v kolecku VZDY, jen se skryva. Drive se pri kazdem tuknuti mazala a znovu vytvarela (innerHTML), cimz se prekresloval cely obsah bubliny. */
+.nvk .nrow:not(.hot) .nchk .i{visibility:hidden;}
 .nvk .nrow.pak .nchk{position:relative;overflow:hidden;border-color:color-mix(in srgb,var(--ter) 78%,var(--card));box-shadow:none;cursor:default;pointer-events:none;}
 .nvk .nrow.pak .nchk::after{content:'';position:absolute;inset:0.5px;border-radius:50%;background:repeating-linear-gradient(45deg,color-mix(in srgb,var(--ter) 85%,transparent) 0 1.5px,transparent 1.5px 5.5px);-webkit-mask-image:radial-gradient(circle at 50% 50%,#000 18%,rgba(0,0,0,.42) 60%,transparent 86%);mask-image:radial-gradient(circle at 50% 50%,#000 18%,rgba(0,0,0,.42) 60%,transparent 86%);}
 .nvk .nrow.pak .nic{opacity:.62;}
 .nvk .nrow.hot{background:var(--card);box-shadow:var(--shadow);}
-.nvk .nrow.hot .nchk{background:linear-gradient(160deg,#9C7BE6,#6B49CF);border:0;box-shadow:none;}
+.nvk .nrow.hot .nchk{background:linear-gradient(160deg,#9C7BE6,#6B49CF);border-color:transparent;box-shadow:none;}
 .nvk .nrow.hot.just .nchk{animation:none;}
 .nvk .nrow.hot.just .nchk .i{animation:none;}
 .nvk .nrow.just{animation:none;}
@@ -3429,10 +3431,10 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .nvk .nrow .nic .i{width:16px;height:16px;}
 .nvk .nrow .nnm{flex:1;min-width:0;font-size:13.81px;font-weight:600;letter-spacing:-.005em;color:color-mix(in srgb,var(--label) 82%,var(--sec));white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .nvk .nrow .ndet{font-size:11.15px;font-weight:800;color:var(--sec);white-space:nowrap;display:inline-flex;align-items:center;gap:3px;font-variant-numeric:tabular-nums;}
-.nvk .tecky{display:inline-flex;gap:3px;align-items:center;}
+.nvk .tecky{display:inline-flex;gap:3px;align-items:center;flex:0 0 auto;}
 .nvk .tecky i{width:6px;height:6px;border-radius:50%;background:var(--track);}
 .nvk .tecky i.on{background:var(--nc);}
-.nvk .tydny{display:inline-flex;gap:2.5px;align-items:center;}
+.nvk .tydny{display:inline-flex;gap:2.5px;align-items:center;flex:0 0 auto;width:78px;box-sizing:content-box;}
 .nvk .tydny i{width:9px;height:9px;border-radius:50%;background:var(--track);transition:background .18s ease;}
 .nvk .tydny i.on{background:var(--fial);}
 .nvk .tydny i.pak{opacity:.4;cursor:default;}
@@ -3440,7 +3442,7 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .nvk .tydny i.on.ten{box-shadow:0 0 0 1.5px color-mix(in srgb,var(--fial) 45%,transparent);}
 .nvk .mprouzek{display:inline-block;width:34px;height:5px;border-radius:999px;background:var(--track);overflow:hidden;}
 .nvk .mprouzek i{display:block;height:100%;border-radius:999px;background:var(--nc);}
-.nvk .cilpomer{font-size:11.15px;font-weight:800;color:var(--sec);font-variant-numeric:tabular-nums;}
+.nvk .cilpomer{font-size:11.15px;font-weight:800;color:var(--sec);font-variant-numeric:tabular-nums;flex:0 0 auto;min-width:19px;text-align:right;}
 .nvk .nnahr{flex:0 0 auto;display:inline-flex;align-items:center;gap:3px;font-size:9.4px;font-weight:800;color:#C96A12;background:color-mix(in srgb,#E8902F 16%,transparent);border-radius:999px;padding:3px 7px;cursor:pointer;white-space:nowrap;}
 .nvk .nnahrok{flex:0 0 auto;font-size:9.4px;font-weight:800;color:#C96A12;background:color-mix(in srgb,#E8902F 12%,transparent);border-radius:999px;padding:3px 7px;cursor:pointer;white-space:nowrap;}
 .nvk .nrow.hot .nnahrok{opacity:.9;}
@@ -3448,11 +3450,13 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .nvk .nrow .ndet .i{width:12px;height:12px;}
 .nvk .nrow .nchk{width:22px;height:22px;flex:0 0 22px;box-sizing:border-box;border-radius:50%;border:2px solid var(--ter);box-shadow:none;display:grid;place-items:center;color:#fff;cursor:pointer;}
 .nvk .nrow .nchk .i{width:13px;height:13px;}
+/* Ukol 98: fajfka je v kolecku VZDY, jen se skryva. Drive se pri kazdem tuknuti mazala a znovu vytvarela (innerHTML), cimz se prekresloval cely obsah bubliny. */
+.nvk .nrow:not(.hot) .nchk .i{visibility:hidden;}
 .nvk .nrow.pak .nchk{position:relative;overflow:hidden;border-color:color-mix(in srgb,var(--ter) 78%,var(--card));box-shadow:none;cursor:default;pointer-events:none;}
 .nvk .nrow.pak .nchk::after{content:'';position:absolute;inset:0.5px;border-radius:50%;background:repeating-linear-gradient(45deg,color-mix(in srgb,var(--ter) 85%,transparent) 0 1.5px,transparent 1.5px 5.5px);-webkit-mask-image:radial-gradient(circle at 50% 50%,#000 18%,rgba(0,0,0,.42) 60%,transparent 86%);mask-image:radial-gradient(circle at 50% 50%,#000 18%,rgba(0,0,0,.42) 60%,transparent 86%);}
 .nvk .nrow.pak .nic{opacity:.62;}
 .nvk .nrow.hot{background:var(--card);box-shadow:var(--shadow);}
-.nvk .nrow.hot .nchk{background:linear-gradient(160deg,#9C7BE6,#6B49CF);border:0;box-shadow:none;}
+.nvk .nrow.hot .nchk{background:linear-gradient(160deg,#9C7BE6,#6B49CF);border-color:transparent;box-shadow:none;}
 .nvk .nrow.hot.just .nchk{animation:none;}
 .nvk .nrow.hot.just .nchk .i{animation:none;}
 .nvk .nrow.just{animation:none;}
@@ -6912,7 +6916,7 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v98';
+const MM_VERZE = 'v99';
 function mmVerzeCas(){ return MM_VERZE; }
 // Diagnostika (Marek 4. 9.): tuknutim na cislo verze se zapne zivy vypis rozmeru
 // radku navyku. Poskakovani bublin se mi nedari vyvolat v prohlizeci, takze potrebuji
@@ -6939,19 +6943,34 @@ function mmDiagPrepni(){
     r.forEach((x,i) => {
       const b = x.getBoundingClientRect();
       const mez = r[i+1] ? (r[i+1].getBoundingClientRect().top - b.bottom) : 0;
-      const z = _mmDiagZaznam[i] = _mmDiagZaznam[i] || { vMin:1e9, vMax:0, sMin:1e9, sMax:0, mMin:1e9, mMax:0 };
+      const z = _mmDiagZaznam[i] = _mmDiagZaznam[i] || { vMin:1e9, vMax:0, sMin:1e9, sMax:0, mMin:1e9, mMax:0, uvnitr:{} };
       z.vMin = Math.min(z.vMin, b.height); z.vMax = Math.max(z.vMax, b.height);
       z.sMin = Math.min(z.sMin, b.width);  z.sMax = Math.max(z.sMax, b.width);
       z.mMin = Math.min(z.mMin, mez);      z.mMax = Math.max(z.mMax, mez);
+      // Ukol 98: sleduj i obsah UVNITR bubliny — ikonu, nazev, udaj vpravo a kolecko.
+      [['ik','.nic'],['nz','.nnm'],['ud','.ndet'],['ko','.nchk']].forEach(([k,sel]) => {
+        const e = x.querySelector(sel); if (!e) return;
+        const q = e.getBoundingClientRect();
+        const u = z.uvnitr[k] = z.uvnitr[k] || { xMin:1e9, xMax:-1e9, wMin:1e9, wMax:0 };
+        u.xMin = Math.min(u.xMin, q.left - b.left); u.xMax = Math.max(u.xMax, q.left - b.left);
+        u.wMin = Math.min(u.wMin, q.width);         u.wMax = Math.max(u.wMax, q.width);
+      });
     });
     const radky = Object.keys(_mmDiagZaznam).map(i => {
       const z = _mmDiagZaznam[i];
       const dv = (z.vMax - z.vMin), ds = (z.sMax - z.sMin), dm = (z.mMax - z.mMin);
-      const zm = (dv > 0.6 || ds > 0.6 || dm > 0.6);
+      const vnitrek = Object.keys(z.uvnitr).map(k => { const u = z.uvnitr[k];
+        const dx = u.xMax - u.xMin, dw = u.wMax - u.wMin;
+        return (dx > 0.6 || dw > 0.6)
+          ? (' ' + k + (dx > 0.6 ? ' x' + u.xMin.toFixed(1) + '-' + u.xMax.toFixed(1) : '')
+                  + (dw > 0.6 ? ' w' + u.wMin.toFixed(1) + '-' + u.wMax.toFixed(1) : '')) : '';
+      }).filter(Boolean).join('');
+      const zm = (dv > 0.6 || ds > 0.6 || dm > 0.6 || !!vnitrek);
       return (zm ? '! ' : '  ') + i
         + ' v' + z.vMin.toFixed(1) + (dv > 0.6 ? '-' + z.vMax.toFixed(1) : '')
         + ' s' + z.sMin.toFixed(1) + (ds > 0.6 ? '-' + z.sMax.toFixed(1) : '')
-        + ' m' + z.mMin.toFixed(1) + (dm > 0.6 ? '-' + z.mMax.toFixed(1) : '');
+        + ' m' + z.mMin.toFixed(1) + (dm > 0.6 ? '-' + z.mMax.toFixed(1) : '')
+        + vnitrek;
     });
     const neco = radky.some(x => x[0] === '!');
     el.style.color = neco ? '#FF6B5E' : '#7CF0A8';
@@ -8345,7 +8364,7 @@ function mmHabitRowHtml(h, pid, ds){
     +`<span class="ndet">${mmHabitDetailHtml(h,pid,ds)}</span>`
     +(nahr>0 ? `<span class="nnahrok" title="Zrušit nahrazení" onclick="event.stopPropagation();mmHabitZrusNahrazeni('${h.id}','${ds}')">nahrazeno</span>` : '')
     +(lzeNahr>0 ? `<span class="nnahr" onclick="event.stopPropagation();mmHabitNahradit('${h.id}','${ds}')">↺ nahradit ${habitFmtNum(lzeNahr)}</span>` : '')
-    +`<span class="nchk" data-id="${h.id}" onclick="event.stopPropagation();mmHabitKlik('${h.id}')">${done?'<svg class="i"><use href="#i-check"/></svg>':''}</span></div>`;
+    +`<span class="nchk" data-id="${h.id}" onclick="event.stopPropagation();mmHabitKlik('${h.id}')"><svg class="i"><use href="#i-check"/></svg></span></div>`;
 }
 // vpravo v radku jen kratky udaj (hodnota u meritelnych, pomer u flexibilnich cilu)
 function mmHabitDetailHtml(h, pid, ds){
@@ -8534,6 +8553,29 @@ function mmHabitFronta(id, prace){
 // znovu vytvorila vsechny radky, takze <use> odkazy na ikony se musely znovu navazat
 // (ikony probliknuty) a pilulka "nahradit" se objevila/zmizela, cimz se menila vyska
 // radku a skakaly mezery. Ted se meni jen to, co se opravdu zmenilo.
+// Ukol 98 (Marek 14. 9.): udaj vpravo v bubline (tecky Po–Ne + pomer) se pri kazdem
+// tuknuti prepisoval pres innerHTML — cely obsah se zahodil a postavil znovu, takze
+// prohlizec musel znovu spocitat rozlozeni a obsah v bubline poskocil. Ted se meni
+// jen to jedine, co se opravdu zmenilo: trida tecky, sirka prouzku a cislo pomeru.
+function mmDetPatch(det, html){
+  const tmp = document.createElement('i'); tmp.innerHTML = html;
+  const pasA = det.querySelector('.tydny, .tecky'), pasB = tmp.querySelector('.tydny, .tecky');
+  const pomA = det.querySelector('.cilpomer'),      pomB = tmp.querySelector('.cilpomer');
+  const pruA = det.querySelector('.mprouzek > i'),  pruB = tmp.querySelector('.mprouzek > i');
+  const stejnaKostra = !!pasA === !!pasB && !!pomA === !!pomB && !!pruA === !!pruB
+    && det.childElementCount === tmp.childElementCount
+    && (!pasA || pasA.children.length === pasB.children.length);
+  if (!stejnaKostra || !(pasA || pomA || pruA)){
+    if (det.innerHTML !== html) det.innerHTML = html;   // jina kostra (napr. plamínek) — postav znovu
+    return;
+  }
+  if (pasA) for (let i = 0; i < pasA.children.length; i++){
+    const t = pasA.children[i], n = pasB.children[i].className;
+    if (t.className !== n) t.className = n;
+  }
+  if (pruA && pruA.style.width !== pruB.style.width) pruA.style.width = pruB.style.width;
+  if (pomA && pomA.textContent !== pomB.textContent) pomA.textContent = pomB.textContent;
+}
 function mmNavykyPatch(){
   const host = document.getElementById('navyky-mm');
   const sh = host && host.shadowRoot; if (!sh) return false;
@@ -8550,10 +8592,10 @@ function mmNavykyPatch(){
     const done = habitIsDoneOn(h, pid, ds);
     r.classList.toggle('hot', done);
     // animacni tridy resi mmAnimujRadek — tady se na ne nesahá
-    const chceme = done ? '<svg class="i"><use href="#i-check"/></svg>' : '';
-    if (chk.innerHTML !== chceme) chk.innerHTML = chceme;
+    // Ukol 98: fajfka uz je v kolecku porad, jen ji skryva CSS — nic se nemaze ani nevytvari.
+    if (!chk.firstElementChild) chk.innerHTML = '<svg class="i"><use href="#i-check"/></svg>';
     const det = r.querySelector('.ndet');
-    if (det){ const nd = mmHabitDetailHtml(h, pid, ds); if (det.innerHTML !== nd) det.innerHTML = nd; }
+    if (det) mmDetPatch(det, mmHabitDetailHtml(h, pid, ds));
     // pilulky nahrazovani — prepocitat, ale bez sahani na zbytek radku
     const nahr = habitNahrazenoOn(h, pid, ds);
     const lze = done ? 0 : habitLzeNahraditDen(h, pid, ds);
@@ -8900,8 +8942,10 @@ function mmHabitCileHtml(pid, flex, ds){
     const hotovo=list.filter(h=>mmHabitDoneToday(h,pid,ds)).length;
     const dni=mmHabitZbyvaDni(typ, ds);
     const zbyva = hotovo===list.length ? 'splněno' : ('zbývá '+dni+' '+(dni===1?'den':(dni<5?'dny':'dní')));
+    // Ukol 98: i cile (Beh 3x tydne) patri do stejneho pevneho rastru jako denni navyky —
+    // drive visely mimo .nlist, takze se jich oprava rozestupu z ukolu 81 vubec netykala.
     out+='<div class="sl"><span>'+nazev+'</span><a class="slinfo">'+hotovo+'/'+list.length+' · '+zbyva+'</a></div>'
-      + list.map(h=>mmHabitRowHtml(h,pid,ds)).join('');
+      + '<div class="nlist">' + list.map(h=>mmHabitRowHtml(h,pid,ds)).join('') + '</div>';
   });
   return out;
 }

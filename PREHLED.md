@@ -116,6 +116,7 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 94 | Týdenní cíl počítá DNY, ne jednotky — jedno ťuknutí = den | Návyky | 📱 |
 | 96 | „Neuloženo: duplicate key" u Běhu — starý částečný záznam blokoval den | Návyky → Cíle na tento týden | 📱 |
 | 97 | Podržení splní návyk, ale po puštění prstu se zase odškrtlo | Návyky → Pít 2 l vody | 📱 |
+| 98 | Obsah bubliny se při ťuknutí přestavoval (Běh) — teď se mění jen barva a číslo | Návyky → Cíle na tento týden | 📱 |
 | 95 | Profil — vzhled a údaje | Já → Profil | ⏸️ odloženo (Marek) |
 
 
