@@ -2113,7 +2113,12 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .twoc .ts{font-size:12.07px;color:var(--sec);}
 .mm .hbm{background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:8px 15px;display:flex;align-items:center;gap:10px;}
 /* --- Navyky: banner + bubliny (Marek 2026-08-23, varianta 1 z mockupu) --- */
-.nvk{--fial:#8B6FE0;--fial2:#7757d6;}
+/* Ukol 103: iPhone pri podrzeni prstu nabizel oznaceni textu a pustil lupu.
+   Na obrazovce Navyku se nic oznacovat nepotrebuje, podrzeni patri navyku. */
+.nvk{--fial:#8B6FE0;--fial2:#7757d6;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
+.nvk *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
+.nvk .nrow{-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+.nvk input,.nvk textarea,.nvk [contenteditable]{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default;}
 .nvk .nbn{display:flex;align-items:center;gap:9px;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:8px 17px;}
 .nvk .kcis{flex:0 0 auto;text-align:center;}
 .nvk .kcis b{display:block;font-family:var(--font-display);font-size:30px;font-weight:900;letter-spacing:-.05em;line-height:.85;background:linear-gradient(160deg,#A98BEE,#6B49CF);-webkit-background-clip:text;background-clip:text;color:transparent;}
@@ -3215,7 +3220,12 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
   .two{display:flex;gap:8px;} .twoc{flex:1;background:var(--card);box-shadow:var(--shadow);border-radius:13px;padding:12px;text-align:center;} .twoc .ti{font-size:19.12px;} .twoc .tt{font-size:12.74px;font-weight:700;margin-top:4px;} .twoc .ts{font-size:10.62px;color:var(--sec);}
   .hbm{background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:8px 15px;display:flex;align-items:center;gap:10px;}
 /* --- Navyky: banner + bubliny (Marek 2026-08-23, varianta 1 z mockupu) --- */
-.nvk{--fial:#8B6FE0;--fial2:#7757d6;}
+/* Ukol 103: iPhone pri podrzeni prstu nabizel oznaceni textu a pustil lupu.
+   Na obrazovce Navyku se nic oznacovat nepotrebuje, podrzeni patri navyku. */
+.nvk{--fial:#8B6FE0;--fial2:#7757d6;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
+.nvk *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
+.nvk .nrow{-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+.nvk input,.nvk textarea,.nvk [contenteditable]{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default;}
 .nvk .nbn{display:flex;align-items:center;gap:9px;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:8px 17px;}
 .nvk .kcis{flex:0 0 auto;text-align:center;}
 .nvk .kcis b{display:block;font-family:var(--font-display);font-size:30px;font-weight:900;letter-spacing:-.05em;line-height:.85;background:linear-gradient(160deg,#A98BEE,#6B49CF);-webkit-background-clip:text;background-clip:text;color:transparent;}
@@ -6900,7 +6910,7 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v102';
+const MM_VERZE = 'v103';
 // Ukol 99 (Marek 14. 9.): "obrazovka se zastavi, ale jakoby se to neviditelne scrolluje dal".
 // Stinova obrazovka si rezervovala vysku podle window.innerHeight. Na iPhonu ta hodnota umi
 // byt vetsi nez skutecna viditelna plocha (listy Safari se sbaluji), takze pod obsahem vzniklo
@@ -6991,10 +7001,19 @@ function mmDiagPrepni(){
     const sc = _mmDiagZaznam._sc = _mmDiagZaznam._sc || { sMax:0, pMin:1e9, pMax:-1e9 };
     sc.sMax = Math.max(sc.sMax, st);
     sc.pMin = Math.min(sc.pMin, prazdno); sc.pMax = Math.max(sc.pMax, prazdno);
-    const scRadek = 'okno' + Math.round(mmVyskaOkna()) + '/' + Math.round(window.innerHeight)
-      + ' sjeto' + Math.round(sc.sMax) + '/' + Math.round(maxSc)
-      + ' prazdno' + Math.round(sc.pMin) + (Math.abs(sc.pMax - sc.pMin) > 1 ? '-' + Math.round(sc.pMax) : '');
-    const neco = radky.some(x => x[0] === '!') || sc.pMax > 12;
+    // kolik je pod poslednim prvkem opravdu prazdna
+    let volno = 0;
+    if (bod){ const deti = [...bod.children].filter(e => e.getBoundingClientRect().height > 0.5);
+      if (deti.length){ const posl = deti[deti.length-1].getBoundingClientRect();
+        const lista = sh.querySelector('.tb');
+        const kryje = lista ? Math.max(0, de.clientHeight - lista.getBoundingClientRect().top) : 0;
+        volno = Math.round(de.scrollHeight - (posl.bottom + st) - kryje); } }
+    sc.vMax = Math.max(sc.vMax || 0, volno);
+    const scRadek = (sc.vMax > 12 ? 'SCROLL DO PRAZDNA: ' + sc.vMax + ' px' : 'scroll OK (prazdno ' + sc.vMax + ' px)')
+      + String.fromCharCode(10) + 'okno' + Math.round(mmVyskaOkna()) + '/' + Math.round(window.innerHeight)
+      + '/' + Math.round(de.clientHeight) + ' str' + Math.round(de.scrollHeight)
+      + ' sjeto' + Math.round(sc.sMax) + '/' + Math.round(maxSc);
+    const neco = radky.some(x => x[0] === '!') || sc.vMax > 12;
     el.style.color = neco ? '#FF6B5E' : '#7CF0A8';
     const ch = window._mmPosledniChyba ? (String.fromCharCode(10) + 'CHYBA ZAPISU: ' + window._mmPosledniChyba) : '';
     el.textContent = (neco ? 'NECO SE MENI:' : 'zatim se nic nemeni')
@@ -9450,6 +9469,11 @@ function mmZapisTplKey(){
 // Marek 2026-08-18: „zbytkovy" prasah 1-10 px (zaokrouhleni zoomu + rezerva pod obsahem) delal
 // falesne scrollovani na obrazovkach, ktere se jinak vejdou. Kdyz je prasah maly, uber ho ze spodni
 // rezervy .body — obrazovka pak nescrolluje VUBEC. Vetsi prasah = skutecne dlouhy obsah -> scrolluje dal.
+// Ukol 103 (Marek 14. 9.): "obrazovka se zastavi, ale scrolluje se to dal do prazdna".
+// Drive se orezavalo jen kdyz prebytek nepresahl 10 px — cokoli vetsiho zustalo. Ted se
+// spocita, kolik je pod POSLEDNIM prvkem opravdu prazdna (nad ramec toho, co zakryva
+// plovouci lista), a presne to se odrizne. Oreze se jen kdyz vysku stranky opravdu urcuje
+// spodni rezerva .body — jinak by se jen schoval obsah pod listu.
 function mmTrimTail(scrEl, z){
   if(!scrEl) return;
   const run = ()=>{
@@ -9457,16 +9481,27 @@ function mmTrimTail(scrEl, z){
     const rootNode = scrEl.getRootNode(); const host = rootNode && rootNode.host;
     if (host && !host.isConnected) return;
     const sub = (host && host.classList && host.classList.contains('mm-sub')) ? host : null;
-    const de = document.scrollingElement;
-    const over = sub ? (sub.scrollHeight - sub.clientHeight) : (de.scrollHeight - de.clientHeight);
-    if (over > 0 && over <= 10 && !bodyEl.dataset.mmTrimmed){
-      const cur = parseFloat(getComputedStyle(bodyEl).paddingBottom) || 0;
-      bodyEl.style.paddingBottom = Math.max(40, cur - over/z) + 'px';
-      bodyEl.dataset.mmTrimmed = '1';   // jen JEDNOU na jeden render (jinak by se rezerva pri opakovanych resize scitala dolu)
-    }
+    const de = sub || document.scrollingElement; if (!de) return;
+    const over = de.scrollHeight - de.clientHeight;
+    if (over <= 1) return;                                  // neni co orezavat
+    const st = sub ? sub.scrollTop : (window.scrollY || 0);
+    const br = bodyEl.getBoundingClientRect();
+    if (br.bottom + st < de.scrollHeight - 2) return;        // vysku drzi neco jineho nez .body
+    const deti = [...bodyEl.children].filter(e => e.getBoundingClientRect().height > 0.5);
+    if (!deti.length) return;
+    const posl = deti[deti.length - 1].getBoundingClientRect();
+    const lista = scrEl.querySelector('.tb');
+    const kryje = lista ? Math.max(0, de.clientHeight - lista.getBoundingClientRect().top) : 0;
+    const zbytecne = de.scrollHeight - (posl.bottom + st) - kryje - 6;
+    if (zbytecne <= 2) return;
+    const cur = parseFloat(getComputedStyle(bodyEl).paddingBottom) || 0;
+    const novy = Math.max(10, cur - Math.min(over, zbytecne) / z);
+    if (cur - novy < 0.5) return;
+    bodyEl.style.paddingBottom = novy + 'px';
   };
   requestAnimationFrame(run);
-  setTimeout(run, 260);   // druhy pokus, az se usadi fonty/kalendar (jinak je v prvnim ramci vyska jeste jina)
+  setTimeout(run, 260);   // druhy pokus, az se usadi fonty/kalendar
+  setTimeout(run, 700);   // treti, az dobehnou animace listy
 }
 // Stejny princip jako mmTrimTail, ale pro scrollovaci .body uvnitr oken (formulare, Historie uprav):
 // prasah 1-2 px (zaokrouhleni vysky pripnuteho spodku) delal „gumovy" scroll na oknech, ktera se vejdou.

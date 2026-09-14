@@ -121,6 +121,8 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 100 | Kolečko s fajfkou mělo tmavý prstenec na okraji (moje regrese ve v99) | Návyky → splněný návyk | 📱 |
 | 101 | Bublina se při ODŠKRTNUTÍ zmenšila a zase zvětšila (kolize tříd .zpet) | Návyky → odškrtnutí | ✅ hotovo |
 | 102 | Falešné scrollování — výšku appky určovalo 100dvh, teď skutečná viditelná výška | Všechny obrazovky | 📱 |
+| 103 | Podržení návyku vyvolávalo lupu / označování textu na iPhonu | Návyky → podrž prst na návyku | 📱 |
+| 104 | Prázdné místo pod obsahem se teď odřízne celé (dřív jen do 10 px) | Návyky, Přehled | 📱 |
 | 95 | Profil — vzhled a údaje | Já → Profil | ⏸️ odloženo (Marek) |
 
 
