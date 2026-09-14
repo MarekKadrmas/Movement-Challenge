@@ -6855,9 +6855,7 @@ function mmGo(v){ if(v==='hraci') v='prehled'; mmCloseSub();
   window._mmNoveId=null; window._mmOdskrtId=null;
   clearTimeout(window._mmNoveT); clearTimeout(window._mmOdskrtT);
   mmDozenPrekresleni(v); const b=document.querySelector(".tb-btn[data-view=\""+v+"\"]"); if(b){ const prev=(window._mmTabIdx!=null?window._mmTabIdx:null); b.click(); window._mmTabIdx=MM_TAB_IDX[v]; requestAnimationFrame(()=>{ const h=mmBarHost(v); mmBarPos(h&&h.shadowRoot, MM_TAB_IDX[v], prev); mmLbarAlign(h&&h.shadowRoot); if(v==='prehled') mmHeatInit(h&&h.shadowRoot); }); }
-  // Ukol 106: po prepnuti obrazovky znovu rozhodni, jestli se ma vubec houpat.
-  // Behem prepnuti je v dokumentu chvili stara i nova obrazovka, takze jedno mereni nestaci.
-  [0, 320, 900, 1600].forEach(ms => setTimeout(mmDojezd, ms)); requestAnimationFrame(mmDojezd); }
+ }
 function mmChrome(){ const full=state.view==='prehled'||state.view==='hraci'||state.view==='navyky'||state.view==='historie'; document.body.classList.toggle('mm-full', full); const tb=document.getElementById('mc-tabbar'); if(tb) tb.style.display=full?'none':''; const h=document.querySelector('.header'); if(h) h.style.display=full?'none':''; const f=document.querySelector('.fab-group'); if(f) f.style.display=full?'none':''; }
 function mmFirst(n){ return String(n||'').split(' ')[0]; }
 
@@ -6918,7 +6916,7 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v105';
+const MM_VERZE = 'v106';
 // Ukol 99 (Marek 14. 9.): "obrazovka se zastavi, ale jakoby se to neviditelne scrolluje dal".
 // Stinova obrazovka si rezervovala vysku podle window.innerHeight. Na iPhonu ta hodnota umi
 // byt vetsi nez skutecna viditelna plocha (listy Safari se sbaluji), takze pod obsahem vzniklo
@@ -6930,40 +6928,32 @@ function mmVyskaOkna(){
 }
 // Ukol 102: stejnou hodnotu dostane i CSS (--mm-okno), aby appka nikdy nebyla vyssi
 // nez obrazovka. Prepocitava se pri zmene velikosti okna i pri sbaleni list prohlizece.
-// Ukol 106 (Marek 14. 9.): pruzina na konci scrollu. Delku dojezdu prohlizec nastavit
-// neda — bud je, nebo neni. Kdyz neni (overscroll-behavior:none), vznika mrtva zona pri
-// navratu (ukol 105). Resenim je zapinat ji jen tam, kde je co scrollovat: obrazovka,
-// ktera se cela vejde, se nema proc houpat a mrtva zona tam vzniknout nemuze.
-function mmDojezd(){
-  const de = document.scrollingElement || document.documentElement;
-  if (!de) return;
-  const v = (de.scrollHeight - de.clientHeight > 1) ? 'contain' : 'none';
-  if (window._mmDojezdStav === v) return;
-  window._mmDojezdStav = v;
-  // setProperty (a rovnou zkratka i dlouhy zapis) — starsi Safari camelCase vlastnost
-  // v CSSOM nezna a prirazeni by tise propadlo.
-  [document.documentElement, document.body].forEach(el => {
-    if (!el) return;
-    el.style.setProperty('overscroll-behavior', v);
-    el.style.setProperty('overscroll-behavior-y', v);
-  });
-}
+// Ukol 107 (Marek 14. 9.): "pruzina se aktivuje, ale obsah se nevrati a nadpis zustane
+// nahore mimo obrazovku" + "pri pruzine nejde tuknout na listu". Na vine bylo prepocitavani
+// rozmeru BEHEM gesta: pri pruzinovem dojezdu iPhone hlasi jinou vysku okna, appka si podle
+// ni prestavela vysku, layout se pod prstem hnul a scroll zustal viset. Dokud se uzivatel
+// dotyka obrazovky, se rozmery nehybe — prepocet pocka na pusteni prstu.
+let _mmDotyk = false, _mmVyskaCeka = false;
 function mmNastavVysku(){
+  if (_mmDotyk){ _mmVyskaCeka = true; return; }
   const v = mmVyskaOkna(); if (!v) return;
   const d = document.documentElement;
-  if (d.style.getPropertyValue('--mm-okno') !== v + 'px') d.style.setProperty('--mm-okno', v + 'px');
-  mmDojezd();
+  const stara = parseFloat(d.style.getPropertyValue('--mm-okno')) || 0;
+  if (Math.abs(stara - v) < 4) return;          // drobne vykyvy neresime, jen by trhaly layoutem
+  d.style.setProperty('--mm-okno', v + 'px');
 }
 mmNastavVysku();
 if (!window._mmVyskaVaz){
   window._mmVyskaVaz = true;
   window.addEventListener('resize', mmNastavVysku);
-  window.addEventListener('scroll', mmDojezd, { passive: true });
   window.addEventListener('orientationchange', () => setTimeout(mmNastavVysku, 120));
-  if (window.visualViewport){
-    window.visualViewport.addEventListener('resize', mmNastavVysku);
-    window.visualViewport.addEventListener('scroll', mmNastavVysku);
-  }
+  // POZOR: zadny posluchac na visualViewport 'scroll' — ten se pri pruzinovem dojezdu
+  // spousti desetkrat za vterinu a prepocet uprostred gesta byl prave ta chyba.
+  const konecDotyku = () => { _mmDotyk = false;
+    if (_mmVyskaCeka){ _mmVyskaCeka = false; setTimeout(mmNastavVysku, 60); } };
+  document.addEventListener('touchstart', () => { _mmDotyk = true; }, { passive: true, capture: true });
+  document.addEventListener('touchend', konecDotyku, { passive: true, capture: true });
+  document.addEventListener('touchcancel', konecDotyku, { passive: true, capture: true });
 }
 function mmVerzeCas(){ return MM_VERZE; }
 // Diagnostika (Marek 4. 9.): tuknutim na cislo verze se zapne zivy vypis rozmeru
@@ -9505,7 +9495,7 @@ function mmZapisTplKey(){
 function mmTrimTail(scrEl, z){
   if(!scrEl) return;
   const run = ()=>{
-    mmDojezd();
+    if (_mmDotyk){ setTimeout(run, 300); return; }       // pod prstem se s layoutem nehybe
     const bodyEl = scrEl.querySelector('.body'); if(!bodyEl) return;
     const rootNode = scrEl.getRootNode(); const host = rootNode && rootNode.host;
     if (host && !host.isConnected) return;
@@ -9528,7 +9518,6 @@ function mmTrimTail(scrEl, z){
     const pred = de.scrollHeight;
     bodyEl.style.paddingBottom = novy + 'px';
     if (de.scrollHeight >= pred) bodyEl.style.paddingBottom = cur + 'px';   // nepomohlo -> vratit zpet
-    mmDojezd();
   };
   requestAnimationFrame(run);
   setTimeout(run, 260);   // druhy pokus, az se usadi fonty/kalendar

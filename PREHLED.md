@@ -124,7 +124,9 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 103 | Podržení návyku vyvolávalo lupu / označování textu na iPhonu | Návyky → podrž prst na návyku | 📱 |
 | 104 | Prázdné místo pod obsahem se teď odřízne celé (dřív jen do 10 px) | Návyky, Přehled | 📱 |
 | 105 | Mrtvá zóna na zpáteční cestě scrollu (overscroll-behavior:none) | Všechny obrazovky | 📱 |
-| 106 | Pružina na konci scrollu jen tam, kde je co scrollovat | Návyky bez pružiny, Přehled s ní | 📱 |
+| 106 | ~~Pružina jen tam, kde je co scrollovat~~ — VRÁCENO, rozbilo to víc věcí | — | ↩️ vráceno |
+| 107 | Obsah se po pružině nevracel + nešlo ťuknout na lištu (přepočet rozměrů pod prstem) | Návyky, Přehled | 📱 |
+| 108 | ROZHODNOUT: pružina všude (teď), nebo nikde (vrátí se prodleva při návratu) | — | ❓ na Marka |
 | 95 | Profil — vzhled a údaje | Já → Profil | ⏸️ odloženo (Marek) |
 
 
