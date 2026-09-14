@@ -131,7 +131,7 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-html, body { background: var(--bg); color: var(--text); font-family: var(--font-ui); min-height: 100vh; min-height: 100dvh; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+html, body { background: var(--bg); color: var(--text); font-family: var(--font-ui); min-height: 100vh; min-height: 100dvh; min-height: var(--mm-okno, 100dvh); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
 body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 /* Marek 2026-08-18: ZADNE viditelne scrollbary nikde v appce (mobil je nema mit — na iOS to je ta
    „lista, co jezdi vpravo"). Plati pro light DOM; stinove obrazovky maji stejne pravidlo v #mm-tpl. */
@@ -2964,7 +2964,11 @@ html.mm-boot body{background:var(--bg,#EEF0EE);}
 #view-hraci > :not(#parta-mm){display:none!important;}
 #view-navyky > :not(#navyky-mm){display:none!important;}
 #view-historie > :not(#ja-mm){display:none!important;}
-.mm{max-width:480px;margin:0 auto;min-height:100dvh;}
+/* Ukol 102: vysku appky uz neurcuje 100dvh. Na iPhonu ta hodnota umi byt vetsi nez
+   viditelna plocha (sbalovaci listy Safari), takze stranka byla vyssi nez obrazovka
+   a slo scrollovat do prazdna — nadpis vyjel nahoru a nic dalsiho uz se nedelo.
+   --mm-okno nastavuje JS podle skutecne viditelne vysky. */
+.mm{max-width:480px;margin:0 auto;min-height:100dvh;min-height:var(--mm-okno,100dvh);}
 /* F53: podobrazovky (drill-down z hubu Já) — fullscreen overlay, skryte defaultne, otevira mmOpenSub() */
 .mm-sub{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:150;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch;}
 .mm-sub.open{display:block;}
@@ -6896,7 +6900,7 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v101';
+const MM_VERZE = 'v102';
 // Ukol 99 (Marek 14. 9.): "obrazovka se zastavi, ale jakoby se to neviditelne scrolluje dal".
 // Stinova obrazovka si rezervovala vysku podle window.innerHeight. Na iPhonu ta hodnota umi
 // byt vetsi nez skutecna viditelna plocha (listy Safari se sbaluji), takze pod obsahem vzniklo
@@ -6905,6 +6909,23 @@ function mmVyskaOkna(){
   const d = document.documentElement;
   const a = window.innerHeight || 0, b = d ? d.clientHeight : 0;
   return (a && b) ? Math.min(a, b) : (a || b || 0);
+}
+// Ukol 102: stejnou hodnotu dostane i CSS (--mm-okno), aby appka nikdy nebyla vyssi
+// nez obrazovka. Prepocitava se pri zmene velikosti okna i pri sbaleni list prohlizece.
+function mmNastavVysku(){
+  const v = mmVyskaOkna(); if (!v) return;
+  const d = document.documentElement;
+  if (d.style.getPropertyValue('--mm-okno') !== v + 'px') d.style.setProperty('--mm-okno', v + 'px');
+}
+mmNastavVysku();
+if (!window._mmVyskaVaz){
+  window._mmVyskaVaz = true;
+  window.addEventListener('resize', mmNastavVysku);
+  window.addEventListener('orientationchange', () => setTimeout(mmNastavVysku, 120));
+  if (window.visualViewport){
+    window.visualViewport.addEventListener('resize', mmNastavVysku);
+    window.visualViewport.addEventListener('scroll', mmNastavVysku);
+  }
 }
 function mmVerzeCas(){ return MM_VERZE; }
 // Diagnostika (Marek 4. 9.): tuknutim na cislo verze se zapne zivy vypis rozmeru
