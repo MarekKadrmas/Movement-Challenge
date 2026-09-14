@@ -6912,7 +6912,7 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v96';
+const MM_VERZE = 'v97';
 function mmVerzeCas(){ return MM_VERZE; }
 // Diagnostika (Marek 4. 9.): tuknutim na cislo verze se zapne zivy vypis rozmeru
 // radku navyku. Poskakovani bublin se mi nedari vyvolat v prohlizeci, takze potrebuji
@@ -8477,6 +8477,7 @@ function mmHabitKrok(h){ const cil=Number(h.cil_hodnota)||0; return cil<=12 ? 1 
 async function mmHabitKlik(id){
   const h=state.habits.find(x=>x.id===id); if(!h) return;
   if(habitEffZapis(h)==='check') return mmHabitToggle(id);
+  if({weekly:1,monthly:1,yearly:1}[h.frekvence_typ]) return mmHabitToggle(id);
   const pid=currentHabitPlayer(); const sel=state.habitDay||todayStr();
   const cil=Number(h.cil_hodnota)||0; const log=habitLogObj(id,pid,sel);
   const mam=log?(log.hodnota!=null?Number(log.hodnota):cil):0;
@@ -12321,7 +12322,8 @@ async function toggleHabitToday(id){
     const zD = habitEffZapis(hD);
     const exD = habitLogObj(id, pidD, selD);
     const doneD = habitIsDoneOn(hD, pidD, selD);
-    if (zD !== 'check' && !doneD){ openHabitValue(id); return; }   // meritelny -> sheet Zapis hodnoty
+    const flexD = !!{weekly:1,monthly:1,yearly:1}[hD.frekvence_typ];
+    if (zD !== 'check' && !flexD && !doneD){ openHabitValue(id); return; }   // meritelny -> sheet Zapis hodnoty
     if (doneD && exD) state.habitLogs = state.habitLogs.filter(l=>l.id!==exD.id);
     else if (!doneD) state.habitLogs.push({ id:'demo-'+Math.random().toString(36).slice(2), habit_id:id, player_id:pidD, datum:selD, hodnota:null });
     renderNavyky(); try{ renderDnesek(); }catch(_){}
@@ -12354,8 +12356,9 @@ async function toggleHabitToday(id){
     });
   }
   // u meritelneho s JIZ zadanou castecnou hodnotou -> otevri detail misto prepsani naslepo
-  if (z !== 'check' && (Number(h.cil_hodnota)||0) > 0 && existing){ openHabitValue(id); return; }
-  const full = z === 'check' ? null : (Number(h.cil_hodnota) || null);
+  const flexCil = !!{weekly:1,monthly:1,yearly:1}[h.frekvence_typ];
+  if (z !== 'check' && !flexCil && (Number(h.cil_hodnota)||0) > 0 && existing){ openHabitValue(id); return; }
+  const full = (z === 'check' || flexCil) ? null : (Number(h.cil_hodnota) || null);
   const docasne = { id: 'tmp-' + Math.random().toString(36).slice(2), habit_id: id, player_id: pid, datum: sel, hodnota: full };
   state.habitLogs.push(docasne);
   mmHabitPrekresli();
