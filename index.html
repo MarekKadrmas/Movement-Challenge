@@ -2299,9 +2299,6 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .lcard.ja-prvni .psegt{background:color-mix(in srgb,var(--green) 8%,var(--card));}
 .lcard.ja-prvni .psegt::before{box-shadow:4px 4px 0 4px color-mix(in srgb,var(--green) 8%,var(--card));}
 .lcard.ja-prvni .psegt::after{box-shadow:-4px 4px 0 4px color-mix(in srgb,var(--green) 8%,var(--card));}
-/* Ukol 81: odskrtnuti ma zrcadlovou animaci ke skrtnuti (Marek 3. 9.) */
-.nvk .nrow.zpet .nchk{animation:none;}
-@keyframes mmChkZpet{0%{transform:scale(1.1)}55%{transform:scale(.88)}100%{transform:scale(1)}}
 /* Ukol 75: nove nactene bloky lehce najedou, at je videt, ze se neco stalo */
 .deni .pblok.nove{animation:mmDeniNajed .55s ease both;}
 @keyframes mmDeniNajed{from{opacity:0}to{opacity:1}}
@@ -2349,13 +2346,6 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .nvk .nrow.pak .nic{opacity:.62;}
 .nvk .nrow.hot{background:var(--card);box-shadow:var(--shadow);}
 .nvk .nrow.hot .nchk{background:linear-gradient(160deg,#9C7BE6,#6B49CF);border:0;box-shadow:none;}
-.nvk .nrow.hot.just .nchk{animation:none;}
-.nvk .nrow.hot.just .nchk .i{animation:none;}
-.nvk .nrow.just{animation:none;}
-@keyframes mmChk{0%{transform:scale(.55)}60%{transform:scale(1.14)}100%{transform:scale(1)}}
-@keyframes mmChkI{0%{opacity:0;transform:scale(.4)}100%{opacity:1;transform:scale(1)}}
-@keyframes mmRow{0%{background:color-mix(in srgb,#8B6FE0 14%,var(--card))}100%{}}
-@media (prefers-reduced-motion:reduce){.nvk .nrow.just,.nvk .nrow.hot.just .nchk,.nvk .nrow.hot.just .nchk .i{animation:none;}}
 .nvk .nrow.hot .nnm{color:var(--ter);}
 .nvk .nrow.hot .nic{opacity:.5;}
 .nvk .nnew{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:11px;font-size:14.48px;font-weight:800;color:var(--fial2);cursor:pointer;}
@@ -3407,9 +3397,6 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .lcard.ja-prvni .psegt{background:color-mix(in srgb,var(--green) 8%,var(--card));}
 .lcard.ja-prvni .psegt::before{box-shadow:4px 4px 0 4px color-mix(in srgb,var(--green) 8%,var(--card));}
 .lcard.ja-prvni .psegt::after{box-shadow:-4px 4px 0 4px color-mix(in srgb,var(--green) 8%,var(--card));}
-/* Ukol 81: odskrtnuti ma zrcadlovou animaci ke skrtnuti (Marek 3. 9.) */
-.nvk .nrow.zpet .nchk{animation:none;}
-@keyframes mmChkZpet{0%{transform:scale(1.1)}55%{transform:scale(.88)}100%{transform:scale(1)}}
 /* Ukol 75: nove nactene bloky lehce najedou, at je videt, ze se neco stalo */
 .deni .pblok.nove{animation:mmDeniNajed .55s ease both;}
 @keyframes mmDeniNajed{from{opacity:0}to{opacity:1}}
@@ -3457,13 +3444,6 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .nvk .nrow.pak .nic{opacity:.62;}
 .nvk .nrow.hot{background:var(--card);box-shadow:var(--shadow);}
 .nvk .nrow.hot .nchk{background:linear-gradient(160deg,#9C7BE6,#6B49CF);border:0;box-shadow:none;}
-.nvk .nrow.hot.just .nchk{animation:none;}
-.nvk .nrow.hot.just .nchk .i{animation:none;}
-.nvk .nrow.just{animation:none;}
-@keyframes mmChk{0%{transform:scale(.55)}60%{transform:scale(1.14)}100%{transform:scale(1)}}
-@keyframes mmChkI{0%{opacity:0;transform:scale(.4)}100%{opacity:1;transform:scale(1)}}
-@keyframes mmRow{0%{background:color-mix(in srgb,#8B6FE0 14%,var(--card))}100%{}}
-@media (prefers-reduced-motion:reduce){.nvk .nrow.just,.nvk .nrow.hot.just .nchk,.nvk .nrow.hot.just .nchk .i{animation:none;}}
 .nvk .nrow.hot .nnm{color:var(--ter);}
 .nvk .nrow.hot .nic{opacity:.5;}
 .nvk .nnew{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:11px;font-size:14.48px;font-weight:800;color:var(--fial2);cursor:pointer;}
@@ -6916,7 +6896,16 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v100';
+const MM_VERZE = 'v101';
+// Ukol 99 (Marek 14. 9.): "obrazovka se zastavi, ale jakoby se to neviditelne scrolluje dal".
+// Stinova obrazovka si rezervovala vysku podle window.innerHeight. Na iPhonu ta hodnota umi
+// byt vetsi nez skutecna viditelna plocha (listy Safari se sbaluji), takze pod obsahem vzniklo
+// prazdne misto, kterym slo scrollovat, aniz by se cokoli hnulo. Bereme mensi z obou cisel.
+function mmVyskaOkna(){
+  const d = document.documentElement;
+  const a = window.innerHeight || 0, b = d ? d.clientHeight : 0;
+  return (a && b) ? Math.min(a, b) : (a || b || 0);
+}
 function mmVerzeCas(){ return MM_VERZE; }
 // Diagnostika (Marek 4. 9.): tuknutim na cislo verze se zapne zivy vypis rozmeru
 // radku navyku. Poskakovani bublin se mi nedari vyvolat v prohlizeci, takze potrebuji
@@ -6956,7 +6945,7 @@ function mmDiagPrepni(){
         u.wMin = Math.min(u.wMin, q.width);         u.wMax = Math.max(u.wMax, q.width);
       });
     });
-    const radky = Object.keys(_mmDiagZaznam).map(i => {
+    const radky = Object.keys(_mmDiagZaznam).filter(k => k[0] !== '_').map(i => {
       const z = _mmDiagZaznam[i];
       const dv = (z.vMax - z.vMin), ds = (z.sMax - z.sMin), dm = (z.mMax - z.mMin);
       const vnitrek = Object.keys(z.uvnitr).map(k => { const u = z.uvnitr[k];
@@ -6972,11 +6961,24 @@ function mmDiagPrepni(){
         + ' m' + z.mMin.toFixed(1) + (dm > 0.6 ? '-' + z.mMax.toFixed(1) : '')
         + vnitrek;
     });
-    const neco = radky.some(x => x[0] === '!');
+    // Ukol 99: kolik je pod obsahem prazdna, kterym jde scrollovat naprazdno
+    const de = document.scrollingElement || document.documentElement;
+    const bod = sh.querySelector('.body');
+    const st = Math.max(window.scrollY || 0, document.body.scrollTop || 0, de.scrollTop || 0);
+    const maxSc = Math.max(0, de.scrollHeight - de.clientHeight);
+    const prazdno = bod ? (de.scrollHeight - (bod.getBoundingClientRect().bottom + st)) : 0;
+    const sc = _mmDiagZaznam._sc = _mmDiagZaznam._sc || { sMax:0, pMin:1e9, pMax:-1e9 };
+    sc.sMax = Math.max(sc.sMax, st);
+    sc.pMin = Math.min(sc.pMin, prazdno); sc.pMax = Math.max(sc.pMax, prazdno);
+    const scRadek = 'okno' + Math.round(mmVyskaOkna()) + '/' + Math.round(window.innerHeight)
+      + ' sjeto' + Math.round(sc.sMax) + '/' + Math.round(maxSc)
+      + ' prazdno' + Math.round(sc.pMin) + (Math.abs(sc.pMax - sc.pMin) > 1 ? '-' + Math.round(sc.pMax) : '');
+    const neco = radky.some(x => x[0] === '!') || sc.pMax > 12;
     el.style.color = neco ? '#FF6B5E' : '#7CF0A8';
     const ch = window._mmPosledniChyba ? (String.fromCharCode(10) + 'CHYBA ZAPISU: ' + window._mmPosledniChyba) : '';
     el.textContent = (neco ? 'NECO SE MENI:' : 'zatim se nic nemeni')
       + String.fromCharCode(10) + radky.join(String.fromCharCode(10))
+      + String.fromCharCode(10) + scRadek
       + String.fromCharCode(10) + '(v=vyska s=sirka m=mezera, ' + MM_VERZE + ')' + ch;
   };
   tik();
@@ -7154,7 +7156,7 @@ function renderDnesek(){
   <div class="sl" onclick="mmOpenSub('zaznamy')" style="cursor:pointer;touch-action:manipulation"><span>Dění</span><a style="pointer-events:none">celá historie →</a></div>
   ${feed}
     <div class="hbm" style="margin-top:6px;padding:6px 12px;cursor:pointer" onclick="mmOpenSub('rekordyparty')"><div class="hi" style="background:#E0A23A22;width:27px;height:27px;font-size:16.9px"><svg class="i"><use href="#i-medal"/></svg></div><div class="ht">Rekordy & maximálky všech<small>všichni hráči na jednom místě</small></div><span class="rx" style="color:var(--ter);font-size:19.31px">›</span></div>`;
-  const _mmK=tpl+'|'+(document.documentElement.getAttribute('data-theme')||'light'); if(host._mmTpl===_mmK&&host.shadowRoot){const s=host.shadowRoot.querySelector('.scr'); if(s){const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; s.style.zoom=z; s.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(s,z);} mmDeniApplyFeedState(host.shadowRoot,'prehled'); mmBarSnap(host.shadowRoot,0); mmZnackyCile(host.shadowRoot); mmDeniBindReakce(host.shadowRoot, host); mmPsegAnim(host.shadowRoot); mmPsegPrepocet(host.shadowRoot); mmLbarAlign(host.shadowRoot); mmHeatInit(host.shadowRoot); return;} host._mmTpl=_mmK; const sh=host.shadowRoot||host.attachShadow({mode:'open'});
+  const _mmK=tpl+'|'+(document.documentElement.getAttribute('data-theme')||'light'); if(host._mmTpl===_mmK&&host.shadowRoot){const s=host.shadowRoot.querySelector('.scr'); if(s){const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; s.style.zoom=z; s.style.minHeight=(mmVyskaOkna()/z)+'px'; mmTrimTail(s,z);} mmDeniApplyFeedState(host.shadowRoot,'prehled'); mmBarSnap(host.shadowRoot,0); mmZnackyCile(host.shadowRoot); mmDeniBindReakce(host.shadowRoot, host); mmPsegAnim(host.shadowRoot); mmPsegPrepocet(host.shadowRoot); mmLbarAlign(host.shadowRoot); mmHeatInit(host.shadowRoot); return;} host._mmTpl=_mmK; const sh=host.shadowRoot||host.attachShadow({mode:'open'});
   const tplEl=document.getElementById('mm-tpl'); const sprite=document.getElementById('momentum-sprite');
   const _spr = sh.querySelector('#momentum-sprite');
   [...sh.childNodes].forEach(n => { if (n !== _spr) n.remove(); });   // ukol 85: sprite se neodpojuje
@@ -7167,7 +7169,7 @@ function renderDnesek(){
   if(sprite && !sh.querySelector('#momentum-sprite')) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(0)}</div>`;
   sh.appendChild(w);
-  mmSrovnejJmena(sh); const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin='0 auto';
+  mmSrovnejJmena(sh); const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(mmVyskaOkna()/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin='0 auto';
   mmDeniApplyFeedState(sh,'prehled'); mmBarSnap(sh,0); mmZnackyCile(sh);   // po plnem re-renderu obnov rozbaleni/pocty/tecky komentaru ze state.mmFeed
   mmDeniBindReakce(sh, host);
   mmPsegAnim(sh);
@@ -8293,7 +8295,7 @@ function renderParta(){
   ${feed.html}
   ${feed.hasMore?'<button class="loadmore" onclick="mmPartaLoadMoreFeed()">Načíst starší ↓</button>':''}`;
 
-  const _mmK=tpl+'|'+(document.documentElement.getAttribute('data-theme')||'light'); if(host._mmTpl===_mmK&&host.shadowRoot){const s=host.shadowRoot.querySelector('.scr'); if(s){const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; s.style.zoom=z; s.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(s,z);} mmDeniApplyFeedState(host.shadowRoot, (host.id==='parta-mm'?'parta':'dnesek')); mmLbarAlign(host.shadowRoot); return;} host._mmTpl=_mmK; const sh=host.shadowRoot||host.attachShadow({mode:'open'});
+  const _mmK=tpl+'|'+(document.documentElement.getAttribute('data-theme')||'light'); if(host._mmTpl===_mmK&&host.shadowRoot){const s=host.shadowRoot.querySelector('.scr'); if(s){const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; s.style.zoom=z; s.style.minHeight=(mmVyskaOkna()/z)+'px'; mmTrimTail(s,z);} mmDeniApplyFeedState(host.shadowRoot, (host.id==='parta-mm'?'parta':'dnesek')); mmLbarAlign(host.shadowRoot); return;} host._mmTpl=_mmK; const sh=host.shadowRoot||host.attachShadow({mode:'open'});
   const tplEl=document.getElementById('mm-tpl'); const sprite=document.getElementById('momentum-sprite');
   const _spr = sh.querySelector('#momentum-sprite');
   [...sh.childNodes].forEach(n => { if (n !== _spr) n.remove(); });   // ukol 85: sprite se neodpojuje
@@ -8304,7 +8306,7 @@ function renderParta(){
   if(sprite && !sh.querySelector('#momentum-sprite')) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(1)}</div>`;
   sh.appendChild(w);
-  mmSrovnejJmena(sh); const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin='0 auto'; mmDeniApplyFeedState(sh,'parta'); mmPsegAnim(sh); mmLbarAlign(sh); mmHeatInit(sh);
+  mmSrovnejJmena(sh); const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(mmVyskaOkna()/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin='0 auto'; mmDeniApplyFeedState(sh,'parta'); mmPsegAnim(sh); mmLbarAlign(sh); mmHeatInit(sh);
 }
 
 // ============================================================
@@ -8604,7 +8606,6 @@ function mmNavykyPatch(){
     if (!h) return false;
     const done = habitIsDoneOn(h, pid, ds);
     r.classList.toggle('hot', done);
-    // animacni tridy resi mmAnimujRadek — tady se na ne nesahá
     // Ukol 98: fajfka uz je v kolecku porad, jen ji skryva CSS — nic se nemaze ani nevytvari.
     if (!chk.firstElementChild) chk.innerHTML = '<svg class="i"><use href="#i-check"/></svg>';
     const det = r.querySelector('.ndet');
@@ -8646,18 +8647,11 @@ function mmNavykyPatch(){
   }
   return true;
 }
-function mmAnimujRadek(id, trida){
-  const host = document.getElementById('navyky-mm');
-  const sh = host && host.shadowRoot; if (!sh) return;
-  const chk = sh.querySelector('.nchk[data-id="' + id + '"]');
-  const r = chk && chk.closest('.nrow'); if (!r) return;
-  r.classList.remove('just', 'zpet');
-  void r.offsetWidth;                       // restart animace
-  r.classList.add(trida);
-  const konec = () => { r.classList.remove(trida); r.removeEventListener('animationend', konec); };
-  r.addEventListener('animationend', konec);
-  setTimeout(konec, 900);                   // pojistka, kdyby animationend nedorazil
-}
+// Ukol 98 (Marek 14. 9.): tahle funkce vesela radku na 900 ms tridu 'zpet' — jenze tak se
+// uz jmenuje odkaz "‹ Zpet na dnesek", ktery ma margin:2px 2px 10px a mensi pismo. Bublina
+// tedy pri kazdem ODSKRTNUTI o 4 px zuzila, posunula se a pak zase vratila: presne to
+// "zmensi se a zase zvetsi". Animace radku jsou stejne uz od ukolu 81 vypnute (Marek je
+// nechtel), takze tridy nic nedelaly a jsou pryc i s mrtvym CSS.
 function mmHabitPrekresli(){
   // Prekresluj jen to, co je opravdu videt. Drive se pri kazdem tuknuti stavely
   // tri shadow DOMy vcetne celeho Prehledu (kalendar, zebricek) — na telefonu se
@@ -9142,7 +9136,7 @@ function renderNavykyMM(){
     <div class="nnew" onclick="openHabitModal()"><span><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg></span> Nový návyk</div>`;
   }
   const tpl=nav+body;
-  const _mmK=tpl+'|'+(document.documentElement.getAttribute('data-theme')||'light'); if(host._mmTpl===_mmK&&host.shadowRoot){const s=host.shadowRoot.querySelector('.scr'); if(s){const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; s.style.zoom=z; s.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(s,z);} mmBarSnap(host.shadowRoot,1); return;} host._mmTpl=_mmK; const sh=host.shadowRoot||host.attachShadow({mode:'open'});
+  const _mmK=tpl+'|'+(document.documentElement.getAttribute('data-theme')||'light'); if(host._mmTpl===_mmK&&host.shadowRoot){const s=host.shadowRoot.querySelector('.scr'); if(s){const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; s.style.zoom=z; s.style.minHeight=(mmVyskaOkna()/z)+'px'; mmTrimTail(s,z);} mmBarSnap(host.shadowRoot,1); return;} host._mmTpl=_mmK; const sh=host.shadowRoot||host.attachShadow({mode:'open'});
   const tplEl=document.getElementById('mm-tpl'); const sprite=document.getElementById('momentum-sprite');
   const _spr = sh.querySelector('#momentum-sprite');
   [...sh.childNodes].forEach(n => { if (n !== _spr) n.remove(); });   // ukol 85: sprite se neodpojuje
@@ -9153,7 +9147,7 @@ function renderNavykyMM(){
   if(sprite && !sh.querySelector('#momentum-sprite')) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr nvk" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(1)}</div>`;
   sh.appendChild(w);
-  mmSrovnejJmena(sh); const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin='0 auto'; mmBarSnap(sh,1); mmHabitSwipe(sh); mmHabitDrzeni(sh); window._mmTydSmer=0;
+  mmSrovnejJmena(sh); const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(mmVyskaOkna()/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin='0 auto'; mmBarSnap(sh,1); mmHabitSwipe(sh); mmHabitDrzeni(sh); window._mmTydSmer=0;
   requestAnimationFrame(()=>mmBarPos(sh, MM_TAB_IDX[state.view]));   // usadit indikator spodniho baru i po re-renderu bez navigace
 }
 
@@ -9270,7 +9264,7 @@ function renderJaMM(){
   ${feed.hasMore?'<button class="loadmore" onclick="mmJaLoadMoreFeed()">Načíst starší ↓</button>':''}
   <div class="sl"><span>Nastavení</span></div>
   <div class="hl"><div class="hlr"><span class="ic"><svg class="i"><use href="#i-shield"/></svg></span><div>Admin režim<small style="display:block;font-size:12.67px;color:var(--sec);font-weight:600">zapisovat a upravovat za druhé</small></div><div class="sw ${adminOn?'on':''}" onclick="toggleAdminActive()"><i></i></div></div>${(isAdmin()||isAdminDevice()) ? '<div class="hlr"><span class="ic"><svg class="i"><use href="#i-eye"/></svg></span><div>Demo režim<small style="display:block;font-size:12.67px;color:var(--sec);font-weight:600">ukázková data, nic se neukládá</small></div><div class="sw '+(isDemo()?'on':'')+'" onclick="mmDemoPrepni()"><i></i></div></div>' : ''}<div class="hlr" onclick="mmOpenSub('pozvat')"><span class="ic"><svg class="i"><use href="#i-users"/></svg></span><div>Pozvat kamaráda<small style="display:block;font-size:12.67px;color:var(--sec);font-weight:600">vytvoř profil + párovací kód</small></div><span class="rx" style="color:var(--ter);font-size:19.31px">›</span></div><div class="hlr" onclick="mmOpenSub('cile')"><span class="ic"><svg class="i"><use href="#i-target"/></svg></span><div>Cíle & ochrana série</div><span class="rx" style="color:var(--ter);font-size:19.31px">›</span></div><div class="hlr" onclick="openPlayerEdit('${me?me.id:''}')"><span class="ic"><svg class="i"><use href="#i-edit"/></svg></span><div>Upravit profil</div><span class="rx" style="color:var(--ter);font-size:19.31px">›</span></div><div class="hlr" onclick="mmOpenSub('bodovani')"><span class="ic"><svg class="i"><use href="#i-calc"/></svg></span><div>Jak se boduje</div><span class="rx" style="color:var(--ter);font-size:19.31px">›</span></div><div class="hlr" onclick="mmOpenSub('notifikace')"><span class="ic"><svg class="i"><use href="#i-bell"/></svg></span><div>Notifikace</div><span class="rx" style="color:var(--ter);font-size:19.31px">›</span></div><div class="hlr" onclick="logoutPlayer()"><span class="ic"><svg class="i"><use href="#i-logout"/></svg></span><div>Odhlásit se</div><span class="rx" style="color:var(--ter);font-size:19.31px">›</span></div></div>${mmVerzeHtml()}`;
-  const _mmK=tpl+'|'+(document.documentElement.getAttribute('data-theme')||'light'); if(host._mmTpl===_mmK&&host.shadowRoot){const s=host.shadowRoot.querySelector('.scr'); if(s){const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; s.style.zoom=z; s.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(s,z);} mmBarSnap(host.shadowRoot,2); return;} host._mmTpl=_mmK; const sh=host.shadowRoot||host.attachShadow({mode:'open'});
+  const _mmK=tpl+'|'+(document.documentElement.getAttribute('data-theme')||'light'); if(host._mmTpl===_mmK&&host.shadowRoot){const s=host.shadowRoot.querySelector('.scr'); if(s){const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; s.style.zoom=z; s.style.minHeight=(mmVyskaOkna()/z)+'px'; mmTrimTail(s,z);} mmBarSnap(host.shadowRoot,2); return;} host._mmTpl=_mmK; const sh=host.shadowRoot||host.attachShadow({mode:'open'});
   const tplEl=document.getElementById('mm-tpl'); const sprite=document.getElementById('momentum-sprite');
   const _spr = sh.querySelector('#momentum-sprite');
   [...sh.childNodes].forEach(n => { if (n !== _spr) n.remove(); });   // ukol 85: sprite se neodpojuje
@@ -9281,7 +9275,7 @@ function renderJaMM(){
   if(sprite && !sh.querySelector('#momentum-sprite')) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(2)}</div>`;
   sh.appendChild(w);
-  mmSrovnejJmena(sh); const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin='0 auto'; mmBarSnap(sh,2);
+  mmSrovnejJmena(sh); const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(mmVyskaOkna()/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin='0 auto'; mmBarSnap(sh,2);
   requestAnimationFrame(()=>mmBarPos(sh, MM_TAB_IDX[state.view]));   // usadit indikator spodniho baru i po re-renderu bez navigace
 }
 
@@ -9363,7 +9357,7 @@ function mmFmtWhen(ds){
 function mmRecordCountLabel(n){ if(n===1) return 'záznam'; if(n>=2&&n<=4) return 'záznamy'; return 'záznamů'; }
 // Spolecny mount pro podobrazovky: host.attachShadow + klon mm-tpl/sprite + overlay <style> + zoom — stejny vzor jako u ostatnich 4 render* funkci.
 function mmMountSub(host, tpl, barIdx){
-  const _mmK=tpl+'|'+(document.documentElement.getAttribute('data-theme')||'light'); if(host._mmTpl===_mmK&&host.shadowRoot){const s=host.shadowRoot.querySelector('.scr'); if(s){const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; s.style.zoom=z; s.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(s,z);} return;} host._mmTpl=_mmK; const sh=host.shadowRoot||host.attachShadow({mode:'open'});
+  const _mmK=tpl+'|'+(document.documentElement.getAttribute('data-theme')||'light'); if(host._mmTpl===_mmK&&host.shadowRoot){const s=host.shadowRoot.querySelector('.scr'); if(s){const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; s.style.zoom=z; s.style.minHeight=(mmVyskaOkna()/z)+'px'; mmTrimTail(s,z);} return;} host._mmTpl=_mmK; const sh=host.shadowRoot||host.attachShadow({mode:'open'});
   const tplEl=document.getElementById('mm-tpl'); const sprite=document.getElementById('momentum-sprite');
   const _spr = sh.querySelector('#momentum-sprite');
   [...sh.childNodes].forEach(n => { if (n !== _spr) n.remove(); });   // ukol 85: sprite se neodpojuje
@@ -9374,7 +9368,7 @@ function mmMountSub(host, tpl, barIdx){
   if(sprite && !sh.querySelector('#momentum-sprite')) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(barIdx)}</div>`;
   sh.appendChild(w);
-  mmSrovnejJmena(sh); const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(window.innerHeight/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin='0 auto'; mmBarSnap(sh, barIdx);
+  mmSrovnejJmena(sh); const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(mmVyskaOkna()/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin='0 auto'; mmBarSnap(sh, barIdx);
 }
 
 
@@ -12411,7 +12405,6 @@ async function toggleHabitToday(id){
     const zaloha = existing;
     state.habitLogs = state.habitLogs.filter(l => l !== existing);
     mmHabitPrekresli();
-    mmAnimujRadek(id, 'zpet');
     return mmHabitFronta(id, async () => {
       if (String(zaloha.id).startsWith('tmp-')) return;   // insert neprosel, neni co mazat
       const { error } = await db.from('habit_logs').delete().eq('id', zaloha.id);
@@ -12432,7 +12425,6 @@ async function toggleHabitToday(id){
     const puvodni = existing.hodnota;
     existing.hodnota = full;
     mmHabitPrekresli();
-    mmAnimujRadek(id, 'just');
     return mmHabitFronta(id, async () => {
       if (String(existing.id).startsWith('tmp-')) return;
       const { error } = await db.from('habit_logs').update({ hodnota: full }).eq('id', existing.id);
@@ -12442,7 +12434,6 @@ async function toggleHabitToday(id){
   const docasne = { id: 'tmp-' + Math.random().toString(36).slice(2), habit_id: id, player_id: pid, datum: sel, hodnota: full };
   state.habitLogs.push(docasne);
   mmHabitPrekresli();
-  mmAnimujRadek(id, 'just');
   return mmHabitFronta(id, async () => {
     if (!state.habitLogs.includes(docasne)) return;      // mezitim uz zase odskrtnuto
     const { data, error } = await db.from('habit_logs').insert({ habit_id: id, player_id: pid, datum: sel, hodnota: full }).select();

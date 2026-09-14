@@ -119,6 +119,8 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 98 | Obsah bubliny se při ťuknutí přestavoval (Běh) — teď se mění jen barva a číslo | Návyky → Cíle na tento týden | 📱 |
 | 99 | Scrollování s prstem na kolečku samo splnilo návyk a spolklo další ťuknutí | Návyky → seznam | 📱 |
 | 100 | Kolečko s fajfkou mělo tmavý prstenec na okraji (moje regrese ve v99) | Návyky → splněný návyk | 📱 |
+| 101 | Bublina se při ODŠKRTNUTÍ zmenšila a zase zvětšila (kolize tříd .zpet) | Návyky → odškrtnutí | 📱 |
+| 102 | Falešné scrollování pod obsahem — výška obrazovky podle viditelné plochy | Všechny obrazovky | 📱 |
 | 95 | Profil — vzhled a údaje | Já → Profil | ⏸️ odloženo (Marek) |
 
 
