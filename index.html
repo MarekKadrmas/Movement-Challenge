@@ -6912,7 +6912,7 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v97';
+const MM_VERZE = 'v98';
 function mmVerzeCas(){ return MM_VERZE; }
 // Diagnostika (Marek 4. 9.): tuknutim na cislo verze se zapne zivy vypis rozmeru
 // radku navyku. Poskakovani bublin se mi nedari vyvolat v prohlizeci, takze potrebuji
@@ -8475,6 +8475,7 @@ async function mmHabitZapisHodnotu(id, val){
 }
 function mmHabitKrok(h){ const cil=Number(h.cil_hodnota)||0; return cil<=12 ? 1 : Math.max(1, Math.round(cil/4)); }
 async function mmHabitKlik(id){
+  if(window._mmPoDrzeni) return;                 // Ukol 94: klik po podrzeni prstu se ignoruje
   const h=state.habits.find(x=>x.id===id); if(!h) return;
   if(habitEffZapis(h)==='check') return mmHabitToggle(id);
   if({weekly:1,monthly:1,yearly:1}[h.frekvence_typ]) return mmHabitToggle(id);
@@ -8495,13 +8496,21 @@ async function mmHabitCely(id){
 }
 function mmHabitDrzeni(sh){
   if(!sh || sh._mmDrz) return; sh._mmDrz=true;
-  let t=null, dlouhy=false;
+  let t=null, dlouhy=false, odblok=null;
+  // Ukol 94: po pusteni prstu poslal prohlizec jeste "click" na to same kolecko. Podrzeni
+  // navyk splnilo a nasledny klik ho hned zase odskrtnul. preventDefault na touchend na to
+  // nestacil (inline onclick v shadow DOM), takze si drzime zamek a klik se po podrzeni zahodi.
+  const zamkni=()=>{ window._mmPoDrzeni=true; clearTimeout(odblok); odblok=setTimeout(()=>{ window._mmPoDrzeni=false; }, 2500); };
+  const odemkni=(ms)=>{ clearTimeout(odblok); odblok=setTimeout(()=>{ window._mmPoDrzeni=false; }, ms); };
   const start=(e)=>{ const chk=e.target.closest && e.target.closest('.nchk[data-id]'); if(!chk) return;
-    dlouhy=false; clearTimeout(t); t=setTimeout(()=>{ dlouhy=true; try{navigator.vibrate&&navigator.vibrate(12);}catch(_){}
+    dlouhy=false; clearTimeout(t); t=setTimeout(()=>{ dlouhy=true; zamkni(); try{navigator.vibrate&&navigator.vibrate(12);}catch(_){}
       mmHabitCely(chk.dataset.id); }, 550); };
-  const konec=(e)=>{ clearTimeout(t); if(dlouhy){ if(e.preventDefault) e.preventDefault(); if(e.stopPropagation) e.stopPropagation(); } dlouhy=false; };
+  const konec=(e)=>{ clearTimeout(t);
+    if(dlouhy){ if(e && e.cancelable && e.preventDefault) e.preventDefault(); if(e && e.stopPropagation) e.stopPropagation(); odemkni(500); }
+    dlouhy=false; };
   sh.addEventListener('touchstart', start, {passive:true});
   sh.addEventListener('touchend', konec, {passive:false});
+  sh.addEventListener('touchcancel', konec, {passive:false});
   sh.addEventListener('mousedown', start);
   sh.addEventListener('mouseup', konec);
   sh.addEventListener('mouseleave', ()=>clearTimeout(t), true);
@@ -12359,6 +12368,20 @@ async function toggleHabitToday(id){
   const flexCil = !!{weekly:1,monthly:1,yearly:1}[h.frekvence_typ];
   if (z !== 'check' && !flexCil && (Number(h.cil_hodnota)||0) > 0 && existing){ openHabitValue(id); return; }
   const full = (z === 'check' || flexCil) ? null : (Number(h.cil_hodnota) || null);
+  // Ukol 94: kdyz radek na ten den v databazi UZ JE (treba stara castecna hodnota), nesmi se
+  // vkladat druhy — tabulka ma unikatni klic habit_id+player_id+datum a zapis by spadl na
+  // "duplicate key". Misto vlozeni se prepise hodnota v existujicim radku.
+  if (existing){
+    const puvodni = existing.hodnota;
+    existing.hodnota = full;
+    mmHabitPrekresli();
+    mmAnimujRadek(id, 'just');
+    return mmHabitFronta(id, async () => {
+      if (String(existing.id).startsWith('tmp-')) return;
+      const { error } = await db.from('habit_logs').update({ hodnota: full }).eq('id', existing.id);
+      if (error){ existing.hodnota = puvodni; mmHabitPrekresli(); mmChybaZapisu(error); }
+    });
+  }
   const docasne = { id: 'tmp-' + Math.random().toString(36).slice(2), habit_id: id, player_id: pid, datum: sel, hodnota: full };
   state.habitLogs.push(docasne);
   mmHabitPrekresli();
@@ -12776,6 +12799,11 @@ function habitFractionOn(h, pid, ds){
   const log = habitLogObj(h.id, pid, ds);
   if (!log) return 0;
   if (habitEffZapis(h) === 'check') return 1;
+  // Ukol 94: u tydenniho/mesicniho/rocniho cile se pocitaji DNY, ne jednotky. Zaznam za den
+  // znamena "ten den splneno" i kdyz v nem zustala stara castecna hodnota (napr. 1 z 5 km).
+  // Bez toho se den nikdy nezapocital a dalsi tuknuti se pokusilo vlozit druhy radek
+  // -> "Neulozeno: duplicate key value violates unique constraint".
+  if ({weekly:1,monthly:1,yearly:1}[h.frekvence_typ]) return 1;
   const cil = Number(h.cil_hodnota) || 0;
   const val = (log.hodnota != null ? Number(log.hodnota) : cil) + (Number(log.nahrazeno) || 0);
   return cil > 0 ? Math.min(1, val / cil) : 1;
@@ -12783,7 +12811,7 @@ function habitFractionOn(h, pid, ds){
 // ----- Nahrazení návyku (NAVYKY-NAVRH.md §13) -----
 // `hodnota` = co jsem ten den reálně udělal, `nahrazeno` = kolik jsem dohnal z přebytku jiného dne.
 // Přebytek se počítá jen z reálných hodnot, takže ho nejde utratit dvakrát.
-function habitLzeNahrazovat(h){ return habitEffZapis(h) !== 'check' && (Number(h.cil_hodnota) || 0) > 0; }
+function habitLzeNahrazovat(h){ if ({weekly:1,monthly:1,yearly:1}[h.frekvence_typ]) return false; return habitEffZapis(h) !== 'check' && (Number(h.cil_hodnota) || 0) > 0; }
 function habitNahrazenoOn(h, pid, ds){ const l = habitLogObj(h.id, pid, ds); return l ? (Number(l.nahrazeno) || 0) : 0; }
 function habitRealneOn(h, pid, ds){
   const l = habitLogObj(h.id, pid, ds); if (!l) return 0;

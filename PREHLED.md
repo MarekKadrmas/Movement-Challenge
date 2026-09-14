@@ -114,6 +114,8 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 92 | Zápis aktivity — vzhled a dotažení | Zelené plusko | ⏳ |
 | 93 | Vytváření návyku — design + odlišit zlozvyky | Návyky → Nový návyk | ⏳ |
 | 94 | Týdenní cíl počítá DNY, ne jednotky — jedno ťuknutí = den | Návyky | 📱 |
+| 96 | „Neuloženo: duplicate key" u Běhu — starý částečný záznam blokoval den | Návyky → Cíle na tento týden | 📱 |
+| 97 | Podržení splní návyk, ale po puštění prstu se zase odškrtlo | Návyky → Pít 2 l vody | 📱 |
 | 95 | Profil — vzhled a údaje | Já → Profil | ⏸️ odloženo (Marek) |
 
 
