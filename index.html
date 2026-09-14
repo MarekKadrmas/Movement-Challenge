@@ -6824,8 +6824,35 @@ function mmBarHost(v){ return document.getElementById({prehled:"dnesek-mm",navyk
 // mezera 10 px), ne z offsetLeft. Merenim sedel na nule, kdyz byla obrazovka skryta
 // (Marek 2026-08-26, bod 27).
 const MM_TB_KROK = 56;   // 46 px tlacitko + 10 px mezera
+// Ukol 110 (Marek 14. 9.): "kdyz klikam na listu behem pruzinove animace, akorat tu animaci
+// pridrzim". Dotyk pri dojezdu spolkne scroller a prohlizec uz zadny click nevyrobi. Lista
+// proto reaguje uz na PUSTENI PRSTU (pointerup), pokud se prst skoro nepohnul — to dorazi
+// vzdycky. Nasledny click se zahodi, aby se akce nespustila dvakrat.
+function mmBarRychly(sh){
+  const tb = sh && sh.querySelector('.tb'); if (!tb || tb._mmRychly) return;
+  tb._mmRychly = true;
+  let x0 = 0, y0 = 0, cil = null, kdy = 0;
+  const najdi = t => (t && t.closest) ? t.closest('a[data-jdi],[data-pridat]') : null;
+  tb.addEventListener('pointerdown', e => {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    cil = najdi(e.target); x0 = e.clientX; y0 = e.clientY; kdy = Date.now();
+  }, true);
+  tb.addEventListener('pointerup', e => {
+    const c = cil; cil = null;
+    if (!c || c !== najdi(e.target)) return;
+    if (Math.abs(e.clientX - x0) > 12 || Math.abs(e.clientY - y0) > 12) return;
+    if (Date.now() - kdy > 900) return;
+    tb._mmSpusteno = Date.now();
+    if (c.dataset.jdi) mmGo(c.dataset.jdi);
+    else if (c.dataset.pridat) openModal();
+  }, true);
+  tb.addEventListener('click', e => {
+    if (tb._mmSpusteno && Date.now() - tb._mmSpusteno < 900){ e.preventDefault(); e.stopPropagation(); }
+  }, true);
+}
 function mmBarSnap(sh, idx){
   if(!sh) return; const tb=sh.querySelector('.tb'); if(!tb) return;
+  mmBarRychly(sh);
   const ind=tb.querySelector('.tbind'); if(!ind) return;
   const p=ind.style.transition; ind.style.transition='none';
   tb.style.setProperty('--tbc', ['var(--green)','var(--purple)','var(--blue)'][idx]||'var(--green)');
@@ -6868,8 +6895,8 @@ function mmBar(a){
   // .tbveil = neprusvitny pruh pod plovoucim barem az k dolni hrane viewportu.
   // Bez nej scrolluje obsah v mezere pod barem (na iPhonu 15 Pro 16.5 pt) — Marek 2026-08-18.
   var h='<i class="tbveil"></i><div class="tb" style="--tbc:'+['var(--green)','var(--purple)','var(--blue)'][a]+'"><i class="tbind" style="transform:translateX('+(a*56)+'px)"></i>';
-  for(var i=0;i<3;i++){ h+='<a class="'+(i==a?'on':'')+'" onclick="mmGo(\''+T[i]+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">'+IC[i]+'</svg></a>'; }
-  h+='<button class="tbadd" onclick="openModal()" aria-label="Přidat záznam"><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg></button>';
+  for(var i=0;i<3;i++){ h+='<a class="'+(i==a?'on':'')+'" data-jdi="'+T[i]+'" onclick="mmGo(\''+T[i]+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">'+IC[i]+'</svg></a>'; }
+  h+='<button class="tbadd" data-pridat="1" onclick="openModal()" aria-label="Přidat záznam"><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg></button>';
   return h+'</div>';
 }
 
@@ -6919,7 +6946,7 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v107';
+const MM_VERZE = 'v108';
 // Ukol 99 (Marek 14. 9.): "obrazovka se zastavi, ale jakoby se to neviditelne scrolluje dal".
 // Stinova obrazovka si rezervovala vysku podle window.innerHeight. Na iPhonu ta hodnota umi
 // byt vetsi nez skutecna viditelna plocha (listy Safari se sbaluji), takze pod obsahem vzniklo
@@ -9510,7 +9537,9 @@ function mmZadnyZbytecnyScroll(scrEl, host, de){
   const deti = [...bodyEl.children].filter(e => e.getBoundingClientRect().height > 0.5);
   if (!deti.length) return;
   const lista = scrEl.querySelector('.tb');
-  const kryje = lista ? Math.max(0, de.clientHeight - lista.getBoundingClientRect().top) : 0;
+  const lr = lista ? lista.getBoundingClientRect() : null;
+  if (!lr || lr.height < 10) return;                                    // listu jeste neznam
+  const kryje = Math.max(0, de.clientHeight - lr.top) + 18;
   const spodek = deti[deti.length - 1].getBoundingClientRect().bottom + (window.scrollY || 0);
   const vejdeSe = spodek <= de.clientHeight - kryje + 4;
   if (vejdeSe){ host.style.height = de.clientHeight + 'px'; host.style.overflow = 'hidden'; }
@@ -9558,7 +9587,11 @@ function mmTrimTail(scrEl, z){
       if (!deti.length) return;
       const posl = deti[deti.length - 1].getBoundingClientRect();
       const lista = scrEl.querySelector('.tb');
-      const kryje = lista ? Math.max(0, de.clientHeight - lista.getBoundingClientRect().top) : 0;
+      const lr = lista ? lista.getBoundingClientRect() : null;
+      // Ukol 110: kdyz listu jeste neumim zmerit, NEOREZAVAT. Driv se v takove chvili brala
+      // rezerva 0 a obsah Prehledu skoncil schovany pod listou.
+      if (!lr || lr.height < 10) return;
+      const kryje = Math.max(0, de.clientHeight - lr.top) + 18;         // + male nadechnuti
       const volno = de.scrollHeight - (posl.bottom + st) - kryje - 4;   // prazdno pod poslednim prvkem
       const orez = Math.min(over, volno);
       if (orez <= 2) return;

@@ -128,6 +128,8 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 107 | Obsah se po pružině nevracel + nešlo ťuknout na lištu (přepočet rozměrů pod prstem) | Návyky, Přehled | 📱 |
 | 108 | Návyky měly pár desítek px scrollu navíc — obsah po pružině zůstal posunutý | Návyky | 📱 |
 | 109 | Kde není co scrollovat, je pružina vypnutá (a nemá jak vzniknout prodleva) | Návyky bez pružiny, Přehled s ní | 📱 |
+| 110 | Přehled: obsah se schovával pod spodní lištu (ořez počítal s nulovou rezervou) | Přehled — sjeď na konec | 📱 |
+| 111 | Lišta reaguje i během pružinové animace (čeká se na puštění prstu, ne na click) | Spodní lišta | 📱 |
 | 95 | Profil — vzhled a údaje | Já → Profil | ⏸️ odloženo (Marek) |
 
 
