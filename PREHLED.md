@@ -132,6 +132,7 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 111 | Lišta reaguje i během pružinové animace (čeká se na puštění prstu, ne na click) | Spodní lišta | 📱 |
 | 93 | Knihovna návyků — fialový nádech, bubliny 44 px jako na Návycích | Návyky → Nový návyk | 📱 |
 | 40 | Formulář návyku — fialové tlačítko, ikony 30 px, neuříznutá mřížka | Návyky → ťukni na název | 📱 |
+| 92 | Zápis aktivity — „Zapsat · +25 b" se zalamovalo na dva řádky | Zelené plusko → dole | 📱 |
 | 95 | Profil — vzhled a údaje | Já → Profil | ⏸️ odloženo (Marek) |
 
 
