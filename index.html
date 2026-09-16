@@ -2280,7 +2280,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .body.formb.tcompact{--fial:#8B6FE0;--fial2:#7757d6;}
 /* Ukol 40: bez sede vyplne pole vypadala jako obycejny text a neslo poznat, ze se do nich
    pise. Vlasova linka pod hodnotou to resi a nezavadi tretí vrstvu podkladu zpet. */
-.body.formb.tcompact .fld .inp,.body.formb.tcompact .fld .inpc,.body.formb.tcompact .fld .drange{background:transparent;border-radius:0;padding:4px 0 6px;font-size:14.48px;border-bottom:1.5px solid color-mix(in srgb,var(--sec) 22%,transparent);}
+.body.formb.tcompact .fld .inp,.body.formb.tcompact .fld .inpc,.body.formb.tcompact .fld .drange{background:transparent;border-radius:0;padding:0;font-size:14.48px;color:color-mix(in srgb,var(--label) 88%,var(--sec));}
 .body.formb.tcompact .fld .pickrow{gap:14px;}
 .body.formb.tcompact .fld .drange{gap:7px;}
 .body.formb.tcompact .fhd .fx.zpet{order:-1;margin-right:12px;font-size:26px;line-height:1;}
@@ -2292,7 +2292,26 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .body.formb.tcompact .freqrow::-webkit-scrollbar{display:none;}
 .body.formb.tcompact .freqrow .pk{flex:0 0 auto;}
 .body.formb.tcompact .fld .colors::-webkit-scrollbar{display:none;}
-.body.formb.tcompact .fld{background:var(--card);box-shadow:none;border-radius:0;margin:0;padding:9px 14px;}
+.body.formb.tcompact .fld{background:var(--card);box-shadow:none;border-radius:0;margin:0;padding:7px 15px;display:flex;align-items:center;gap:12px;min-height:46px;box-sizing:border-box;}
+.body.formb.tcompact .fld>label{flex:0 0 auto;margin:0;font-size:12.7px;font-weight:700;letter-spacing:0;text-transform:none;color:var(--sec);}
+.body.formb.tcompact .fld>:not(label){flex:1;min-width:0;display:flex;justify-content:flex-end;}
+.body.formb.tcompact .fld>.typnap{display:block;flex:0 0 100%;width:100%;text-align:left;}
+.body.formb.tcompact .fld .pickrow{flex-wrap:nowrap;gap:10px;}
+.body.formb.tcompact .fld .inp,.body.formb.tcompact .fld .inpc{text-align:right;}
+.body.formb.tcompact .fld .inp input{text-align:right;}
+/* siroke ovladace nejdou na jeden radek - zustanou pod popiskem */
+.body.formb.tcompact .fld:has(.emojirow),.body.formb.tcompact .fld:has(.seg),.body.formb.tcompact .fld:has(.freqrow),.body.formb.tcompact .fld:has(.drange){flex-direction:column;align-items:stretch;gap:7px;padding:9px 15px 11px;}
+.body.formb.tcompact .cilrow .pod{text-transform:none;font-size:12.7px;font-weight:700;letter-spacing:0;}
+/* POZOR: display:block by z vodorovnych rolet udelal sloupce (46 ikon pod sebou =
+   pas 1573 px misto 44). Siroke ovladace zustavaji flex, jen zarovnane doleva. */
+.body.formb.tcompact .fld:has(.emojirow)>:not(label),.body.formb.tcompact .fld:has(.seg)>:not(label),.body.formb.tcompact .fld:has(.freqrow)>:not(label),.body.formb.tcompact .fld:has(.drange)>:not(label){display:flex;justify-content:flex-start;width:100%;}
+/* Vysvetlivka je bezny text pres celou sirku. Bez teto vyjimky ji pravidlo vyse udelalo
+   flex kontejnerem a inline <b> + text se rozpadly do dvou sloupcu. */
+.body.formb.tcompact .fld:has(.seg)>.typnap{display:block;width:100%;}
+.body.formb.tcompact .fld .cilrow .pod{text-transform:none;font-size:12.7px;font-weight:700;letter-spacing:0;color:var(--sec);}
+.body.formb.tcompact .cilrow{display:flex;align-items:center;gap:12px;margin:0;padding:0;border-top:0;}
+.body.formb.tcompact .cilrow .pod{flex:0 0 auto;margin:0;font-size:12.7px;font-weight:700;letter-spacing:0;text-transform:none;color:var(--sec);}
+.body.formb.tcompact .cilrow .pickrow{flex:1;justify-content:flex-end;}
 .body.formb.tcompact .fld+.fld{border-top:1px solid var(--sep);}
 .body.formb.tcompact .fld:first-of-type{border-radius:24px 24px 0 0;}
 .body.formb.tcompact .fld:last-of-type{border-radius:0 0 24px 24px;margin-bottom:10px;}
@@ -3454,7 +3473,7 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .body.formb.tcompact{--fial:#8B6FE0;--fial2:#7757d6;}
 /* Ukol 40: bez sede vyplne pole vypadala jako obycejny text a neslo poznat, ze se do nich
    pise. Vlasova linka pod hodnotou to resi a nezavadi tretí vrstvu podkladu zpet. */
-.body.formb.tcompact .fld .inp,.body.formb.tcompact .fld .inpc,.body.formb.tcompact .fld .drange{background:transparent;border-radius:0;padding:4px 0 6px;font-size:14.48px;border-bottom:1.5px solid color-mix(in srgb,var(--sec) 22%,transparent);}
+.body.formb.tcompact .fld .inp,.body.formb.tcompact .fld .inpc,.body.formb.tcompact .fld .drange{background:transparent;border-radius:0;padding:0;font-size:14.48px;color:color-mix(in srgb,var(--label) 88%,var(--sec));}
 .body.formb.tcompact .fld .pickrow{gap:14px;}
 .body.formb.tcompact .fld .drange{gap:7px;}
 .body.formb.tcompact .fhd .fx.zpet{order:-1;margin-right:12px;font-size:26px;line-height:1;}
@@ -3466,7 +3485,26 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .body.formb.tcompact .freqrow::-webkit-scrollbar{display:none;}
 .body.formb.tcompact .freqrow .pk{flex:0 0 auto;}
 .body.formb.tcompact .fld .colors::-webkit-scrollbar{display:none;}
-.body.formb.tcompact .fld{background:var(--card);box-shadow:none;border-radius:0;margin:0;padding:9px 14px;}
+.body.formb.tcompact .fld{background:var(--card);box-shadow:none;border-radius:0;margin:0;padding:7px 15px;display:flex;align-items:center;gap:12px;min-height:46px;box-sizing:border-box;}
+.body.formb.tcompact .fld>label{flex:0 0 auto;margin:0;font-size:12.7px;font-weight:700;letter-spacing:0;text-transform:none;color:var(--sec);}
+.body.formb.tcompact .fld>:not(label){flex:1;min-width:0;display:flex;justify-content:flex-end;}
+.body.formb.tcompact .fld>.typnap{display:block;flex:0 0 100%;width:100%;text-align:left;}
+.body.formb.tcompact .fld .pickrow{flex-wrap:nowrap;gap:10px;}
+.body.formb.tcompact .fld .inp,.body.formb.tcompact .fld .inpc{text-align:right;}
+.body.formb.tcompact .fld .inp input{text-align:right;}
+/* siroke ovladace nejdou na jeden radek - zustanou pod popiskem */
+.body.formb.tcompact .fld:has(.emojirow),.body.formb.tcompact .fld:has(.seg),.body.formb.tcompact .fld:has(.freqrow),.body.formb.tcompact .fld:has(.drange){flex-direction:column;align-items:stretch;gap:7px;padding:9px 15px 11px;}
+.body.formb.tcompact .cilrow .pod{text-transform:none;font-size:12.7px;font-weight:700;letter-spacing:0;}
+/* POZOR: display:block by z vodorovnych rolet udelal sloupce (46 ikon pod sebou =
+   pas 1573 px misto 44). Siroke ovladace zustavaji flex, jen zarovnane doleva. */
+.body.formb.tcompact .fld:has(.emojirow)>:not(label),.body.formb.tcompact .fld:has(.seg)>:not(label),.body.formb.tcompact .fld:has(.freqrow)>:not(label),.body.formb.tcompact .fld:has(.drange)>:not(label){display:flex;justify-content:flex-start;width:100%;}
+/* Vysvetlivka je bezny text pres celou sirku. Bez teto vyjimky ji pravidlo vyse udelalo
+   flex kontejnerem a inline <b> + text se rozpadly do dvou sloupcu. */
+.body.formb.tcompact .fld:has(.seg)>.typnap{display:block;width:100%;}
+.body.formb.tcompact .fld .cilrow .pod{text-transform:none;font-size:12.7px;font-weight:700;letter-spacing:0;color:var(--sec);}
+.body.formb.tcompact .cilrow{display:flex;align-items:center;gap:12px;margin:0;padding:0;border-top:0;}
+.body.formb.tcompact .cilrow .pod{flex:0 0 auto;margin:0;font-size:12.7px;font-weight:700;letter-spacing:0;text-transform:none;color:var(--sec);}
+.body.formb.tcompact .cilrow .pickrow{flex:1;justify-content:flex-end;}
 .body.formb.tcompact .fld+.fld{border-top:1px solid var(--sep);}
 .body.formb.tcompact .fld:first-of-type{border-radius:24px 24px 0 0;}
 .body.formb.tcompact .fld:last-of-type{border-radius:0 0 24px 24px;margin-bottom:10px;}
@@ -7080,7 +7118,7 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v124';
+const MM_VERZE = 'v128';
 // Ukol 99 (Marek 14. 9.): "obrazovka se zastavi, ale jakoby se to neviditelne scrolluje dal".
 // Stinova obrazovka si rezervovala vysku podle window.innerHeight. Na iPhonu ta hodnota umi
 // byt vetsi nez skutecna viditelna plocha (listy Safari se sbaluji), takze pod obsahem vzniklo
