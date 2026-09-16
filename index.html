@@ -7056,7 +7056,7 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v120';
+const MM_VERZE = 'v121';
 // Ukol 99 (Marek 14. 9.): "obrazovka se zastavi, ale jakoby se to neviditelne scrolluje dal".
 // Stinova obrazovka si rezervovala vysku podle window.innerHeight. Na iPhonu ta hodnota umi
 // byt vetsi nez skutecna viditelna plocha (listy Safari se sbaluji), takze pod obsahem vzniklo
@@ -10445,8 +10445,16 @@ function mmMountZapis(){
   scrEl.style.overflow = 'hidden';
   const bodyEl = scrEl.querySelector('.body.formb');
   const ffEl = scrEl.querySelector('.ff');
-  if (bodyEl) { bodyEl.style.height = '100%'; bodyEl.style.overflowY = 'auto'; bodyEl.style.webkitOverflowScrolling = 'touch'; }
-  if (bodyEl && ffEl) bodyEl.style.paddingBottom = (ffEl.offsetHeight + 16) + 'px';
+  // Ukol 92: paticka byla uvnitr scrollovaci .body, takze na ni platilo
+  // .body.formb .ff{position:sticky}. Lepivy prvek se ale nedostane pod spodni padding
+  // rodice, a rezerva (offsetHeight + 16) ho tedy odtlacila presne o jeho vlastni vysku
+  // nahoru = lezel pres obsah uprostred seznamu. Formular navyku to resi tim, ze .ff je
+  // SOUROZENEC scrollu v .scr (pak plati .scr>.ff{position:static;flex:0 0 auto}).
+  // Delame to same. Poradi je dulezite: mmZapisAktivita uz .ffrow postavila vyse.
+  if (ffEl && ffEl.parentElement !== scrEl) scrEl.appendChild(ffEl);
+  if (bodyEl) { bodyEl.style.height = ''; bodyEl.style.flex = '1 1 auto'; bodyEl.style.minHeight = '0';
+    bodyEl.style.overflowY = 'auto'; bodyEl.style.webkitOverflowScrolling = 'touch';
+    bodyEl.style.paddingBottom = ''; }
   mmNoTinyScroll(bodyEl);   // zadny „gumovy" 1-2px scroll na formulari, ktery se cely vejde
   // Delegace jednou na shadowRoot (preziva sh.innerHTML=''): klik-mosty + input/change mosty do light-DOM.
   if(!host._mmZapisBound){

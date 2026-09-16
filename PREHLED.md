@@ -137,7 +137,8 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 40 | Nastavení návyku — JEDEN list s řádky místo bublin, šipka zpět vlevo | Návyky → ťukni na název | 📱 |
 | 93b | Zlozvyky vizuálně odlišené (jantarová kategorie i ikony) | Návyky → Nový návyk → Zlozvyky | 📱 |
 | 93c | Hledání v knihovně nižší (49 px) | Návyky → Nový návyk | 📱 |
-| 92b | Patička Zápisu leží přes obsah — NEVYŘEŠENO, 3 pokusy vráceny | Zelené plusko | ⏳ |
+| 92b | Patička Zápisu ukotvena dole jako u formuláře návyku (nepřekrývá obsah) | Zelené plusko | 📱 |
+| 92c | Zápis: bledé bubliny + prázdné místo u Náročnosti — NEUDĚLÁNO | Zelené plusko → dolů | ⏳ |
 | 95 | Profil — vzhled a údaje | Já → Profil | ⏸️ odloženo (Marek) |
 
 
