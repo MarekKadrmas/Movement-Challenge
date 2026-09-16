@@ -2278,9 +2278,11 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
    rozestupy. Zamerne scopnuto na .tcompact — tu tridu ma JEN formular navyku, takze zeleny
    Zapis aktivity zustava zeleny. */
 .body.formb.tcompact{--fial:#8B6FE0;--fial2:#7757d6;}
-.body.formb.tcompact .fld{border-radius:22px;padding:11px 13px 13px;margin-bottom:8px;}
-.body.formb.tcompact .fld>label{margin-bottom:7px;}
-.body.formb.tcompact .fld .inp,.body.formb.tcompact .fld .inpc,.body.formb.tcompact .fld .drange{border-radius:999px;}
+/* Ukol 40: bez sede vyplne pole vypadala jako obycejny text a neslo poznat, ze se do nich
+   pise. Vlasova linka pod hodnotou to resi a nezavadi tretí vrstvu podkladu zpet. */
+.body.formb.tcompact .fld .inp,.body.formb.tcompact .fld .inpc,.body.formb.tcompact .fld .drange{background:transparent;border-radius:0;padding:4px 0 6px;font-size:14.48px;border-bottom:1.5px solid color-mix(in srgb,var(--sec) 22%,transparent);}
+.body.formb.tcompact .fld .pickrow{gap:14px;}
+.body.formb.tcompact .fld .drange{gap:7px;}
 .body.formb.tcompact .fhd .fx.zpet{order:-1;margin-right:12px;font-size:26px;line-height:1;}
 .body.formb.tcompact .fld .emojirow,.body.formb.tcompact .fld .colors,.body.formb.tcompact .freqrow{-webkit-mask-image:linear-gradient(to right,#000 0,#000 93%,transparent 100%);mask-image:linear-gradient(to right,#000 0,#000 93%,transparent 100%);}
 .body.formb.tcompact .fld .emojirow{gap:7px;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;max-height:none;scrollbar-width:none;padding:4px;margin:-4px;}
@@ -2290,19 +2292,22 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .body.formb.tcompact .freqrow::-webkit-scrollbar{display:none;}
 .body.formb.tcompact .freqrow .pk{flex:0 0 auto;}
 .body.formb.tcompact .fld .colors::-webkit-scrollbar{display:none;}
-.body.formb.tcompact .fld{background:var(--card);box-shadow:none;border-radius:0;margin:0;padding:12px 15px;}
+.body.formb.tcompact .fld{background:var(--card);box-shadow:none;border-radius:0;margin:0;padding:9px 14px;}
 .body.formb.tcompact .fld+.fld{border-top:1px solid var(--sep);}
-.body.formb.tcompact .fld:first-of-type{border-radius:22px 22px 0 0;}
-.body.formb.tcompact .fld:last-of-type{border-radius:0 0 22px 22px;}
+.body.formb.tcompact .fld:first-of-type{border-radius:24px 24px 0 0;}
+.body.formb.tcompact .fld:last-of-type{border-radius:0 0 24px 24px;margin-bottom:10px;}
 .body.formb.tcompact .fld>label{margin-bottom:6px;}
 .body.formb.tcompact .fld .typnap{margin-top:6px;}
 .body.formb.tcompact .cilrow{margin-top:10px;padding-top:9px;border-top:1px solid var(--sep);}
 .body.formb.tcompact .cilrow .pod{display:block;font-size:9.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ter);margin-bottom:6px;}
-.body.formb.tcompact .fld .em{width:30px;height:30px;flex:0 0 30px;font-size:16.5px;background:var(--track);box-shadow:none;}
+.body.formb.tcompact .fld .em{width:27px;height:27px;flex:0 0 27px;font-size:15px;background:var(--track);box-shadow:none;}
 .body.formb.tcompact .fld .em .i{width:15px;height:15px;}
 .body.formb.tcompact .fld .em.on{outline:2px solid var(--fial);outline-offset:-2px;background:color-mix(in srgb,var(--fial) 14%,var(--track));color:var(--fial2);}
 .body.formb.tcompact .fld .col.on{outline:2.2px solid var(--fial);outline-offset:2.5px;}
-.body.formb.tcompact .fld .pk{background:var(--track);box-shadow:none;border-radius:999px;padding:8px 14px;font-weight:700;}
+.body.formb.tcompact .fld .pk{background:var(--track);box-shadow:none;border-radius:999px;padding:6px 12px;font-weight:700;}
+.body.formb.tcompact .fld .col{width:24px;height:24px;flex:0 0 24px;}
+.body.formb.tcompact .fld .seg{padding:2px;}
+.body.formb.tcompact .fld .seg b{padding:6px 0;}
 .body.formb.tcompact .fld .pk.on,.body.formb.tcompact .fld .pill.on{background:var(--fial);color:#fff;box-shadow:0 6px 16px -8px color-mix(in srgb,var(--fial) 70%,transparent);}
 .body.formb.tcompact .fld .seg b.on{background:var(--card);box-shadow:var(--shadow);color:var(--fial2);}
 /* Patricka s tlacitkem je SOUROZENEC formulare (.ff je dite .scr), ne jeho potomek — proto
@@ -2324,6 +2329,13 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .knihovna .hbm .ht{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .knihovna .hbm .hsub{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;font-size:10.6px;font-weight:800;color:var(--sec);white-space:nowrap;font-variant-numeric:tabular-nums;}
 .knihovna .newbtn{background:var(--track);color:var(--fial2);border:0;font-weight:800;}
+/* Ukol 93b: zlozvyk = neco, co chci NEdelat. Preskrtnuta ikona + prerusovany jantarovy
+   ram a jemna jantarova vypln, takze se radek lisi na prvni pohled, ne jen barvou ikony. */
+.knihovna .hbm.zloz{background:color-mix(in srgb,#F5793B 7%,var(--card));border:1.5px dashed color-mix(in srgb,#F5793B 52%,transparent);box-shadow:none;}
+.knihovna .hbm.zloz .hi{position:relative;}
+.knihovna .hbm.zloz .hi::after{content:"";position:absolute;left:50%;top:50%;width:130%;height:2px;background:#F5793B;transform:translate(-50%,-50%) rotate(-45deg);border-radius:2px;}
+.knihovna .hbm.zloz .ht{color:#8A4418;}
+.knihovna .hbm.zloz .hsub{color:#B0623A;}
 .kolwrap{position:relative;display:block;}
 .koldn{position:absolute;inset:0;display:grid;place-items:center;font-style:normal;font-size:8.7px;font-weight:900;letter-spacing:-.02em;color:var(--label);pointer-events:none;}
 .koldn.hot{color:var(--green);}
@@ -3440,9 +3452,11 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
    rozestupy. Zamerne scopnuto na .tcompact — tu tridu ma JEN formular navyku, takze zeleny
    Zapis aktivity zustava zeleny. */
 .body.formb.tcompact{--fial:#8B6FE0;--fial2:#7757d6;}
-.body.formb.tcompact .fld{border-radius:22px;padding:11px 13px 13px;margin-bottom:8px;}
-.body.formb.tcompact .fld>label{margin-bottom:7px;}
-.body.formb.tcompact .fld .inp,.body.formb.tcompact .fld .inpc,.body.formb.tcompact .fld .drange{border-radius:999px;}
+/* Ukol 40: bez sede vyplne pole vypadala jako obycejny text a neslo poznat, ze se do nich
+   pise. Vlasova linka pod hodnotou to resi a nezavadi tretí vrstvu podkladu zpet. */
+.body.formb.tcompact .fld .inp,.body.formb.tcompact .fld .inpc,.body.formb.tcompact .fld .drange{background:transparent;border-radius:0;padding:4px 0 6px;font-size:14.48px;border-bottom:1.5px solid color-mix(in srgb,var(--sec) 22%,transparent);}
+.body.formb.tcompact .fld .pickrow{gap:14px;}
+.body.formb.tcompact .fld .drange{gap:7px;}
 .body.formb.tcompact .fhd .fx.zpet{order:-1;margin-right:12px;font-size:26px;line-height:1;}
 .body.formb.tcompact .fld .emojirow,.body.formb.tcompact .fld .colors,.body.formb.tcompact .freqrow{-webkit-mask-image:linear-gradient(to right,#000 0,#000 93%,transparent 100%);mask-image:linear-gradient(to right,#000 0,#000 93%,transparent 100%);}
 .body.formb.tcompact .fld .emojirow{gap:7px;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;max-height:none;scrollbar-width:none;padding:4px;margin:-4px;}
@@ -3452,19 +3466,22 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .body.formb.tcompact .freqrow::-webkit-scrollbar{display:none;}
 .body.formb.tcompact .freqrow .pk{flex:0 0 auto;}
 .body.formb.tcompact .fld .colors::-webkit-scrollbar{display:none;}
-.body.formb.tcompact .fld{background:var(--card);box-shadow:none;border-radius:0;margin:0;padding:12px 15px;}
+.body.formb.tcompact .fld{background:var(--card);box-shadow:none;border-radius:0;margin:0;padding:9px 14px;}
 .body.formb.tcompact .fld+.fld{border-top:1px solid var(--sep);}
-.body.formb.tcompact .fld:first-of-type{border-radius:22px 22px 0 0;}
-.body.formb.tcompact .fld:last-of-type{border-radius:0 0 22px 22px;}
+.body.formb.tcompact .fld:first-of-type{border-radius:24px 24px 0 0;}
+.body.formb.tcompact .fld:last-of-type{border-radius:0 0 24px 24px;margin-bottom:10px;}
 .body.formb.tcompact .fld>label{margin-bottom:6px;}
 .body.formb.tcompact .fld .typnap{margin-top:6px;}
 .body.formb.tcompact .cilrow{margin-top:10px;padding-top:9px;border-top:1px solid var(--sep);}
 .body.formb.tcompact .cilrow .pod{display:block;font-size:9.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ter);margin-bottom:6px;}
-.body.formb.tcompact .fld .em{width:30px;height:30px;flex:0 0 30px;font-size:16.5px;background:var(--track);box-shadow:none;}
+.body.formb.tcompact .fld .em{width:27px;height:27px;flex:0 0 27px;font-size:15px;background:var(--track);box-shadow:none;}
 .body.formb.tcompact .fld .em .i{width:15px;height:15px;}
 .body.formb.tcompact .fld .em.on{outline:2px solid var(--fial);outline-offset:-2px;background:color-mix(in srgb,var(--fial) 14%,var(--track));color:var(--fial2);}
 .body.formb.tcompact .fld .col.on{outline:2.2px solid var(--fial);outline-offset:2.5px;}
-.body.formb.tcompact .fld .pk{background:var(--track);box-shadow:none;border-radius:999px;padding:8px 14px;font-weight:700;}
+.body.formb.tcompact .fld .pk{background:var(--track);box-shadow:none;border-radius:999px;padding:6px 12px;font-weight:700;}
+.body.formb.tcompact .fld .col{width:24px;height:24px;flex:0 0 24px;}
+.body.formb.tcompact .fld .seg{padding:2px;}
+.body.formb.tcompact .fld .seg b{padding:6px 0;}
 .body.formb.tcompact .fld .pk.on,.body.formb.tcompact .fld .pill.on{background:var(--fial);color:#fff;box-shadow:0 6px 16px -8px color-mix(in srgb,var(--fial) 70%,transparent);}
 .body.formb.tcompact .fld .seg b.on{background:var(--card);box-shadow:var(--shadow);color:var(--fial2);}
 /* Patricka s tlacitkem je SOUROZENEC formulare (.ff je dite .scr), ne jeho potomek — proto
@@ -3486,6 +3503,13 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .knihovna .hbm .ht{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .knihovna .hbm .hsub{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;font-size:10.6px;font-weight:800;color:var(--sec);white-space:nowrap;font-variant-numeric:tabular-nums;}
 .knihovna .newbtn{background:var(--track);color:var(--fial2);border:0;font-weight:800;}
+/* Ukol 93b: zlozvyk = neco, co chci NEdelat. Preskrtnuta ikona + prerusovany jantarovy
+   ram a jemna jantarova vypln, takze se radek lisi na prvni pohled, ne jen barvou ikony. */
+.knihovna .hbm.zloz{background:color-mix(in srgb,#F5793B 7%,var(--card));border:1.5px dashed color-mix(in srgb,#F5793B 52%,transparent);box-shadow:none;}
+.knihovna .hbm.zloz .hi{position:relative;}
+.knihovna .hbm.zloz .hi::after{content:"";position:absolute;left:50%;top:50%;width:130%;height:2px;background:#F5793B;transform:translate(-50%,-50%) rotate(-45deg);border-radius:2px;}
+.knihovna .hbm.zloz .ht{color:#8A4418;}
+.knihovna .hbm.zloz .hsub{color:#B0623A;}
 .kolwrap{position:relative;display:block;}
 .koldn{position:absolute;inset:0;display:grid;place-items:center;font-style:normal;font-size:8.7px;font-weight:900;letter-spacing:-.02em;color:var(--label);pointer-events:none;}
 .koldn.hot{color:var(--green);}
@@ -7056,7 +7080,7 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v121';
+const MM_VERZE = 'v123';
 // Ukol 99 (Marek 14. 9.): "obrazovka se zastavi, ale jakoby se to neviditelne scrolluje dal".
 // Stinova obrazovka si rezervovala vysku podle window.innerHeight. Na iPhonu ta hodnota umi
 // byt vetsi nez skutecna viditelna plocha (listy Safari se sbaluji), takze pod obsahem vzniklo
@@ -10919,7 +10943,7 @@ function mmHabitSync(sh){
     const wrap = body.querySelector('[data-mmpresets]');
     if (wrap) wrap.innerHTML = list.map(p => {
       const idx = HABIT_PRESETS.indexOf(p); const c = safeColor(HABIT_CAT_COLOR[p.kat] || '#0FA968'); const sub = presetSub(p);
-      return `<div class="hbm" data-mmpreset="${idx}"><div class="hi" style="background:color-mix(in srgb,${c} 15%,transparent);color:${c}">${habitIconHtml(p.ikona)}</div><div class="ht">${habitEsc(p.nazev)}</div>${sub ? `<span class="hsub">${habitEsc(sub)}</span>` : ''}<span class="rx" style="color:var(--fial,#8B6FE0);font-size:21.73px">＋</span></div>`;
+      return `<div class="hbm${p.kat === 'zlozvyky' ? ' zloz' : ''}" data-mmpreset="${idx}"><div class="hi" style="background:color-mix(in srgb,${c} 15%,transparent);color:${c}">${habitIconHtml(p.ikona)}</div><div class="ht">${habitEsc(p.nazev)}</div>${sub ? `<span class="hsub">${habitEsc(sub)}</span>` : ''}<span class="rx" style="color:var(--fial,#8B6FE0);font-size:21.73px">＋</span></div>`;
     }).join('') + (!list.length && q ? `<div class="info" style="margin-top:6px">Nic nenalezeno — zkus „Vlastní návyk“.</div>` : '');
     return;
   }
