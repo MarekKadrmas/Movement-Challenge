@@ -135,6 +135,9 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 92 | ~~Zápis aktivity — úprava patičky~~ VRÁCENO do stavu v109 (rozbil jsem ji) | Zelené plusko | ↩️ vráceno |
 | 93 | Knihovna — řádek 1:1 s Návyky (55 px, barva ikony, detail vpravo) | Návyky → Nový návyk | 📱 |
 | 40 | Nastavení návyku — jeden list, konec tří vrstev podkladů, pole s linkou | Návyky → ťukni na název | 📱 |
+| 40b | Vybraná barva se vůbec neoznačila (nebyla v paletě) | Návyky → Nový návyk → preset | 📱 |
+| 40c | Pás ikon zarovnán na rozteč — žádná uříznutá ikona | Návyky → Nový návyk | 📱 |
+| 40d | Linky pod „8" a „sklenic" stejně dlouhé | Návyky → Nový návyk | 📱 |
 | 93e | Zlozvyky mají vlastní vzhled — přerušovaný rám, přeškrtnutá ikona | Návyky → Nový návyk → Zlozvyky | 📱 |
 | 93b | Zlozvyky vizuálně odlišené (jantarová kategorie i ikony) | Návyky → Nový návyk → Zlozvyky | 📱 |
 | 93c | Hledání v knihovně nižší (49 px) | Návyky → Nový návyk | 📱 |

@@ -7080,7 +7080,7 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v123';
+const MM_VERZE = 'v124';
 // Ukol 99 (Marek 14. 9.): "obrazovka se zastavi, ale jakoby se to neviditelne scrolluje dal".
 // Stinova obrazovka si rezervovala vysku podle window.innerHeight. Na iPhonu ta hodnota umi
 // byt vetsi nez skutecna viditelna plocha (listy Safari se sbaluji), takze pod obsahem vzniklo
@@ -10795,7 +10795,7 @@ function mmZapisSync(sh){
 // Builder formulare tvorby — 1:1 mockup hf(name,icon,freqOn,sub); "Denní cíl" blok (z S.tvorba) je
 // v sablone vzdy a sync ho skryva u typu Splnit (mockup hf ho u Splnit nema, S.tvorba u Zmerit ma).
 function mmHabitHf(sub){
-  return `<div class="body formb tcompact" style="padding-top:16px"><div class="fhd"><div class="fttl">Nový návyk</div><span class="fx">×</span></div><div class="fld"><label>Název</label><div class="inp"><input data-mmhb="habit-nazev" type="text" maxlength="40" placeholder="Např. Pít 2 l vody"></div></div><div class="fld"><label>Vzhled</label><div class="emojirow" data-mmicons></div><div class="colors" data-mmcolors></div></div><div class="fld"><label>Typ návyku</label><div class="seg"><b class="on">Splnit ✓</b><b>Změřit #</b></div><div data-mmcil class="cilrow"><label class="pod">Denní cíl</label><div class="pickrow"><div class="inp" style="flex:1"><input data-mmhb="habit-cil-hodnota" type="number" inputmode="decimal" min="1" placeholder="8"></div><div class="inp" style="flex:2"><input data-mmhb="habit-cil-jednotka" type="text" maxlength="12" placeholder="sklenic"></div></div></div></div><div class="fld"><label>Jak často</label><div class="pickrow freqrow"><div class="pk on">Každý den</div><div class="pk">Vybrané</div><div class="pk">Týdně</div><div class="pk">Měsíčně</div><div class="pk">Ročně</div></div></div>${sub}<div class="smazbox" data-mmsmaz hidden><span data-mmdel>Smazat návyk</span></div><div class="ff"><div class="fld"><label>Platnost · od – do</label><div class="pickrow"><div class="drange" data-mmdate="start" style="flex:1"><span class="cal"><svg class="i"><use href="#i-calendar"/></svg></span><span data-mmdtext>27. 6.</span></div><div class="drange" data-mmdate="end" style="flex:1"><span class="cal"><svg class="i"><use href="#i-calendar"/></svg></span><span data-mmdtext>bez konce</span></div></div></div><div class="submit">Vytvořit návyk</div></div></div>`;
+  return `<div class="body formb tcompact" style="padding-top:16px"><div class="fhd"><div class="fttl">Nový návyk</div><span class="fx">×</span></div><div class="fld"><label>Název</label><div class="inp"><input data-mmhb="habit-nazev" type="text" maxlength="40" placeholder="Např. Pít 2 l vody"></div></div><div class="fld"><label>Vzhled</label><div class="emojirow" data-mmicons></div><div class="colors" data-mmcolors></div></div><div class="fld"><label>Typ návyku</label><div class="seg"><b class="on">Splnit ✓</b><b>Změřit #</b></div><div data-mmcil class="cilrow"><label class="pod">Denní cíl</label><div class="pickrow"><div class="inp" style="flex:1"><input data-mmhb="habit-cil-hodnota" type="number" inputmode="decimal" min="1" placeholder="8"></div><div class="inp" style="flex:1"><input data-mmhb="habit-cil-jednotka" type="text" maxlength="12" placeholder="sklenic"></div></div></div></div><div class="fld"><label>Jak často</label><div class="pickrow freqrow"><div class="pk on">Každý den</div><div class="pk">Vybrané</div><div class="pk">Týdně</div><div class="pk">Měsíčně</div><div class="pk">Ročně</div></div></div>${sub}<div class="smazbox" data-mmsmaz hidden><span data-mmdel>Smazat návyk</span></div><div class="ff"><div class="fld"><label>Platnost · od – do</label><div class="pickrow"><div class="drange" data-mmdate="start" style="flex:1"><span class="cal"><svg class="i"><use href="#i-calendar"/></svg></span><span data-mmdtext>27. 6.</span></div><div class="drange" data-mmdate="end" style="flex:1"><span class="cal"><svg class="i"><use href="#i-calendar"/></svg></span><span data-mmdtext>bez konce</span></div></div></div><div class="submit">Vytvořit návyk</div></div></div>`;
 }
 const MM_BP2 = {
  "tvorba":  mmHabitHf(""),
@@ -10896,7 +10896,14 @@ function mmHabitFormUklid(sh){
     fx.classList.toggle('zpet', zpet);
   }
   const zvolena = body.querySelector('.emojirow .em.on');   // at je videt, ktera ikona je vybrana
-  if (zvolena && zvolena.scrollIntoView) zvolena.scrollIntoView({block:'nearest'});
+  if (zvolena && zvolena.parentElement){
+    const pas = zvolena.parentElement;
+    const krok = zvolena.offsetWidth + (parseFloat(getComputedStyle(pas).gap) || 0);
+    if (krok > 0){
+      const cil = zvolena.offsetLeft - (pas.clientWidth - zvolena.offsetWidth) / 2;
+      pas.scrollLeft = Math.max(0, Math.round(cil / krok) * krok);
+    }
+  }
   const rada = ff.querySelector(':scope > .pickrow');
   if (rada){
     const del = rada.querySelector('[data-mmdel]');
@@ -10952,8 +10959,12 @@ function mmHabitSync(sh){
   if (icons) icons.innerHTML = HABIT_ICONS.map(ic =>
     `<div class="em ${ic === state.habitIcon ? 'on' : ''}" data-mmic="${habitEsc(ic)}">${habitIconHtml(ic)}</div>`).join('');
   const cols = body.querySelector('[data-mmcolors]');
-  if (cols) cols.innerHTML = HABIT_COLORS.map(c =>
-    `<div class="col ${c === state.habitColor ? 'on' : ''}" data-mmcol="${c}" style="background:${c}"></div>`).join('');
+  if (cols){
+    const akt = state.habitColor;
+    const paleta = HABIT_COLORS.includes(akt) ? HABIT_COLORS : [akt].concat(HABIT_COLORS);
+    cols.innerHTML = paleta.map(c =>
+      `<div class="col ${c === akt ? 'on' : ''}" data-mmcol="${c}" style="background:${c}"></div>`).join('');
+  }
   body.querySelectorAll('.seg b').forEach(b =>
     b.classList.toggle('on', (/Splnit/.test(b.textContent) ? 'check' : 'number') === state.habitZapis));
   const cil = body.querySelector('[data-mmcil]'); if (cil) cil.style.display = state.habitZapis === 'check' ? 'none' : '';
