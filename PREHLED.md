@@ -134,7 +134,7 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 40 | Formulář návyku — fialové tlačítko, ikony 30 px, neuříznutá mřížka | Návyky → ťukni na název | 📱 |
 | 92 | ~~Zápis aktivity — úprava patičky~~ VRÁCENO do stavu v109 (rozbil jsem ji) | Zelené plusko | ↩️ vráceno |
 | 93 | Knihovna — řádek 1:1 s Návyky (55 px, barva ikony, detail vpravo) | Návyky → Nový návyk | 📱 |
-| 40 | Nastavení návyku — REDESIGN, zatím neuděláno | Návyky → ťukni na název | ⏳ |
+| 40 | Nastavení návyku — 7 karet → 5, mřížka ikon 222→48 px, 2,12→1,58 obrazovky | Návyky → ťukni na název | 📱 |
 | 95 | Profil — vzhled a údaje | Já → Profil | ⏸️ odloženo (Marek) |
 
 
