@@ -2281,14 +2281,19 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .body.formb.tcompact .fld{border-radius:22px;padding:11px 13px 13px;margin-bottom:8px;}
 .body.formb.tcompact .fld>label{margin-bottom:7px;}
 .body.formb.tcompact .fld .inp,.body.formb.tcompact .fld .inpc,.body.formb.tcompact .fld .drange{border-radius:999px;}
-.body.formb.tcompact .fld .emojirow{gap:7px;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;max-height:none;-webkit-mask-image:none;mask-image:none;scrollbar-width:none;padding:4px 12px 4px 4px;margin:-4px -12px -4px -4px;}
+.body.formb.tcompact .fhd .fx.zpet{order:-1;margin-right:12px;font-size:26px;line-height:1;}
+.body.formb.tcompact .fld .emojirow,.body.formb.tcompact .fld .colors,.body.formb.tcompact .freqrow{-webkit-mask-image:linear-gradient(to right,#000 0,#000 93%,transparent 100%);mask-image:linear-gradient(to right,#000 0,#000 93%,transparent 100%);}
+.body.formb.tcompact .fld .emojirow{gap:7px;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;max-height:none;scrollbar-width:none;padding:4px;margin:-4px;}
 .body.formb.tcompact .fld .emojirow::-webkit-scrollbar{display:none;}
-.body.formb.tcompact .fld .colors{flex-wrap:nowrap;overflow-x:auto;gap:8px;scrollbar-width:none;padding:5px 12px 5px 5px;margin:4px -12px -5px -5px;}
-.body.formb.tcompact .freqrow{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding:2px 12px 2px 2px;margin:-2px -12px -2px -2px;}
+.body.formb.tcompact .fld .colors{flex-wrap:nowrap;overflow-x:auto;gap:8px;scrollbar-width:none;padding:5px;margin:5px -5px -5px -5px;}
+.body.formb.tcompact .freqrow{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding:3px;margin:-3px;}
 .body.formb.tcompact .freqrow::-webkit-scrollbar{display:none;}
 .body.formb.tcompact .freqrow .pk{flex:0 0 auto;}
 .body.formb.tcompact .fld .colors::-webkit-scrollbar{display:none;}
-.body.formb.tcompact .fld{padding:9px 12px 10px;margin-bottom:6px;}
+.body.formb.tcompact .fld{background:var(--card);box-shadow:none;border-radius:0;margin:0;padding:12px 15px;}
+.body.formb.tcompact .fld+.fld{border-top:1px solid var(--sep);}
+.body.formb.tcompact .fld:first-of-type{border-radius:22px 22px 0 0;}
+.body.formb.tcompact .fld:last-of-type{border-radius:0 0 22px 22px;}
 .body.formb.tcompact .fld>label{margin-bottom:6px;}
 .body.formb.tcompact .fld .typnap{margin-top:6px;}
 .body.formb.tcompact .cilrow{margin-top:10px;padding-top:9px;border-top:1px solid var(--sep);}
@@ -2312,6 +2317,9 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .knihovna .hbm+.hbm{margin-top:6px;}
 .knihovna .hbm .hi{width:30px;height:30px;flex:0 0 30px;border-radius:50%;}
 .knihovna .hbm .ht{color:color-mix(in srgb,var(--label) 82%,var(--sec));}
+.knihovna>.inp{padding:7px 14px;}
+.knihovna .filt b[data-mmcat="zlozvyky"]{background:color-mix(in srgb,#F5793B 16%,transparent);color:#C4551F;}
+.knihovna .filt b[data-mmcat="zlozvyky"].on{background:#F5793B;color:#fff;}
 .knihovna .hbm{height:44px;overflow:hidden;}
 .knihovna .hbm .ht{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .knihovna .hbm .hsub{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;font-size:10.6px;font-weight:800;color:var(--sec);white-space:nowrap;font-variant-numeric:tabular-nums;}
@@ -2627,6 +2635,9 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .znchip.znakce .i{color:var(--ter);}
 .mm .znsmaz{border:0;background:var(--track);color:var(--ter);border-radius:999px;width:20px;height:20px;font-size:13px;line-height:1;margin-left:-3px;cursor:pointer;align-self:center;}
 .mm .ffrow{display:flex;align-items:center;gap:8px;}
+/* Ukol 92: .ff je lepiva UVNITR scrollu, ale nikdo ji nerezervoval misto — proto lezela
+   pres kartu Narocnost. Rezervu dava .body, takze obsah ma kam dojet. */
+
 .mm .ffrow .drange{flex:0 0 152px;width:152px;height:46px;padding:0 14px;font-size:11.6px;gap:6px;overflow:hidden;white-space:nowrap;}
 .mm .ffrow .drange .i{width:13px;height:13px;}
 .mm .ffrow .submit{flex:1;margin-top:0;height:46px;padding:0;display:flex;align-items:center;justify-content:center;font-size:14.48px;}
@@ -3432,14 +3443,19 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .body.formb.tcompact .fld{border-radius:22px;padding:11px 13px 13px;margin-bottom:8px;}
 .body.formb.tcompact .fld>label{margin-bottom:7px;}
 .body.formb.tcompact .fld .inp,.body.formb.tcompact .fld .inpc,.body.formb.tcompact .fld .drange{border-radius:999px;}
-.body.formb.tcompact .fld .emojirow{gap:7px;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;max-height:none;-webkit-mask-image:none;mask-image:none;scrollbar-width:none;padding:4px 12px 4px 4px;margin:-4px -12px -4px -4px;}
+.body.formb.tcompact .fhd .fx.zpet{order:-1;margin-right:12px;font-size:26px;line-height:1;}
+.body.formb.tcompact .fld .emojirow,.body.formb.tcompact .fld .colors,.body.formb.tcompact .freqrow{-webkit-mask-image:linear-gradient(to right,#000 0,#000 93%,transparent 100%);mask-image:linear-gradient(to right,#000 0,#000 93%,transparent 100%);}
+.body.formb.tcompact .fld .emojirow{gap:7px;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;max-height:none;scrollbar-width:none;padding:4px;margin:-4px;}
 .body.formb.tcompact .fld .emojirow::-webkit-scrollbar{display:none;}
-.body.formb.tcompact .fld .colors{flex-wrap:nowrap;overflow-x:auto;gap:8px;scrollbar-width:none;padding:5px 12px 5px 5px;margin:4px -12px -5px -5px;}
-.body.formb.tcompact .freqrow{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding:2px 12px 2px 2px;margin:-2px -12px -2px -2px;}
+.body.formb.tcompact .fld .colors{flex-wrap:nowrap;overflow-x:auto;gap:8px;scrollbar-width:none;padding:5px;margin:5px -5px -5px -5px;}
+.body.formb.tcompact .freqrow{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding:3px;margin:-3px;}
 .body.formb.tcompact .freqrow::-webkit-scrollbar{display:none;}
 .body.formb.tcompact .freqrow .pk{flex:0 0 auto;}
 .body.formb.tcompact .fld .colors::-webkit-scrollbar{display:none;}
-.body.formb.tcompact .fld{padding:9px 12px 10px;margin-bottom:6px;}
+.body.formb.tcompact .fld{background:var(--card);box-shadow:none;border-radius:0;margin:0;padding:12px 15px;}
+.body.formb.tcompact .fld+.fld{border-top:1px solid var(--sep);}
+.body.formb.tcompact .fld:first-of-type{border-radius:22px 22px 0 0;}
+.body.formb.tcompact .fld:last-of-type{border-radius:0 0 22px 22px;}
 .body.formb.tcompact .fld>label{margin-bottom:6px;}
 .body.formb.tcompact .fld .typnap{margin-top:6px;}
 .body.formb.tcompact .cilrow{margin-top:10px;padding-top:9px;border-top:1px solid var(--sep);}
@@ -3463,6 +3479,9 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .knihovna .hbm+.hbm{margin-top:6px;}
 .knihovna .hbm .hi{width:30px;height:30px;flex:0 0 30px;border-radius:50%;}
 .knihovna .hbm .ht{color:color-mix(in srgb,var(--label) 82%,var(--sec));}
+.knihovna>.inp{padding:7px 14px;}
+.knihovna .filt b[data-mmcat="zlozvyky"]{background:color-mix(in srgb,#F5793B 16%,transparent);color:#C4551F;}
+.knihovna .filt b[data-mmcat="zlozvyky"].on{background:#F5793B;color:#fff;}
 .knihovna .hbm{height:44px;overflow:hidden;}
 .knihovna .hbm .ht{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .knihovna .hbm .hsub{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;font-size:10.6px;font-weight:800;color:var(--sec);white-space:nowrap;font-variant-numeric:tabular-nums;}
@@ -3663,6 +3682,9 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .znchip.znakce .i{color:var(--ter);}
 .znsmaz{border:0;background:var(--track);color:var(--ter);border-radius:999px;width:20px;height:20px;font-size:13px;line-height:1;margin-left:-3px;cursor:pointer;align-self:center;}
 .ffrow{display:flex;align-items:center;gap:8px;}
+/* Ukol 92: .ff je lepiva UVNITR scrollu, ale nikdo ji nerezervoval misto — proto lezela
+   pres kartu Narocnost. Rezervu dava .body, takze obsah ma kam dojet. */
+
 .ffrow .drange{flex:0 0 152px;width:152px;height:46px;padding:0 14px;font-size:11.6px;gap:6px;overflow:hidden;white-space:nowrap;}
 .ffrow .drange .i{width:13px;height:13px;}
 .ffrow .submit{flex:1;margin-top:0;height:46px;padding:0;display:flex;align-items:center;justify-content:center;font-size:14.48px;}
@@ -4977,7 +4999,7 @@ const HABIT_CAT_META = [
   { key: 'spanek', nazev: 'Spánek', ikona: '🛌', barva: '#60A5FA' },
   { key: 'produktivita', nazev: 'Produktivita & růst', ikona: '📈', barva: '#FB923C' },
   { key: 'vztahy', nazev: 'Vztahy & domov', ikona: '🏠', barva: '#F472B6' },
-  { key: 'zlozvyky', nazev: 'Zlozvyky', ikona: '🚫', barva: '#22D3EE' }
+  { key: 'zlozvyky', nazev: 'Zlozvyky', ikona: '🚫', barva: '#F5793B' }
 ];
 const HABIT_CAT_COLOR = Object.fromEntries(HABIT_CAT_META.map(c => [c.key, c.barva]));
 const HABIT_CAT_NAME = Object.fromEntries(HABIT_CAT_META.map(c => [c.key, c.nazev]));
@@ -7034,7 +7056,7 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v116';
+const MM_VERZE = 'v120';
 // Ukol 99 (Marek 14. 9.): "obrazovka se zastavi, ale jakoby se to neviditelne scrolluje dal".
 // Stinova obrazovka si rezervovala vysku podle window.innerHeight. Na iPhonu ta hodnota umi
 // byt vetsi nez skutecna viditelna plocha (listy Safari se sbaluji), takze pod obsahem vzniklo
@@ -10835,6 +10857,12 @@ function mmHabitFormUklid(sh){
     (typPole.querySelector('.seg') || typPole).insertAdjacentHTML('afterend',
       '<div class="typnap"><b>Splnit</b> — jedno ťuknutí. <b>Změřit</b> — ťuknutí přidá díl, podržení splní celý.</div>');
   }
+  const fx = body.querySelector('.fx');
+  if (fx){
+    const zpet = (state.habitView !== 'catalog' && !state.habitEditId);
+    fx.textContent = zpet ? '‹' : '×';
+    fx.classList.toggle('zpet', zpet);
+  }
   const zvolena = body.querySelector('.emojirow .em.on');   // at je videt, ktera ikona je vybrana
   if (zvolena && zvolena.scrollIntoView) zvolena.scrollIntoView({block:'nearest'});
   const rada = ff.querySelector(':scope > .pickrow');
@@ -10937,7 +10965,12 @@ function mmHabitSync(sh){
 
 function mmHabitClick(e){
   const t = e.target;
-  if (t.closest('.fx')) { closeHabitModal(); return; }
+  if (t.closest('.fx')) {
+    // Ukol 40: z formulare patri sipka ZPET do knihovny, ne zavreni celeho okna.
+    // Pri uprave existujiciho navyku se do knihovny vracet nemame — tam krizek zavira.
+    if (state.habitView !== 'catalog' && !state.habitEditId){ state.habitView = 'catalog'; mmMountHabit(); return; }
+    closeHabitModal(); return;
+  }
   if (t.closest('[data-mmdel]')) { const b = document.getElementById('habit-delete-btn'); if (b) b.click(); return; }
   if (t.closest('[data-mmdup]')) { duplicateHabit(state.habitEditId); mmMountHabit(); return; }
   const sub = t.closest('.submit');
