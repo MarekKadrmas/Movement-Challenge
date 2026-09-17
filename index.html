@@ -2693,7 +2693,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .znzvol .znri{width:16px;height:16px;color:var(--green);flex:0 0 auto;}
 .mm .znzvol .znrn{flex:1;min-width:0;text-align:left;font-size:14.48px;font-weight:700;color:var(--label);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .mm .znzm{flex:0 0 auto;font-size:11.2px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:var(--sec);background:var(--track);border-radius:999px;padding:6px 11px;}
-.mm .znfil{display:flex;gap:4px;overflow-x:auto;margin:8px 0 7px;padding-bottom:3px;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.mm .znfil{display:flex;gap:4px;overflow-x:auto;margin:0 0 7px;padding-bottom:3px;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
 .mm .znfil::-webkit-scrollbar{display:none;}
 .mm .znf{flex:0 0 auto;border:0;background:transparent;border-radius:999px;padding:5px 11px;font:inherit;font-size:11.6px;font-weight:800;color:var(--ter);cursor:pointer;white-space:nowrap;}
 .mm .znf.on{background:var(--label);color:var(--bg);}
@@ -2786,7 +2786,36 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .body.formb.zapisb .znsez:not(.cvs2) .znip{width:28px;height:28px;flex:0 0 28px;}
 .mm .body.formb.zapisb .znsez:not(.cvs2) .znip .znri{width:15px;height:15px;}
 .mm .body.formb.zapisb .znsez:not(.cvs2) .znrn{font-size:13.2px;}
-.mm .body.formb.zapisb .znfil{-webkit-mask-image:linear-gradient(to right,#000 0,#000 88%,transparent 100%);mask-image:linear-gradient(to right,#000 0,#000 88%,transparent 100%);}
+.mm .body.formb.zapisb .znfil{-webkit-mask-image:linear-gradient(to right,#000 0,#000 88%,transparent 100%);mask-image:linear-gradient(to right,#000 0,#000 88%,transparent 100%);}
+.mm .body.formb.zapisb .znhled{margin-bottom:8px;}
+/* 92i: strankou nejde posouvat - roluje se jen seznam aktivit; Narocnost sedi nad patickou. */
+.mm .body.formb.zapisb{display:flex;flex-direction:column;min-height:0;overflow:hidden;}
+.mm .body.formb.zapisb>.fld.zn{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;}
+.mm .body.formb.zapisb .znpick{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;}
+.mm .body.formb.zapisb .znsez:not(.cvs2){flex:1 1 auto;min-height:0;max-height:none;}
+.mm .scr>.lvlwrap{flex:0 0 auto;padding:0 14px 2px;margin:0;background:transparent;box-shadow:none;border-radius:0;}
+.mm .scr>.lvlwrap>label{display:block;margin-bottom:3px;}
+.mm .scr>.lvlwrap .lvlnum{font-size:18px;}
+.mm .scr>.lvlwrap .lvldesc{font-size:11px;margin-top:1px;min-height:0;}
+.mm .scr>.lvlwrap .lvltrack{height:28px;margin-top:5px;}
+.mm .scr>.lvlwrap .lvlends{margin-top:3px;font-size:9px;}
+.mm .scr>.lvlwrap .lvlhint{display:none;}
+/* 92j: nic se nesmi smrsknout krome seznamu; zadna dira po stare paticce. */
+.mm .body.formb.zapisb{padding-bottom:0;}
+.mm .body.formb.zapisb>.fld.zn>*:not(.znpick){flex-shrink:0;}
+.mm .body.formb.zapisb .znpick>*:not(.znsez){flex-shrink:0;}
+.mm .body.formb.zapisb .znpick{flex:1 1 auto;min-height:0;}
+.mm .body.formb.zapisb .znpick[hidden]{display:none;}
+.mm .body.formb.zapisb .znsez:not(.cvs2){flex:1 1 auto;min-height:0;max-height:none;}
+/* Narocnost kompaktne - jen cislo, body a drahu. */
+.mm .scr>.lvlwrap .lvlends{display:none;}
+.mm .scr>.lvlwrap .lvlnum{font-size:16px;}
+.mm .scr>.lvlwrap .lvldesc{font-size:10.5px;margin-top:0;min-height:0;}
+.mm .scr>.lvlwrap .lvltrack{height:26px;margin-top:4px;}
+.mm .scr>.lvlwrap>label{font-size:9.5px;margin-bottom:2px;}
+.mm .scr>.lvlwrap{padding-bottom:6px;}
+.mm .scr>.lvlwrap>label{text-transform:uppercase;letter-spacing:.06em;font-weight:800;color:var(--ter);}
+.mm .scr>.lvlwrap .lvlknob{width:22px;height:22px;margin-left:-11px;top:2px;font-size:12px;}
 .mm .lvlbox ~ .lvlhint,.mm .fld .lvlhint{display:none;}
 .mm .lvlhead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;}
 .mm .lvlnum{font-size:22.93px;font-weight:900;letter-spacing:-.04em;line-height:1;color:var(--label);font-family:var(--font-display);}
@@ -3816,7 +3845,7 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .znzvol .znri{width:16px;height:16px;color:var(--green);flex:0 0 auto;}
 .znzvol .znrn{flex:1;min-width:0;text-align:left;font-size:14.48px;font-weight:700;color:var(--label);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .znzm{flex:0 0 auto;font-size:11.2px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:var(--sec);background:var(--track);border-radius:999px;padding:6px 11px;}
-.znfil{display:flex;gap:4px;overflow-x:auto;margin:8px 0 7px;padding-bottom:3px;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.znfil{display:flex;gap:4px;overflow-x:auto;margin:0 0 7px;padding-bottom:3px;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
 .znfil::-webkit-scrollbar{display:none;}
 .znf{flex:0 0 auto;border:0;background:transparent;border-radius:999px;padding:5px 11px;font:inherit;font-size:11.6px;font-weight:800;color:var(--ter);cursor:pointer;white-space:nowrap;}
 .znf.on{background:var(--label);color:var(--bg);}
@@ -3909,7 +3938,36 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .body.formb.zapisb .znsez:not(.cvs2) .znip{width:28px;height:28px;flex:0 0 28px;}
 .body.formb.zapisb .znsez:not(.cvs2) .znip .znri{width:15px;height:15px;}
 .body.formb.zapisb .znsez:not(.cvs2) .znrn{font-size:13.2px;}
-.body.formb.zapisb .znfil{-webkit-mask-image:linear-gradient(to right,#000 0,#000 88%,transparent 100%);mask-image:linear-gradient(to right,#000 0,#000 88%,transparent 100%);}
+.body.formb.zapisb .znfil{-webkit-mask-image:linear-gradient(to right,#000 0,#000 88%,transparent 100%);mask-image:linear-gradient(to right,#000 0,#000 88%,transparent 100%);}
+.body.formb.zapisb .znhled{margin-bottom:8px;}
+/* 92i: strankou nejde posouvat - roluje se jen seznam aktivit; Narocnost sedi nad patickou. */
+.body.formb.zapisb{display:flex;flex-direction:column;min-height:0;overflow:hidden;}
+.body.formb.zapisb>.fld.zn{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;}
+.body.formb.zapisb .znpick{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;}
+.body.formb.zapisb .znsez:not(.cvs2){flex:1 1 auto;min-height:0;max-height:none;}
+.scr>.lvlwrap{flex:0 0 auto;padding:0 14px 2px;margin:0;background:transparent;box-shadow:none;border-radius:0;}
+.scr>.lvlwrap>label{display:block;margin-bottom:3px;}
+.scr>.lvlwrap .lvlnum{font-size:18px;}
+.scr>.lvlwrap .lvldesc{font-size:11px;margin-top:1px;min-height:0;}
+.scr>.lvlwrap .lvltrack{height:28px;margin-top:5px;}
+.scr>.lvlwrap .lvlends{margin-top:3px;font-size:9px;}
+.scr>.lvlwrap .lvlhint{display:none;}
+/* 92j: nic se nesmi smrsknout krome seznamu; zadna dira po stare paticce. */
+.body.formb.zapisb{padding-bottom:0;}
+.body.formb.zapisb>.fld.zn>*:not(.znpick){flex-shrink:0;}
+.body.formb.zapisb .znpick>*:not(.znsez){flex-shrink:0;}
+.body.formb.zapisb .znpick{flex:1 1 auto;min-height:0;}
+.body.formb.zapisb .znpick[hidden]{display:none;}
+.body.formb.zapisb .znsez:not(.cvs2){flex:1 1 auto;min-height:0;max-height:none;}
+/* Narocnost kompaktne - jen cislo, body a drahu. */
+.scr>.lvlwrap .lvlends{display:none;}
+.scr>.lvlwrap .lvlnum{font-size:16px;}
+.scr>.lvlwrap .lvldesc{font-size:10.5px;margin-top:0;min-height:0;}
+.scr>.lvlwrap .lvltrack{height:26px;margin-top:4px;}
+.scr>.lvlwrap>label{font-size:9.5px;margin-bottom:2px;}
+.scr>.lvlwrap{padding-bottom:6px;}
+.scr>.lvlwrap>label{text-transform:uppercase;letter-spacing:.06em;font-weight:800;color:var(--ter);}
+.scr>.lvlwrap .lvlknob{width:22px;height:22px;margin-left:-11px;top:2px;font-size:12px;}
 .lvlbox ~ .lvlhint,.fld .lvlhint{display:none;}
 .lvlhead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;}
 .lvlnum{font-size:22.93px;font-weight:900;letter-spacing:-.04em;line-height:1;color:var(--label);font-family:var(--font-display);}
@@ -7212,7 +7270,7 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v134';
+const MM_VERZE = 'v141';
 // Ukol 99 (Marek 14. 9.): "obrazovka se zastavi, ale jakoby se to neviditelne scrolluje dal".
 // Stinova obrazovka si rezervovala vysku podle window.innerHeight. Na iPhonu ta hodnota umi
 // byt vetsi nez skutecna viditelna plocha (listy Safari se sbaluji), takze pod obsahem vzniklo
@@ -10612,8 +10670,13 @@ function mmMountZapis(){
   // SOUROZENEC scrollu v .scr (pak plati .scr>.ff{position:static;flex:0 0 auto}).
   // Delame to same. Poradi je dulezite: mmZapisAktivita uz .ffrow postavila vyse.
   if (ffEl && ffEl.parentElement !== scrEl) scrEl.appendChild(ffEl);
+  // 92i: Narocnost patri nad paticku (nesmi se hybat s obsahem) a strankou nejde posouvat -
+  // roluje se VYHRADNE seznam aktivit (.znsez).
+  const lvlEl = scrEl.querySelector('.lvlbox');
+  const lvlFld = lvlEl ? lvlEl.closest('.fld') : null;
+  if (lvlFld && ffEl && lvlFld.parentElement !== scrEl){ lvlFld.classList.add('lvlwrap'); scrEl.insertBefore(lvlFld, ffEl); }
   if (bodyEl) { bodyEl.style.height = ''; bodyEl.style.flex = '1 1 auto'; bodyEl.style.minHeight = '0';
-    bodyEl.style.overflowY = 'auto'; bodyEl.style.webkitOverflowScrolling = 'touch';
+    bodyEl.style.overflowY = 'hidden'; bodyEl.style.webkitOverflowScrolling = 'touch';
     bodyEl.style.paddingBottom = ''; }
   mmNoTinyScroll(bodyEl);   // zadny „gumovy" 1-2px scroll na formulari, ktery se cely vejde
   // Delegace jednou na shadowRoot (preziva sh.innerHTML=''): klik-mosty + input/change mosty do light-DOM.
