@@ -2292,7 +2292,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .body.formb.tcompact .freqrow::-webkit-scrollbar{display:none;}
 .body.formb.tcompact .freqrow .pk{flex:0 0 auto;}
 .body.formb.tcompact .fld .colors::-webkit-scrollbar{display:none;}
-.body.formb.tcompact .fld{background:var(--card);box-shadow:none;border-radius:0;margin:0;padding:7px 15px;display:flex;align-items:center;gap:12px;min-height:46px;box-sizing:border-box;}
+.body.formb.tcompact .fld{background:var(--card);box-shadow:none;border-radius:0;margin:0;padding:5px 15px;display:flex;align-items:center;gap:12px;min-height:42px;box-sizing:border-box;}
 .body.formb.tcompact .fld>label{flex:0 0 auto;margin:0;font-size:12.7px;font-weight:700;letter-spacing:0;text-transform:none;color:var(--sec);}
 .body.formb.tcompact .fld>:not(label){flex:1;min-width:0;display:flex;justify-content:flex-end;}
 .body.formb.tcompact .fld>.typnap{display:block;flex:0 0 100%;width:100%;text-align:left;}
@@ -2300,7 +2300,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .body.formb.tcompact .fld .inp,.body.formb.tcompact .fld .inpc{text-align:right;}
 .body.formb.tcompact .fld .inp input{text-align:right;}
 /* siroke ovladace nejdou na jeden radek - zustanou pod popiskem */
-.body.formb.tcompact .fld:has(.emojirow):not(.vyb),.body.formb.tcompact .fld:has(.seg),.body.formb.tcompact .fld:has(.freqrow),.body.formb.tcompact .fld:has(.drange){flex-direction:column;align-items:stretch;gap:7px;padding:9px 15px 11px;}
+.body.formb.tcompact .fld:has(.emojirow):not(.vyb),.body.formb.tcompact .fld:has(.seg),.body.formb.tcompact .fld:has(.freqrow),.body.formb.tcompact .fld:has(.drange){flex-direction:column;align-items:stretch;gap:5px;padding:7px 15px 8px;}
 .body.formb.tcompact .cilrow .pod{text-transform:none;font-size:12.7px;font-weight:700;letter-spacing:0;}
 /* POZOR: display:block by z vodorovnych rolet udelal sloupce (46 ikon pod sebou =
    pas 1573 px misto 44). Siroke ovladace zustavaji flex, jen zarovnane doleva. */
@@ -2326,8 +2326,8 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .body.formb.tcompact .fld:first-of-type{border-radius:24px 24px 0 0;}
 .body.formb.tcompact .fld:last-of-type{border-radius:0 0 24px 24px;margin-bottom:10px;}
 .body.formb.tcompact .fld>label{margin-bottom:6px;}
-.body.formb.tcompact .fld .typnap{margin-top:6px;}
-.body.formb.tcompact .cilrow{margin-top:10px;padding-top:9px;border-top:1px solid var(--sep);}
+.body.formb.tcompact .fld .typnap{margin-top:4px;}
+.body.formb.tcompact .cilrow{margin-top:7px;padding-top:7px;border-top:1px solid var(--sep);}
 .body.formb.tcompact .cilrow .pod{display:block;font-size:9.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ter);margin-bottom:6px;}
 .body.formb.tcompact .fld .em{width:27px;height:27px;flex:0 0 27px;font-size:15px;background:var(--track);box-shadow:none;}
 .body.formb.tcompact .fld .em .i{width:15px;height:15px;}
@@ -2336,7 +2336,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .body.formb.tcompact .fld .pk{background:var(--track);box-shadow:none;border-radius:999px;padding:6px 12px;font-weight:700;}
 .body.formb.tcompact .fld .col{width:24px;height:24px;flex:0 0 24px;}
 .body.formb.tcompact .fld .seg{padding:2px;}
-.body.formb.tcompact .fld .seg b{padding:6px 0;}
+.body.formb.tcompact .fld .seg b{padding:5px 0;}
 .body.formb.tcompact .fld .pk.on,.body.formb.tcompact .fld .pill.on{background:var(--fial);color:#fff;box-shadow:0 6px 16px -8px color-mix(in srgb,var(--fial) 70%,transparent);}
 .body.formb.tcompact .fld .seg b.on{background:var(--card);box-shadow:var(--shadow);color:var(--fial2);}
 /* Patricka s tlacitkem je SOUROZENEC formulare (.ff je dite .scr), ne jeho potomek — proto
@@ -2418,6 +2418,9 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .body.formb .fld .typnap{margin-top:9px;font-size:9.8px;line-height:1.5;font-weight:600;color:var(--ter);}
 .body.formb .fld .typnap b{color:var(--sec);font-weight:800;}
 .smazbox{display:flex;justify-content:center;margin:10px 0 2px;}
+/* Ukol 40: atribut hidden nestacil - .smazbox{display:flex} ho prebijel, takze skryty
+   blok dal zabiral 50 px a pod bilym listem prosvital bezovy pruh. */
+.smazbox[hidden]{display:none !important;}
 .smazbox span{font-size:13.28px;font-weight:800;color:var(--red,#E05C5C);padding:8px 16px;border-radius:999px;background:color-mix(in srgb,var(--red,#E05C5C) 10%,transparent);cursor:pointer;}
 .nvk .nrow{display:flex;align-items:center;gap:10px;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:7px 14px 7px 8px;margin-bottom:6px;box-sizing:border-box;min-height:44px;height:44px;overflow:hidden;}
 .nvk .nrow .nic{width:30px;height:30px;flex:0 0 30px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--nc) 15%,transparent);color:var(--nc);font-size:15px;}
@@ -3496,7 +3499,7 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .body.formb.tcompact .freqrow::-webkit-scrollbar{display:none;}
 .body.formb.tcompact .freqrow .pk{flex:0 0 auto;}
 .body.formb.tcompact .fld .colors::-webkit-scrollbar{display:none;}
-.body.formb.tcompact .fld{background:var(--card);box-shadow:none;border-radius:0;margin:0;padding:7px 15px;display:flex;align-items:center;gap:12px;min-height:46px;box-sizing:border-box;}
+.body.formb.tcompact .fld{background:var(--card);box-shadow:none;border-radius:0;margin:0;padding:5px 15px;display:flex;align-items:center;gap:12px;min-height:42px;box-sizing:border-box;}
 .body.formb.tcompact .fld>label{flex:0 0 auto;margin:0;font-size:12.7px;font-weight:700;letter-spacing:0;text-transform:none;color:var(--sec);}
 .body.formb.tcompact .fld>:not(label){flex:1;min-width:0;display:flex;justify-content:flex-end;}
 .body.formb.tcompact .fld>.typnap{display:block;flex:0 0 100%;width:100%;text-align:left;}
@@ -3504,7 +3507,7 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .body.formb.tcompact .fld .inp,.body.formb.tcompact .fld .inpc{text-align:right;}
 .body.formb.tcompact .fld .inp input{text-align:right;}
 /* siroke ovladace nejdou na jeden radek - zustanou pod popiskem */
-.body.formb.tcompact .fld:has(.emojirow):not(.vyb),.body.formb.tcompact .fld:has(.seg),.body.formb.tcompact .fld:has(.freqrow),.body.formb.tcompact .fld:has(.drange){flex-direction:column;align-items:stretch;gap:7px;padding:9px 15px 11px;}
+.body.formb.tcompact .fld:has(.emojirow):not(.vyb),.body.formb.tcompact .fld:has(.seg),.body.formb.tcompact .fld:has(.freqrow),.body.formb.tcompact .fld:has(.drange){flex-direction:column;align-items:stretch;gap:5px;padding:7px 15px 8px;}
 .body.formb.tcompact .cilrow .pod{text-transform:none;font-size:12.7px;font-weight:700;letter-spacing:0;}
 /* POZOR: display:block by z vodorovnych rolet udelal sloupce (46 ikon pod sebou =
    pas 1573 px misto 44). Siroke ovladace zustavaji flex, jen zarovnane doleva. */
@@ -3530,8 +3533,8 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .body.formb.tcompact .fld:first-of-type{border-radius:24px 24px 0 0;}
 .body.formb.tcompact .fld:last-of-type{border-radius:0 0 24px 24px;margin-bottom:10px;}
 .body.formb.tcompact .fld>label{margin-bottom:6px;}
-.body.formb.tcompact .fld .typnap{margin-top:6px;}
-.body.formb.tcompact .cilrow{margin-top:10px;padding-top:9px;border-top:1px solid var(--sep);}
+.body.formb.tcompact .fld .typnap{margin-top:4px;}
+.body.formb.tcompact .cilrow{margin-top:7px;padding-top:7px;border-top:1px solid var(--sep);}
 .body.formb.tcompact .cilrow .pod{display:block;font-size:9.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ter);margin-bottom:6px;}
 .body.formb.tcompact .fld .em{width:27px;height:27px;flex:0 0 27px;font-size:15px;background:var(--track);box-shadow:none;}
 .body.formb.tcompact .fld .em .i{width:15px;height:15px;}
@@ -3540,7 +3543,7 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .body.formb.tcompact .fld .pk{background:var(--track);box-shadow:none;border-radius:999px;padding:6px 12px;font-weight:700;}
 .body.formb.tcompact .fld .col{width:24px;height:24px;flex:0 0 24px;}
 .body.formb.tcompact .fld .seg{padding:2px;}
-.body.formb.tcompact .fld .seg b{padding:6px 0;}
+.body.formb.tcompact .fld .seg b{padding:5px 0;}
 .body.formb.tcompact .fld .pk.on,.body.formb.tcompact .fld .pill.on{background:var(--fial);color:#fff;box-shadow:0 6px 16px -8px color-mix(in srgb,var(--fial) 70%,transparent);}
 .body.formb.tcompact .fld .seg b.on{background:var(--card);box-shadow:var(--shadow);color:var(--fial2);}
 /* Patricka s tlacitkem je SOUROZENEC formulare (.ff je dite .scr), ne jeho potomek — proto
@@ -3622,6 +3625,9 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .body.formb .fld .typnap{margin-top:9px;font-size:9.8px;line-height:1.5;font-weight:600;color:var(--ter);}
 .body.formb .fld .typnap b{color:var(--sec);font-weight:800;}
 .smazbox{display:flex;justify-content:center;margin:10px 0 2px;}
+/* Ukol 40: atribut hidden nestacil - .smazbox{display:flex} ho prebijel, takze skryty
+   blok dal zabiral 50 px a pod bilym listem prosvital bezovy pruh. */
+.smazbox[hidden]{display:none !important;}
 .smazbox span{font-size:13.28px;font-weight:800;color:var(--red,#E05C5C);padding:8px 16px;border-radius:999px;background:color-mix(in srgb,var(--red,#E05C5C) 10%,transparent);cursor:pointer;}
 .nvk .nrow{display:flex;align-items:center;gap:10px;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:7px 14px 7px 8px;margin-bottom:6px;box-sizing:border-box;min-height:44px;height:44px;overflow:hidden;}
 .nvk .nrow .nic{width:30px;height:30px;flex:0 0 30px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--nc) 15%,transparent);color:var(--nc);font-size:15px;}
@@ -7140,7 +7146,7 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v130';
+const MM_VERZE = 'v132';
 // Ukol 99 (Marek 14. 9.): "obrazovka se zastavi, ale jakoby se to neviditelne scrolluje dal".
 // Stinova obrazovka si rezervovala vysku podle window.innerHeight. Na iPhonu ta hodnota umi
 // byt vetsi nez skutecna viditelna plocha (listy Safari se sbaluji), takze pod obsahem vzniklo
@@ -10947,7 +10953,7 @@ function mmHabitFormUklid(sh){
   const typPole = [...body.querySelectorAll('.fld')].find(f => /Typ návyku/.test(f.textContent||''));
   if (typPole && !typPole.querySelector('.typnap')){
     (typPole.querySelector('.seg') || typPole).insertAdjacentHTML('afterend',
-      '<div class="typnap"><b>Splnit</b> — jedno ťuknutí. <b>Změřit</b> — ťuknutí přidá díl, podržení splní celý.</div>');
+      '<div class="typnap"><b>Změřit</b>: ťuknutí přidá díl, podržení splní celý.</div>');
   }
   const fx = body.querySelector('.fx');
   if (fx){
