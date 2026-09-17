@@ -139,7 +139,9 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 40c | Pás ikon zarovnán na rozteč — žádná uříznutá ikona | Návyky → Nový návyk | 📱 |
 | 40d | Linky pod „8" a „sklenic" stejně dlouhé | Návyky → Nový návyk | 📱 |
 | 40e | Formulář ve stylu Nastavení — štítek vlevo, hodnota vpravo, jeden systém popisků | Návyky → ťukni na název | 📱 |
-| 93f | Návrhy vzhledu zlozvyků A–D k výběru (navrhy-zlozvyky.png) | kořen projektu | ❓ na Marka |
+| 93g | Zlozvyky = G3: plná barva vlevo, přechod do bílé, bílý puk | Návyky → Nový návyk → Zlozvyky | 📱 |
+| 40f | Nastavení návyku = Návrh 2: Ikona a Barva jsou řádky s náhledem, rozbalují se | Návyky → ťukni na název | 📱 |
+| 92d | Zápis — tři návrhy s původním posuvníkem (navrh-zapis-2.png) | kořen projektu | ❓ na Marka |
 | 93e | Zlozvyky mají vlastní vzhled — přerušovaný rám, přeškrtnutá ikona | Návyky → Nový návyk → Zlozvyky | 📱 |
 | 93b | Zlozvyky vizuálně odlišené (jantarová kategorie i ikony) | Návyky → Nový návyk → Zlozvyky | 📱 |
 | 93c | Hledání v knihovně nižší (49 px) | Návyky → Nový návyk | 📱 |

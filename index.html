@@ -2300,15 +2300,25 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .body.formb.tcompact .fld .inp,.body.formb.tcompact .fld .inpc{text-align:right;}
 .body.formb.tcompact .fld .inp input{text-align:right;}
 /* siroke ovladace nejdou na jeden radek - zustanou pod popiskem */
-.body.formb.tcompact .fld:has(.emojirow),.body.formb.tcompact .fld:has(.seg),.body.formb.tcompact .fld:has(.freqrow),.body.formb.tcompact .fld:has(.drange){flex-direction:column;align-items:stretch;gap:7px;padding:9px 15px 11px;}
+.body.formb.tcompact .fld:has(.emojirow):not(.vyb),.body.formb.tcompact .fld:has(.seg),.body.formb.tcompact .fld:has(.freqrow),.body.formb.tcompact .fld:has(.drange){flex-direction:column;align-items:stretch;gap:7px;padding:9px 15px 11px;}
 .body.formb.tcompact .cilrow .pod{text-transform:none;font-size:12.7px;font-weight:700;letter-spacing:0;}
 /* POZOR: display:block by z vodorovnych rolet udelal sloupce (46 ikon pod sebou =
    pas 1573 px misto 44). Siroke ovladace zustavaji flex, jen zarovnane doleva. */
-.body.formb.tcompact .fld:has(.emojirow)>:not(label),.body.formb.tcompact .fld:has(.seg)>:not(label),.body.formb.tcompact .fld:has(.freqrow)>:not(label),.body.formb.tcompact .fld:has(.drange)>:not(label){display:flex;justify-content:flex-start;width:100%;}
+.body.formb.tcompact .fld:has(.emojirow):not(.vyb)>:not(label),.body.formb.tcompact .fld:has(.seg)>:not(label),.body.formb.tcompact .fld:has(.freqrow)>:not(label),.body.formb.tcompact .fld:has(.drange)>:not(label){display:flex;justify-content:flex-start;width:100%;}
 /* Vysvetlivka je bezny text pres celou sirku. Bez teto vyjimky ji pravidlo vyse udelalo
    flex kontejnerem a inline <b> + text se rozpadly do dvou sloupcu. */
 .body.formb.tcompact .fld:has(.seg)>.typnap{display:block;width:100%;}
 .body.formb.tcompact .fld .cilrow .pod{text-transform:none;font-size:12.7px;font-weight:700;letter-spacing:0;color:var(--sec);}
+/* Navrh 2: Ikona a Barva jsou radky s nahledem vpravo; strip se ukaze az po tuknuti. */
+.body.formb.tcompact .fld.vyb{flex-wrap:wrap;cursor:pointer;}
+.body.formb.tcompact .fld.vyb>.nahl{flex:1;display:flex;align-items:center;justify-content:flex-end;gap:8px;}
+.body.formb.tcompact .fld.vyb .sip{color:var(--ter);font-size:17px;line-height:1;}
+.body.formb.tcompact .fld.vyb .ikprev{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;}
+.body.formb.tcompact .fld.vyb .ikprev .i{width:14px;height:14px;}
+.body.formb.tcompact .fld.vyb .baprev{width:18px;height:18px;border-radius:50%;}
+.body.formb.tcompact .fld.vyb>.emojirow,.body.formb.tcompact .fld.vyb>.colors{display:none;}
+.body.formb.tcompact .fld.vyb.open>.emojirow{display:flex;width:100%;margin-top:9px;}
+.body.formb.tcompact .fld.vyb.open>.colors{display:flex;width:100%;margin-top:9px;}
 .body.formb.tcompact .cilrow{display:flex;align-items:center;gap:12px;margin:0;padding:0;border-top:0;}
 .body.formb.tcompact .cilrow .pod{flex:0 0 auto;margin:0;font-size:12.7px;font-weight:700;letter-spacing:0;text-transform:none;color:var(--sec);}
 .body.formb.tcompact .cilrow .pickrow{flex:1;justify-content:flex-end;}
@@ -2342,19 +2352,20 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .knihovna .hbm .hi{width:30px;height:30px;flex:0 0 30px;border-radius:50%;}
 .knihovna .hbm .ht{color:color-mix(in srgb,var(--label) 82%,var(--sec));}
 .knihovna>.inp{padding:7px 14px;}
-.knihovna .filt b[data-mmcat="zlozvyky"]{background:color-mix(in srgb,#F5793B 16%,transparent);color:#C4551F;}
-.knihovna .filt b[data-mmcat="zlozvyky"].on{background:#F5793B;color:#fff;}
+.knihovna .filt b[data-mmcat="zlozvyky"]{background:color-mix(in srgb,#E0584B 16%,transparent);color:#A82F22;}
+.knihovna .filt b[data-mmcat="zlozvyky"].on{background:#E0584B;color:#fff;}
 .knihovna .hbm{height:44px;overflow:hidden;}
 .knihovna .hbm .ht{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .knihovna .hbm .hsub{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;font-size:10.6px;font-weight:800;color:var(--sec);white-space:nowrap;font-variant-numeric:tabular-nums;}
 .knihovna .newbtn{background:var(--track);color:var(--fial2);border:0;font-weight:800;}
 /* Ukol 93b: zlozvyk = neco, co chci NEdelat. Preskrtnuta ikona + prerusovany jantarovy
    ram a jemna jantarova vypln, takze se radek lisi na prvni pohled, ne jen barvou ikony. */
-.knihovna .hbm.zloz{background:color-mix(in srgb,#F5793B 7%,var(--card));border:1.5px dashed color-mix(in srgb,#F5793B 52%,transparent);box-shadow:none;}
+.knihovna .hbm.zloz{background:linear-gradient(90deg,#E0584B 0%,color-mix(in srgb,#E0584B 35%,var(--card)) 26%,var(--card) 92%);border:0;box-shadow:var(--shadow);}
 .knihovna .hbm.zloz .hi{position:relative;}
-.knihovna .hbm.zloz .hi::after{content:"";position:absolute;left:50%;top:50%;width:130%;height:2px;background:#F5793B;transform:translate(-50%,-50%) rotate(-45deg);border-radius:2px;}
-.knihovna .hbm.zloz .ht{color:#8A4418;}
-.knihovna .hbm.zloz .hsub{color:#B0623A;}
+.knihovna .hbm.zloz .hi{background:rgba(255,255,255,.88);color:#E0584B;}
+.knihovna .hbm.zloz .hi::after{content:"";position:absolute;left:50%;top:50%;width:130%;height:2px;background:#E0584B;transform:translate(-50%,-50%) rotate(-45deg);border-radius:2px;}
+.knihovna .hbm.zloz .ht{color:#A82F22;}
+.knihovna .hbm.zloz .hsub{color:#B84A3C;}
 .kolwrap{position:relative;display:block;}
 .koldn{position:absolute;inset:0;display:grid;place-items:center;font-style:normal;font-size:8.7px;font-weight:900;letter-spacing:-.02em;color:var(--label);pointer-events:none;}
 .koldn.hot{color:var(--green);}
@@ -3493,15 +3504,25 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .body.formb.tcompact .fld .inp,.body.formb.tcompact .fld .inpc{text-align:right;}
 .body.formb.tcompact .fld .inp input{text-align:right;}
 /* siroke ovladace nejdou na jeden radek - zustanou pod popiskem */
-.body.formb.tcompact .fld:has(.emojirow),.body.formb.tcompact .fld:has(.seg),.body.formb.tcompact .fld:has(.freqrow),.body.formb.tcompact .fld:has(.drange){flex-direction:column;align-items:stretch;gap:7px;padding:9px 15px 11px;}
+.body.formb.tcompact .fld:has(.emojirow):not(.vyb),.body.formb.tcompact .fld:has(.seg),.body.formb.tcompact .fld:has(.freqrow),.body.formb.tcompact .fld:has(.drange){flex-direction:column;align-items:stretch;gap:7px;padding:9px 15px 11px;}
 .body.formb.tcompact .cilrow .pod{text-transform:none;font-size:12.7px;font-weight:700;letter-spacing:0;}
 /* POZOR: display:block by z vodorovnych rolet udelal sloupce (46 ikon pod sebou =
    pas 1573 px misto 44). Siroke ovladace zustavaji flex, jen zarovnane doleva. */
-.body.formb.tcompact .fld:has(.emojirow)>:not(label),.body.formb.tcompact .fld:has(.seg)>:not(label),.body.formb.tcompact .fld:has(.freqrow)>:not(label),.body.formb.tcompact .fld:has(.drange)>:not(label){display:flex;justify-content:flex-start;width:100%;}
+.body.formb.tcompact .fld:has(.emojirow):not(.vyb)>:not(label),.body.formb.tcompact .fld:has(.seg)>:not(label),.body.formb.tcompact .fld:has(.freqrow)>:not(label),.body.formb.tcompact .fld:has(.drange)>:not(label){display:flex;justify-content:flex-start;width:100%;}
 /* Vysvetlivka je bezny text pres celou sirku. Bez teto vyjimky ji pravidlo vyse udelalo
    flex kontejnerem a inline <b> + text se rozpadly do dvou sloupcu. */
 .body.formb.tcompact .fld:has(.seg)>.typnap{display:block;width:100%;}
 .body.formb.tcompact .fld .cilrow .pod{text-transform:none;font-size:12.7px;font-weight:700;letter-spacing:0;color:var(--sec);}
+/* Navrh 2: Ikona a Barva jsou radky s nahledem vpravo; strip se ukaze az po tuknuti. */
+.body.formb.tcompact .fld.vyb{flex-wrap:wrap;cursor:pointer;}
+.body.formb.tcompact .fld.vyb>.nahl{flex:1;display:flex;align-items:center;justify-content:flex-end;gap:8px;}
+.body.formb.tcompact .fld.vyb .sip{color:var(--ter);font-size:17px;line-height:1;}
+.body.formb.tcompact .fld.vyb .ikprev{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;}
+.body.formb.tcompact .fld.vyb .ikprev .i{width:14px;height:14px;}
+.body.formb.tcompact .fld.vyb .baprev{width:18px;height:18px;border-radius:50%;}
+.body.formb.tcompact .fld.vyb>.emojirow,.body.formb.tcompact .fld.vyb>.colors{display:none;}
+.body.formb.tcompact .fld.vyb.open>.emojirow{display:flex;width:100%;margin-top:9px;}
+.body.formb.tcompact .fld.vyb.open>.colors{display:flex;width:100%;margin-top:9px;}
 .body.formb.tcompact .cilrow{display:flex;align-items:center;gap:12px;margin:0;padding:0;border-top:0;}
 .body.formb.tcompact .cilrow .pod{flex:0 0 auto;margin:0;font-size:12.7px;font-weight:700;letter-spacing:0;text-transform:none;color:var(--sec);}
 .body.formb.tcompact .cilrow .pickrow{flex:1;justify-content:flex-end;}
@@ -3535,19 +3556,20 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .knihovna .hbm .hi{width:30px;height:30px;flex:0 0 30px;border-radius:50%;}
 .knihovna .hbm .ht{color:color-mix(in srgb,var(--label) 82%,var(--sec));}
 .knihovna>.inp{padding:7px 14px;}
-.knihovna .filt b[data-mmcat="zlozvyky"]{background:color-mix(in srgb,#F5793B 16%,transparent);color:#C4551F;}
-.knihovna .filt b[data-mmcat="zlozvyky"].on{background:#F5793B;color:#fff;}
+.knihovna .filt b[data-mmcat="zlozvyky"]{background:color-mix(in srgb,#E0584B 16%,transparent);color:#A82F22;}
+.knihovna .filt b[data-mmcat="zlozvyky"].on{background:#E0584B;color:#fff;}
 .knihovna .hbm{height:44px;overflow:hidden;}
 .knihovna .hbm .ht{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .knihovna .hbm .hsub{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;font-size:10.6px;font-weight:800;color:var(--sec);white-space:nowrap;font-variant-numeric:tabular-nums;}
 .knihovna .newbtn{background:var(--track);color:var(--fial2);border:0;font-weight:800;}
 /* Ukol 93b: zlozvyk = neco, co chci NEdelat. Preskrtnuta ikona + prerusovany jantarovy
    ram a jemna jantarova vypln, takze se radek lisi na prvni pohled, ne jen barvou ikony. */
-.knihovna .hbm.zloz{background:color-mix(in srgb,#F5793B 7%,var(--card));border:1.5px dashed color-mix(in srgb,#F5793B 52%,transparent);box-shadow:none;}
+.knihovna .hbm.zloz{background:linear-gradient(90deg,#E0584B 0%,color-mix(in srgb,#E0584B 35%,var(--card)) 26%,var(--card) 92%);border:0;box-shadow:var(--shadow);}
 .knihovna .hbm.zloz .hi{position:relative;}
-.knihovna .hbm.zloz .hi::after{content:"";position:absolute;left:50%;top:50%;width:130%;height:2px;background:#F5793B;transform:translate(-50%,-50%) rotate(-45deg);border-radius:2px;}
-.knihovna .hbm.zloz .ht{color:#8A4418;}
-.knihovna .hbm.zloz .hsub{color:#B0623A;}
+.knihovna .hbm.zloz .hi{background:rgba(255,255,255,.88);color:#E0584B;}
+.knihovna .hbm.zloz .hi::after{content:"";position:absolute;left:50%;top:50%;width:130%;height:2px;background:#E0584B;transform:translate(-50%,-50%) rotate(-45deg);border-radius:2px;}
+.knihovna .hbm.zloz .ht{color:#A82F22;}
+.knihovna .hbm.zloz .hsub{color:#B84A3C;}
 .kolwrap{position:relative;display:block;}
 .koldn{position:absolute;inset:0;display:grid;place-items:center;font-style:normal;font-size:8.7px;font-weight:900;letter-spacing:-.02em;color:var(--label);pointer-events:none;}
 .koldn.hot{color:var(--green);}
@@ -5061,7 +5083,7 @@ const HABIT_CAT_META = [
   { key: 'spanek', nazev: 'Spánek', ikona: '🛌', barva: '#60A5FA' },
   { key: 'produktivita', nazev: 'Produktivita & růst', ikona: '📈', barva: '#FB923C' },
   { key: 'vztahy', nazev: 'Vztahy & domov', ikona: '🏠', barva: '#F472B6' },
-  { key: 'zlozvyky', nazev: 'Zlozvyky', ikona: '🚫', barva: '#F5793B' }
+  { key: 'zlozvyky', nazev: 'Zlozvyky', ikona: '🚫', barva: '#E0584B' }
 ];
 const HABIT_CAT_COLOR = Object.fromEntries(HABIT_CAT_META.map(c => [c.key, c.barva]));
 const HABIT_CAT_NAME = Object.fromEntries(HABIT_CAT_META.map(c => [c.key, c.nazev]));
@@ -7118,7 +7140,7 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v128';
+const MM_VERZE = 'v130';
 // Ukol 99 (Marek 14. 9.): "obrazovka se zastavi, ale jakoby se to neviditelne scrolluje dal".
 // Stinova obrazovka si rezervovala vysku podle window.innerHeight. Na iPhonu ta hodnota umi
 // byt vetsi nez skutecna viditelna plocha (listy Safari se sbaluji), takze pod obsahem vzniklo
@@ -10833,7 +10855,7 @@ function mmZapisSync(sh){
 // Builder formulare tvorby — 1:1 mockup hf(name,icon,freqOn,sub); "Denní cíl" blok (z S.tvorba) je
 // v sablone vzdy a sync ho skryva u typu Splnit (mockup hf ho u Splnit nema, S.tvorba u Zmerit ma).
 function mmHabitHf(sub){
-  return `<div class="body formb tcompact" style="padding-top:16px"><div class="fhd"><div class="fttl">Nový návyk</div><span class="fx">×</span></div><div class="fld"><label>Název</label><div class="inp"><input data-mmhb="habit-nazev" type="text" maxlength="40" placeholder="Např. Pít 2 l vody"></div></div><div class="fld"><label>Vzhled</label><div class="emojirow" data-mmicons></div><div class="colors" data-mmcolors></div></div><div class="fld"><label>Typ návyku</label><div class="seg"><b class="on">Splnit ✓</b><b>Změřit #</b></div><div data-mmcil class="cilrow"><label class="pod">Denní cíl</label><div class="pickrow"><div class="inp" style="flex:1"><input data-mmhb="habit-cil-hodnota" type="number" inputmode="decimal" min="1" placeholder="8"></div><div class="inp" style="flex:1"><input data-mmhb="habit-cil-jednotka" type="text" maxlength="12" placeholder="sklenic"></div></div></div></div><div class="fld"><label>Jak často</label><div class="pickrow freqrow"><div class="pk on">Každý den</div><div class="pk">Vybrané</div><div class="pk">Týdně</div><div class="pk">Měsíčně</div><div class="pk">Ročně</div></div></div>${sub}<div class="smazbox" data-mmsmaz hidden><span data-mmdel>Smazat návyk</span></div><div class="ff"><div class="fld"><label>Platnost · od – do</label><div class="pickrow"><div class="drange" data-mmdate="start" style="flex:1"><span class="cal"><svg class="i"><use href="#i-calendar"/></svg></span><span data-mmdtext>27. 6.</span></div><div class="drange" data-mmdate="end" style="flex:1"><span class="cal"><svg class="i"><use href="#i-calendar"/></svg></span><span data-mmdtext>bez konce</span></div></div></div><div class="submit">Vytvořit návyk</div></div></div>`;
+  return `<div class="body formb tcompact" style="padding-top:16px"><div class="fhd"><div class="fttl">Nový návyk</div><span class="fx">×</span></div><div class="fld"><label>Název</label><div class="inp"><input data-mmhb="habit-nazev" type="text" maxlength="40" placeholder="Např. Pít 2 l vody"></div></div><div class="fld vyb" data-mmtog="ik"><label>Ikona</label><span class="nahl"><span class="ikprev" data-mmikprev></span><span class="sip">&#8250;</span></span><div class="emojirow" data-mmicons></div></div><div class="fld vyb" data-mmtog="ba"><label>Barva</label><span class="nahl"><span class="baprev" data-mmbaprev></span><span class="sip">&#8250;</span></span><div class="colors" data-mmcolors></div></div><div class="fld"><label>Typ návyku</label><div class="seg"><b class="on">Splnit ✓</b><b>Změřit #</b></div><div data-mmcil class="cilrow"><label class="pod">Denní cíl</label><div class="pickrow"><div class="inp" style="flex:1"><input data-mmhb="habit-cil-hodnota" type="number" inputmode="decimal" min="1" placeholder="8"></div><div class="inp" style="flex:1"><input data-mmhb="habit-cil-jednotka" type="text" maxlength="12" placeholder="sklenic"></div></div></div></div><div class="fld"><label>Jak často</label><div class="pickrow freqrow"><div class="pk on">Každý den</div><div class="pk">Vybrané</div><div class="pk">Týdně</div><div class="pk">Měsíčně</div><div class="pk">Ročně</div></div></div>${sub}<div class="smazbox" data-mmsmaz hidden><span data-mmdel>Smazat návyk</span></div><div class="ff"><div class="fld"><label>Platnost · od – do</label><div class="pickrow"><div class="drange" data-mmdate="start" style="flex:1"><span class="cal"><svg class="i"><use href="#i-calendar"/></svg></span><span data-mmdtext>27. 6.</span></div><div class="drange" data-mmdate="end" style="flex:1"><span class="cal"><svg class="i"><use href="#i-calendar"/></svg></span><span data-mmdtext>bez konce</span></div></div></div><div class="submit">Vytvořit návyk</div></div></div>`;
 }
 const MM_BP2 = {
  "tvorba":  mmHabitHf(""),
@@ -10988,7 +11010,10 @@ function mmHabitSync(sh){
     const wrap = body.querySelector('[data-mmpresets]');
     if (wrap) wrap.innerHTML = list.map(p => {
       const idx = HABIT_PRESETS.indexOf(p); const c = safeColor(HABIT_CAT_COLOR[p.kat] || '#0FA968'); const sub = presetSub(p);
-      return `<div class="hbm${p.kat === 'zlozvyky' ? ' zloz' : ''}" data-mmpreset="${idx}"><div class="hi" style="background:color-mix(in srgb,${c} 15%,transparent);color:${c}">${habitIconHtml(p.ikona)}</div><div class="ht">${habitEsc(p.nazev)}</div>${sub ? `<span class="hsub">${habitEsc(sub)}</span>` : ''}<span class="rx" style="color:var(--fial,#8B6FE0);font-size:21.73px">＋</span></div>`;
+      const hiStyl = p.kat === 'zlozvyky'
+        ? 'background:rgba(255,255,255,.88);color:#E0584B'
+        : ('background:color-mix(in srgb,' + c + ' 15%,transparent);color:' + c);
+      return `<div class="hbm${p.kat === 'zlozvyky' ? ' zloz' : ''}" data-mmpreset="${idx}"><div class="hi" style="${hiStyl}">${habitIconHtml(p.ikona)}</div><div class="ht">${habitEsc(p.nazev)}</div>${sub ? `<span class="hsub">${habitEsc(sub)}</span>` : ''}<span class="rx" style="color:var(--fial,#8B6FE0);font-size:21.73px">＋</span></div>`;
     }).join('') + (!list.length && q ? `<div class="info" style="margin-top:6px">Nic nenalezeno — zkus „Vlastní návyk“.</div>` : '');
     return;
   }
@@ -10996,6 +11021,12 @@ function mmHabitSync(sh){
   const icons = body.querySelector('[data-mmicons]');
   if (icons) icons.innerHTML = HABIT_ICONS.map(ic =>
     `<div class="em ${ic === state.habitIcon ? 'on' : ''}" data-mmic="${habitEsc(ic)}">${habitIconHtml(ic)}</div>`).join('');
+  const ikp = body.querySelector('[data-mmikprev]');
+  if (ikp){ ikp.innerHTML = habitIconHtml(state.habitIcon);
+    ikp.style.background = 'color-mix(in srgb,' + state.habitColor + ' 15%,transparent)';
+    ikp.style.color = state.habitColor; }
+  const bap = body.querySelector('[data-mmbaprev]');
+  if (bap) bap.style.background = state.habitColor;
   const cols = body.querySelector('[data-mmcolors]');
   if (cols){
     const akt = state.habitColor;
@@ -11061,6 +11092,8 @@ function mmHabitClick(e){
   if (pr) { selectPreset(parseInt(pr.dataset.mmpreset)); mmMountHabit(); return; }
   const cat = t.closest('[data-mmcat]');
   if (cat) { setHabitCat(cat.dataset.mmcat); mmHabitSync(); return; }
+  const tog = t.closest('[data-mmtog]');
+  if (tog && !t.closest('[data-mmic]') && !t.closest('[data-mmcol]')){ tog.classList.toggle('open'); return; }
   const em = t.closest('[data-mmic]');
   if (em) { const l = document.querySelector(`#habit-icon-picker .habit-icon-opt[data-ic="${em.dataset.mmic}"]`); if (l) l.click(); mmHabitSync(); return; }
   const col = t.closest('[data-mmcol]');
