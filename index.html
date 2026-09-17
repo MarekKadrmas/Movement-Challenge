@@ -2775,7 +2775,18 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .znob .znip{width:26px;height:26px;flex:0 0 26px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--green) 15%,transparent);color:var(--green);}
 .mm .znob .znip .znri{width:14px;height:14px;color:inherit;}
 .mm .znob.on{background:var(--green);color:#fff;}
-.mm .znob.on .znip{background:rgba(255,255,255,.9);color:var(--green);}
+.mm .znob.on .znip{background:rgba(255,255,255,.9);color:var(--green);}
+/* 92g: Zapis bez bilych karet - bubliny primo na podkladu jako na Navycich.
+   Plati jen na .zapisb (formular navyku ma .tcompact a zustava beze zmeny).
+   "> .fld" = jen dve velke karty v tele; karta s Datem je uvnitr .ff. */
+.mm .body.formb.zapisb>.fld{background:transparent;box-shadow:none;border-radius:0;padding:0;margin-bottom:12px;}
+.mm .body.formb.zapisb>.fld>label{margin-bottom:7px;}
+.mm .body.formb.zapisb .znsez:not(.cvs2){max-height:300px;gap:5px;}
+.mm .body.formb.zapisb .znsez:not(.cvs2) .znr{height:40px;min-height:40px;padding:5px 12px 5px 6px;}
+.mm .body.formb.zapisb .znsez:not(.cvs2) .znip{width:28px;height:28px;flex:0 0 28px;}
+.mm .body.formb.zapisb .znsez:not(.cvs2) .znip .znri{width:15px;height:15px;}
+.mm .body.formb.zapisb .znsez:not(.cvs2) .znrn{font-size:13.2px;}
+.mm .body.formb.zapisb .znfil{-webkit-mask-image:linear-gradient(to right,#000 0,#000 88%,transparent 100%);mask-image:linear-gradient(to right,#000 0,#000 88%,transparent 100%);}
 .mm .lvlbox ~ .lvlhint,.mm .fld .lvlhint{display:none;}
 .mm .lvlhead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;}
 .mm .lvlnum{font-size:22.93px;font-weight:900;letter-spacing:-.04em;line-height:1;color:var(--label);font-family:var(--font-display);}
@@ -3887,7 +3898,18 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .znob .znip{width:26px;height:26px;flex:0 0 26px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--green) 15%,transparent);color:var(--green);}
 .znob .znip .znri{width:14px;height:14px;color:inherit;}
 .znob.on{background:var(--green);color:#fff;}
-.znob.on .znip{background:rgba(255,255,255,.9);color:var(--green);}
+.znob.on .znip{background:rgba(255,255,255,.9);color:var(--green);}
+/* 92g: Zapis bez bilych karet - bubliny primo na podkladu jako na Navycich.
+   Plati jen na .zapisb (formular navyku ma .tcompact a zustava beze zmeny).
+   "> .fld" = jen dve velke karty v tele; karta s Datem je uvnitr .ff. */
+.body.formb.zapisb>.fld{background:transparent;box-shadow:none;border-radius:0;padding:0;margin-bottom:12px;}
+.body.formb.zapisb>.fld>label{margin-bottom:7px;}
+.body.formb.zapisb .znsez:not(.cvs2){max-height:300px;gap:5px;}
+.body.formb.zapisb .znsez:not(.cvs2) .znr{height:40px;min-height:40px;padding:5px 12px 5px 6px;}
+.body.formb.zapisb .znsez:not(.cvs2) .znip{width:28px;height:28px;flex:0 0 28px;}
+.body.formb.zapisb .znsez:not(.cvs2) .znip .znri{width:15px;height:15px;}
+.body.formb.zapisb .znsez:not(.cvs2) .znrn{font-size:13.2px;}
+.body.formb.zapisb .znfil{-webkit-mask-image:linear-gradient(to right,#000 0,#000 88%,transparent 100%);mask-image:linear-gradient(to right,#000 0,#000 88%,transparent 100%);}
 .lvlbox ~ .lvlhint,.fld .lvlhint{display:none;}
 .lvlhead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;}
 .lvlnum{font-size:22.93px;font-weight:900;letter-spacing:-.04em;line-height:1;color:var(--label);font-family:var(--font-display);}
@@ -7190,7 +7212,7 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v133';
+const MM_VERZE = 'v134';
 // Ukol 99 (Marek 14. 9.): "obrazovka se zastavi, ale jakoby se to neviditelne scrolluje dal".
 // Stinova obrazovka si rezervovala vysku podle window.innerHeight. Na iPhonu ta hodnota umi
 // byt vetsi nez skutecna viditelna plocha (listy Safari se sbaluji), takze pod obsahem vzniklo
@@ -10581,6 +10603,7 @@ function mmMountZapis(){
   scrEl.style.height = (mmAvailH(host)/z)+'px';   // vnitrek .modal (bez safe-area paddingu) — viz mmAvailH
   scrEl.style.overflow = 'hidden';
   const bodyEl = scrEl.querySelector('.body.formb');
+  if (bodyEl) bodyEl.classList.add('zapisb');   // 92g: jen Zapis, ne formular navyku
   const ffEl = scrEl.querySelector('.ff');
   // Ukol 92: paticka byla uvnitr scrollovaci .body, takze na ni platilo
   // .body.formb .ff{position:sticky}. Lepivy prvek se ale nedostane pod spodni padding
