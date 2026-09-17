@@ -2763,19 +2763,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .znsez:not(.cvs2) .znip .znri{width:16px;height:16px;color:inherit;}
 .mm .znsez:not(.cvs2) .znrn{font-size:13.81px;letter-spacing:-.005em;color:color-mix(in srgb,var(--label) 82%,var(--sec));}
 .mm .znsez:not(.cvs2) .znr.on .znip{background:rgba(255,255,255,.9);color:var(--green);}
-.mm .znsez:not(.cvs2) .znr.on .znrn{color:#fff;}
-/* Oblibene nad seznamem - jedno tuknuti misto hledani v kategoriich. */
-.mm .znobl2{display:flex;gap:6px;overflow-x:auto;margin:0;padding-bottom:3px;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
-.mm .znobl2::-webkit-scrollbar{display:none;}
-.mm .znobl2[hidden]{display:none;}
-.mm .znoblw{margin:0 0 8px;}
-.mm .znoblw[hidden]{display:none;}
-.mm .znobll{display:block;margin:0 2px 5px;font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--ter);}
-.mm .znob{flex:0 0 auto;display:inline-flex;align-items:center;gap:7px;border:0;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:6px 13px 6px 6px;font:inherit;font-size:12.4px;font-weight:700;color:color-mix(in srgb,var(--label) 82%,var(--sec));cursor:pointer;white-space:nowrap;}
-.mm .znob .znip{width:26px;height:26px;flex:0 0 26px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--green) 15%,transparent);color:var(--green);}
-.mm .znob .znip .znri{width:14px;height:14px;color:inherit;}
-.mm .znob.on{background:var(--green);color:#fff;}
-.mm .znob.on .znip{background:rgba(255,255,255,.9);color:var(--green);}
+.mm .znsez:not(.cvs2) .znr.on .znrn{color:#fff;}
 /* 92g: Zapis bez bilych karet - bubliny primo na podkladu jako na Navycich.
    Plati jen na .zapisb (formular navyku ma .tcompact a zustava beze zmeny).
    "> .fld" = jen dve velke karty v tele; karta s Datem je uvnitr .ff. */
@@ -2812,6 +2800,16 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .body.formb.zapisb .znsez:not(.cvs2) .znip{width:26px;height:26px;flex:0 0 26px;}
 .mm .body.formb.zapisb .znsez:not(.cvs2) .znip .znri{width:14px;height:14px;}
 .mm .body.formb.zapisb .znsez:not(.cvs2) .znrn{font-size:12.9px;}
+/* 92t: barva kategorie do kolecka ikony i do aktivniho chipu; srdicko ruzove. */
+.mm .body.formb.zapisb .znsez:not(.cvs2) .znip{background:color-mix(in srgb,var(--kc,var(--green)) 16%,transparent);color:var(--kc,var(--green));}
+.mm .body.formb.zapisb .znf.on{background:color-mix(in srgb,var(--kc,var(--green)) 15%,var(--card));color:var(--kc,var(--green));}
+.mm .body.formb.zapisb .znsez:not(.cvs2) .znr.on{background:var(--kc,var(--green));}
+.mm .body.formb.zapisb .znsez:not(.cvs2) .znr.on .znip{background:rgba(255,255,255,.92);color:var(--kc,var(--green));}
+.mm .body.formb.zapisb .znrs .i{width:15px;height:15px;color:var(--ter);opacity:.2;fill:none;}
+.mm .body.formb.zapisb .znrs.on{background:color-mix(in srgb,#E8629F 12%,transparent);}
+.mm .body.formb.zapisb .znrs.on .i{color:#E8629F;opacity:1;fill:currentColor;}
+.mm .body.formb.zapisb .znf.znfo{color:#E8629F;}
+.mm .body.formb.zapisb .znf.znfo.on{background:color-mix(in srgb,#E8629F 15%,var(--card));color:#E8629F;}
 /* ZA KOHO: jedna posuvna rada misto dvou. */
 .mm .body.formb.zapisb>.fld:not(.zn){margin-bottom:8px;}
 .mm .body.formb.zapisb>.fld:not(.zn) .pickrow{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
@@ -3927,19 +3925,7 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .znsez:not(.cvs2) .znip .znri{width:16px;height:16px;color:inherit;}
 .znsez:not(.cvs2) .znrn{font-size:13.81px;letter-spacing:-.005em;color:color-mix(in srgb,var(--label) 82%,var(--sec));}
 .znsez:not(.cvs2) .znr.on .znip{background:rgba(255,255,255,.9);color:var(--green);}
-.znsez:not(.cvs2) .znr.on .znrn{color:#fff;}
-/* Oblibene nad seznamem - jedno tuknuti misto hledani v kategoriich. */
-.znobl2{display:flex;gap:6px;overflow-x:auto;margin:0;padding-bottom:3px;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
-.znobl2::-webkit-scrollbar{display:none;}
-.znobl2[hidden]{display:none;}
-.znoblw{margin:0 0 8px;}
-.znoblw[hidden]{display:none;}
-.znobll{display:block;margin:0 2px 5px;font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--ter);}
-.znob{flex:0 0 auto;display:inline-flex;align-items:center;gap:7px;border:0;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:6px 13px 6px 6px;font:inherit;font-size:12.4px;font-weight:700;color:color-mix(in srgb,var(--label) 82%,var(--sec));cursor:pointer;white-space:nowrap;}
-.znob .znip{width:26px;height:26px;flex:0 0 26px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--green) 15%,transparent);color:var(--green);}
-.znob .znip .znri{width:14px;height:14px;color:inherit;}
-.znob.on{background:var(--green);color:#fff;}
-.znob.on .znip{background:rgba(255,255,255,.9);color:var(--green);}
+.znsez:not(.cvs2) .znr.on .znrn{color:#fff;}
 /* 92g: Zapis bez bilych karet - bubliny primo na podkladu jako na Navycich.
    Plati jen na .zapisb (formular navyku ma .tcompact a zustava beze zmeny).
    "> .fld" = jen dve velke karty v tele; karta s Datem je uvnitr .ff. */
@@ -3976,6 +3962,16 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .body.formb.zapisb .znsez:not(.cvs2) .znip{width:26px;height:26px;flex:0 0 26px;}
 .body.formb.zapisb .znsez:not(.cvs2) .znip .znri{width:14px;height:14px;}
 .body.formb.zapisb .znsez:not(.cvs2) .znrn{font-size:12.9px;}
+/* 92t: barva kategorie do kolecka ikony i do aktivniho chipu; srdicko ruzove. */
+.body.formb.zapisb .znsez:not(.cvs2) .znip{background:color-mix(in srgb,var(--kc,var(--green)) 16%,transparent);color:var(--kc,var(--green));}
+.body.formb.zapisb .znf.on{background:color-mix(in srgb,var(--kc,var(--green)) 15%,var(--card));color:var(--kc,var(--green));}
+.body.formb.zapisb .znsez:not(.cvs2) .znr.on{background:var(--kc,var(--green));}
+.body.formb.zapisb .znsez:not(.cvs2) .znr.on .znip{background:rgba(255,255,255,.92);color:var(--kc,var(--green));}
+.body.formb.zapisb .znrs .i{width:15px;height:15px;color:var(--ter);opacity:.2;fill:none;}
+.body.formb.zapisb .znrs.on{background:color-mix(in srgb,#E8629F 12%,transparent);}
+.body.formb.zapisb .znrs.on .i{color:#E8629F;opacity:1;fill:currentColor;}
+.body.formb.zapisb .znf.znfo{color:#E8629F;}
+.body.formb.zapisb .znf.znfo.on{background:color-mix(in srgb,#E8629F 15%,var(--card));color:#E8629F;}
 /* ZA KOHO: jedna posuvna rada misto dvou. */
 .body.formb.zapisb>.fld:not(.zn){margin-bottom:8px;}
 .body.formb.zapisb>.fld:not(.zn) .pickrow{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
@@ -7294,7 +7290,7 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v146';
+const MM_VERZE = 'v148';
 // Ukol 99 (Marek 14. 9.): "obrazovka se zastavi, ale jakoby se to neviditelne scrolluje dal".
 // Stinova obrazovka si rezervovala vysku podle window.innerHeight. Na iPhonu ta hodnota umi
 // byt vetsi nez skutecna viditelna plocha (listy Safari se sbaluji), takze pod obsahem vzniklo
@@ -10106,6 +10102,12 @@ function mmCvikSeznam(){
   return MM_CVIKY_KNIHOVNA.concat(moje).slice().sort((x,y)=>(p[y.n]||0)-(p[x.n]||0));
 }
 const MM_RADA_POCET = 12;   // kolik nejcastejsich se vejde do rady, zbytek je pod "Vse"
+// 92t: kazda kategorie ma svou barvu z palety appky (stejna paleta jako navyky),
+// aby seznam nebyl jen zeleny a barva zaroven neco znamenala.
+const MM_KAT_BARVA = {'Posilovna':'#5B6EE8','Běh a chůze':'#FF9F0A','Kolo':'#2FB1A8',
+  'Voda':'#0A84FF','Zima':'#7A8B99','Míčové':'#34C759','Lezení':'#C9902F',
+  'Bojové':'#E0584B','Klid':'#8B6FE0','Ostatní':'#69736D','Moje':'#E8629F',
+  'Oblíbené':'#E8629F'};
 const MM_KATEGORIE = ['Posilovna','Běh a chůze','Kolo','Voda','Zima','Míčové','Lezení','Bojové','Klid','Ostatní','Moje'];
 const MM_AKTIVITY = [
   {n:'Gym', k:'Posilovna', i:'i-pushup', dopl:'cviky'},
@@ -10294,7 +10296,6 @@ function mmZapisAktivita(sh){
     +  '<div class="znhled"><svg class="i"><use href="#i-search"/></svg>'
     +  '<input type="text" placeholder="Hledat aktivitu…" autocomplete="off" spellcheck="false"></div>'
     +  '<div class="znfil"></div>'
-    +  '<div class="znoblw" hidden><label class="znobll">Oblíbené</label><div class="znobl2"></div></div>'
     +  '<div class="znsez"></div>'
     +  '<div class="znakce"></div>'
     +'</div>'
@@ -10306,8 +10307,6 @@ function mmZapisAktivita(sh){
   const hled = blok.querySelector('.znhled input');
   const fil  = blok.querySelector('.znfil');
   const sez  = blok.querySelector('.znsez');
-  const oblw = blok.querySelector('.znoblw');
-  const oblb = blok.querySelector('.znobl2');
   const akce = blok.querySelector('.znakce');
   const dopl = blok.querySelector('.zndopl');
   let filtr = null, otevreno = true;
@@ -10453,14 +10452,12 @@ function mmZapisAktivita(sh){
       dopl.innerHTML='<label class="znlbl">Doplňky</label><div class="znrow">'
         +'<label>Metry<input data-d="metry" type="number" min="0" step="25" inputmode="numeric" placeholder="1000"></label></div>';
     } else if(a.dopl==='cviky'){
-      dopl.innerHTML='<label class="znlbl">Cviky</label><div class="cvlist"></div>'
-        +'<button type="button" class="zntl cvnovy">+ Přidat cvik</button>';
+      dopl.innerHTML='';   // 92t: rozpis jednotlivych cviku zatim nezobrazujeme (Marek)
     } else if(a.dopl==='cesty'){
       dopl.innerHTML='<label class="znlbl">Cesty <i class="cvpocet"></i></label>'
         +'<div class="cvgrades"></div><div class="cvlist"></div>';
     } else dopl.innerHTML='';
-    if(a.dopl==='cviky') zapojCviky();
-    else if(a.dopl==='cesty') zapojCesty(a.n==='Boulder' ? 'boulder' : 'lano');
+    if(a.dopl==='cesty') zapojCesty(a.n==='Boulder' ? 'boulder' : 'lano');
     const most = {km:'aktivita-km', tempo:'aktivita-tempo', prev:'aktivita-prevyseni'};
     dopl.querySelectorAll('input').forEach(inp=>inp.addEventListener('input',()=>{
       const id = most[inp.getAttribute('data-d')]; if(!id) return;
@@ -10511,7 +10508,8 @@ function mmZapisAktivita(sh){
   const ikonaPro = x => x.i || 'i-sprout';
   function radek(x){
     const obl = mmJeOblibena(x.n);
-    return '<div class="znr'+(vybrana&&vybrana.n===x.n?' on':'')+'" data-n="'+mmEsc(x.n)+'">'
+    const bar = MM_KAT_BARVA[x.k] || '#0FA968';
+    return '<div class="znr'+(vybrana&&vybrana.n===x.n?' on':'')+'" data-n="'+mmEsc(x.n)+'" style="--kc:'+bar+'">'
       + '<span class="znip"><svg class="i znri"><use href="#'+ikonaPro(x)+'"/></svg></span>'
       + '<span class="znrn">'+mmEsc(x.n)+'</span>'
       + (x.moje ? '<button type="button" class="znrx" data-smaz="'+mmEsc(x.n)+'" title="Smazat">×</button>' : '')
@@ -10520,7 +10518,9 @@ function mmZapisAktivita(sh){
       + '</div>';
   }
   function filtry(seznam){
-    const f = ['Vše'];   // Oblibene uz nejsou chip, ale vlastni rada nad seznamem
+    const f = [];
+    if(seznam.some(x=>mmJeOblibena(x.n))) f.push('Oblíbené');   // 92t: zpet jako kategorie
+    f.push('Vše');
     MM_KATEGORIE.forEach(k=>{ if(k!=='Moje' || seznam.some(x=>x.moje)) f.push(k); });
     return f;
   }
@@ -10552,7 +10552,7 @@ function mmZapisAktivita(sh){
     const q = mmAktNorm(hled.value.trim());
     const text = hled.value.trim();
     if(q){
-      fil.hidden = true; fil.innerHTML = ''; oblw.hidden = true;
+      fil.hidden = true; fil.innerHTML = '';
       let shody = seznam.filter(x=>mmAktNorm(x.n).includes(q));
       if(!shody.length){
         // Cely text nesedi — zkusit jednotliva slova („beh v lese" -> Beh).
@@ -10568,18 +10568,16 @@ function mmZapisAktivita(sh){
       const f = filtry(seznam);
       if(f.indexOf(filtr) < 0) filtr = f[0];
       fil.hidden = false;
-      fil.innerHTML = f.map(k=>'<button type="button" class="znf'+(k===filtr?' on':'')+(k==='Oblíbené'?' znfo':'')+'" data-f="'+mmEsc(k)+'">'
+      fil.innerHTML = f.map(k=>'<button type="button" class="znf'+(k===filtr?' on':'')+(k==='Oblíbené'?' znfo':'')+'" data-f="'+mmEsc(k)+'" style="--kc:'+(MM_KAT_BARVA[k]||'#0FA968')+'">'
         + (k==='Oblíbené' ? '<svg class="i"><use href="#i-heart"/></svg>' : '') + mmEsc(k) + '</button>').join('');
-      const obl2 = seznam.filter(x=>mmJeOblibena(x.n));
-      oblw.hidden = !obl2.length;
-      oblb.innerHTML = obl2.map(x=>'<button type="button" class="znob'+(vybrana&&vybrana.n===x.n?' on':'')+'" data-n="'+mmEsc(x.n)+'">'
-        + '<span class="znip"><svg class="i znri"><use href="#'+ikonaPro(x)+'"/></svg></span>'+mmEsc(x.n)+'</button>').join('');
-      const vyber2 = filtr==='Vše' ? seznam : seznam.filter(x=>x.k===filtr);
+      const vyber2 = filtr==='Oblíbené' ? seznam.filter(x=>mmJeOblibena(x.n))
+                   : filtr==='Vše'      ? seznam
+                   : seznam.filter(x=>x.k===filtr);
       sez.innerHTML = vyber2.length ? vyber2.map(radek).join('')
         : '<div class="znnic">Zatím tu nic není</div>';
       akce.innerHTML = '';
     }
-    zapoj(fil); zapoj(oblb); zapoj(sez); zapoj(akce);
+    zapoj(fil); zapoj(sez); zapoj(akce);
     // 92p: po kazdem prekresleni dorovnat vysku na cele bubliny (nikdy uriznuta)
     if (window._mmSnapZapis) requestAnimationFrame(window._mmSnapZapis);
     // aktivni kategorie se sama posune doprostred, at neni schovana za okrajem
