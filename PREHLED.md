@@ -149,6 +149,7 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 93c | Hledání v knihovně nižší (49 px) | Návyky → Nový návyk | 📱 |
 | 92b | Patička Zápisu ukotvena dole jako u formuláře návyku (nepřekrývá obsah) | Zelené plusko | 📱 |
 | 92c | Zápis: bledé bubliny + prázdné místo u Náročnosti — NEUDĚLÁNO | Zelené plusko → dolů | ⏳ |
+| 92f | Zápis = B3: aktivity jako bubliny 44 px jako na Návycích + řádek oblíbených | Zelené plusko | 📱 |
 | 95 | Profil — vzhled a údaje | Já → Profil | ⏸️ odloženo (Marek) |
 
 

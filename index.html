@@ -2754,6 +2754,28 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .znrow label{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;font-size:9.9px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--ter);}
 .mm .znrow input{border:0;outline:0;background:var(--card);box-shadow:var(--shadow);border-radius:12px;height:34px;padding:0 11px;font:inherit;font-size:13.28px;font-weight:600;color:var(--label);width:100%;text-transform:none;letter-spacing:0;}
 .mm .znsoon{font-size:11.6px;font-weight:600;color:var(--ter);background:var(--track);border-radius:12px;padding:9px 12px;}
+/* 92-B3: aktivity jako samostatne bubliny presne jako radky na Navycich
+   (.nrow: 44 px, 999px, padding 7/14/7/8, gap 10, ikona 30 px v kolecku).
+   Vyber cviku (.znsez.cvs2) zustava na puvodnich uzkych radcich. */
+.mm .znsez:not(.cvs2){gap:6px;max-height:194px;}
+.mm .znsez:not(.cvs2) .znr{height:44px;min-height:44px;padding:7px 14px 7px 8px;gap:10px;box-sizing:border-box;}
+.mm .znsez:not(.cvs2) .znip{width:30px;height:30px;flex:0 0 30px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--green) 15%,transparent);color:var(--green);}
+.mm .znsez:not(.cvs2) .znip .znri{width:16px;height:16px;color:inherit;}
+.mm .znsez:not(.cvs2) .znrn{font-size:13.81px;letter-spacing:-.005em;color:color-mix(in srgb,var(--label) 82%,var(--sec));}
+.mm .znsez:not(.cvs2) .znr.on .znip{background:rgba(255,255,255,.9);color:var(--green);}
+.mm .znsez:not(.cvs2) .znr.on .znrn{color:#fff;}
+/* Oblibene nad seznamem - jedno tuknuti misto hledani v kategoriich. */
+.mm .znobl2{display:flex;gap:6px;overflow-x:auto;margin:0;padding-bottom:3px;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.mm .znobl2::-webkit-scrollbar{display:none;}
+.mm .znobl2[hidden]{display:none;}
+.mm .znoblw{margin:0 0 8px;}
+.mm .znoblw[hidden]{display:none;}
+.mm .znobll{display:block;margin:0 2px 5px;font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--ter);}
+.mm .znob{flex:0 0 auto;display:inline-flex;align-items:center;gap:7px;border:0;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:6px 13px 6px 6px;font:inherit;font-size:12.4px;font-weight:700;color:color-mix(in srgb,var(--label) 82%,var(--sec));cursor:pointer;white-space:nowrap;}
+.mm .znob .znip{width:26px;height:26px;flex:0 0 26px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--green) 15%,transparent);color:var(--green);}
+.mm .znob .znip .znri{width:14px;height:14px;color:inherit;}
+.mm .znob.on{background:var(--green);color:#fff;}
+.mm .znob.on .znip{background:rgba(255,255,255,.9);color:var(--green);}
 .mm .lvlbox ~ .lvlhint,.mm .fld .lvlhint{display:none;}
 .mm .lvlhead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;}
 .mm .lvlnum{font-size:22.93px;font-weight:900;letter-spacing:-.04em;line-height:1;color:var(--label);font-family:var(--font-display);}
@@ -3844,6 +3866,28 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .znrow label{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;font-size:9.9px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--ter);}
 .znrow input{border:0;outline:0;background:var(--card);box-shadow:var(--shadow);border-radius:12px;height:34px;padding:0 11px;font:inherit;font-size:13.28px;font-weight:600;color:var(--label);width:100%;text-transform:none;letter-spacing:0;}
 .znsoon{font-size:11.6px;font-weight:600;color:var(--ter);background:var(--track);border-radius:12px;padding:9px 12px;}
+/* 92-B3: aktivity jako samostatne bubliny presne jako radky na Navycich
+   (.nrow: 44 px, 999px, padding 7/14/7/8, gap 10, ikona 30 px v kolecku).
+   Vyber cviku (.znsez.cvs2) zustava na puvodnich uzkych radcich. */
+.znsez:not(.cvs2){gap:6px;max-height:194px;}
+.znsez:not(.cvs2) .znr{height:44px;min-height:44px;padding:7px 14px 7px 8px;gap:10px;box-sizing:border-box;}
+.znsez:not(.cvs2) .znip{width:30px;height:30px;flex:0 0 30px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--green) 15%,transparent);color:var(--green);}
+.znsez:not(.cvs2) .znip .znri{width:16px;height:16px;color:inherit;}
+.znsez:not(.cvs2) .znrn{font-size:13.81px;letter-spacing:-.005em;color:color-mix(in srgb,var(--label) 82%,var(--sec));}
+.znsez:not(.cvs2) .znr.on .znip{background:rgba(255,255,255,.9);color:var(--green);}
+.znsez:not(.cvs2) .znr.on .znrn{color:#fff;}
+/* Oblibene nad seznamem - jedno tuknuti misto hledani v kategoriich. */
+.znobl2{display:flex;gap:6px;overflow-x:auto;margin:0;padding-bottom:3px;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.znobl2::-webkit-scrollbar{display:none;}
+.znobl2[hidden]{display:none;}
+.znoblw{margin:0 0 8px;}
+.znoblw[hidden]{display:none;}
+.znobll{display:block;margin:0 2px 5px;font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--ter);}
+.znob{flex:0 0 auto;display:inline-flex;align-items:center;gap:7px;border:0;background:var(--card);box-shadow:var(--shadow);border-radius:999px;padding:6px 13px 6px 6px;font:inherit;font-size:12.4px;font-weight:700;color:color-mix(in srgb,var(--label) 82%,var(--sec));cursor:pointer;white-space:nowrap;}
+.znob .znip{width:26px;height:26px;flex:0 0 26px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--green) 15%,transparent);color:var(--green);}
+.znob .znip .znri{width:14px;height:14px;color:inherit;}
+.znob.on{background:var(--green);color:#fff;}
+.znob.on .znip{background:rgba(255,255,255,.9);color:var(--green);}
 .lvlbox ~ .lvlhint,.fld .lvlhint{display:none;}
 .lvlhead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;}
 .lvlnum{font-size:22.93px;font-weight:900;letter-spacing:-.04em;line-height:1;color:var(--label);font-family:var(--font-display);}
@@ -7146,7 +7190,7 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v132';
+const MM_VERZE = 'v133';
 // Ukol 99 (Marek 14. 9.): "obrazovka se zastavi, ale jakoby se to neviditelne scrolluje dal".
 // Stinova obrazovka si rezervovala vysku podle window.innerHeight. Na iPhonu ta hodnota umi
 // byt vetsi nez skutecna viditelna plocha (listy Safari se sbaluji), takze pod obsahem vzniklo
@@ -10146,6 +10190,7 @@ function mmZapisAktivita(sh){
     +  '<div class="znhled"><svg class="i"><use href="#i-search"/></svg>'
     +  '<input type="text" placeholder="Hledat aktivitu…" autocomplete="off" spellcheck="false"></div>'
     +  '<div class="znfil"></div>'
+    +  '<div class="znoblw" hidden><label class="znobll">Oblíbené</label><div class="znobl2"></div></div>'
     +  '<div class="znsez"></div>'
     +  '<div class="znakce"></div>'
     +'</div>'
@@ -10157,6 +10202,8 @@ function mmZapisAktivita(sh){
   const hled = blok.querySelector('.znhled input');
   const fil  = blok.querySelector('.znfil');
   const sez  = blok.querySelector('.znsez');
+  const oblw = blok.querySelector('.znoblw');
+  const oblb = blok.querySelector('.znobl2');
   const akce = blok.querySelector('.znakce');
   const dopl = blok.querySelector('.zndopl');
   let filtr = null, otevreno = true;
@@ -10361,7 +10408,7 @@ function mmZapisAktivita(sh){
   function radek(x){
     const obl = mmJeOblibena(x.n);
     return '<div class="znr'+(vybrana&&vybrana.n===x.n?' on':'')+'" data-n="'+mmEsc(x.n)+'">'
-      + '<svg class="i znri"><use href="#'+ikonaPro(x)+'"/></svg>'
+      + '<span class="znip"><svg class="i znri"><use href="#'+ikonaPro(x)+'"/></svg></span>'
       + '<span class="znrn">'+mmEsc(x.n)+'</span>'
       + (x.moje ? '<button type="button" class="znrx" data-smaz="'+mmEsc(x.n)+'" title="Smazat">×</button>' : '')
       + '<button type="button" class="znrs'+(obl?' on':'')+'" data-obl="'+mmEsc(x.n)+'" title="Oblíbené">'
@@ -10369,14 +10416,12 @@ function mmZapisAktivita(sh){
       + '</div>';
   }
   function filtry(seznam){
-    const f = [];
-    if(seznam.some(x=>mmJeOblibena(x.n))) f.push('Oblíbené');
-    f.push('Vše');
+    const f = ['Vše'];   // Oblibene uz nejsou chip, ale vlastni rada nad seznamem
     MM_KATEGORIE.forEach(k=>{ if(k!=='Moje' || seznam.some(x=>x.moje)) f.push(k); });
     return f;
   }
   function zapoj(box){
-    box.querySelectorAll('.znr[data-n]').forEach(r=>r.addEventListener('click',e=>{
+    box.querySelectorAll('[data-n]').forEach(r=>r.addEventListener('click',e=>{
       if(e.target.closest('[data-obl]') || e.target.closest('[data-smaz]')) return;
       const n = r.getAttribute('data-n');
       vyber(mmAktSeznam().find(x=>x.n===n) || {n:n, dopl:null});
@@ -10403,7 +10448,7 @@ function mmZapisAktivita(sh){
     const q = mmAktNorm(hled.value.trim());
     const text = hled.value.trim();
     if(q){
-      fil.hidden = true; fil.innerHTML = '';
+      fil.hidden = true; fil.innerHTML = ''; oblw.hidden = true;
       let shody = seznam.filter(x=>mmAktNorm(x.n).includes(q));
       if(!shody.length){
         // Cely text nesedi — zkusit jednotliva slova („beh v lese" -> Beh).
@@ -10421,14 +10466,16 @@ function mmZapisAktivita(sh){
       fil.hidden = false;
       fil.innerHTML = f.map(k=>'<button type="button" class="znf'+(k===filtr?' on':'')+(k==='Oblíbené'?' znfo':'')+'" data-f="'+mmEsc(k)+'">'
         + (k==='Oblíbené' ? '<svg class="i"><use href="#i-heart"/></svg>' : '') + mmEsc(k) + '</button>').join('');
-      const vyber2 = filtr==='Oblíbené' ? seznam.filter(x=>mmJeOblibena(x.n))
-                   : filtr==='Vše'      ? seznam
-                   : seznam.filter(x=>x.k===filtr);
+      const obl2 = seznam.filter(x=>mmJeOblibena(x.n));
+      oblw.hidden = !obl2.length;
+      oblb.innerHTML = obl2.map(x=>'<button type="button" class="znob'+(vybrana&&vybrana.n===x.n?' on':'')+'" data-n="'+mmEsc(x.n)+'">'
+        + '<span class="znip"><svg class="i znri"><use href="#'+ikonaPro(x)+'"/></svg></span>'+mmEsc(x.n)+'</button>').join('');
+      const vyber2 = filtr==='Vše' ? seznam : seznam.filter(x=>x.k===filtr);
       sez.innerHTML = vyber2.length ? vyber2.map(radek).join('')
         : '<div class="znnic">Zatím tu nic není</div>';
       akce.innerHTML = '';
     }
-    zapoj(fil); zapoj(sez); zapoj(akce);
+    zapoj(fil); zapoj(oblb); zapoj(sez); zapoj(akce);
     // aktivni kategorie se sama posune doprostred, at neni schovana za okrajem
     const akt = fil.querySelector('.znf.on');
     if(akt) fil.scrollLeft = Math.max(0, akt.offsetLeft - (fil.clientWidth - akt.offsetWidth)/2);
