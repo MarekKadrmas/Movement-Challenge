@@ -152,6 +152,7 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 92f | Zápis = B3: aktivity jako bubliny 44 px jako na Návycích + řádek oblíbených | Zelené plusko | 📱 |
 | 92g | Zápis bez bílých karet — bubliny přímo na podkladu jako na Návycích, 7 aktivit místo 4 | Zelené plusko | 📱 |
 | 92i | Zápis: Náročnost kompaktně nad patičkou, stránka nehybná, roluje se jen seznam aktivit | Zelené plusko | 📱 |
+| 92o | Zápis: žádná uříznutá bublina (výška se dopočítá na celé), menší bubliny, ZA KOHO v jedné řadě, vyšší dráha Náročnosti | Zelené plusko | 📱 |
 | 95 | Profil — vzhled a údaje | Já → Profil | ⏸️ odloženo (Marek) |
 
 

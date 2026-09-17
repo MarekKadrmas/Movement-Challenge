@@ -2806,16 +2806,28 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 .mm .body.formb.zapisb .znpick>*:not(.znsez){flex-shrink:0;}
 .mm .body.formb.zapisb .znpick{flex:1 1 auto;min-height:0;}
 .mm .body.formb.zapisb .znpick[hidden]{display:none;}
+/* 92o: zadna uriznuta bublina, mensi bubliny, uspora nahore, vyssi draha. */
+.mm .body.formb.zapisb .znsez:not(.cvs2){scroll-snap-type:y mandatory;}
+.mm .body.formb.zapisb .znsez:not(.cvs2) .znr{height:36px;min-height:36px;padding:4px 12px 4px 5px;scroll-snap-align:start;}
+.mm .body.formb.zapisb .znsez:not(.cvs2) .znip{width:26px;height:26px;flex:0 0 26px;}
+.mm .body.formb.zapisb .znsez:not(.cvs2) .znip .znri{width:14px;height:14px;}
+.mm .body.formb.zapisb .znsez:not(.cvs2) .znrn{font-size:12.9px;}
+/* ZA KOHO: jedna posuvna rada misto dvou. */
+.mm .body.formb.zapisb>.fld:not(.zn){margin-bottom:8px;}
+.mm .body.formb.zapisb>.fld:not(.zn) .pickrow{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.mm .body.formb.zapisb>.fld:not(.zn) .pickrow::-webkit-scrollbar{display:none;}
+.mm .body.formb.zapisb>.fld:not(.zn) .pk{flex:0 0 auto;padding:6px 12px;font-size:13.2px;}
+/* Narocnost: vyssi draha, kolecko na stredu - stejna mezera kolem dokola. */
+.mm .scr>.lvlwrap .lvlknob{width:24px;height:24px;margin-left:-12px;top:4px;font-size:12.5px;}
 .mm .body.formb.zapisb .znsez:not(.cvs2){flex:1 1 auto;min-height:0;max-height:none;}
 /* Narocnost kompaktne - jen cislo, body a drahu. */
 .mm .scr>.lvlwrap .lvlends{display:none;}
 .mm .scr>.lvlwrap .lvlnum{font-size:16px;}
 .mm .scr>.lvlwrap .lvldesc{font-size:10.5px;margin-top:0;min-height:0;}
-.mm .scr>.lvlwrap .lvltrack{height:26px;margin-top:4px;}
+.mm .scr>.lvlwrap .lvltrack{height:32px;margin-top:4px;}
 .mm .scr>.lvlwrap>label{font-size:9.5px;margin-bottom:2px;}
 .mm .scr>.lvlwrap{padding-bottom:6px;}
 .mm .scr>.lvlwrap>label{text-transform:uppercase;letter-spacing:.06em;font-weight:800;color:var(--ter);}
-.mm .scr>.lvlwrap .lvlknob{width:22px;height:22px;margin-left:-11px;top:2px;font-size:12px;}
 .mm .lvlbox ~ .lvlhint,.mm .fld .lvlhint{display:none;}
 .mm .lvlhead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;}
 .mm .lvlnum{font-size:22.93px;font-weight:900;letter-spacing:-.04em;line-height:1;color:var(--label);font-family:var(--font-display);}
@@ -3958,16 +3970,28 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .body.formb.zapisb .znpick>*:not(.znsez){flex-shrink:0;}
 .body.formb.zapisb .znpick{flex:1 1 auto;min-height:0;}
 .body.formb.zapisb .znpick[hidden]{display:none;}
+/* 92o: zadna uriznuta bublina, mensi bubliny, uspora nahore, vyssi draha. */
+.body.formb.zapisb .znsez:not(.cvs2){scroll-snap-type:y mandatory;}
+.body.formb.zapisb .znsez:not(.cvs2) .znr{height:36px;min-height:36px;padding:4px 12px 4px 5px;scroll-snap-align:start;}
+.body.formb.zapisb .znsez:not(.cvs2) .znip{width:26px;height:26px;flex:0 0 26px;}
+.body.formb.zapisb .znsez:not(.cvs2) .znip .znri{width:14px;height:14px;}
+.body.formb.zapisb .znsez:not(.cvs2) .znrn{font-size:12.9px;}
+/* ZA KOHO: jedna posuvna rada misto dvou. */
+.body.formb.zapisb>.fld:not(.zn){margin-bottom:8px;}
+.body.formb.zapisb>.fld:not(.zn) .pickrow{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.body.formb.zapisb>.fld:not(.zn) .pickrow::-webkit-scrollbar{display:none;}
+.body.formb.zapisb>.fld:not(.zn) .pk{flex:0 0 auto;padding:6px 12px;font-size:13.2px;}
+/* Narocnost: vyssi draha, kolecko na stredu - stejna mezera kolem dokola. */
+.scr>.lvlwrap .lvlknob{width:24px;height:24px;margin-left:-12px;top:4px;font-size:12.5px;}
 .body.formb.zapisb .znsez:not(.cvs2){flex:1 1 auto;min-height:0;max-height:none;}
 /* Narocnost kompaktne - jen cislo, body a drahu. */
 .scr>.lvlwrap .lvlends{display:none;}
 .scr>.lvlwrap .lvlnum{font-size:16px;}
 .scr>.lvlwrap .lvldesc{font-size:10.5px;margin-top:0;min-height:0;}
-.scr>.lvlwrap .lvltrack{height:26px;margin-top:4px;}
+.scr>.lvlwrap .lvltrack{height:32px;margin-top:4px;}
 .scr>.lvlwrap>label{font-size:9.5px;margin-bottom:2px;}
 .scr>.lvlwrap{padding-bottom:6px;}
 .scr>.lvlwrap>label{text-transform:uppercase;letter-spacing:.06em;font-weight:800;color:var(--ter);}
-.scr>.lvlwrap .lvlknob{width:22px;height:22px;margin-left:-11px;top:2px;font-size:12px;}
 .lvlbox ~ .lvlhint,.fld .lvlhint{display:none;}
 .lvlhead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;}
 .lvlnum{font-size:22.93px;font-weight:900;letter-spacing:-.04em;line-height:1;color:var(--label);font-family:var(--font-display);}
@@ -7270,7 +7294,7 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v141';
+const MM_VERZE = 'v146';
 // Ukol 99 (Marek 14. 9.): "obrazovka se zastavi, ale jakoby se to neviditelne scrolluje dal".
 // Stinova obrazovka si rezervovala vysku podle window.innerHeight. Na iPhonu ta hodnota umi
 // byt vetsi nez skutecna viditelna plocha (listy Safari se sbaluji), takze pod obsahem vzniklo
@@ -10556,6 +10580,8 @@ function mmZapisAktivita(sh){
       akce.innerHTML = '';
     }
     zapoj(fil); zapoj(oblb); zapoj(sez); zapoj(akce);
+    // 92p: po kazdem prekresleni dorovnat vysku na cele bubliny (nikdy uriznuta)
+    if (window._mmSnapZapis) requestAnimationFrame(window._mmSnapZapis);
     // aktivni kategorie se sama posune doprostred, at neni schovana za okrajem
     const akt = fil.querySelector('.znf.on');
     if(akt) fil.scrollLeft = Math.max(0, akt.offsetLeft - (fil.clientWidth - akt.offsetWidth)/2);
@@ -10678,12 +10704,48 @@ function mmMountZapis(){
   if (bodyEl) { bodyEl.style.height = ''; bodyEl.style.flex = '1 1 auto'; bodyEl.style.minHeight = '0';
     bodyEl.style.overflowY = 'hidden'; bodyEl.style.webkitOverflowScrolling = 'touch';
     bodyEl.style.paddingBottom = ''; }
+  // 92o: seznam aktivit VZDY konci celou bublinou - nikdy uriznutou. Vysku dopocitam
+  // na cely nasobek rozteci; zbytek radeji zustane prazdny nez aby koukala pulka bubliny.
+  let _vSnapu = false;
+  const mmSnapSeznam = () => {
+    if (_vSnapu) return; _vSnapu = true;
+    try {
+      const sez = scrEl.querySelector('.znsez:not(.cvs2)'); if(!sez) return;
+      const rady = sez.querySelectorAll('.znr'); if(rady.length < 2) return;
+      // zoom merim ze skutecnosti, ne z promenne - ta nemusi byt jeste promitnuta
+      const zoom = (scrEl.offsetWidth > 0) ? (scrEl.getBoundingClientRect().width / scrEl.offsetWidth) : 1;
+      const drzeno = sez.style.height;
+      sez.style.flex = ''; sez.style.height = '';
+      const r0 = rady[0].getBoundingClientRect(), r1 = rady[1].getBoundingClientRect();
+      const h0 = r0.height, rozt = r1.top - r0.top, mez = rozt - h0;
+      const dost = sez.getBoundingClientRect().height;
+      if (rozt <= 0 || dost <= 0){ sez.style.height = drzeno; return; }
+      const n = Math.max(1, Math.floor((dost + mez + 0.5) / rozt));
+      const cil = (n * rozt - mez) / (zoom || 1);
+      sez.style.flex = '0 0 auto';
+      sez.style.height = cil + 'px';
+    } finally { requestAnimationFrame(() => { _vSnapu = false; }); }
+  };
+  host._mmSnap = mmSnapSeznam;
+  window._mmSnapZapis = mmSnapSeznam;
+  // 92q: jedno volani nestaci - prvni mereni padne jeste do neustaleneho rozvrzeni
+  // (pisma/zoom), takze by seznam koncil uriznutou bublinou. Opakujeme, az se usadi.
+  requestAnimationFrame(() => requestAnimationFrame(mmSnapSeznam));
+  setTimeout(mmSnapSeznam, 260);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(mmSnapSeznam).catch(() => {});
+  if (window.ResizeObserver && !host._mmSnapRO && bodyEl){
+    host._mmSnapRO = new ResizeObserver(() => { if (host._mmSnap) host._mmSnap(); });
+    host._mmSnapRO.observe(bodyEl);
+  }
+  if (!host._mmSnapResize){ host._mmSnapResize = true;
+    window.addEventListener('resize', () => { if (host._mmSnap) host._mmSnap(); }); }
   mmNoTinyScroll(bodyEl);   // zadny „gumovy" 1-2px scroll na formulari, ktery se cely vejde
   // Delegace jednou na shadowRoot (preziva sh.innerHTML=''): klik-mosty + input/change mosty do light-DOM.
   if(!host._mmZapisBound){
     host._mmZapisBound = true;
     sh.addEventListener('click', mmZapisClick);
     sh.addEventListener('input', mmZapisInput);
+    sh.addEventListener('input', () => { if (host._mmSnap) requestAnimationFrame(host._mmSnap); });
     sh.addEventListener('change', mmZapisChange);
   }
 }
