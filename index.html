@@ -7345,7 +7345,7 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v159';
+const MM_VERZE = 'v160';
 // Ukol 99 (Marek 14. 9.): "obrazovka se zastavi, ale jakoby se to neviditelne scrolluje dal".
 // Stinova obrazovka si rezervovala vysku podle window.innerHeight. Na iPhonu ta hodnota umi
 // byt vetsi nez skutecna viditelna plocha (listy Safari se sbaluji), takze pod obsahem vzniklo
@@ -7360,7 +7360,7 @@ const MM_MODELY = [
   ['iPhone Pro Max — Safari', 430, 739, 0, 0]
 ];
 function mmPcModely(){
-  let vybran = 2, vlastni = null;   // vychozi = iPhone 14/15 v Safari (tak appku Marek otevira)
+  let vybran = 3, vlastni = null;   // vychozi = 393x852, stejne jako ma Marek u squash ligy
   try{
     const q = localStorage.getItem('mc-model');
     if(q!==null && +q>=0 && +q<MM_MODELY.length) vybran = +q;
@@ -7547,9 +7547,11 @@ let _mmDiagBezi = false, _mmDiagT = null, _mmDiagZaznam = {};
 function mmRozmer(el){
   if(!el) return;
   if(el._mmPuv == null) el._mmPuv = el.textContent;
-  const vv = window.visualViewport;
-  const w = Math.round((vv && vv.width) || window.innerWidth);
-  const h = Math.round((vv && vv.height) || window.innerHeight);
+  // POZOR: zamerne NE visualViewport - ten na iOS odecita horni bezpecnou zonu
+  // (793 misto 852 na iPhonu 15 Pro). Squash liga meri celou vysku okna, tak taky.
+  const d = document.documentElement;
+  const w = Math.round(window.innerWidth || d.clientWidth);
+  const h = Math.round(window.innerHeight || d.clientHeight);
   el.textContent = w + "×" + h;
   clearTimeout(el._mmT);
   el._mmT = setTimeout(() => { el.textContent = el._mmPuv; }, 8000);
