@@ -3149,14 +3149,25 @@ html.mm-boot body{background:var(--bg,#EEF0EE);}
 /* PC ram: na pocitaci bezi appka v ramu telefonu uprostred stranky, aby sla kontrolovat
    i mimo mobil. Ram ma transform -> position:fixed uvnitr (spodni lista, modaly) se ukotvi
    k ramu misto k oknu prohlizece. Obsah roluje uvnitr #pc-scroll. Na mobilu se nic nemeni. */
-@media (min-width:860px){
-  html.pc-ram{background:#15171A;}
-  html.pc-ram body{width:393px;height:min(844px,calc(100vh - 56px));min-height:0;max-height:calc(100vh - 56px);
-    padding-bottom:0;margin:28px auto;border-radius:46px;overflow:hidden;
-    position:relative;transform:translateZ(0);
-    box-shadow:0 0 0 11px #0d0f11,0 0 0 13px #30353b,0 36px 80px -22px rgba(0,0,0,.75);}
+/* Lista modelu telefonu (1:1 se squash ligou). Zije MIMO telo, protoze telo je ram
+   s overflow:hidden - uvnitr by se orizla. */
+#mm-model{display:none;position:fixed;left:50%;bottom:10px;transform:translateX(-50%);
+  align-items:center;gap:4px;padding:5px;border-radius:999px;background:rgba(255,255,255,.07);
+  backdrop-filter:blur(6px);z-index:2147483000;}
+#mm-model button{height:28px;padding:0 10px;border-radius:999px;color:#9FB0A3;border:0;background:none;
+  cursor:pointer;font:700 11.5px Figtree,system-ui,sans-serif;white-space:nowrap;}
+#mm-model button.on{background:#EDF3ED;color:#1B2320;}
+#mm-model #mm-popis,#mm-model #mm-zoom{color:#6E7F73;font:700 10.5px Figtree,system-ui,sans-serif;
+  white-space:nowrap;padding:0 5px;}
+@media (min-width:500px) and (pointer:fine){
+  html.pc-ram{background:#22261F;}
+  html.pc-ram body{width:var(--ph-w,393px);height:var(--ph-h,659px);min-height:0;max-height:none;
+    padding-bottom:0;margin:0;border-radius:44px;overflow:hidden;
+    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(var(--ph-k,1));transform-origin:50% 50%;
+    box-shadow:0 24px 70px rgba(0,0,0,.5),0 0 0 11px #0D0F0D,0 0 0 12.5px #2C332C;}
   html.pc-ram #pc-scroll{width:100%;height:100%;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;}
   html.pc-ram #pc-scroll::-webkit-scrollbar{width:0;height:0;}
+  html.pc-ram #mm-model{display:flex;}
 }
 /* Ukol 102: vysku appky uz neurcuje 100dvh. Na iPhonu ta hodnota umi byt vetsi nez
    viditelna plocha (sbalovaci listy Safari), takze stranka byla vyssi nez obrazovka
@@ -7302,20 +7313,79 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v150';
+const MM_VERZE = 'v151';
 // Ukol 99 (Marek 14. 9.): "obrazovka se zastavi, ale jakoby se to neviditelne scrolluje dal".
 // Stinova obrazovka si rezervovala vysku podle window.innerHeight. Na iPhonu ta hodnota umi
 // byt vetsi nez skutecna viditelna plocha (listy Safari se sbaluji), takze pod obsahem vzniklo
 // prazdne misto, kterym slo scrollovat, aniz by se cokoli hnulo. Bereme mensi z obou cisel.
+// [nazev, sirka, vyska] - vysky jsou SKUTECNE pouzitelne (co zbyde po liste prohlizece);
+// prevzato ze squash ligy, kde si je Marek odmeril primo na mobilu.
+const MM_MODELY = [
+  ['iPhone SE — Safari', 375, 553],
+  ['iPhone 13 mini — Safari', 375, 629],
+  ['iPhone 14/15 — Safari', 393, 659],
+  ['iPhone 15 Pro — na ploše', 393, 852],
+  ['iPhone Pro Max — Safari', 430, 739]
+];
+function mmPcModely(){
+  let vybran = 2, vlastni = null;   // vychozi = iPhone 14/15 Safari
+  try{
+    const q = localStorage.getItem('mc-model');
+    if(q!==null && +q>=0 && +q<MM_MODELY.length) vybran = +q;
+    const v = JSON.parse(localStorage.getItem('mc-model-vlastni')||'null');
+    if(v && v.w>0 && v.h>0){ vlastni = v; vybran = -1; }
+  }catch(_){}
+  let box = document.getElementById('mm-model');
+  if(!box){ box = document.createElement('div'); box.id = 'mm-model';
+    document.documentElement.appendChild(box); }   // mimo telo: telo je ram s overflow:hidden
+  const uplatni = () => {
+    const m = (vybran<0 && vlastni) ? ['vlastni', vlastni.w, vlastni.h] : MM_MODELY[vybran];
+    const w = m[1], h = m[2];
+    const d = document.documentElement.style;
+    d.setProperty('--ph-w', w+'px'); d.setProperty('--ph-h', h+'px');
+    // kdyz se telefon do okna nevejde, zmensi se cely - rozlozeni zustane stejne
+    const k = Math.min(1, (window.innerHeight-74)/h, (window.innerWidth-40)/w);
+    d.setProperty('--ph-k', k<1 ? k.toFixed(3) : '1');
+    box.querySelectorAll('[data-m]').forEach(x=>x.classList.toggle('on', +x.dataset.m===vybran));
+    const z = box.querySelector('#mm-zoom');
+    if(z) z.textContent = (vybran<0 ? w+'×'+h+' · ' : '') + (k<1 ? Math.round(k*100)+' %' : '1:1');
+  };
+  box.innerHTML = '<span id=\'mm-popis\'>jak to máš na telefonu:</span>'
+    + MM_MODELY.map((m,i)=>'<button data-m=\''+i+'\' title=\''+m[0]+'\'>'+m[1]+'×'+m[2]+'</button>').join('')
+    + '<button data-m=\'-1\'>Vlastní…</button>'
+    + '<span id=\'mm-zoom\'></span>';
+  box.querySelectorAll('[data-m]').forEach(bt => bt.onclick = () => {
+    const i = +bt.dataset.m;
+    if(i<0){
+      const t = prompt('Rozměr, který ti appka ukázala na mobilu (šířka×výška):',
+        vlastni ? vlastni.w+'×'+vlastni.h : '393×659');
+      if(!t) return;
+      const c = t.replace(/\s/g,'').split(/[x×*,;]/).map(Number);
+      if(!(c[0]>0 && c[1]>0)) return;
+      vlastni = {w:c[0], h:c[1]}; vybran = -1;
+      try{ localStorage.setItem('mc-model-vlastni', JSON.stringify(vlastni)); }catch(_){}
+    } else {
+      vybran = i; vlastni = null;
+      try{ localStorage.setItem('mc-model', String(i)); localStorage.removeItem('mc-model-vlastni'); }catch(_){}
+    }
+    uplatni();
+  });
+  uplatni();
+  window.addEventListener('resize', uplatni);
+}
 function mmPcRam(){
   try{
-    if(!window.matchMedia || !window.matchMedia('(min-width:860px)').matches) return;
+    if(!window.matchMedia || !window.matchMedia('(min-width:500px) and (pointer:fine)').matches) return;
+    if(/[?&]ramecek=0\b/.test(location.search)){ try{ localStorage.setItem('mc-ramecek','0'); }catch(_){} }
+    else if(/[?&]ramecek\b/.test(location.search)){ try{ localStorage.setItem('mc-ramecek','1'); }catch(_){} }
+    try{ if(localStorage.getItem('mc-ramecek')==='0') return; }catch(_){}
     if(document.getElementById('pc-scroll')) return;
     const b = document.body; if(!b) return;
     const s = document.createElement('div'); s.id = 'pc-scroll';
     while(b.firstChild) s.appendChild(b.firstChild);
     b.appendChild(s);
     document.documentElement.classList.add('pc-ram');
+    mmPcModely();
   }catch(_){}
 }
 function mmVyskaOkna(){

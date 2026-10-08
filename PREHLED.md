@@ -154,7 +154,7 @@ Stav: ⏳ čeká na Markovu kontrolu · 🔧 dělá se · ✅ uzavřeno · 🅼 
 | 92i | Zápis: Náročnost kompaktně nad patičkou, stránka nehybná, roluje se jen seznam aktivit | Zelené plusko | 📱 |
 | 92o | Zápis: žádná uříznutá bublina (výška se dopočítá na celé), menší bubliny, ZA KOHO v jedné řadě, vyšší dráha Náročnosti | Zelené plusko | 📱 |
 | 92t | Zápis: rozpis cviků zatím pryč, Oblíbené zpět jako kategorie, barva podle kategorie + růžové srdíčko | Zelené plusko | 📱 |
-| 112 | PC rám — appka v rámu telefonu uprostřed stránky, aby šla kontrolovat na počítači | Počítač, jakákoli stránka | 📱 |
+| 112 | PC rám 1:1 se squash ligou — rám telefonu + spodní lišta modelů se zoomem a volbou Vlastní | Počítač, jakákoli stránka | 📱 |
 | 95 | Profil — vzhled a údaje | Já → Profil | ⏸️ odloženo (Marek) |
 
 
