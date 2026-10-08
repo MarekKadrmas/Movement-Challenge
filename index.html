@@ -3169,6 +3169,16 @@ html.mm-boot body{background:var(--bg,#EEF0EE);}
   html.pc-ram #pc-scroll{width:100%;height:100%;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;}
   html.pc-ram #pc-scroll::-webkit-scrollbar{width:0;height:0;}
   html.pc-ram #mm-model{display:flex;}
+  /* Ostruvek a indikator domu - appka pod nimi nechava misto, bez nakresleni
+     to vypada jako prazdna dira nahore (prevzato ze squash ligy). */
+  html.pc-ram body.ma-ostruvek::before{content:"";position:absolute;top:12px;left:50%;
+    transform:translateX(-50%);width:122px;height:35px;border-radius:18px;background:#0B0D0B;
+    z-index:70;pointer-events:none;}
+  html.pc-ram body.ma-indikator::after{content:"";position:absolute;bottom:9px;left:50%;
+    transform:translateX(-50%);width:138px;height:5px;border-radius:3px;background:#1B211C;
+    opacity:.55;z-index:70;pointer-events:none;}
+  html.pc-ram #pc-scroll{padding-top:var(--ph-sat,0px);padding-bottom:var(--ph-sab,0px);
+    box-sizing:border-box;}
 }
 /* Ukol 102: vysku appky uz neurcuje 100dvh. Na iPhonu ta hodnota umi byt vetsi nez
    viditelna plocha (sbalovaci listy Safari), takze stranka byla vyssi nez obrazovka
@@ -7258,7 +7268,7 @@ function mmGo(v){ if(v==='hraci') v='prehled'; mmCloseSub();
   // v dokumentu chvili stara i nova, takze jedno mereni nestaci.
   requestAnimationFrame(mmSrovnejObrazovku); [320, 900, 1600].forEach(ms => setTimeout(mmSrovnejObrazovku, ms));
  }
-function mmChrome(){ const full=state.view==='prehled'||state.view==='hraci'||state.view==='navyky'||state.view==='historie'; document.body.classList.toggle('mm-full', full); const tb=document.getElementById('mc-tabbar'); if(tb) tb.style.display=full?'none':''; const h=document.querySelector('.header'); if(h) h.style.display=full?'none':''; const f=document.querySelector('.fab-group'); if(f) f.style.display=full?'none':''; }
+function mmChrome(){ const full=state.view==='prehled'||state.view==='hraci'||state.view==='navyky'||state.view==='historie'||state.view==='karty'; document.body.classList.toggle('mm-full', full); const tb=document.getElementById('mc-tabbar'); if(tb) tb.style.display=full?'none':''; const h=document.querySelector('.header'); if(h) h.style.display=full?'none':''; const f=document.querySelector('.fab-group'); if(f) f.style.display=full?'none':''; }
 function mmFirst(n){ return String(n||'').split(' ')[0]; }
 
 // ============================================================
@@ -7335,7 +7345,7 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v153';
+const MM_VERZE = 'v156';
 // Ukol 99 (Marek 14. 9.): "obrazovka se zastavi, ale jakoby se to neviditelne scrolluje dal".
 // Stinova obrazovka si rezervovala vysku podle window.innerHeight. Na iPhonu ta hodnota umi
 // byt vetsi nez skutecna viditelna plocha (listy Safari se sbaluji), takze pod obsahem vzniklo
@@ -7343,14 +7353,14 @@ const MM_VERZE = 'v153';
 // [nazev, sirka, vyska] - vysky jsou SKUTECNE pouzitelne (co zbyde po liste prohlizece);
 // prevzato ze squash ligy, kde si je Marek odmeril primo na mobilu.
 const MM_MODELY = [
-  ['iPhone SE — Safari', 375, 553],
-  ['iPhone 13 mini — Safari', 375, 629],
-  ['iPhone 14/15 — Safari', 393, 659],
-  ['iPhone 15 Pro — na ploše', 393, 852],
-  ['iPhone Pro Max — Safari', 430, 739]
+  ['iPhone SE — Safari', 375, 553, 0, 0],
+  ['iPhone 13 mini — Safari', 375, 629, 0, 0],
+  ['iPhone 14/15 — Safari', 393, 659, 0, 0],
+  ['iPhone 15 Pro — na ploše', 393, 852, 59, 34],
+  ['iPhone Pro Max — Safari', 430, 739, 0, 0]
 ];
 function mmPcModely(){
-  let vybran = 2, vlastni = null;   // vychozi = iPhone 14/15 Safari
+  let vybran = 3, vlastni = null;   // vychozi = iPhone 15 Pro na ploše (stejne jako squash)
   try{
     const q = localStorage.getItem('mc-model');
     if(q!==null && +q>=0 && +q<MM_MODELY.length) vybran = +q;
@@ -7362,9 +7372,14 @@ function mmPcModely(){
     document.documentElement.appendChild(box); }   // mimo telo: telo je ram s overflow:hidden
   const uplatni = () => {
     const m = (vybran<0 && vlastni) ? ['vlastni', vlastni.w, vlastni.h] : MM_MODELY[vybran];
-    const w = m[1], h = m[2];
+    const w = m[1], h = m[2], st = m[3]||0, sb = m[4]||0;
     const d = document.documentElement.style;
     d.setProperty('--ph-w', w+'px'); d.setProperty('--ph-h', h+'px');
+    // na pocitaci env() nic nevraci, takze bezpecne zony nasimulujeme rucne a
+    // ostruvek i indikator domu dokreslime - jinak to nahore vypada jako prazdna dira
+    d.setProperty('--ph-sat', st+'px'); d.setProperty('--ph-sab', sb+'px');
+    document.body.classList.toggle('ma-ostruvek', st > 0);
+    document.body.classList.toggle('ma-indikator', sb > 0);
     // kdyz se telefon do okna nevejde, zmensi se cely - rozlozeni zustane stejne
     const k = Math.min(1, (window.innerHeight-74)/h, (window.innerWidth-40)/w);
     d.setProperty('--ph-k', k<1 ? k.toFixed(3) : '1');
@@ -7395,6 +7410,80 @@ function mmPcModely(){
   uplatni();
   window.addEventListener('resize', uplatni);
 }
+// ---- Verne pismo v ramu na pocitaci (viz komentar u mmPcRam) ----
+const MM_IOS_FAKTOR = 1.207;   // = -webkit-text-size-adjust:120.7% z <html>
+function mmIosPismo(){
+  if(window.__mmIos) return;
+  window.__mmIos = true;
+  const hotovaPravidla = new WeakSet(), slepeListy = new WeakSet();
+  const korenyStinu = [];
+  const puvodni = Element.prototype.attachShadow;
+  Element.prototype.attachShadow = function(init){
+    const r = puvodni.call(this, init); korenyStinu.push(r); return r;
+  };
+  const skaluj = v => {
+    const m = /^\s*(-?[\d.]+)(px|pt)\s*$/i.exec(v);
+    if(!m) return null;
+    const n = parseFloat(m[1]);
+    if(!isFinite(n)) return null;
+    return (Math.round(n * MM_IOS_FAKTOR * 10000) / 10000) + m[2];
+  };
+  const projdiPravidla = rules => {
+    for(const r of rules){
+      if(r.style && !hotovaPravidla.has(r)){
+        const f = r.style.getPropertyValue("font-size");
+        if(f){ const nv = skaluj(f);
+          if(nv){ r.style.setProperty("font-size", nv, r.style.getPropertyPriority("font-size"));
+            hotovaPravidla.add(r); } }
+      }
+      if(r.cssRules){ try{ projdiPravidla(r.cssRules); }catch(_){} }
+    }
+  };
+  const projdiListy = listy => {
+    for(const l of listy){
+      if(slepeListy.has(l)) continue;
+      let rules; try{ rules = l.cssRules; }catch(_){ slepeListy.add(l); continue; }
+      if(rules) projdiPravidla(rules);
+    }
+  };
+  const projdiInline = koren => {
+    let els; try{ els = koren.querySelectorAll("*"); }catch(_){ return; }
+    for(const el of els){
+      if(el.__mmIos) continue;
+      if(el.style && el.style.fontSize){
+        const nv = skaluj(el.style.fontSize);
+        if(nv) el.style.setProperty("font-size", nv, el.style.getPropertyPriority("font-size"));
+      }
+      if(el.namespaceURI === "http://www.w3.org/2000/svg" && el.hasAttribute("font-size")){
+        const raw = el.getAttribute("font-size");
+        const nv = skaluj(raw) || skaluj(raw + "px");
+        if(nv) el.setAttribute("font-size", nv);
+      }
+      el.__mmIos = true;
+    }
+  };
+  const uplatni = () => {
+    projdiListy(document.styleSheets); projdiListy(document.adoptedStyleSheets || []);
+    projdiInline(document);
+    const videne = new Set(), fronta = korenyStinu.slice();
+    (function sber(koren){
+      let els; try{ els = koren.querySelectorAll("*"); }catch(_){ return; }
+      for(const el of els) if(el.shadowRoot){ fronta.push(el.shadowRoot); sber(el.shadowRoot); }
+    })(document);
+    while(fronta.length){
+      const sr = fronta.shift();
+      if(!sr || videne.has(sr)) continue;
+      videne.add(sr);
+      projdiListy(sr.styleSheets || []); projdiListy(sr.adoptedStyleSheets || []);
+      projdiInline(sr);
+    }
+  };
+  // appka prekresluje stinovy DOM pri kazdem prepnuti i resize -> vznikaji nova
+  // pravidla, ktera je potreba preskalovat. WeakSet hlida, aby se nic neskalovalo dvakrat.
+  window.__mmIosUplatni = uplatni;
+  uplatni();
+  setInterval(uplatni, 600);
+}
 function mmPcRam(){
   try{
     if(!window.matchMedia || !window.matchMedia('(min-width:500px) and (pointer:fine)').matches) return;
@@ -7407,6 +7496,7 @@ function mmPcRam(){
     while(b.firstChild) s.appendChild(b.firstChild);
     b.appendChild(s);
     document.documentElement.classList.add('pc-ram');
+    mmIosPismo();   // na PC musi byt videt presne to co na mobilu
     mmPcModely();
   }catch(_){}
 }
