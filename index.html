@@ -3145,6 +3145,7 @@ html.mm-boot body{background:var(--bg,#EEF0EE);}
 #view-prehled > :not(#dnesek-mm){display:none!important;}
 #view-hraci > :not(#parta-mm){display:none!important;}
 #view-navyky > :not(#navyky-mm){display:none!important;}
+#view-karty > :not(#karty-mm){display:none!important;}
 #view-historie > :not(#ja-mm){display:none!important;}
 /* PC ram: na pocitaci bezi appka v ramu telefonu uprostred stranky, aby sla kontrolovat
    i mimo mobil. Ram ma transform -> position:fixed uvnitr (spodni lista, modaly) se ukotvi
@@ -4390,6 +4391,7 @@ body.mm-full{background:var(--bg);padding-bottom:0;}
   <a class="tb-btn active" data-view="prehled" aria-label="Dnešek"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path fill="currentColor" stroke="none" d="M12 3.2 21 11v8.2a1.8 1.8 0 0 1-1.8 1.8H15v-4.8a3 3 0 0 0-6 0V21H4.8A1.8 1.8 0 0 1 3 19.2V11Z"/></svg></a>
   <a class="tb-btn" data-view="navyky" aria-label="Návyky"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10.4" fill="currentColor" stroke="none"/><path d="M7.6 12.3 10.9 15.6 16.5 9.2" stroke="var(--card)" stroke-width="2.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
   <a class="tb-btn" data-view="historie" aria-label="Já"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.8" fill="currentColor" stroke="none"/><path fill="currentColor" stroke="none" d="M12 13c-4 0-7 2.7-7 6.2 0 .6.4 1 1.4 1h11.2c1 0 1.4-.4 1.4-1 0-3.5-3-6.2-7-6.2Z"/></svg></a>
+  <a class="tb-btn" data-view="karty" aria-label="Kartičky"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3.2" y="6.4" width="13" height="14.2" rx="2.6" fill="currentColor" stroke="none"/><path d="M7.8 4.2h9.4a2.6 2.6 0 0 1 2.6 2.6v10.4" stroke="currentColor" stroke-width="1.9" fill="none" stroke-linecap="round"/></svg></a>
 </nav>
 
   <div id="view-prehled">
@@ -4529,6 +4531,9 @@ body.mm-full{background:var(--bg);padding-bottom:0;}
 <div class="mm mm-sub" id="sub-zaznamy"></div>
 
 <!-- F52: HABIT modal (nový/úprava návyku) -->
+<div id="view-karty" style="display:none;">
+  <div class="mm" id="karty-mm"></div>
+</div>
 <div class="modal-overlay" id="habit-modal">
   <div class="modal">
     <!-- BULLETPROOF2: verbatim mockup okno (S.knihovna / hf tvorba*) ve stinovem DOM — stare light
@@ -7184,8 +7189,8 @@ function mmGreet(){ const h=new Date().getHours(); if(h>=5&&h<11) return 'Dobré
 function mmWeek(){ const a=new Date(); a.setHours(0,0,0,0); const day=a.getDay()||7; const s=new Date(a); s.setDate(a.getDate()-day+1); const e=new Date(s); e.setDate(s.getDate()+6); return {from:dateToStr(s),to:dateToStr(e),start:s,end:e}; }
 // Marek 2026-08: slouceni Dnesek+Parta do JEDNE obrazovky Prehled -> bar ma 3 zalozky.
 // 'hraci' zustava jako ALIAS (mmGo presmeruje na 'prehled'), aby stare odkazy nespadly.
-const MM_TAB_IDX={prehled:0,navyky:1,historie:2};
-function mmBarHost(v){ return document.getElementById({prehled:"dnesek-mm",navyky:"navyky-mm",historie:"ja-mm"}[v]); }
+const MM_TAB_IDX={prehled:0,navyky:1,historie:2,karty:3};
+function mmBarHost(v){ return document.getElementById({prehled:"dnesek-mm",navyky:"navyky-mm",historie:"ja-mm",karty:"karty-mm"}[v]); }
 // Klouzava pilulka aktivni zalozky (Marek 2026-07-27): indikator prijede z pozice predchozi zalozky.
 // Jezdec spodni listy: pozice se pocita z rozmeru v CSS (odsazeni 6 px, tlacitko 46 px,
 // mezera 10 px), ne z offsetLeft. Merenim sedel na nule, kdyz byla obrazovka skryta
@@ -7256,13 +7261,30 @@ function mmGo(v){ if(v==='hraci') v='prehled'; mmCloseSub();
 function mmChrome(){ const full=state.view==='prehled'||state.view==='hraci'||state.view==='navyky'||state.view==='historie'; document.body.classList.toggle('mm-full', full); const tb=document.getElementById('mc-tabbar'); if(tb) tb.style.display=full?'none':''; const h=document.querySelector('.header'); if(h) h.style.display=full?'none':''; const f=document.querySelector('.fab-group'); if(f) f.style.display=full?'none':''; }
 function mmFirst(n){ return String(n||'').split(' ')[0]; }
 
+// ============================================================
+//  KARTICKY (flashcards) — ctvrta zalozka. Krok 1: obrazovka a zapojeni do listy.
+//  Data budou v tabulce flashcards (viz tools/browser/flashcards.sql).
+// ============================================================
+function mmKartyTpl(){
+  return '<div class="nav"><div class="ttl">Kartičky</div></div>'
+    + '<div class="nvk" style="padding:0 14px">'
+    +   '<div class="prazdno" style="text-align:center;color:var(--ter);font-size:13.3px;font-weight:600;padding:60px 10px">'
+    +     'Zatím tu nic není.<br>Balíčky a slovíčka přibydou v dalším kroku.'
+    +   '</div>'
+    + '</div>';
+}
+function renderKartyMM(){
+  const host = document.getElementById('karty-mm'); if(!host) return;
+  mmMountSub(host, mmKartyTpl(), 3);
+}
 function mmBar(a){
   var IC=['<path fill="currentColor" stroke="none" d="M12 3.2 21 11v8.2a1.8 1.8 0 0 1-1.8 1.8H15v-4.8a3 3 0 0 0-6 0V21H4.8A1.8 1.8 0 0 1 3 19.2V11Z"/>','<circle cx="12" cy="12" r="10.4" fill="currentColor" stroke="none"/><path d="M7.6 12.3 10.9 15.6 16.5 9.2" stroke="var(--card)" stroke-width="2.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>','<circle cx="12" cy="8" r="3.8" fill="currentColor" stroke="none"/><path fill="currentColor" stroke="none" d="M12 13c-4 0-7 2.7-7 6.2 0 .6.4 1 1.4 1h11.2c1 0 1.4-.4 1.4-1 0-3.5-3-6.2-7-6.2Z"/>'];
-  var T=['prehled','navyky','historie'];
+  IC.push('<rect x="3.2" y="6.4" width="13" height="14.2" rx="2.6" fill="currentColor" stroke="none"/><path d="M7.8 4.2h9.4a2.6 2.6 0 0 1 2.6 2.6v10.4" stroke="currentColor" stroke-width="1.9" fill="none" stroke-linecap="round"/>');   // karticky
+  var T=['prehled','navyky','historie','karty'];
   // .tbveil = neprusvitny pruh pod plovoucim barem az k dolni hrane viewportu.
   // Bez nej scrolluje obsah v mezere pod barem (na iPhonu 15 Pro 16.5 pt) — Marek 2026-08-18.
-  var h='<i class="tbveil"></i><div class="tb" style="--tbc:'+['var(--green)','var(--purple)','var(--blue)'][a]+'"><i class="tbind" style="transform:translateX('+(a*56)+'px)"></i>';
-  for(var i=0;i<3;i++){ h+='<a class="'+(i==a?'on':'')+'" data-jdi="'+T[i]+'" onclick="mmGo(\''+T[i]+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">'+IC[i]+'</svg></a>'; }
+  var h='<i class="tbveil"></i><div class="tb" style="--tbc:'+['var(--green)','var(--purple)','var(--blue)','var(--orange,#FF9F0A)'][a]+'"><i class="tbind" style="transform:translateX('+(a*56)+'px)"></i>';
+  for(var i=0;i<4;i++){ h+='<a class="'+(i==a?'on':'')+'" data-jdi="'+T[i]+'" onclick="mmGo(\''+T[i]+'\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">'+IC[i]+'</svg></a>'; }
   h+='<button class="tbadd" data-pridat="1" onclick="openModal()" aria-label="Přidat záznam"><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg></button>';
   return h+'</div>';
 }
@@ -7313,7 +7335,7 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v151';
+const MM_VERZE = 'v153';
 // Ukol 99 (Marek 14. 9.): "obrazovka se zastavi, ale jakoby se to neviditelne scrolluje dal".
 // Stinova obrazovka si rezervovala vysku podle window.innerHeight. Na iPhonu ta hodnota umi
 // byt vetsi nez skutecna viditelna plocha (listy Safari se sbaluji), takze pod obsahem vzniklo
@@ -12570,6 +12592,7 @@ function renderAllViews() {
   mmDemoOdznak();
   mmAdminFloat();
   requestAnimationFrame(mmBootHotovo);          // ukol 37: plovouci kolecko plati pro celou appku
+  renderKartyMM();
   renderDnesek();
   renderNavykyMM();
   renderJaMM();
@@ -14939,6 +14962,7 @@ document.querySelectorAll('.tb-btn').forEach(btn => {
     document.getElementById('view-historie').style.display = state.view === 'historie' ? '' : 'none';
     document.getElementById('view-hraci').style.display = state.view === 'hraci' ? '' : 'none';
     document.getElementById('view-navyky').style.display = state.view === 'navyky' ? '' : 'none';
+    document.getElementById('view-karty').style.display = state.view === 'karty' ? '' : 'none';
     // F52: na Návycích se přidává přes „+ Nový návyk"; na Dnešku/Partě má shadow-DOM svůj vlastní ＋ v hlavičce.
     // Viditelnost fab-group uz spravne resi mmChrome() o radek vys (jinak by se tu prepsala zpet na viditelnou).
     if (state.view === 'navyky') { state.habitDay = todayStr(); setHabitTab('dnes'); }
