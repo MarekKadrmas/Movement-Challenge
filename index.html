@@ -7345,7 +7345,7 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v156';
+const MM_VERZE = 'v158';
 // Ukol 99 (Marek 14. 9.): "obrazovka se zastavi, ale jakoby se to neviditelne scrolluje dal".
 // Stinova obrazovka si rezervovala vysku podle window.innerHeight. Na iPhonu ta hodnota umi
 // byt vetsi nez skutecna viditelna plocha (listy Safari se sbaluji), takze pod obsahem vzniklo
@@ -7360,7 +7360,7 @@ const MM_MODELY = [
   ['iPhone Pro Max — Safari', 430, 739, 0, 0]
 ];
 function mmPcModely(){
-  let vybran = 3, vlastni = null;   // vychozi = iPhone 15 Pro na ploše (stejne jako squash)
+  let vybran = 2, vlastni = null;   // vychozi = iPhone 14/15 v Safari (tak appku Marek otevira)
   try{
     const q = localStorage.getItem('mc-model');
     if(q!==null && +q>=0 && +q<MM_MODELY.length) vybran = +q;
@@ -7496,7 +7496,6 @@ function mmPcRam(){
     while(b.firstChild) s.appendChild(b.firstChild);
     b.appendChild(s);
     document.documentElement.classList.add('pc-ram');
-    mmIosPismo();   // na PC musi byt videt presne to co na mobilu
     mmPcModely();
   }catch(_){}
 }
