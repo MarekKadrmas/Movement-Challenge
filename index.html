@@ -7345,7 +7345,7 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v158';
+const MM_VERZE = 'v159';
 // Ukol 99 (Marek 14. 9.): "obrazovka se zastavi, ale jakoby se to neviditelne scrolluje dal".
 // Stinova obrazovka si rezervovala vysku podle window.innerHeight. Na iPhonu ta hodnota umi
 // byt vetsi nez skutecna viditelna plocha (listy Safari se sbaluji), takze pod obsahem vzniklo
@@ -7540,6 +7540,20 @@ function mmVerzeCas(){ return MM_VERZE; }
 // radku navyku. Poskakovani bublin se mi nedari vyvolat v prohlizeci, takze potrebuji
 // videt skutecna cisla primo z Markova telefonu — staci, aby byl vypis v zaberu videa.
 let _mmDiagBezi = false, _mmDiagT = null, _mmDiagZaznam = {};
+// Tuknuti na verzi ukaze SKUTECNOU pouzitelnou plochu, kterou appce nechal prohlizec
+// (Safari si ukrojí adresni radek nahore i listu dole). Marek to odecte na telefonu a
+// zada na pocitaci do ramu pres "Vlastni..." - pak je na PC presne to, co na mobilu.
+// Stejne reseni jako u squash ligy. Dvojklik = puvodni merak radku (mmDiagPrepni).
+function mmRozmer(el){
+  if(!el) return;
+  if(el._mmPuv == null) el._mmPuv = el.textContent;
+  const vv = window.visualViewport;
+  const w = Math.round((vv && vv.width) || window.innerWidth);
+  const h = Math.round((vv && vv.height) || window.innerHeight);
+  el.textContent = w + "×" + h;
+  clearTimeout(el._mmT);
+  el._mmT = setTimeout(() => { el.textContent = el._mmPuv; }, 8000);
+}
 function mmDiagPrepni(){
   _mmDiagBezi = !_mmDiagBezi;
   let el = document.getElementById('mm-diag');
@@ -7631,7 +7645,7 @@ function mmAdminFloat(){
   let html = (typeof mmAdminPruhHtml === 'function') ? mmAdminPruhHtml() : '';
   if (typeof isAdminDevice === 'function' && isAdminDevice()){
     const cas = mmVerzeCas();
-    if (cas) html += '<span class="zkver" onclick="mmDiagPrepni()">' + cas + '</span>';
+    if (cas) html += '<span class="zkver" onclick="mmRozmer(this)" ondblclick="mmDiagPrepni()">' + cas + '</span>';
   }
   let obal = document.getElementById('mm-admin-float');
   if (!html){ if (obal) obal.remove(); return; }
