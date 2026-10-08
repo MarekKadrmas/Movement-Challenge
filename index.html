@@ -3146,6 +3146,18 @@ html.mm-boot body{background:var(--bg,#EEF0EE);}
 #view-hraci > :not(#parta-mm){display:none!important;}
 #view-navyky > :not(#navyky-mm){display:none!important;}
 #view-historie > :not(#ja-mm){display:none!important;}
+/* PC ram: na pocitaci bezi appka v ramu telefonu uprostred stranky, aby sla kontrolovat
+   i mimo mobil. Ram ma transform -> position:fixed uvnitr (spodni lista, modaly) se ukotvi
+   k ramu misto k oknu prohlizece. Obsah roluje uvnitr #pc-scroll. Na mobilu se nic nemeni. */
+@media (min-width:860px){
+  html.pc-ram{background:#15171A;}
+  html.pc-ram body{width:393px;height:min(844px,calc(100vh - 56px));min-height:0;max-height:calc(100vh - 56px);
+    padding-bottom:0;margin:28px auto;border-radius:46px;overflow:hidden;
+    position:relative;transform:translateZ(0);
+    box-shadow:0 0 0 11px #0d0f11,0 0 0 13px #30353b,0 36px 80px -22px rgba(0,0,0,.75);}
+  html.pc-ram #pc-scroll{width:100%;height:100%;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;}
+  html.pc-ram #pc-scroll::-webkit-scrollbar{width:0;height:0;}
+}
 /* Ukol 102: vysku appky uz neurcuje 100dvh. Na iPhonu ta hodnota umi byt vetsi nez
    viditelna plocha (sbalovaci listy Safari), takze stranka byla vyssi nez obrazovka
    a slo scrollovat do prazdna — nadpis vyjel nahoru a nic dalsiho uz se nedelo.
@@ -7290,12 +7302,25 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v148';
+const MM_VERZE = 'v150';
 // Ukol 99 (Marek 14. 9.): "obrazovka se zastavi, ale jakoby se to neviditelne scrolluje dal".
 // Stinova obrazovka si rezervovala vysku podle window.innerHeight. Na iPhonu ta hodnota umi
 // byt vetsi nez skutecna viditelna plocha (listy Safari se sbaluji), takze pod obsahem vzniklo
 // prazdne misto, kterym slo scrollovat, aniz by se cokoli hnulo. Bereme mensi z obou cisel.
+function mmPcRam(){
+  try{
+    if(!window.matchMedia || !window.matchMedia('(min-width:860px)').matches) return;
+    if(document.getElementById('pc-scroll')) return;
+    const b = document.body; if(!b) return;
+    const s = document.createElement('div'); s.id = 'pc-scroll';
+    while(b.firstChild) s.appendChild(b.firstChild);
+    b.appendChild(s);
+    document.documentElement.classList.add('pc-ram');
+  }catch(_){}
+}
 function mmVyskaOkna(){
+  // PC ram: "okno" je vyska ramu telefonu, ne prohlizece
+  if (document.documentElement.classList.contains('pc-ram')) return document.body.clientHeight || 0;
   const d = document.documentElement;
   const a = window.innerHeight || 0, b = d ? d.clientHeight : 0;
   return (a && b) ? Math.min(a, b) : (a || b || 0);
@@ -15233,6 +15258,7 @@ db.channel('public:all-test-v12')
 
 // Fix "koruna poskoci": prvni render az po nacteni fontu (fallback font je uzsi -> po nacteni
 // custom fontu se text rozsiri a prvky za nim odskoci). Pojistka 1.5s, aby boot nikdy nevisel.
+mmPcRam();
 (async()=>{ try{ if(document.fonts && document.fonts.status!=='loaded') await Promise.race([document.fonts.ready, new Promise(r=>setTimeout(r,1500))]); }catch(e){} await loadData(); try{ await mmFeedLoadComments(); renderAllViews(); }catch(_){} try{ window._mmTabIdx=MM_TAB_IDX[state.view]!=null?MM_TAB_IDX[state.view]:0; const h0=mmBarHost(state.view); mmBarPos(h0&&h0.shadowRoot, window._mmTabIdx, null); }catch(_){} })();
 
 document.getElementById('modal').addEventListener('click', (e) => { if (e.target.id === 'modal') closeModal(); });
