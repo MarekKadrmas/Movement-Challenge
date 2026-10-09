@@ -34,7 +34,7 @@ html{-webkit-text-size-adjust:100%;}
 .rx-back{position:fixed;inset:0;background:rgba(0,0,0,.28);opacity:0;transition:opacity .26s ease;z-index:9998;}
 .rx-back.on{opacity:1;}
 .rx-back.tich{background:transparent;}
-.rx-sheet{position:fixed;left:0;right:0;bottom:0;z-index:9999;background:var(--bg,#F2F2F6);display:flex;flex-direction:column;border-radius:20px 20px 0 0;box-shadow:0 -10px 34px rgba(0,0,0,.18);transform:translateY(102%);transition:transform .32s cubic-bezier(.22,1,.36,1);padding-bottom:calc(4px + env(safe-area-inset-bottom));will-change:transform;}
+.rx-sheet{position:fixed;left:0;right:0;bottom:0;z-index:9999;background:var(--bg,#F2F2F6);display:flex;flex-direction:column;border-radius:20px 20px 0 0;box-shadow:0 -10px 34px rgba(0,0,0,.18);transform:translateY(102%);transition:transform .32s cubic-bezier(.22,1,.36,1);padding-bottom:calc(4px + var(--mm-sab, env(safe-area-inset-bottom)));will-change:transform;}
 .rx-sheet.on{transform:none;}
 .rx-sheet.rx-drag{transition:none;}
 .rx-sheet,.rx-sheet *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
@@ -137,7 +137,7 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 html, body { background: var(--bg); color: var(--text); font-family: var(--font-ui); min-height: 100vh; min-height: 100dvh; min-height: var(--mm-okno, 100dvh); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
-body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
+body { padding-bottom: var(--mm-sab, env(safe-area-inset-bottom)); letter-spacing: -0.01em; }
 /* Marek 2026-08-18: ZADNE viditelne scrollbary nikde v appce (mobil je nema mit — na iOS to je ta
    „lista, co jezdi vpravo"). Plati pro light DOM; stinove obrazovky maji stejne pravidlo v #mm-tpl. */
 * { scrollbar-width: none; -ms-overflow-style: none; }
@@ -152,7 +152,7 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 
 .test-banner {
   position: fixed; z-index: 300;
-  top: calc(6px + env(safe-area-inset-top)); left: 12px;
+  top: calc(6px + var(--mm-sat, env(safe-area-inset-top))); left: 12px;
   width: 11px; height: 11px; border-radius: 50%;
   background: #E3A93C;
   box-shadow: 0 2px 9px rgba(227,169,60,.55), 0 0 0 3px rgba(227,169,60,.16);
@@ -695,7 +695,7 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 
 /* FAB */
 .fab-group {
-  position: fixed; bottom: calc(88px + env(safe-area-inset-bottom));
+  position: fixed; bottom: calc(88px + var(--mm-sab, env(safe-area-inset-bottom)));
   left: 50%; transform: translateX(-50%);
   display: flex; gap: 12px; z-index: 100;
 }
@@ -746,7 +746,7 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
    #step2-zoom-top/#step2-zoom-bottom (306px-design + zoom), presne stejna konvence jako .mm host
    (max-width) + .scr (width:306px;zoom) u root obrazovek. Safe-area dole reseno na .modal samotnem
    (mimo zoom), aby nezkreslovalo zoom-faktor. */
-#modal.step-2 .modal { padding-left: 0; padding-right: 0; padding-bottom: env(safe-area-inset-bottom); }
+#modal.step-2 .modal { padding-left: 0; padding-right: 0; padding-bottom: var(--mm-sab, env(safe-area-inset-bottom)); }
 /* F42: modal body (scrollable middle) + footer (sticky bottom) */
 .modal-body {
   flex: 1 1 auto; overflow-y: auto; overscroll-behavior: contain;
@@ -756,7 +756,7 @@ body { padding-bottom: env(safe-area-inset-bottom); letter-spacing: -0.01em; }
 .modal-footer {
   flex-shrink: 0; display: flex; flex-direction: column; gap: 8px;
   margin: 0 -18px; padding: 14px 18px;
-  padding-bottom: calc(14px + env(safe-area-inset-bottom));
+  padding-bottom: calc(14px + var(--mm-sab, env(safe-area-inset-bottom)));
   background: var(--bg-card);
   border-top: 1px solid var(--border-soft);
 }
@@ -804,7 +804,7 @@ body.modal-open .modal { touch-action: auto; }
   border-radius: 0;
   background: var(--bg);   /* mockup: formular sedi na --bg (svetle sede), ne na --card (bila) */
   /* jen safe-area (notch) — horni 16px odsazeni uz dava #step2-zoom-top padding (mockup formb padding-top:16). */
-  padding-top: env(safe-area-inset-top);
+  padding-top: var(--mm-sat, env(safe-area-inset-top));
   overflow-y: auto;   /* delsi formular (Lezeni) na kratsim displeji scrolluje misto kolize s .ff */
   animation: fadeIn 0.2s;
 }
@@ -827,7 +827,7 @@ body.modal-open .modal { touch-action: auto; }
 #habit-modal, #player-modal, #history-modal { align-items: stretch; background: var(--bg); backdrop-filter: none; }
 #habit-modal .modal, #player-modal .modal, #history-modal .modal {
   width: 100%; max-width: none; height: 100dvh; max-height: none; border-radius: 0;
-  background: var(--bg); padding: env(safe-area-inset-top) 0 0;
+  background: var(--bg); padding: var(--mm-sat, env(safe-area-inset-top)) 0 0;
   overflow-y: auto; animation: fadeIn 0.2s;
 }
 #habit-modal .modal-handle, #habit-modal .modal-head-row, #habit-modal .modal-body, #habit-modal .modal-footer,
@@ -938,7 +938,7 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 #modal.step-1 .modal-footer,
 #modal.step-1 .modal-subtitle { display: none !important; }
 /* KROK 1 (addsheet): kompaktni sheet u spodu (fit obsah), ne fixnich 90vh */
-#modal.step-1 .modal { height: auto; padding-bottom: calc(22px + env(safe-area-inset-bottom)); }
+#modal.step-1 .modal { height: auto; padding-bottom: calc(22px + var(--mm-sab, env(safe-area-inset-bottom))); }
 
 /* KROK 2: kompaktni segmentovany prepinac typu (mockup .tsel) — tytez .type-btn prvky/handlery, jen jiny vizual.
    Momentum KROK2 rebuild: uvnitr #step2-zoom-top (306-design+zoom) — verbatim mockup .tsel/.tsel b
@@ -1056,7 +1056,7 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 .date-picker {
   position: relative;
   background: var(--card); width: 100%; max-width: 480px;
-  border-radius: 22px 22px 0 0; padding: 8px 15px calc(22px + env(safe-area-inset-bottom));
+  border-radius: 22px 22px 0 0; padding: 8px 15px calc(22px + var(--mm-sab, env(safe-area-inset-bottom)));
   box-shadow: 0 -10px 30px rgba(0,0,0,0.14);
   transform: translateY(100%); transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -1879,11 +1879,11 @@ body.guest-mode .header-power { opacity: 0.3; pointer-events: none; }
 .history-empty .he-sub { font-size:15.09px; line-height: 1.5; }
 
 /* Momentum spodní lišta (Fáze 1c) */
-.tb{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(10px + env(safe-area-inset-bottom));width:calc(100% - 24px);max-width:460px;display:flex;justify-content:space-around;align-items:center;padding:8px;background:var(--bar);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border-radius:999px;box-shadow:0 8px 26px rgba(0,0,0,.16);border:1px solid var(--sep);z-index:50;}
+.tb{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(10px + var(--mm-sab, env(safe-area-inset-bottom)));width:calc(100% - 24px);max-width:460px;display:flex;justify-content:space-around;align-items:center;padding:8px;background:var(--bar);backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);border-radius:999px;box-shadow:0 8px 26px rgba(0,0,0,.16);border:1px solid var(--sep);z-index:50;}
 .tb-btn{width:46px;height:40px;display:grid;place-items:center;border-radius:999px;color:var(--label);opacity:.5;cursor:pointer;text-decoration:none;transition:opacity .15s,background .15s;}
 .tb-btn svg{width:25px;height:25px;display:block;}
 .tb-btn.active{opacity:1;background:color-mix(in srgb,var(--green) 16%,transparent);color:var(--green);}
-body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
+body{padding-bottom:calc(80px + var(--mm-sab, env(safe-area-inset-bottom)));}
 
 
 /* === Momentum component CSS (scoped .mm) — Fáze 3+ === */
@@ -2973,7 +2973,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 #mm-cil-sheet .cs-stin{position:absolute;inset:0;background:rgba(8,14,10,.42);opacity:0;transition:opacity .22s ease;}
 #mm-cil-sheet.je .cs-stin{opacity:1;}
 #mm-cil-sheet .cs-panel{position:relative;width:100%;max-width:460px;background:var(--card,#fff);
-  border-radius:26px 26px 0 0;padding:8px 20px calc(18px + env(safe-area-inset-bottom));
+  border-radius:26px 26px 0 0;padding:8px 20px calc(18px + var(--mm-sab, env(safe-area-inset-bottom)));
   box-shadow:0 -12px 40px rgba(0,0,0,.2);transform:translateY(14px);opacity:0;
   transition:transform .24s cubic-bezier(.22,.9,.3,1),opacity .2s ease;
   font-family:var(--font-ui,inherit);color:var(--label,#141A16);}
@@ -3006,7 +3006,7 @@ body{padding-bottom:calc(80px + env(safe-area-inset-bottom));}
 @media (prefers-reduced-motion: reduce){
   #mm-cil-sheet .cs-panel,#mm-cil-sheet .cs-stin{transition:none;}
 }
-.mm .zkver{position:fixed;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 2px);z-index:41;font-size:9.4px;font-weight:800;color:var(--ter);opacity:.85;letter-spacing:.02em;cursor:pointer;-webkit-tap-highlight-color:transparent;white-space:nowrap;padding:2px 9px;background:color-mix(in srgb,var(--card) 88%,transparent);border-radius:999px;}
+.mm .zkver{position:fixed;left:50%;transform:translateX(-50%);top:calc(var(--mm-sat, env(safe-area-inset-top,0px)) + 2px);z-index:41;font-size:9.4px;font-weight:800;color:var(--ter);opacity:.85;letter-spacing:.02em;cursor:pointer;-webkit-tap-highlight-color:transparent;white-space:nowrap;padding:2px 9px;background:color-mix(in srgb,var(--card) 88%,transparent);border-radius:999px;}
 
 /* Ukol 91 (Marek 7. 9.): nez se nacetla data, byla vteřinu videt STARA verze
    rozhrani — hlavicka Momentum, plovouci plusko a stara spodni lista. Do doby,
@@ -3162,7 +3162,8 @@ html.mm-boot body{background:var(--bg,#EEF0EE);}
   white-space:nowrap;padding:0 5px;}
 @media (min-width:500px) and (pointer:fine){
   html.pc-ram{background:#22261F;}
-  html.pc-ram body{width:var(--ph-w,393px);height:var(--ph-h,659px);min-height:0;max-height:none;
+  html.pc-ram body{width:var(--ph-w,393px);height:calc(var(--ph-h,659px) + var(--ph-lista,0px));
+    min-height:0;max-height:none;padding-top:var(--ph-lista,0px);box-sizing:border-box;
     padding-bottom:0;margin:0;border-radius:44px;overflow:hidden;
     position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(var(--ph-k,1));transform-origin:50% 50%;
     box-shadow:0 24px 70px rgba(0,0,0,.5),0 0 0 11px #0D0F0D,0 0 0 12.5px #2C332C;}
@@ -3171,14 +3172,16 @@ html.mm-boot body{background:var(--bg,#EEF0EE);}
   html.pc-ram #mm-model{display:flex;}
   /* Ostruvek a indikator domu - appka pod nimi nechava misto, bez nakresleni
      to vypada jako prazdna dira nahore (prevzato ze squash ligy). */
-  html.pc-ram body.ma-ostruvek::before{content:"";position:absolute;top:12px;left:50%;
+  html.pc-ram body.ma-ostruvek::before{content:"";position:absolute;top:11px;left:50%;
     transform:translateX(-50%);width:122px;height:35px;border-radius:18px;background:#0B0D0B;
     z-index:70;pointer-events:none;}
   html.pc-ram body.ma-indikator::after{content:"";position:absolute;bottom:9px;left:50%;
     transform:translateX(-50%);width:138px;height:5px;border-radius:3px;background:#1B211C;
     opacity:.55;z-index:70;pointer-events:none;}
-  html.pc-ram #pc-scroll{padding-top:var(--ph-sat,0px);padding-bottom:var(--ph-sab,0px);
+  html.pc-ram #pc-scroll{height:var(--ph-h,659px);
     box-sizing:border-box;}
+  /* Lista s hodinami je SOUCAST RAMECKU nad appkou, ne safe-area uvnitr ni. */
+  html.pc-ram body.ma-ostruvek{background:var(--bg);}
 }
 /* Ukol 102: vysku appky uz neurcuje 100dvh. Na iPhonu ta hodnota umi byt vetsi nez
    viditelna plocha (sbalovaci listy Safari), takze stranka byla vyssi nez obrazovka
@@ -7345,7 +7348,7 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v163';
+const MM_VERZE = 'v164';
 // Ukol 99 (Marek 14. 9.): "obrazovka se zastavi, ale jakoby se to neviditelne scrolluje dal".
 // Stinova obrazovka si rezervovala vysku podle window.innerHeight. Na iPhonu ta hodnota umi
 // byt vetsi nez skutecna viditelna plocha (listy Safari se sbaluji), takze pod obsahem vzniklo
@@ -7356,7 +7359,7 @@ const MM_MODELY = [
   ['iPhone SE — Safari', 375, 553, 0, 0],
   ['iPhone 13 mini — Safari', 375, 629, 0, 0],
   ['iPhone 14/15 — Safari', 393, 659, 0, 0],
-  ['iPhone 15 Pro — na ploše', 393, 852, 59, 34],
+  ['iPhone 15 Pro — na ploše', 393, 793, 59, 34],   // 793 = appka POD listou s hodinami
   ['iPhone Pro Max — Safari', 430, 739, 0, 0]
 ];
 function mmPcModely(){
@@ -7377,11 +7380,14 @@ function mmPcModely(){
     d.setProperty('--ph-w', w+'px'); d.setProperty('--ph-h', h+'px');
     // na pocitaci env() nic nevraci, takze bezpecne zony nasimulujeme rucne a
     // ostruvek i indikator domu dokreslime - jinak to nahore vypada jako prazdna dira
-    d.setProperty('--ph-sat', st+'px'); d.setProperty('--ph-sab', sb+'px');
+    // lista s hodinami je nad appkou (soucast ramecku), uvnitr appky je horni zona 0
+    d.setProperty('--ph-lista', st+'px');
+    d.setProperty('--mm-sat', '0px');
+    d.setProperty('--mm-sab', sb+'px');
     document.body.classList.toggle('ma-ostruvek', st > 0);
     document.body.classList.toggle('ma-indikator', sb > 0);
     // kdyz se telefon do okna nevejde, zmensi se cely - rozlozeni zustane stejne
-    const k = Math.min(1, (window.innerHeight-74)/h, (window.innerWidth-40)/w);
+    const k = Math.min(1, (window.innerHeight-74)/(h+st), (window.innerWidth-40)/w);
     d.setProperty('--ph-k', k<1 ? k.toFixed(3) : '1');
     box.querySelectorAll('[data-m]').forEach(x=>x.classList.toggle('on', +x.dataset.m===vybran));
     const z = box.querySelector('#mm-zoom');
@@ -7496,7 +7502,6 @@ function mmPcRam(){
     while(b.firstChild) s.appendChild(b.firstChild);
     b.appendChild(s);
     document.documentElement.classList.add('pc-ram');
-    mmIosPismo();   // iPhone zvetsuje text o 120.7% (-webkit-text-size-adjust), Chrome ne
     mmPcModely();
   }catch(_){}
 }
@@ -7564,7 +7569,7 @@ function mmDiagPrepni(){
   _mmDiagZaznam = {};
   el = document.createElement('div');
   el.id = 'mm-diag';
-  el.style.cssText = 'position:fixed;left:6px;top:calc(env(safe-area-inset-top,0px) + 26px);z-index:60;'
+  el.style.cssText = 'position:fixed;left:6px;top:calc(var(--mm-sat, env(safe-area-inset-top,0px)) + 26px);z-index:60;'
     + 'font:700 9px/1.35 ui-monospace,Menlo,monospace;color:#fff;background:rgba(0,0,0,.86);'
     + 'padding:6px 8px;border-radius:8px;white-space:pre;pointer-events:none;max-width:72vw;';
   document.body.appendChild(el);
@@ -7819,7 +7824,7 @@ function renderDnesek(){
   const ov=document.createElement('style');
   /* .lc padding-bottom 5.9px = kompenzace tesnejsiho renderovani pisma na iOS (zmereno z Markova
      screenshotu 2026-07-20: karta zebricku koncila o 7.4pt vys nez v mockup nahledu) — jen Dnesek. */
-  ov.textContent=':host{-webkit-text-size-adjust:100%;display:block;font-family:var(--font-ui);font-size:19.31px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:calc(66px + env(safe-area-inset-bottom));}.tb{position:fixed;transform:translateZ(0);will-change:transform;backface-visibility:hidden;}.tbveil{display:none;}.nav{position:relative;}.nav .right{position:absolute;right:2px;top:16.5px;}.lc{padding-bottom:0;}'+(document.documentElement.classList.contains('pwa-standalone')?'.nav:not(:has(.date)){padding-top:15px;}':'');
+  ov.textContent=':host{-webkit-text-size-adjust:100%;display:block;font-family:var(--font-ui);font-size:19.31px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:calc(66px + var(--mm-sab, env(safe-area-inset-bottom)));}.tb{position:fixed;transform:translateZ(0);will-change:transform;backface-visibility:hidden;}.tbveil{display:none;}.nav{position:relative;}.nav .right{position:absolute;right:2px;top:16.5px;}.lc{padding-bottom:0;}'+(document.documentElement.classList.contains('pwa-standalone')?'.nav:not(:has(.date)){padding-top:15px;}':'');
   sh.appendChild(ov);
   if(sprite && !sh.querySelector('#momentum-sprite')) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(0)}</div>`;
@@ -8956,7 +8961,7 @@ function renderParta(){
   [...sh.childNodes].forEach(n => { if (n !== _spr) n.remove(); });   // ukol 85: sprite se neodpojuje
   if(tplEl) sh.appendChild(tplEl.content.cloneNode(true));
   const ov=document.createElement('style');
-  ov.textContent=':host{-webkit-text-size-adjust:100%;display:block;font-family:var(--font-ui);font-size:19.31px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:calc(66px + env(safe-area-inset-bottom));}.tb{position:fixed;transform:translateZ(0);will-change:transform;backface-visibility:hidden;}.tbveil{display:none;}.nav{position:relative;}.nav .right{position:absolute;right:2px;top:16.5px;}'+(document.documentElement.classList.contains('pwa-standalone')?'.nav:not(:has(.date)){padding-top:15px;}':'');
+  ov.textContent=':host{-webkit-text-size-adjust:100%;display:block;font-family:var(--font-ui);font-size:19.31px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:calc(66px + var(--mm-sab, env(safe-area-inset-bottom)));}.tb{position:fixed;transform:translateZ(0);will-change:transform;backface-visibility:hidden;}.tbveil{display:none;}.nav{position:relative;}.nav .right{position:absolute;right:2px;top:16.5px;}'+(document.documentElement.classList.contains('pwa-standalone')?'.nav:not(:has(.date)){padding-top:15px;}':'');
   sh.appendChild(ov);
   if(sprite && !sh.querySelector('#momentum-sprite')) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(1)}</div>`;
@@ -9797,7 +9802,7 @@ function renderNavykyMM(){
   [...sh.childNodes].forEach(n => { if (n !== _spr) n.remove(); });   // ukol 85: sprite se neodpojuje
   if(tplEl) sh.appendChild(tplEl.content.cloneNode(true));
   const ov=document.createElement('style');
-  ov.textContent=':host{-webkit-text-size-adjust:100%;display:block;font-family:var(--font-ui);font-size:19.31px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:calc(66px + env(safe-area-inset-bottom));}.tb{position:fixed;transform:translateZ(0);will-change:transform;backface-visibility:hidden;}.tbveil{display:none;}.nav{position:relative;}.nav .right{position:absolute;right:2px;top:16.5px;}'+(document.documentElement.classList.contains('pwa-standalone')?'.nav:not(:has(.date)){padding-top:15px;}':'');
+  ov.textContent=':host{-webkit-text-size-adjust:100%;display:block;font-family:var(--font-ui);font-size:19.31px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:calc(66px + var(--mm-sab, env(safe-area-inset-bottom)));}.tb{position:fixed;transform:translateZ(0);will-change:transform;backface-visibility:hidden;}.tbveil{display:none;}.nav{position:relative;}.nav .right{position:absolute;right:2px;top:16.5px;}'+(document.documentElement.classList.contains('pwa-standalone')?'.nav:not(:has(.date)){padding-top:15px;}':'');
   sh.appendChild(ov);
   if(sprite && !sh.querySelector('#momentum-sprite')) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr nvk" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(1)}</div>`;
@@ -9925,7 +9930,7 @@ function renderJaMM(){
   [...sh.childNodes].forEach(n => { if (n !== _spr) n.remove(); });   // ukol 85: sprite se neodpojuje
   if(tplEl) sh.appendChild(tplEl.content.cloneNode(true));
   const ov=document.createElement('style');
-  ov.textContent=':host{-webkit-text-size-adjust:100%;display:block;font-family:var(--font-ui);font-size:19.31px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:calc(66px + env(safe-area-inset-bottom));}.tb{position:fixed;transform:translateZ(0);will-change:transform;backface-visibility:hidden;}.tbveil{display:none;}.nav{position:relative;}.nav .right{position:absolute;right:2px;top:16.5px;}'+(document.documentElement.classList.contains('pwa-standalone')?'.nav:not(:has(.date)){padding-top:15px;}':'');
+  ov.textContent=':host{-webkit-text-size-adjust:100%;display:block;font-family:var(--font-ui);font-size:19.31px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:calc(66px + var(--mm-sab, env(safe-area-inset-bottom)));}.tb{position:fixed;transform:translateZ(0);will-change:transform;backface-visibility:hidden;}.tbveil{display:none;}.nav{position:relative;}.nav .right{position:absolute;right:2px;top:16.5px;}'+(document.documentElement.classList.contains('pwa-standalone')?'.nav:not(:has(.date)){padding-top:15px;}':'');
   sh.appendChild(ov);
   if(sprite && !sh.querySelector('#momentum-sprite')) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(2)}</div>`;
@@ -10018,7 +10023,7 @@ function mmMountSub(host, tpl, barIdx){
   [...sh.childNodes].forEach(n => { if (n !== _spr) n.remove(); });   // ukol 85: sprite se neodpojuje
   if(tplEl) sh.appendChild(tplEl.content.cloneNode(true));
   const ov=document.createElement('style');
-  ov.textContent=':host{-webkit-text-size-adjust:100%;display:block;font-family:var(--font-ui);font-size:19.31px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:calc(66px + env(safe-area-inset-bottom));}.tb{position:fixed;transform:translateZ(0);will-change:transform;backface-visibility:hidden;}.tbveil{display:none;}.nav{position:relative;}.nav .right{position:absolute;right:2px;top:16.5px;}'+(document.documentElement.classList.contains('pwa-standalone')?'.fhd{padding-top:15px;}':'');
+  ov.textContent=':host{-webkit-text-size-adjust:100%;display:block;font-family:var(--font-ui);font-size:19.31px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:calc(66px + var(--mm-sab, env(safe-area-inset-bottom)));}.tb{position:fixed;transform:translateZ(0);will-change:transform;backface-visibility:hidden;}.tbveil{display:none;}.nav{position:relative;}.nav .right{position:absolute;right:2px;top:16.5px;}'+(document.documentElement.classList.contains('pwa-standalone')?'.fhd{padding-top:15px;}':'');
   sh.appendChild(ov);
   if(sprite && !sh.querySelector('#momentum-sprite')) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(barIdx)}</div>`;
@@ -10077,7 +10082,7 @@ function mmZapisTplKey(){
 
 // Mont formulare do #zapis-shadow — STEJNA technika jako mmMountSub (mm-tpl + sprite + scr + zoom).
 // Vyska, kterou ma stinovy .scr k dispozici = VNITREK kontejneru hosta. Celoobrazovkove modaly maji
-// `.modal{height:100dvh;padding-top:env(safe-area-inset-top)}` a `box-sizing:border-box`, takze obsahu
+// `.modal{height:100dvh;padding-top:var(--mm-sat, env(safe-area-inset-top))}` a `box-sizing:border-box`, takze obsahu
 // zbyva 100dvh MINUS notch. Driv se sazelo natvrdo window.innerHeight -> okno preteklo presne o vysku
 // safe-area (na iPhonu 15 Pro 59 px): stranka sla posouvat, vpravo jezdila lista a spodni bublina /
 // tlacitko bylo useknute spodni hranou. Marek 2026-08-18.
@@ -12157,7 +12162,7 @@ async function mmFeedPersistComment(payload){
 // Vstup: Já → Nastavení → Pozvat kamaráda. Jméno/kód jsou ukázková data z mockupu, "Sdílet kód" bez akce (no-op).
 function renderSubPozvat(){
   const host=document.getElementById('sub-pozvat'); if(!host) return;
-  const body = `<div class="info" style="margin-top:2px">Vytvoř profil pro nového hráče. Pošli mu párovací kód — zadá ho při prvním přihlášení a profil bude jeho.</div><div class="fld" style="margin-top:12px"><label>Jméno hráče</label><div class="inp">Kuba</div></div><div class="sl" style="margin-top:6px"><span>Párovací kód</span></div><div style="background:var(--card);box-shadow:var(--shadow);border-radius:16px;padding:18px;text-align:center"><div style="font-size:36.21px;font-weight:900;letter-spacing:.12em;color:var(--green)">X7-K2P9</div><div class="pbcap" style="text-align:center;margin-top:6px">Platí 24 h · pošli ho Kubovi</div></div><div class="ff" style="position:absolute;left:14px;right:14px;bottom:calc(66px + env(safe-area-inset-bottom));background:var(--bg);padding-top:8px"><div class="submit"><svg class="i"><use href="#i-share"/></svg> Sdílet kód</div></div>`;
+  const body = `<div class="info" style="margin-top:2px">Vytvoř profil pro nového hráče. Pošli mu párovací kód — zadá ho při prvním přihlášení a profil bude jeho.</div><div class="fld" style="margin-top:12px"><label>Jméno hráče</label><div class="inp">Kuba</div></div><div class="sl" style="margin-top:6px"><span>Párovací kód</span></div><div style="background:var(--card);box-shadow:var(--shadow);border-radius:16px;padding:18px;text-align:center"><div style="font-size:36.21px;font-weight:900;letter-spacing:.12em;color:var(--green)">X7-K2P9</div><div class="pbcap" style="text-align:center;margin-top:6px">Platí 24 h · pošli ho Kubovi</div></div><div class="ff" style="position:absolute;left:14px;right:14px;bottom:calc(66px + var(--mm-sab, env(safe-area-inset-bottom)));background:var(--bg);padding-top:8px"><div class="submit"><svg class="i"><use href="#i-share"/></svg> Sdílet kód</div></div>`;
   const tpl = mmBackHdr('Pozvat kamaráda') + body;
   mmMountSub(host, tpl, 2);
 }
@@ -15201,7 +15206,7 @@ function mmDemoOdznak(){
   el.type = 'button';
   el.textContent = 'DEMO — vypnout';
   // nulova stopa v toku, jinak by prvek prodlouzil stranku (viz ukol 71)
-  el.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top) + 6px);'
+  el.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);top:calc(var(--mm-sat, env(safe-area-inset-top)) + 6px);'
     + 'z-index:60;border:0;cursor:pointer;font:inherit;font-size:11px;font-weight:800;letter-spacing:.04em;'
     + 'color:#fff;background:#C4483C;border-radius:999px;padding:5px 13px;box-shadow:0 3px 12px rgba(0,0,0,.22);'
     + '-webkit-tap-highlight-color:transparent;';
