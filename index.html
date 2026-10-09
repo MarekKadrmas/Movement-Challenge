@@ -3158,6 +3158,12 @@ html.mm-boot body{background:var(--bg,#EEF0EE);}
 #mm-model button{height:28px;padding:0 10px;border-radius:999px;color:#9FB0A3;border:0;background:none;
   cursor:pointer;font:700 11.5px Figtree,system-ui,sans-serif;white-space:nowrap;}
 #mm-model button.on{background:#EDF3ED;color:#1B2320;}
+#mm-shoda{display:none;position:fixed;left:50%;bottom:46px;transform:translateX(-50%);
+  z-index:2147483000;font:700 11px Figtree,system-ui,sans-serif;padding:5px 12px;border-radius:999px;
+  white-space:nowrap;max-width:92vw;overflow:hidden;text-overflow:ellipsis;}
+#mm-shoda.dobre{background:#1E7A4B;color:#EAF7EF;}
+#mm-shoda.spatne{background:#9B2C2C;color:#FDECEC;}
+html.pc-ram #mm-shoda{display:block;}
 #mm-model #mm-popis,#mm-model #mm-zoom{color:#6E7F73;font:700 10.5px Figtree,system-ui,sans-serif;
   white-space:nowrap;padding:0 5px;}
 @media (min-width:500px) and (pointer:fine){
@@ -7348,7 +7354,7 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v165';
+const MM_VERZE = 'v166';
 // Ukol 99 (Marek 14. 9.): "obrazovka se zastavi, ale jakoby se to neviditelne scrolluje dal".
 // Stinova obrazovka si rezervovala vysku podle window.innerHeight. Na iPhonu ta hodnota umi
 // byt vetsi nez skutecna viditelna plocha (listy Safari se sbaluji), takze pod obsahem vzniklo
@@ -7490,6 +7496,88 @@ function mmIosPismo(){
   uplatni();
   setInterval(uplatni, 600);
 }
+// ---- Prenos miry telefon -> pocitac (sloupec players.mira, viz mira-zarizeni.sql) ----
+function mmMiraBloky(){
+  const host = document.getElementById("dnesek-mm");
+  const sh = host && host.shadowRoot; if(!sh) return null;
+  const scr = sh.querySelector(".scr"); if(!scr) return null;
+  const nula = scr.getBoundingClientRect().top;
+  const telo = sh.querySelector(".body"); if(!telo) return null;
+  const b = {};
+  [...telo.children].forEach((el, i) => {
+    const r = el.getBoundingClientRect();
+    if(r.height < 1) return;
+    const jm = (String(el.className).split(" ")[0] || el.tagName.toLowerCase()) + i;
+    b[jm] = { y: Math.round((r.top - nula)*10)/10, h: Math.round(r.height*10)/10 };
+  });
+  const tb = sh.querySelector(".tb");
+  if(tb) b.LISTA = { y: Math.round((tb.getBoundingClientRect().top - nula)*10)/10,
+                     h: Math.round(tb.getBoundingClientRect().height*10)/10 };
+  return b;
+}
+function mmMiraZony(){
+  const d = document.createElement("div");
+  d.style.cssText = "position:fixed;left:0;top:0;width:0;visibility:hidden;"
+    + "padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);";
+  document.body.appendChild(d);
+  const c = getComputedStyle(d);
+  const sat = Math.round(parseFloat(c.paddingTop) || 0);
+  const sab = Math.round(parseFloat(c.paddingBottom) || 0);
+  d.remove();
+  return { sat: sat, sab: sab };
+}
+async function mmMiruUloz(){
+  try{
+    if(document.documentElement.classList.contains("pc-ram")) return;   // v ramecku nikdy
+    if(!matchMedia("(pointer:coarse)").matches) return;                 // jen skutecny dotykovy telefon
+    const pid = state.currentPlayerId; if(!pid) return;
+    const bloky = mmMiraBloky(); if(!bloky) return;
+    const z = mmMiraZony();
+    // lista s hodinami je MIMO appku: vyska displeje minus vyska appky (kdyz je horni zona 0)
+    const lista = (z.sat === 0 && screen && screen.height > window.innerHeight)
+      ? Math.max(0, Math.round(screen.height - window.innerHeight)) : 0;
+    const mira = { w: window.innerWidth, h: window.innerHeight, sat: z.sat, sab: z.sab,
+      lista: lista, kdy: new Date().toISOString(), bloky: bloky };
+    await db.from("players").update({ mira: mira }).eq("id", pid);
+  }catch(_){}
+}
+async function mmMiruNacti(){
+  try{
+    const pid = state.currentPlayerId; if(!pid) return null;
+    const r = await db.from("players").select("mira").eq("id", pid).single();
+    return (r && r.data && r.data.mira) ? r.data.mira : null;
+  }catch(_){ return null; }
+}
+function mmMiruPorovnej(m){
+  const moje = mmMiraBloky();
+  let el = document.getElementById("mm-shoda");
+  if(!el){ el = document.createElement("div"); el.id = "mm-shoda";
+    document.documentElement.appendChild(el); }
+  if(!m || !m.bloky || !moje){ el.textContent = "telefon se jeste nezmeril"; el.className = ""; return; }
+  const rozdily = [];
+  Object.keys(m.bloky).forEach(k => {
+    const a = m.bloky[k], b = moje[k];
+    if(!b) return;
+    const dy = Math.round((b.y - a.y)*10)/10;
+    if(Math.abs(dy) > 1) rozdily.push(k + " " + (dy > 0 ? "+" : "") + dy);
+  });
+  if(rozdily.length){ el.className = "spatne"; el.textContent = "\u2260 lisi se: " + rozdily.join("  "); }
+  else { el.className = "dobre"; el.textContent = "= stejne jako telefon (" + m.w + "\u00d7" + m.h + ")"; }
+}
+function mmMiruPouzij(m){
+  if(!m || !m.w || !m.h) return false;
+  const d = document.documentElement.style;
+  d.setProperty("--ph-w", m.w + "px");
+  d.setProperty("--ph-h", m.h + "px");
+  d.setProperty("--ph-lista", (m.lista || 0) + "px");
+  d.setProperty("--mm-sat", (m.sat || 0) + "px");
+  d.setProperty("--mm-sab", (m.sab || 0) + "px");
+  const k = Math.min(1, (window.innerHeight - 74) / (m.h + (m.lista || 0)), (window.innerWidth - 40) / m.w);
+  d.setProperty("--ph-k", k < 1 ? k.toFixed(3) : "1");
+  document.body.classList.toggle("ma-ostruvek", (m.lista || 0) > 0);
+  document.body.classList.toggle("ma-indikator", (m.sab || 0) > 0);
+  return true;
+}
 function mmPcRam(){
   try{
     if(!window.matchMedia || !window.matchMedia('(min-width:500px) and (pointer:fine)').matches) return;
@@ -7502,6 +7590,10 @@ function mmPcRam(){
     while(b.firstChild) s.appendChild(b.firstChild);
     b.appendChild(s);
     document.documentElement.classList.add('pc-ram');
+    // mira z telefonu ma prednost pred rucne vybranym modelem (bod 1 navodu)
+    setTimeout(() => { mmMiruNacti().then(m => {
+      if(mmMiruPouzij(m)) setTimeout(() => mmMiruPorovnej(m), 1200);
+    }); }, 3000);
     mmPcModely();
   }catch(_){}
 }
@@ -15507,6 +15599,7 @@ db.channel('public:all-test-v12')
 // Fix "koruna poskoci": prvni render az po nacteni fontu (fallback font je uzsi -> po nacteni
 // custom fontu se text rozsiri a prvky za nim odskoci). Pojistka 1.5s, aby boot nikdy nevisel.
 mmPcRam();
+setTimeout(() => { try{ mmMiruUloz(); }catch(_){} }, 4000);
 (async()=>{ try{ if(document.fonts && document.fonts.status!=='loaded') await Promise.race([document.fonts.ready, new Promise(r=>setTimeout(r,1500))]); }catch(e){} await loadData(); try{ await mmFeedLoadComments(); renderAllViews(); }catch(_){} try{ window._mmTabIdx=MM_TAB_IDX[state.view]!=null?MM_TAB_IDX[state.view]:0; const h0=mmBarHost(state.view); mmBarPos(h0&&h0.shadowRoot, window._mmTabIdx, null); }catch(_){} })();
 
 document.getElementById('modal').addEventListener('click', (e) => { if (e.target.id === 'modal') closeModal(); });
