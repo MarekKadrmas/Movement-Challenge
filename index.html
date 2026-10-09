@@ -7345,7 +7345,7 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v162';
+const MM_VERZE = 'v163';
 // Ukol 99 (Marek 14. 9.): "obrazovka se zastavi, ale jakoby se to neviditelne scrolluje dal".
 // Stinova obrazovka si rezervovala vysku podle window.innerHeight. Na iPhonu ta hodnota umi
 // byt vetsi nez skutecna viditelna plocha (listy Safari se sbaluji), takze pod obsahem vzniklo
@@ -7496,6 +7496,7 @@ function mmPcRam(){
     while(b.firstChild) s.appendChild(b.firstChild);
     b.appendChild(s);
     document.documentElement.classList.add('pc-ram');
+    mmIosPismo();   // iPhone zvetsuje text o 120.7% (-webkit-text-size-adjust), Chrome ne
     mmPcModely();
   }catch(_){}
 }
