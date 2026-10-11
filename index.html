@@ -7354,7 +7354,7 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v167';
+const MM_VERZE = 'v168';
 // Ukol 99 (Marek 14. 9.): "obrazovka se zastavi, ale jakoby se to neviditelne scrolluje dal".
 // Stinova obrazovka si rezervovala vysku podle window.innerHeight. Na iPhonu ta hodnota umi
 // byt vetsi nez skutecna viditelna plocha (listy Safari se sbaluji), takze pod obsahem vzniklo
@@ -7502,17 +7502,21 @@ function mmMiraBloky(){
   const sh = host && host.shadowRoot; if(!sh) return null;
   const scr = sh.querySelector(".scr"); if(!scr) return null;
   const nula = scr.getBoundingClientRect().top;
+  // ramecek na PC je zmenseny (scale) -> prepocet zpet na pixely appky, jinak
+  // jsou cisla z PC o par procent mensi a "nesedi" uplne vsechno. Stejne to dela SL.
+  const t2 = document.body;
+  const kk = (t2 && t2.offsetHeight) ? ((t2.getBoundingClientRect().height / t2.offsetHeight) || 1) : 1;
   const telo = sh.querySelector(".body"); if(!telo) return null;
   const b = {};
   [...telo.children].forEach((el, i) => {
     const r = el.getBoundingClientRect();
     if(r.height < 1) return;
     const jm = (String(el.className).split(" ")[0] || el.tagName.toLowerCase()) + i;
-    b[jm] = { y: Math.round((r.top - nula)*10)/10, h: Math.round(r.height*10)/10 };
+    b[jm] = { y: Math.round((r.top - nula)/kk*10)/10, h: Math.round(r.height/kk*10)/10 };
   });
   const tb = sh.querySelector(".tb");
-  if(tb) b.LISTA = { y: Math.round((tb.getBoundingClientRect().top - nula)*10)/10,
-                     h: Math.round(tb.getBoundingClientRect().height*10)/10 };
+  if(tb) b.LISTA = { y: Math.round((tb.getBoundingClientRect().top - nula)/kk*10)/10,
+                     h: Math.round(tb.getBoundingClientRect().height/kk*10)/10 };
   return b;
 }
 function mmMiraZony(){
