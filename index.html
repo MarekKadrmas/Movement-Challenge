@@ -7354,7 +7354,7 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v168';
+const MM_VERZE = 'v169';
 // Ukol 99 (Marek 14. 9.): "obrazovka se zastavi, ale jakoby se to neviditelne scrolluje dal".
 // Stinova obrazovka si rezervovala vysku podle window.innerHeight. Na iPhonu ta hodnota umi
 // byt vetsi nez skutecna viditelna plocha (listy Safari se sbaluji), takze pod obsahem vzniklo
@@ -7534,6 +7534,9 @@ async function mmMiruUloz(){
   try{
     if(document.documentElement.classList.contains("pc-ram")) return;   // v ramecku nikdy
     if(!matchMedia("(pointer:coarse)").matches) return;                 // jen skutecny dotykovy telefon
+    const zPlochy = (navigator.standalone === true)
+      || (matchMedia("(display-mode: standalone)").matches);
+    if(!zPlochy) return;   // v Safari vyjde vyska listy spatne (lista prohlizece, ne hodin)
     const pid = state.currentPlayerId; if(!pid) return;
     const bloky = mmMiraBloky(); if(!bloky) return;
     const z = mmMiraZony();
@@ -15612,6 +15615,7 @@ mmPcRam();
     try{
       if(!document.documentElement.classList.contains('pc-ram')
          && matchMedia('(pointer:coarse)').matches
+         && (navigator.standalone === true || matchMedia('(display-mode: standalone)').matches)
          && state.currentPlayerId && mmMiraBloky()){
         mmMiruUloz(); return;
       }
