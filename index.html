@@ -7377,7 +7377,7 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v172';
+const MM_VERZE = 'v173';
 // Ukol 99 (Marek 14. 9.): "obrazovka se zastavi, ale jakoby se to neviditelne scrolluje dal".
 // Stinova obrazovka si rezervovala vysku podle window.innerHeight. Na iPhonu ta hodnota umi
 // byt vetsi nez skutecna viditelna plocha (listy Safari se sbaluji), takze pod obsahem vzniklo
@@ -7487,32 +7487,63 @@ function mmMiraTelefonu(){
       mmOkno: (document.documentElement.style.getPropertyValue('--mm-okno') || '').trim(),
       ios: (navigator.userAgent.match(/OS (\d+)_(\d+)/) || []).slice(1).join('.') } };
 }
-// TELEFON: zmerit a ulozit - jen appka z plochy na dotykovem zarizeni, nikdy v ramecku.
-// Uklada se jen kdyz se mira zmenila; mereni nese cas, aby ho starsi kopie neprepsala.
+// Stav ukládání míry na telefonu - ukáže se ve výpisu po ťuknutí na číslo verze.
+function mmMiraStav(text){
+  const s = { kdy: Date.now(), text: text };
+  window.__mmMiraStav = s;
+  try{ localStorage.setItem('mc-mira-stav', JSON.stringify(s)); }catch(_){}
+}
+function mmMiraStavText(){
+  let s = window.__mmMiraStav;
+  if(!s){ try{ s = JSON.parse(localStorage.getItem('mc-mira-stav') || 'null'); }catch(_){} }
+  if(!s) return 'zatím nic';
+  const d = new Date(s.kdy);
+  return s.text + ' (' + d.getHours() + ':' + String(d.getMinutes()).padStart(2, '0')
+    + ':' + String(d.getSeconds()).padStart(2, '0') + ')';
+}
+// TELEFON: změřit a uložit - jen appka z plochy na dotykovém zařízení, nikdy v rámečku.
+// Ukládá se jen když se míra změnila; měření nese čas, aby ho starší kopie nepřepsala.
+let _mmMiraUlozeni = 0;
 async function mmMiruUloz(){
   try{
     if(window.__mmRamVnitrek || window.__mmRamVnejsi) return false;
-    if(!(window.matchMedia && matchMedia('(pointer:coarse)').matches) || !mmZPlochy()) return false;
-    const pid = state && state.currentPlayerId; if(!pid) return false;
-    const m = mmMiraTelefonu(); if(!m) return false;
+    if(!(window.matchMedia && matchMedia('(pointer:coarse)').matches)) return false;
+    if(!mmZPlochy()){ mmMiraStav('neukládá se: appka není spuštěná z plochy'); return false; }
+    const pid = state && state.currentPlayerId;
+    if(!pid){ mmMiraStav('čekám na přihlášení'); return false; }
+    const m = mmMiraTelefonu();
+    if(!m){ mmMiraStav('čekám na Přehled'); return false; }
     let stara = null; try{ stara = JSON.parse(localStorage.getItem('mc-mira') || 'null'); }catch(_){}
     if(stara){ const s2 = Object.assign({}, stara); delete s2.cas;
-      if(JSON.stringify(s2) === JSON.stringify(m)) return true; }
+      if(JSON.stringify(s2) === JSON.stringify(m)){ mmMiraStav('beze změny, uloženo dřív'); return true; } }
+    // pojistka: uložení vyvolá v appce překreslení - kdyby se míra pokaždé lišila, nesmí se to zacyklit
+    if(_mmMiraUlozeni >= 4){ mmMiraStav('pojistka: v tomhle spuštění už 4 uložení'); return true; }
     m.cas = Date.now();
     const r = await db.from('players').update({ mira: m }).eq('id', pid);
-    if(r && r.error) return false;
+    if(r && r.error){ mmMiraStav('chyba ukládání: ' + (r.error.message || r.error.code || '?')); return false; }
+    _mmMiraUlozeni++;
     try{ localStorage.setItem('mc-mira', JSON.stringify(m)); }catch(_){}
+    mmMiraStav('uloženo ' + m.w + '×' + m.h);
     return true;
-  }catch(_){ return false; }
+  }catch(e){ mmMiraStav('chyba: ' + ((e && e.message) || e)); return false; }
 }
+// Měří se opakovaně ~2 minuty po startu (ukládá jen při změně) a znovu po návratu do appky -
+// appka z plochy se při otevření často jen probudí a startovní kód vůbec neproběhne.
 function mmMiruSpoustej(){
   if(window.__mmRamVnitrek || window.__mmRamVnejsi) return;
   if(!(window.matchMedia && matchMedia('(pointer:coarse)').matches)) return;
-  let pokus = 0;
-  const zkus = async () => { pokus++; if(await mmMiruUloz()) return; if(pokus < 12) setTimeout(zkus, 2500); };
-  setTimeout(zkus, 3000);
-  let t = null;
-  window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(mmMiruUloz, 400); });
+  let konec = 0, t = null;
+  const kolo = () => {
+    clearTimeout(t);
+    if(Date.now() > konec) return;
+    Promise.resolve(mmMiruUloz()).then(() => { t = setTimeout(kolo, 3000); }, () => { t = setTimeout(kolo, 3000); });
+  };
+  const start = zpozdeni => { konec = Date.now() + 120000; clearTimeout(t); t = setTimeout(kolo, zpozdeni); };
+  start(2500);
+  let tr = null;
+  window.addEventListener('resize', () => { clearTimeout(tr); tr = setTimeout(mmMiruUloz, 400); });
+  document.addEventListener('visibilitychange', () => { if(document.visibilityState === 'visible') start(1200); });
+  window.addEventListener('pageshow', () => start(1200));
 }
 // Volá rámeček na PC přes iframe (db a state nejsou na window).
 function mmMiruZDb(){
@@ -7534,6 +7565,7 @@ function mmMiryUkaz(){
   }
   el = document.createElement('div');
   el.id = 'mm-miry';
+  radky.push('ukládání: ' + mmMiraStavText());
   el.style.cssText = 'position:fixed;left:8px;right:8px;top:calc(var(--mm-sat, env(safe-area-inset-top,0px)) + 30px);'
     + 'z-index:2147483000;font:700 11px/1.5 ui-monospace,Menlo,monospace;color:#fff;'
     + 'background:rgba(0,0,0,.9);padding:8px 10px;border-radius:10px;white-space:pre;';
@@ -7642,31 +7674,39 @@ function mmRamecekPostav(){
       uplatni();
     });
   };
-  // míra z telefonu se načte přes appku v iframe (má db i přihlášeného hráče)
-  let pokusu = 0;
+  // míra z telefonu se načte přes appku v iframe (má db i přihlášeného hráče);
+  // hlídá se průběžně, takže nové měření z telefonu se ukáže i bez F5
+  let pokusu = 0, hlida = false;
+  const pouzijMiru = m => {
+    if(!(m.lista === 0 || (m.lista > 20 && m.lista < 70))) m.lista = 0;   // nesmysl (Safari) nebrat
+    const nova = !tel || (m.cas || 0) !== (tel.cas || 0);
+    tel = m;
+    let videl = 0; try{ videl = +localStorage.getItem('mc-tel-videl') || 0; }catch(_){}
+    if((m.cas || 0) > videl){ volba = 't';                 // nové měření se samo vybere (SL bod 9)
+      try{ localStorage.setItem('mc-tel-videl', String(m.cas || 0)); localStorage.setItem('mc-model', 't'); }catch(_){} }
+    if(nova){ kresli(); uplatni(); } else porovnej();
+  };
   const nactiTelefon = () => {
-    pokusu++;
     let w = null; try{ w = ifr.contentWindow; }catch(_){}
     let dotaz = null; try{ dotaz = (w && typeof w.mmMiruZDb === 'function') ? w.mmMiruZDb() : null; }catch(_){}
     if(!dotaz){
+      pokusu++;
       if(pokusu < 60) setTimeout(nactiTelefon, 800);
       else { pruh.className = 'ceka'; pruh.textContent = 'přihlas se v rámečku, ať si můžu vzít míru z telefonu'; }
       return;
     }
+    pokusu = 0;
     Promise.resolve(dotaz).then(r => {
-      const m = r && r.data && r.data.mira;
-      if(m && m.w > 0 && m.h > 0){
-        if(!(m.lista === 0 || (m.lista > 20 && m.lista < 70))) m.lista = 0;   // nesmysl (Safari) nebrat
-        tel = m;
-        let videl = 0; try{ videl = +localStorage.getItem('mc-tel-videl') || 0; }catch(_){}
-        if((m.cas || 0) > videl || volba === 't'){ volba = 't';           // nové měření se samo vybere (SL bod 9)
-          try{ localStorage.setItem('mc-tel-videl', String(m.cas || 0)); localStorage.setItem('mc-model', 't'); }catch(_){} }
-      }
-      kresli(); uplatni();
-    }, () => { kresli(); uplatni(); });
+      if(r && r.error){ pruh.className = 'ne';
+        pruh.textContent = 'nemůžu přečíst míru z databáze: ' + (r.error.message || r.error.code || '?'); }
+      else { const m = r && r.data && r.data.mira; if(m && m.w > 0 && m.h > 0) pouzijMiru(m); else porovnej(); }
+      setTimeout(nactiTelefon, 8000);
+    }, e => { pruh.className = 'ne';
+      pruh.textContent = 'nemůžu přečíst míru z databáze: ' + ((e && e.message) || e);
+      setTimeout(nactiTelefon, 8000); });
   };
   kresli(); uplatni();
-  ifr.addEventListener('load', () => setTimeout(nactiTelefon, 400));
+  ifr.addEventListener('load', () => { if(hlida) return; hlida = true; setTimeout(nactiTelefon, 400); });
   window.addEventListener('resize', uplatni);
 }
 
