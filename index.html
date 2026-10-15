@@ -2763,69 +2763,69 @@ body{padding-bottom:calc(80px + var(--mm-sab, env(safe-area-inset-bottom)));}
 .mm .znsez:not(.cvs2) .znip .znri{width:16px;height:16px;color:inherit;}
 .mm .znsez:not(.cvs2) .znrn{font-size:13.81px;letter-spacing:-.005em;color:color-mix(in srgb,var(--label) 82%,var(--sec));}
 .mm .znsez:not(.cvs2) .znr.on .znip{background:rgba(255,255,255,.9);color:var(--green);}
-.mm .znsez:not(.cvs2) .znr.on .znrn{color:#fff;}
-/* 92g: Zapis bez bilych karet - bubliny primo na podkladu jako na Navycich.
-   Plati jen na .zapisb (formular navyku ma .tcompact a zustava beze zmeny).
-   "> .fld" = jen dve velke karty v tele; karta s Datem je uvnitr .ff. */
-.mm .body.formb.zapisb>.fld{background:transparent;box-shadow:none;border-radius:0;padding:0;margin-bottom:12px;}
-.mm .body.formb.zapisb>.fld>label{margin-bottom:7px;}
-.mm .body.formb.zapisb .znsez:not(.cvs2){max-height:300px;gap:5px;}
-.mm .body.formb.zapisb .znsez:not(.cvs2) .znr{height:40px;min-height:40px;padding:5px 12px 5px 6px;}
-.mm .body.formb.zapisb .znsez:not(.cvs2) .znip{width:28px;height:28px;flex:0 0 28px;}
-.mm .body.formb.zapisb .znsez:not(.cvs2) .znip .znri{width:15px;height:15px;}
-.mm .body.formb.zapisb .znsez:not(.cvs2) .znrn{font-size:13.2px;}
-.mm .body.formb.zapisb .znfil{-webkit-mask-image:linear-gradient(to right,#000 0,#000 88%,transparent 100%);mask-image:linear-gradient(to right,#000 0,#000 88%,transparent 100%);}
-.mm .body.formb.zapisb .znhled{margin-bottom:8px;}
-/* 92i: strankou nejde posouvat - roluje se jen seznam aktivit; Narocnost sedi nad patickou. */
-.mm .body.formb.zapisb{display:flex;flex-direction:column;min-height:0;overflow:hidden;}
-.mm .body.formb.zapisb>.fld.zn{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;}
-.mm .body.formb.zapisb .znpick{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;}
-.mm .body.formb.zapisb .znsez:not(.cvs2){flex:1 1 auto;min-height:0;max-height:none;}
-.mm .scr>.lvlwrap{flex:0 0 auto;padding:0 14px 2px;margin:0;background:transparent;box-shadow:none;border-radius:0;}
-.mm .scr>.lvlwrap>label{display:block;margin-bottom:3px;}
-.mm .scr>.lvlwrap .lvlnum{font-size:18px;}
-.mm .scr>.lvlwrap .lvldesc{font-size:11px;margin-top:1px;min-height:0;}
-.mm .scr>.lvlwrap .lvltrack{height:28px;margin-top:5px;}
-.mm .scr>.lvlwrap .lvlends{margin-top:3px;font-size:9px;}
-.mm .scr>.lvlwrap .lvlhint{display:none;}
-/* 92j: nic se nesmi smrsknout krome seznamu; zadna dira po stare paticce. */
-.mm .body.formb.zapisb{padding-bottom:0;}
-.mm .body.formb.zapisb>.fld.zn>*:not(.znpick){flex-shrink:0;}
-.mm .body.formb.zapisb .znpick>*:not(.znsez){flex-shrink:0;}
-.mm .body.formb.zapisb .znpick{flex:1 1 auto;min-height:0;}
-.mm .body.formb.zapisb .znpick[hidden]{display:none;}
-/* 92o: zadna uriznuta bublina, mensi bubliny, uspora nahore, vyssi draha. */
-.mm .body.formb.zapisb .znsez:not(.cvs2){scroll-snap-type:y mandatory;}
-.mm .body.formb.zapisb .znsez:not(.cvs2) .znr{height:36px;min-height:36px;padding:4px 12px 4px 5px;scroll-snap-align:start;}
-.mm .body.formb.zapisb .znsez:not(.cvs2) .znip{width:26px;height:26px;flex:0 0 26px;}
-.mm .body.formb.zapisb .znsez:not(.cvs2) .znip .znri{width:14px;height:14px;}
-.mm .body.formb.zapisb .znsez:not(.cvs2) .znrn{font-size:12.9px;}
-/* 92t: barva kategorie do kolecka ikony i do aktivniho chipu; srdicko ruzove. */
-.mm .body.formb.zapisb .znsez:not(.cvs2) .znip{background:color-mix(in srgb,var(--kc,var(--green)) 16%,transparent);color:var(--kc,var(--green));}
-.mm .body.formb.zapisb .znf.on{background:color-mix(in srgb,var(--kc,var(--green)) 15%,var(--card));color:var(--kc,var(--green));}
-.mm .body.formb.zapisb .znsez:not(.cvs2) .znr.on{background:var(--kc,var(--green));}
-.mm .body.formb.zapisb .znsez:not(.cvs2) .znr.on .znip{background:rgba(255,255,255,.92);color:var(--kc,var(--green));}
-.mm .body.formb.zapisb .znrs .i{width:15px;height:15px;color:var(--ter);opacity:.2;fill:none;}
-.mm .body.formb.zapisb .znrs.on{background:color-mix(in srgb,#E8629F 12%,transparent);}
-.mm .body.formb.zapisb .znrs.on .i{color:#E8629F;opacity:1;fill:currentColor;}
-.mm .body.formb.zapisb .znf.znfo{color:#E8629F;}
-.mm .body.formb.zapisb .znf.znfo.on{background:color-mix(in srgb,#E8629F 15%,var(--card));color:#E8629F;}
-/* ZA KOHO: jedna posuvna rada misto dvou. */
-.mm .body.formb.zapisb>.fld:not(.zn){margin-bottom:8px;}
-.mm .body.formb.zapisb>.fld:not(.zn) .pickrow{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
-.mm .body.formb.zapisb>.fld:not(.zn) .pickrow::-webkit-scrollbar{display:none;}
-.mm .body.formb.zapisb>.fld:not(.zn) .pk{flex:0 0 auto;padding:6px 12px;font-size:13.2px;}
-/* Narocnost: vyssi draha, kolecko na stredu - stejna mezera kolem dokola. */
-.mm .scr>.lvlwrap .lvlknob{width:24px;height:24px;margin-left:-12px;top:4px;font-size:12.5px;}
-.mm .body.formb.zapisb .znsez:not(.cvs2){flex:1 1 auto;min-height:0;max-height:none;}
-/* Narocnost kompaktne - jen cislo, body a drahu. */
-.mm .scr>.lvlwrap .lvlends{display:none;}
-.mm .scr>.lvlwrap .lvlnum{font-size:16px;}
-.mm .scr>.lvlwrap .lvldesc{font-size:10.5px;margin-top:0;min-height:0;}
-.mm .scr>.lvlwrap .lvltrack{height:32px;margin-top:4px;}
-.mm .scr>.lvlwrap>label{font-size:9.5px;margin-bottom:2px;}
-.mm .scr>.lvlwrap{padding-bottom:6px;}
-.mm .scr>.lvlwrap>label{text-transform:uppercase;letter-spacing:.06em;font-weight:800;color:var(--ter);}
+.mm .znsez:not(.cvs2) .znr.on .znrn{color:#fff;}
+/* 92g: Zapis bez bilych karet - bubliny primo na podkladu jako na Navycich.
+   Plati jen na .zapisb (formular navyku ma .tcompact a zustava beze zmeny).
+   "> .fld" = jen dve velke karty v tele; karta s Datem je uvnitr .ff. */
+.mm .body.formb.zapisb>.fld{background:transparent;box-shadow:none;border-radius:0;padding:0;margin-bottom:12px;}
+.mm .body.formb.zapisb>.fld>label{margin-bottom:7px;}
+.mm .body.formb.zapisb .znsez:not(.cvs2){max-height:300px;gap:5px;}
+.mm .body.formb.zapisb .znsez:not(.cvs2) .znr{height:40px;min-height:40px;padding:5px 12px 5px 6px;}
+.mm .body.formb.zapisb .znsez:not(.cvs2) .znip{width:28px;height:28px;flex:0 0 28px;}
+.mm .body.formb.zapisb .znsez:not(.cvs2) .znip .znri{width:15px;height:15px;}
+.mm .body.formb.zapisb .znsez:not(.cvs2) .znrn{font-size:13.2px;}
+.mm .body.formb.zapisb .znfil{-webkit-mask-image:linear-gradient(to right,#000 0,#000 88%,transparent 100%);mask-image:linear-gradient(to right,#000 0,#000 88%,transparent 100%);}
+.mm .body.formb.zapisb .znhled{margin-bottom:8px;}
+/* 92i: strankou nejde posouvat - roluje se jen seznam aktivit; Narocnost sedi nad patickou. */
+.mm .body.formb.zapisb{display:flex;flex-direction:column;min-height:0;overflow:hidden;}
+.mm .body.formb.zapisb>.fld.zn{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;}
+.mm .body.formb.zapisb .znpick{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;}
+.mm .body.formb.zapisb .znsez:not(.cvs2){flex:1 1 auto;min-height:0;max-height:none;}
+.mm .scr>.lvlwrap{flex:0 0 auto;padding:0 14px 2px;margin:0;background:transparent;box-shadow:none;border-radius:0;}
+.mm .scr>.lvlwrap>label{display:block;margin-bottom:3px;}
+.mm .scr>.lvlwrap .lvlnum{font-size:18px;}
+.mm .scr>.lvlwrap .lvldesc{font-size:11px;margin-top:1px;min-height:0;}
+.mm .scr>.lvlwrap .lvltrack{height:28px;margin-top:5px;}
+.mm .scr>.lvlwrap .lvlends{margin-top:3px;font-size:9px;}
+.mm .scr>.lvlwrap .lvlhint{display:none;}
+/* 92j: nic se nesmi smrsknout krome seznamu; zadna dira po stare paticce. */
+.mm .body.formb.zapisb{padding-bottom:0;}
+.mm .body.formb.zapisb>.fld.zn>*:not(.znpick){flex-shrink:0;}
+.mm .body.formb.zapisb .znpick>*:not(.znsez){flex-shrink:0;}
+.mm .body.formb.zapisb .znpick{flex:1 1 auto;min-height:0;}
+.mm .body.formb.zapisb .znpick[hidden]{display:none;}
+/* 92o: zadna uriznuta bublina, mensi bubliny, uspora nahore, vyssi draha. */
+.mm .body.formb.zapisb .znsez:not(.cvs2){scroll-snap-type:y mandatory;}
+.mm .body.formb.zapisb .znsez:not(.cvs2) .znr{height:36px;min-height:36px;padding:4px 12px 4px 5px;scroll-snap-align:start;}
+.mm .body.formb.zapisb .znsez:not(.cvs2) .znip{width:26px;height:26px;flex:0 0 26px;}
+.mm .body.formb.zapisb .znsez:not(.cvs2) .znip .znri{width:14px;height:14px;}
+.mm .body.formb.zapisb .znsez:not(.cvs2) .znrn{font-size:12.9px;}
+/* 92t: barva kategorie do kolecka ikony i do aktivniho chipu; srdicko ruzove. */
+.mm .body.formb.zapisb .znsez:not(.cvs2) .znip{background:color-mix(in srgb,var(--kc,var(--green)) 16%,transparent);color:var(--kc,var(--green));}
+.mm .body.formb.zapisb .znf.on{background:color-mix(in srgb,var(--kc,var(--green)) 15%,var(--card));color:var(--kc,var(--green));}
+.mm .body.formb.zapisb .znsez:not(.cvs2) .znr.on{background:var(--kc,var(--green));}
+.mm .body.formb.zapisb .znsez:not(.cvs2) .znr.on .znip{background:rgba(255,255,255,.92);color:var(--kc,var(--green));}
+.mm .body.formb.zapisb .znrs .i{width:15px;height:15px;color:var(--ter);opacity:.2;fill:none;}
+.mm .body.formb.zapisb .znrs.on{background:color-mix(in srgb,#E8629F 12%,transparent);}
+.mm .body.formb.zapisb .znrs.on .i{color:#E8629F;opacity:1;fill:currentColor;}
+.mm .body.formb.zapisb .znf.znfo{color:#E8629F;}
+.mm .body.formb.zapisb .znf.znfo.on{background:color-mix(in srgb,#E8629F 15%,var(--card));color:#E8629F;}
+/* ZA KOHO: jedna posuvna rada misto dvou. */
+.mm .body.formb.zapisb>.fld:not(.zn){margin-bottom:8px;}
+.mm .body.formb.zapisb>.fld:not(.zn) .pickrow{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.mm .body.formb.zapisb>.fld:not(.zn) .pickrow::-webkit-scrollbar{display:none;}
+.mm .body.formb.zapisb>.fld:not(.zn) .pk{flex:0 0 auto;padding:6px 12px;font-size:13.2px;}
+/* Narocnost: vyssi draha, kolecko na stredu - stejna mezera kolem dokola. */
+.mm .scr>.lvlwrap .lvlknob{width:24px;height:24px;margin-left:-12px;top:4px;font-size:12.5px;}
+.mm .body.formb.zapisb .znsez:not(.cvs2){flex:1 1 auto;min-height:0;max-height:none;}
+/* Narocnost kompaktne - jen cislo, body a drahu. */
+.mm .scr>.lvlwrap .lvlends{display:none;}
+.mm .scr>.lvlwrap .lvlnum{font-size:16px;}
+.mm .scr>.lvlwrap .lvldesc{font-size:10.5px;margin-top:0;min-height:0;}
+.mm .scr>.lvlwrap .lvltrack{height:32px;margin-top:4px;}
+.mm .scr>.lvlwrap>label{font-size:9.5px;margin-bottom:2px;}
+.mm .scr>.lvlwrap{padding-bottom:6px;}
+.mm .scr>.lvlwrap>label{text-transform:uppercase;letter-spacing:.06em;font-weight:800;color:var(--ter);}
 .mm .lvlbox ~ .lvlhint,.mm .fld .lvlhint{display:none;}
 .mm .lvlhead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;}
 .mm .lvlnum{font-size:22.93px;font-weight:900;letter-spacing:-.04em;line-height:1;color:var(--label);font-family:var(--font-display);}
@@ -3213,6 +3213,8 @@ body.mm-full{background:var(--bg);padding-bottom:0;}
       var a = q.match(/[?&]sab=(\d+)/), b = q.match(/[?&]sat=(\d+)/), s = document.documentElement.style;
       s.setProperty('--mm-sab', (a ? a[1] : 0) + 'px');
       s.setProperty('--mm-sat', (b ? b[1] : 0) + 'px');
+      // appka z plochy ma vlastni upravy (napr. .main o 33 px vys) - ramecek je musi mit taky
+      if (/[?&]plocha=1(&|$)/.test(q)) document.documentElement.classList.add('pwa-standalone');
       return;
     }
     if (window.top !== window.self) return;
@@ -3991,69 +3993,69 @@ input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-sel
 .znsez:not(.cvs2) .znip .znri{width:16px;height:16px;color:inherit;}
 .znsez:not(.cvs2) .znrn{font-size:13.81px;letter-spacing:-.005em;color:color-mix(in srgb,var(--label) 82%,var(--sec));}
 .znsez:not(.cvs2) .znr.on .znip{background:rgba(255,255,255,.9);color:var(--green);}
-.znsez:not(.cvs2) .znr.on .znrn{color:#fff;}
-/* 92g: Zapis bez bilych karet - bubliny primo na podkladu jako na Navycich.
-   Plati jen na .zapisb (formular navyku ma .tcompact a zustava beze zmeny).
-   "> .fld" = jen dve velke karty v tele; karta s Datem je uvnitr .ff. */
-.body.formb.zapisb>.fld{background:transparent;box-shadow:none;border-radius:0;padding:0;margin-bottom:12px;}
-.body.formb.zapisb>.fld>label{margin-bottom:7px;}
-.body.formb.zapisb .znsez:not(.cvs2){max-height:300px;gap:5px;}
-.body.formb.zapisb .znsez:not(.cvs2) .znr{height:40px;min-height:40px;padding:5px 12px 5px 6px;}
-.body.formb.zapisb .znsez:not(.cvs2) .znip{width:28px;height:28px;flex:0 0 28px;}
-.body.formb.zapisb .znsez:not(.cvs2) .znip .znri{width:15px;height:15px;}
-.body.formb.zapisb .znsez:not(.cvs2) .znrn{font-size:13.2px;}
-.body.formb.zapisb .znfil{-webkit-mask-image:linear-gradient(to right,#000 0,#000 88%,transparent 100%);mask-image:linear-gradient(to right,#000 0,#000 88%,transparent 100%);}
-.body.formb.zapisb .znhled{margin-bottom:8px;}
-/* 92i: strankou nejde posouvat - roluje se jen seznam aktivit; Narocnost sedi nad patickou. */
-.body.formb.zapisb{display:flex;flex-direction:column;min-height:0;overflow:hidden;}
-.body.formb.zapisb>.fld.zn{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;}
-.body.formb.zapisb .znpick{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;}
-.body.formb.zapisb .znsez:not(.cvs2){flex:1 1 auto;min-height:0;max-height:none;}
-.scr>.lvlwrap{flex:0 0 auto;padding:0 14px 2px;margin:0;background:transparent;box-shadow:none;border-radius:0;}
-.scr>.lvlwrap>label{display:block;margin-bottom:3px;}
-.scr>.lvlwrap .lvlnum{font-size:18px;}
-.scr>.lvlwrap .lvldesc{font-size:11px;margin-top:1px;min-height:0;}
-.scr>.lvlwrap .lvltrack{height:28px;margin-top:5px;}
-.scr>.lvlwrap .lvlends{margin-top:3px;font-size:9px;}
-.scr>.lvlwrap .lvlhint{display:none;}
-/* 92j: nic se nesmi smrsknout krome seznamu; zadna dira po stare paticce. */
-.body.formb.zapisb{padding-bottom:0;}
-.body.formb.zapisb>.fld.zn>*:not(.znpick){flex-shrink:0;}
-.body.formb.zapisb .znpick>*:not(.znsez){flex-shrink:0;}
-.body.formb.zapisb .znpick{flex:1 1 auto;min-height:0;}
-.body.formb.zapisb .znpick[hidden]{display:none;}
-/* 92o: zadna uriznuta bublina, mensi bubliny, uspora nahore, vyssi draha. */
-.body.formb.zapisb .znsez:not(.cvs2){scroll-snap-type:y mandatory;}
-.body.formb.zapisb .znsez:not(.cvs2) .znr{height:36px;min-height:36px;padding:4px 12px 4px 5px;scroll-snap-align:start;}
-.body.formb.zapisb .znsez:not(.cvs2) .znip{width:26px;height:26px;flex:0 0 26px;}
-.body.formb.zapisb .znsez:not(.cvs2) .znip .znri{width:14px;height:14px;}
-.body.formb.zapisb .znsez:not(.cvs2) .znrn{font-size:12.9px;}
-/* 92t: barva kategorie do kolecka ikony i do aktivniho chipu; srdicko ruzove. */
-.body.formb.zapisb .znsez:not(.cvs2) .znip{background:color-mix(in srgb,var(--kc,var(--green)) 16%,transparent);color:var(--kc,var(--green));}
-.body.formb.zapisb .znf.on{background:color-mix(in srgb,var(--kc,var(--green)) 15%,var(--card));color:var(--kc,var(--green));}
-.body.formb.zapisb .znsez:not(.cvs2) .znr.on{background:var(--kc,var(--green));}
-.body.formb.zapisb .znsez:not(.cvs2) .znr.on .znip{background:rgba(255,255,255,.92);color:var(--kc,var(--green));}
-.body.formb.zapisb .znrs .i{width:15px;height:15px;color:var(--ter);opacity:.2;fill:none;}
-.body.formb.zapisb .znrs.on{background:color-mix(in srgb,#E8629F 12%,transparent);}
-.body.formb.zapisb .znrs.on .i{color:#E8629F;opacity:1;fill:currentColor;}
-.body.formb.zapisb .znf.znfo{color:#E8629F;}
-.body.formb.zapisb .znf.znfo.on{background:color-mix(in srgb,#E8629F 15%,var(--card));color:#E8629F;}
-/* ZA KOHO: jedna posuvna rada misto dvou. */
-.body.formb.zapisb>.fld:not(.zn){margin-bottom:8px;}
-.body.formb.zapisb>.fld:not(.zn) .pickrow{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
-.body.formb.zapisb>.fld:not(.zn) .pickrow::-webkit-scrollbar{display:none;}
-.body.formb.zapisb>.fld:not(.zn) .pk{flex:0 0 auto;padding:6px 12px;font-size:13.2px;}
-/* Narocnost: vyssi draha, kolecko na stredu - stejna mezera kolem dokola. */
-.scr>.lvlwrap .lvlknob{width:24px;height:24px;margin-left:-12px;top:4px;font-size:12.5px;}
-.body.formb.zapisb .znsez:not(.cvs2){flex:1 1 auto;min-height:0;max-height:none;}
-/* Narocnost kompaktne - jen cislo, body a drahu. */
-.scr>.lvlwrap .lvlends{display:none;}
-.scr>.lvlwrap .lvlnum{font-size:16px;}
-.scr>.lvlwrap .lvldesc{font-size:10.5px;margin-top:0;min-height:0;}
-.scr>.lvlwrap .lvltrack{height:32px;margin-top:4px;}
-.scr>.lvlwrap>label{font-size:9.5px;margin-bottom:2px;}
-.scr>.lvlwrap{padding-bottom:6px;}
-.scr>.lvlwrap>label{text-transform:uppercase;letter-spacing:.06em;font-weight:800;color:var(--ter);}
+.znsez:not(.cvs2) .znr.on .znrn{color:#fff;}
+/* 92g: Zapis bez bilych karet - bubliny primo na podkladu jako na Navycich.
+   Plati jen na .zapisb (formular navyku ma .tcompact a zustava beze zmeny).
+   "> .fld" = jen dve velke karty v tele; karta s Datem je uvnitr .ff. */
+.body.formb.zapisb>.fld{background:transparent;box-shadow:none;border-radius:0;padding:0;margin-bottom:12px;}
+.body.formb.zapisb>.fld>label{margin-bottom:7px;}
+.body.formb.zapisb .znsez:not(.cvs2){max-height:300px;gap:5px;}
+.body.formb.zapisb .znsez:not(.cvs2) .znr{height:40px;min-height:40px;padding:5px 12px 5px 6px;}
+.body.formb.zapisb .znsez:not(.cvs2) .znip{width:28px;height:28px;flex:0 0 28px;}
+.body.formb.zapisb .znsez:not(.cvs2) .znip .znri{width:15px;height:15px;}
+.body.formb.zapisb .znsez:not(.cvs2) .znrn{font-size:13.2px;}
+.body.formb.zapisb .znfil{-webkit-mask-image:linear-gradient(to right,#000 0,#000 88%,transparent 100%);mask-image:linear-gradient(to right,#000 0,#000 88%,transparent 100%);}
+.body.formb.zapisb .znhled{margin-bottom:8px;}
+/* 92i: strankou nejde posouvat - roluje se jen seznam aktivit; Narocnost sedi nad patickou. */
+.body.formb.zapisb{display:flex;flex-direction:column;min-height:0;overflow:hidden;}
+.body.formb.zapisb>.fld.zn{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;}
+.body.formb.zapisb .znpick{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;}
+.body.formb.zapisb .znsez:not(.cvs2){flex:1 1 auto;min-height:0;max-height:none;}
+.scr>.lvlwrap{flex:0 0 auto;padding:0 14px 2px;margin:0;background:transparent;box-shadow:none;border-radius:0;}
+.scr>.lvlwrap>label{display:block;margin-bottom:3px;}
+.scr>.lvlwrap .lvlnum{font-size:18px;}
+.scr>.lvlwrap .lvldesc{font-size:11px;margin-top:1px;min-height:0;}
+.scr>.lvlwrap .lvltrack{height:28px;margin-top:5px;}
+.scr>.lvlwrap .lvlends{margin-top:3px;font-size:9px;}
+.scr>.lvlwrap .lvlhint{display:none;}
+/* 92j: nic se nesmi smrsknout krome seznamu; zadna dira po stare paticce. */
+.body.formb.zapisb{padding-bottom:0;}
+.body.formb.zapisb>.fld.zn>*:not(.znpick){flex-shrink:0;}
+.body.formb.zapisb .znpick>*:not(.znsez){flex-shrink:0;}
+.body.formb.zapisb .znpick{flex:1 1 auto;min-height:0;}
+.body.formb.zapisb .znpick[hidden]{display:none;}
+/* 92o: zadna uriznuta bublina, mensi bubliny, uspora nahore, vyssi draha. */
+.body.formb.zapisb .znsez:not(.cvs2){scroll-snap-type:y mandatory;}
+.body.formb.zapisb .znsez:not(.cvs2) .znr{height:36px;min-height:36px;padding:4px 12px 4px 5px;scroll-snap-align:start;}
+.body.formb.zapisb .znsez:not(.cvs2) .znip{width:26px;height:26px;flex:0 0 26px;}
+.body.formb.zapisb .znsez:not(.cvs2) .znip .znri{width:14px;height:14px;}
+.body.formb.zapisb .znsez:not(.cvs2) .znrn{font-size:12.9px;}
+/* 92t: barva kategorie do kolecka ikony i do aktivniho chipu; srdicko ruzove. */
+.body.formb.zapisb .znsez:not(.cvs2) .znip{background:color-mix(in srgb,var(--kc,var(--green)) 16%,transparent);color:var(--kc,var(--green));}
+.body.formb.zapisb .znf.on{background:color-mix(in srgb,var(--kc,var(--green)) 15%,var(--card));color:var(--kc,var(--green));}
+.body.formb.zapisb .znsez:not(.cvs2) .znr.on{background:var(--kc,var(--green));}
+.body.formb.zapisb .znsez:not(.cvs2) .znr.on .znip{background:rgba(255,255,255,.92);color:var(--kc,var(--green));}
+.body.formb.zapisb .znrs .i{width:15px;height:15px;color:var(--ter);opacity:.2;fill:none;}
+.body.formb.zapisb .znrs.on{background:color-mix(in srgb,#E8629F 12%,transparent);}
+.body.formb.zapisb .znrs.on .i{color:#E8629F;opacity:1;fill:currentColor;}
+.body.formb.zapisb .znf.znfo{color:#E8629F;}
+.body.formb.zapisb .znf.znfo.on{background:color-mix(in srgb,#E8629F 15%,var(--card));color:#E8629F;}
+/* ZA KOHO: jedna posuvna rada misto dvou. */
+.body.formb.zapisb>.fld:not(.zn){margin-bottom:8px;}
+.body.formb.zapisb>.fld:not(.zn) .pickrow{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.body.formb.zapisb>.fld:not(.zn) .pickrow::-webkit-scrollbar{display:none;}
+.body.formb.zapisb>.fld:not(.zn) .pk{flex:0 0 auto;padding:6px 12px;font-size:13.2px;}
+/* Narocnost: vyssi draha, kolecko na stredu - stejna mezera kolem dokola. */
+.scr>.lvlwrap .lvlknob{width:24px;height:24px;margin-left:-12px;top:4px;font-size:12.5px;}
+.body.formb.zapisb .znsez:not(.cvs2){flex:1 1 auto;min-height:0;max-height:none;}
+/* Narocnost kompaktne - jen cislo, body a drahu. */
+.scr>.lvlwrap .lvlends{display:none;}
+.scr>.lvlwrap .lvlnum{font-size:16px;}
+.scr>.lvlwrap .lvldesc{font-size:10.5px;margin-top:0;min-height:0;}
+.scr>.lvlwrap .lvltrack{height:32px;margin-top:4px;}
+.scr>.lvlwrap>label{font-size:9.5px;margin-bottom:2px;}
+.scr>.lvlwrap{padding-bottom:6px;}
+.scr>.lvlwrap>label{text-transform:uppercase;letter-spacing:.06em;font-weight:800;color:var(--ter);}
 .lvlbox ~ .lvlhint,.fld .lvlhint{display:none;}
 .lvlhead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;}
 .lvlnum{font-size:22.93px;font-weight:900;letter-spacing:-.04em;line-height:1;color:var(--label);font-family:var(--font-display);}
@@ -7377,7 +7379,7 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v173';
+const MM_VERZE = 'v174';
 // Ukol 99 (Marek 14. 9.): "obrazovka se zastavi, ale jakoby se to neviditelne scrolluje dal".
 // Stinova obrazovka si rezervovala vysku podle window.innerHeight. Na iPhonu ta hodnota umi
 // byt vetsi nez skutecna viditelna plocha (listy Safari se sbaluji), takze pod obsahem vzniklo
@@ -7451,6 +7453,9 @@ function mmMiraBloky(){
     n++;
     const jm = (String(el.className).split(' ')[0] || el.tagName.toLowerCase()) + '#' + i;
     b[jm] = { y: mmR1(r.top + sy), h: mmR1(r.height) };
+    // vysky radku uvnitr bloku - kdyz blok nesedi, rekne se, ktery radek za to muze
+    const d = [...el.children].map(c => mmR1(c.getBoundingClientRect().height)).filter(v => v >= 1);
+    if(d.length > 1) b[jm].d = d;
   });
   if(!n) return null;                       // Prehled neni videt (jina zalozka)
   const tb = sh.querySelector('.tb');
@@ -7599,12 +7604,13 @@ function mmRamecekPostav(){
   }catch(_){}
 
   const rozmer = () => {
-    if(volba === 't' && tel) return { w: tel.w, h: tel.h, lista: tel.lista || 0, sat: tel.sat || 0, sab: tel.sab || 0 };
-    if(volba === 'v' && vlastni) return { w: vlastni.w, h: vlastni.h, lista: 0, sat: 0, sab: 0 };
+    // plocha = appka spustena z plochy (míru telefon posílá jen odtud), Safari modely ne
+    if(volba === 't' && tel) return { w: tel.w, h: tel.h, lista: tel.lista || 0, sat: tel.sat || 0, sab: tel.sab || 0, plocha: true };
+    if(volba === 'v' && vlastni) return { w: vlastni.w, h: vlastni.h, lista: 0, sat: 0, sab: 0, plocha: false };
     const m = MM_MODELY[typeof volba === 'number' ? volba : 3];
-    return { w: m[1], h: m[2], lista: m[3], sat: 0, sab: m[4] };
+    return { w: m[1], h: m[2], lista: m[3], sat: 0, sab: m[4], plocha: m[3] > 0 };
   };
-  let nacteno = false;
+  let nacteno = false, plochaNactena = null;
   const porovnej = () => {
     let w = null; try{ w = ifr.contentWindow; }catch(_){}
     let fce = null; try{ fce = w && w.mmMiraBloky; }catch(_){}   // cizi puvod (napr. file://) = nedostupne
@@ -7622,7 +7628,13 @@ function mmRamecekPostav(){
       const jm = MM_POPIS[k.split('#')[0]] || k.split('#')[0];
       if(!p){ roz.push(jm + ': na pc chybí'); return; }
       pridej(jm + ' poloha', t.y, p.y);
-      pridej(jm + ' výška', t.h, p.h);
+      if(Math.abs(t.h - p.h) > 0.5 && t.d && p.d){
+        // ukázat první řádek bloku, který nesedí
+        const i = t.d.findIndex((v, j) => p.d[j] == null || Math.abs(v - p.d[j]) > 0.5);
+        if(t.d.length !== p.d.length) roz.push(jm + ' výška tel ' + t.h + ' / pc ' + p.h + ' (řádků tel ' + t.d.length + ' / pc ' + p.d.length + ')');
+        else if(i >= 0) roz.push(jm + ' výška tel ' + t.h + ' / pc ' + p.h + ' (' + (i + 1) + '. řádek tel ' + t.d[i] + ' / pc ' + p.d[i] + ')');
+        else pridej(jm + ' výška', t.h, p.h);
+      } else pridej(jm + ' výška', t.h, p.h);
     });
     pridej('posun stránky', tel.posun, pc.posun);
     if(tel.pismo && pc.pismo && tel.pismo !== pc.pismo) roz.push('písmo tel ' + tel.pismo + ' / pc ' + pc.pismo);
@@ -7638,12 +7650,14 @@ function mmRamecekPostav(){
     s.setProperty('--ph-k', k < 1 ? k.toFixed(3) : '1');
     ram.classList.toggle('ma-ostruvek', r.lista > 0 || r.sat > 0);
     ram.classList.toggle('ma-indikator', r.sab > 0);
-    if(!nacteno){
-      // bezpečné zóny dostane appka v iframe v adrese (env() na PC vrací 0)
+    if(!nacteno || r.plocha !== plochaNactena){
+      // bezpečné zóny a „z plochy" dostane appka v iframe v adrese (env() na PC vrací 0);
+      // přepnutí mezi Safari a plochou mění styly při vykreslení, proto se appka načte znovu
       const p = new URLSearchParams(location.search);
       p.delete('ramecek'); p.set('vram', '1'); p.set('sat', String(r.sat)); p.set('sab', String(r.sab));
+      if(r.plocha) p.set('plocha', '1'); else p.delete('plocha');
       ifr.src = location.pathname + '?' + p.toString() + location.hash;
-      nacteno = true;
+      nacteno = true; plochaNactena = r.plocha;
     } else {
       try{ const ds = ifr.contentDocument.documentElement.style;
         ds.setProperty('--mm-sat', r.sat + 'px'); ds.setProperty('--mm-sab', r.sab + 'px'); }catch(_){}
