@@ -7380,7 +7380,7 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v177';
+const MM_VERZE = 'v178';
 // Ukol 99 (Marek 14. 9.): "obrazovka se zastavi, ale jakoby se to neviditelne scrolluje dal".
 // Stinova obrazovka si rezervovala vysku podle window.innerHeight. Na iPhonu ta hodnota umi
 // byt vetsi nez skutecna viditelna plocha (listy Safari se sbaluji), takze pod obsahem vzniklo
@@ -10423,7 +10423,7 @@ function mmPismoMetr(cs){
   const c = document.createElement('canvas').getContext('2d'); c.font = f;
   const m = c.measureText('Ag');
   const r = { a: (m.fontBoundingBoxAscent || 950) / 1000, d: (m.fontBoundingBoxDescent || 250) / 1000 };
-  if(!document.fonts || document.fonts.check(f)) _mmPismoMetr[f] = r;   // dokud se písmo nenačte, neukládat
+  try{ if(!document.fonts || document.fonts.check(f)) _mmPismoMetr[f] = r; }catch(_){}   // dokud se písmo nenačte, neukládat
   return r;
 }
 function mmRadkyCele(koren){
@@ -10433,7 +10433,7 @@ function mmRadkyCele(koren){
   // nejdřív vrátit původní hodnoty - počítá se vždy z návrhu, ne z minulého srovnání
   els.forEach(e => {
     if(_mmRadkyPuvodni.has(e)) e.style.lineHeight = _mmRadkyPuvodni.get(e);
-    if(_mmRadkyOkraje.has(e)){ const o = _mmRadkyOkraje.get(e); e.style.marginTop = o[0]; e.style.marginBottom = o[1]; }
+    if(_mmRadkyOkraje.has(e)){ const o = _mmRadkyOkraje.get(e); e.style.marginTop = o[0]; e.style.marginBottom = o[1]; e.style.position = o[2]; e.style.top = o[3]; }
   });
   const nove = els.map(e => {
     const cs = getComputedStyle(e);
@@ -10464,7 +10464,9 @@ function mmRadkyCele(koren){
       // první text položky - podle jeho řádku má položka účaří (i když je to štítek s ikonou apod.)
       const tw = document.createTreeWalker(c, NodeFilter.SHOW_TEXT, { acceptNode: n => /\S/.test(n.data) ? 1 : 3 });
       const t = tw.nextNode(); if(!t || !t.parentElement) return;
-      pol.push({ c, cc, t });
+      // optický posun jen u položky bez vlastního umístění a bez absolutně umístěných prvků uvnitř
+      const posun = cc.position === 'static' && ![...c.querySelectorAll('*')].some(x => /absolute|fixed/.test(getComputedStyle(x).position));
+      pol.push({ c, cc, t, posun });
     });
   });
   if(pol.length){
@@ -10480,27 +10482,34 @@ function mmRadkyCele(koren){
       p.zh = zn('top'); p.zu = zn('baseline');
       rod.insertBefore(p.zu, p.t); rod.insertBefore(p.zh, p.zu);
     });
-    pol.forEach(p => {
-      const top = p.c.getBoundingClientRect().top;
-      p.radekPc = p.zh.getBoundingClientRect().top - top;
-      p.ucariPc = p.zu.getBoundingClientRect().top - top;
-      // blok, ve kterém řádek leží - jeho písmo a výška řádku určují účaří
-      let b = p.rod, d = getComputedStyle(b).display;
-      while(b !== p.c && d === 'inline'){ b = b.parentElement; d = getComputedStyle(b).display; }
-      p.bs = getComputedStyle(b);
-    });
-    pol.forEach(p => { p.zh.remove(); p.zu.remove(); if(p.obal) p.obal.replaceWith(p.t); });
+    try{
+      pol.forEach(p => {
+        const top = p.c.getBoundingClientRect().top;
+        p.radekPc = p.zh.getBoundingClientRect().top - top;
+        p.ucariPc = p.zu.getBoundingClientRect().top - top;
+        // blok, ve kterém řádek leží - jeho písmo a výška řádku určují účaří
+        let b = p.rod, d = getComputedStyle(b).display;
+        while(b !== p.c && d === 'inline'){ b = b.parentElement; d = getComputedStyle(b).display; }
+        const bs = getComputedStyle(b);   // hodnoty hned opsat - obal se za chvíli zase odstraní
+        p.bs = { lineHeight: bs.lineHeight, fontSize: bs.fontSize, fontWeight: bs.fontWeight, fontFamily: bs.fontFamily };
+      });
+    } finally {                         // značky a obaly pryč vždy, i kdyby měření selhalo
+      pol.forEach(p => { p.zh.remove(); p.zu.remove(); if(p.obal && p.obal.isConnected) p.obal.replaceWith(p.t); });
+    }
     pol.forEach(p => {
       const lh = parseFloat(p.bs.lineHeight), fs = parseFloat(p.bs.fontSize);
       if(!(lh > 0) || !(fs > 0)) return;
       const k = Math.floor(lh * z + 1e-3), m = mmPismoMetr(p.bs);
       const A = Math.floor(m.a * fs * z + 1e-3), D = Math.ceil(m.d * fs * z - 1e-3);
       // účaří na iPhonu: ověřeno na 25 zkušebních řádcích a 6 dvojicích z telefonu
-      const d = (p.radekPc + A + Math.round((k - A - D) / 2) - p.ucariPc) / z;
+      // a účaří položky (od její horní hrany) bere iPhone jen v celých pixelech - u štítku s okrajem 2,5 px je to znát
+      const d = (Math.floor(p.radekPc + A + Math.round((k - A - D) / 2) + 0.01) - p.ucariPc) / z;
       if(Math.abs(d * z) < 0.02) return;
-      if(!_mmRadkyOkraje.has(p.c)) _mmRadkyOkraje.set(p.c, [p.c.style.marginTop, p.c.style.marginBottom]);
+      if(!_mmRadkyOkraje.has(p.c)) _mmRadkyOkraje.set(p.c, [p.c.style.marginTop, p.c.style.marginBottom, p.c.style.position, p.c.style.top]);
       p.c.style.marginTop = (parseFloat(p.cc.marginTop) + d) + 'px';
       p.c.style.marginBottom = (parseFloat(p.cc.marginBottom) - d) + 'px';
+      // okraje drží výšku řádku; samotnou položku iPhone stejně posune - jen opticky, rozložení se nemění
+      if(p.posun){ p.c.style.position = 'relative'; p.c.style.top = (-d) + 'px'; }
     });
   }
   const h = _mmRadkyHlidac.get(koren); if(h) h.takeRecords();     // vlastní značky nejsou změna obsahu
