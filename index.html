@@ -7380,7 +7380,7 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v176';
+const MM_VERZE = 'v177';
 // Ukol 99 (Marek 14. 9.): "obrazovka se zastavi, ale jakoby se to neviditelne scrolluje dal".
 // Stinova obrazovka si rezervovala vysku podle window.innerHeight. Na iPhonu ta hodnota umi
 // byt vetsi nez skutecna viditelna plocha (listy Safari se sbaluji), takze pod obsahem vzniklo
@@ -7457,6 +7457,18 @@ function mmMiraBloky(){
     // vysky radku uvnitr bloku - kdyz blok nesedi, rekne se, ktery radek za to muze
     const d = [...el.children].map(c => mmR1(c.getBoundingClientRect().height)).filter(v => v >= 1);
     if(d.length > 1) b[jm].d = d;
+    // podrobně: prvky uvnitř bloku do hloubky 4 (cesta.k.prvku:poloha v bloku:výška) - pruh na PC
+    // pak ukáže přesně ten prvek, který nesedí, ne jen řádek
+    const pod = [];
+    const projdi = (x, cesta, hl) => [...x.children].forEach((c, j) => {
+      if(c instanceof SVGElement || pod.length >= 80) return;
+      const rc = c.getBoundingClientRect(); if(rc.height < 0.5) return;
+      const cc = cesta ? cesta + '.' + j : String(j);
+      pod.push(cc + ':' + mmR1(rc.top - r.top) + ':' + mmR1(rc.height));
+      if(hl < 4) projdi(c, cc, hl + 1);
+    });
+    projdi(el, '', 1);
+    if(pod.length) b[jm].s = pod.join(' ');
   });
   if(!n) return null;                       // Prehled neni videt (jina zalozka)
   const tb = sh.querySelector('.tb');
@@ -7612,6 +7624,27 @@ function mmMiryUkaz(){
   document.body.appendChild(el);
 }
 
+// Který prvek uvnitř bloku nesedí: nejhlubší s jinou výškou (ten je příčina, rodiče jen následek),
+// když výšky sedí, tak nejhlubší posunutý. Jméno podle tříd v appce v rámečku.
+function mmMiraPrvek(w, klic, sTel, sPc){
+  if(!sTel || !sPc) return '';
+  const rozloz = s => { const m = {}; s.split(' ').forEach(x => { const q = x.split(':'); m[q[0]] = [+q[1], +q[2]]; }); return m; };
+  const a = rozloz(sTel), c = rozloz(sPc);
+  let nejV = null, nejY = null;
+  Object.keys(a).forEach(cs => { if(!c[cs]) return;
+    const hl = cs.split('.').length;
+    if(Math.abs(a[cs][1] - c[cs][1]) > 0.25 && (!nejV || hl > nejV.hl)) nejV = { cs, hl, co: 'výška', t: a[cs][1], p: c[cs][1] };
+    if(Math.abs(a[cs][0] - c[cs][0]) > 0.25 && (!nejY || hl > nejY.hl)) nejY = { cs, hl, co: 'poloha', t: a[cs][0], p: c[cs][0] }; });
+  const x = nejV || nejY; if(!x) return '';
+  let jmeno = x.cs;
+  try{
+    const telo = w.document.getElementById('dnesek-mm').shadowRoot.querySelector('.body');
+    let el = telo.children[+klic.split('#')[1]]; const jm = [];
+    x.cs.split('.').forEach(j => { el = el && el.children[+j]; if(el) jm.push(String(el.className && el.className.baseVal == null ? el.className : '').split(' ')[0] || el.tagName.toLowerCase()); });
+    if(jm.length) jmeno = jm.slice(-2).join(' › ');
+  }catch(_){}
+  return jmeno + ' ' + x.co + ' tel ' + x.t + ' / pc ' + x.p;
+}
 // ---- POČÍTAČ: rámeček (jen vnější stránka správce, viz skript v <head>) ----
 const MM_POPIS = { hcard:'karta nahoře', hbm:'blok', sl:'nadpis sekce', lcard:'žebříček',
   heatcard:'kalendář', deni:'dění', lista:'spodní lišta' };
@@ -7681,8 +7714,9 @@ function mmRamecekPostav(){
       else { const dy = t.y - p.y;
         if(Math.abs(dy - posunNad) > 0.5) roz.push(jm + ' poloha tel ' + t.y + ' / pc ' + p.y);
         posunNad = dy + (t.h - p.h); }
-      if(Math.abs(t.h - p.h) > 0.5 && t.d && p.d){
-        // ukázat první řádek bloku, který nesedí
+      const det = Math.abs(t.h - p.h) > 0.5 ? mmMiraPrvek(w, k, t.s, p.s) : '';
+      if(det) roz.push(jm + ' výška tel ' + t.h + ' / pc ' + p.h + ' (' + det + ')');
+      else if(Math.abs(t.h - p.h) > 0.5 && t.d && p.d){
         // řádek s největším rozdílem (i když každý zvlášť nesedí jen o kousek)
         let i = -1, max = 0.15;
         t.d.forEach((v, j) => { const r = p.d[j] == null ? 999 : Math.abs(v - p.d[j]); if(r > max){ max = r; i = j; } });
@@ -10414,40 +10448,55 @@ function mmRadkyCele(koren){
     e.style.lineHeight = nove[i]; });
 
   // Flex zarovnaný na účaří (align-items:baseline): iPhone má i účaří textu v celých pixelech
-  // (horní část písma dolů, dolní nahoru, polovina zbylé mezery useknutá). Když se v řádku potká
-  // velké a malé písmo, vyjde řádek jinak vysoký než v Chromu. Každá jednořádková textová položka
+  // (horní část písma dolů, dolní nahoru, polovina zbylé mezery zaokrouhlená). Když se v řádku potká
+  // velké a malé písmo, vyjde řádek jinak vysoký než v Chromu. Každá položka zarovnaná na účaří
   // se proto posune okraji (nahoře +, dole -) tak, aby účaří sedělo přesně jako na iPhonu.
   const pol = [];
   els.forEach(e => {
     const cs = getComputedStyle(e);
-    if(!/flex/.test(cs.display) || cs.display === 'none') return;
+    if(!/flex/.test(cs.display)) return;
     [...e.children].forEach(c => {
       if(c instanceof SVGElement) return;
       const cc = getComputedStyle(c);
       const al = cc.alignSelf === 'auto' ? cs.alignItems : cc.alignSelf;
-      if(!/baseline/.test(al) || cc.display === 'none' || /flex|grid|table/.test(cc.display) || /absolute|fixed/.test(cc.position)) return;
+      if(!/baseline/.test(al) || cc.display === 'none' || /absolute|fixed/.test(cc.position)) return;
       if(cc.marginTop === 'auto' || cc.marginBottom === 'auto') return;
-      if(!/\S/.test(c.textContent)) return;
-      const lh = parseFloat(cc.lineHeight), fs = parseFloat(cc.fontSize);
-      if(!(lh > 0) || !(fs > 0)) return;
-      const k = Math.floor(lh * z + 1e-3);
-      const okr = (parseFloat(cc.paddingTop) + parseFloat(cc.borderTopWidth)) * z;
-      const vys = c.getBoundingClientRect().height - okr - (parseFloat(cc.paddingBottom) + parseFloat(cc.borderBottomWidth)) * z;
-      if(Math.abs(vys - k) > 0.6) return;                    // jen jeden řádek textu
-      const m = mmPismoMetr(cc);
-      const A = Math.floor(m.a * fs * z + 1e-3), D = Math.ceil(m.d * fs * z - 1e-3);
-      pol.push({ c, cc, ucariIos: okr + A + Math.trunc((k - A - D) / 2) });
+      // první text položky - podle jeho řádku má položka účaří (i když je to štítek s ikonou apod.)
+      const tw = document.createTreeWalker(c, NodeFilter.SHOW_TEXT, { acceptNode: n => /\S/.test(n.data) ? 1 : 3 });
+      const t = tw.nextNode(); if(!t || !t.parentElement) return;
+      pol.push({ c, cc, t });
     });
   });
   if(pol.length){
-    // účaří v Chromu: nulová značka na začátku textu sedí přesně na účaří
-    const zn = pol.map(p => { const s = document.createElement('span');
-      s.style.cssText = 'display:inline-block;width:0;height:0;margin:0;padding:0;border:0;';
-      p.c.insertBefore(s, p.c.firstChild); return s; });
-    pol.forEach((p, i) => { p.ucariPc = zn[i].getBoundingClientRect().top - p.c.getBoundingClientRect().top; });
-    zn.forEach(s => s.remove());
+    // v Chromu změřit horní okraj řádku a účaří: dvě nulové značky před prvním textem
+    // (text přímo ve flexu se na chvíli obalí, jinak by značka byla samostatná položka)
     pol.forEach(p => {
-      const d = (p.ucariIos - p.ucariPc) / z;
+      let rod = p.t.parentElement;
+      if(/flex|grid/.test(getComputedStyle(rod).display)){
+        const ob = document.createElement('span'); p.t.replaceWith(ob); ob.appendChild(p.t); p.obal = ob; rod = ob; }
+      p.rod = rod;
+      const zn = va => { const s = document.createElement('span');
+        s.style.cssText = 'display:inline-block;width:0;height:0;margin:0;padding:0;border:0;vertical-align:' + va + ';'; return s; };
+      p.zh = zn('top'); p.zu = zn('baseline');
+      rod.insertBefore(p.zu, p.t); rod.insertBefore(p.zh, p.zu);
+    });
+    pol.forEach(p => {
+      const top = p.c.getBoundingClientRect().top;
+      p.radekPc = p.zh.getBoundingClientRect().top - top;
+      p.ucariPc = p.zu.getBoundingClientRect().top - top;
+      // blok, ve kterém řádek leží - jeho písmo a výška řádku určují účaří
+      let b = p.rod, d = getComputedStyle(b).display;
+      while(b !== p.c && d === 'inline'){ b = b.parentElement; d = getComputedStyle(b).display; }
+      p.bs = getComputedStyle(b);
+    });
+    pol.forEach(p => { p.zh.remove(); p.zu.remove(); if(p.obal) p.obal.replaceWith(p.t); });
+    pol.forEach(p => {
+      const lh = parseFloat(p.bs.lineHeight), fs = parseFloat(p.bs.fontSize);
+      if(!(lh > 0) || !(fs > 0)) return;
+      const k = Math.floor(lh * z + 1e-3), m = mmPismoMetr(p.bs);
+      const A = Math.floor(m.a * fs * z + 1e-3), D = Math.ceil(m.d * fs * z - 1e-3);
+      // účaří na iPhonu: ověřeno na 25 zkušebních řádcích a 6 dvojicích z telefonu
+      const d = (p.radekPc + A + Math.round((k - A - D) / 2) - p.ucariPc) / z;
       if(Math.abs(d * z) < 0.02) return;
       if(!_mmRadkyOkraje.has(p.c)) _mmRadkyOkraje.set(p.c, [p.c.style.marginTop, p.c.style.marginBottom]);
       p.c.style.marginTop = (parseFloat(p.cc.marginTop) + d) + 'px';
