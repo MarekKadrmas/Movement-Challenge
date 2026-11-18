@@ -3194,11 +3194,13 @@ html.mm-ramec #mm-shoda{display:block;}
 .mm-sub.open{display:block;}
 
 body.mm-full .main{padding:0!important;max-width:none!important;}
+/* Appka z plochy: obsah zacina tesne pod horni hranou okna (pod listou s hodinami). v180 posun
+   zrusil kvuli rozmazani na iOS 27 -> Marek 18. 11.: "obsah je az moc dole, nahore je nevyuzite
+   misto" -> v181 zpet na -33 px. Proti rozmazani horniho okraje zustava .ios-prouzek. */
+html.pwa-standalone body.mm-full .main{margin-top:-33px!important;}
 /* iOS 27 (Marek 18. 11. 2026, iOS 27.2.1): system rozmaze horni okraj appky z plochy (pas ~40-50 px
-   pod listou s hodinami). Drive tu bylo .main{margin-top:-33px} (od 7. 7., tesnejsi hlavicka) —
-   nadpis pak sedel 2 px pod horni hranou okna, tedy primo v rozmazanem pasu. Zruseno: obsah
-   zacina pod hodinami s plnym odsazenim. Rozmazani navic potlacuje .ios-prouzek (stejne jako
-   Squash Liga B552–B554): neviditelny prouzek na horni hrane okna, iOS ho vezme jako listu.
+   pod listou s hodinami). Potlacuje to .ios-prouzek (stejne jako Squash Liga B552–B554):
+   neviditelny prouzek na horni hrane okna, iOS ho vezme jako listu.
    Musi to byt skutecny prvek (ne ::before), position:fixed, >=6 px, >=80 % sirky, <=4 px od hrany;
    background-color = barva pozadi appky (podle ni iOS barvi listu), viditelny neni diky clip:text. */
 .ios-prouzek{position:fixed;left:0;right:0;top:0;height:11px;z-index:2147483600;pointer-events:none;
@@ -7754,7 +7756,7 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v180';
+const MM_VERZE = 'v181';
 // Ukol 99 (Marek 14. 9.): "obrazovka se zastavi, ale jakoby se to neviditelne scrolluje dal".
 // Stinova obrazovka si rezervovala vysku podle window.innerHeight. Na iPhonu ta hodnota umi
 // byt vetsi nez skutecna viditelna plocha (listy Safari se sbaluji), takze pod obsahem vzniklo
