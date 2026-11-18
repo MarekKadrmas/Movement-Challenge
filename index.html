@@ -7645,7 +7645,7 @@ async function mmKartyUlozKartu(id, btn){
 }
 async function mmKartySmazKartu(id){
   const k = (state.karty||[]).find(x => x.id === id); if(!k) return;
-  if(!confirm('Smazat kartičku „' + k.predni + '“?')) return;
+  if(!(await mmPotvrd('Smazat kartičku?', '„' + k.predni + ' = ' + k.zadni + '“', 'Smazat kartičku', 'oranz'))) return;
   if(!isDemo()){
     const { error } = await db.from('flashcards').delete().eq('id', id);
     if(error){ toast('Nesmazáno: ' + error.message, 'error'); return; }
@@ -7670,7 +7670,7 @@ async function mmKartyPrejmenuj(btn){
 async function mmKartySmazBalicek(){
   const b = state.kv && state.kv.b; if(!b) return;
   const n = mmKartyVBalicku(b).length;
-  if(!confirm(`Smazat balíček „${b}“ i se všemi ${n} ${mmKartyPocetSlovo(n)}?`)) return;
+  if(!(await mmPotvrd(`Smazat balíček „${b}“?`, `Smaže se i ${n} ${mmKartyPocetSlovo(n)} v něm. Nejde to vrátit.`, 'Smazat balíček', 'oranz'))) return;
   if(!isDemo()){
     const { error } = await db.from('flashcards').delete().eq('player_id', state.currentPlayerId).eq('balicek', b);
     if(error){ toast('Nesmazáno: ' + error.message, 'error'); return; }
@@ -7756,7 +7756,7 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v181';
+const MM_VERZE = 'v182';
 // Ukol 99 (Marek 14. 9.): "obrazovka se zastavi, ale jakoby se to neviditelne scrolluje dal".
 // Stinova obrazovka si rezervovala vysku podle window.innerHeight. Na iPhonu ta hodnota umi
 // byt vetsi nez skutecna viditelna plocha (listy Safari se sbaluji), takze pod obsahem vzniklo
@@ -10493,17 +10493,13 @@ function mmSkupinaPosun(n, smer){
   [skup[i],skup[j]]=[skup[j],skup[i]];
   mmHabitZapisZmeny([...mine.filter(h=>!mmSkupNazev(h)), ...skup.flatMap(x=>mine.filter(h=>mmSkupNazev(h)===x))]);
 }
-function mmHabitDoSkupiny(id, v, sel){
-  const mine=mmHabitMine(state.currentPlayerId); const h=mine.find(x=>x.id===id); if(!h) return;
-  if(v==='__nova'){
-    v=((prompt('Název nové skupiny','')||'').trim()).slice(0,30);
-    if(!v){ if(sel) sel.value=mmSkupNazev(h); return; }
-  }
-  const rest=mine.filter(x=>x!==h);
+// Presun vic navyku do skupiny (na konec skupiny). Skupina, ktera jeste neexistuje, vznikne na konci.
+function mmHabitDoSkupinyVice(ids, v){
+  const mine=mmHabitMine(state.currentPlayerId); const mnozina=new Set(ids);
+  const jdou=mine.filter(h=>mnozina.has(h.id)), rest=mine.filter(h=>!mnozina.has(h.id));
   const skup=mmSkupinyPoradi(rest); if(v && !skup.includes(v)) skup.push(v);
-  // presunuty navyk jde na konec cilove skupiny
-  const seq=[...rest.filter(x=>!mmSkupNazev(x)), ...(v?[]:[h]), ...skup.flatMap(n=>[...rest.filter(x=>mmSkupNazev(x)===n), ...(v===n?[h]:[])])];
-  mmHabitZapisZmeny(seq, new Map([[id, v||null]]));
+  const seq=[...rest.filter(x=>!mmSkupNazev(x)), ...(v?[]:jdou), ...skup.flatMap(n=>[...rest.filter(x=>mmSkupNazev(x)===n), ...(v===n?jdou:[])])];
+  mmHabitZapisZmeny(seq, new Map(jdou.map(h=>[h.id, v||null])));
 }
 function mmSkupinaPrejmenuj(stary, novy){
   novy=String(novy||'').trim().slice(0,30);
@@ -10513,59 +10509,164 @@ function mmSkupinaPrejmenuj(stary, novy){
   const z=mmSkupZavrene(); const i=z.indexOf(stary); if(i>=0){ z[i]=novy; mmSkupZavUloz(z); }
   mmHabitZapisZmeny(mmHabitSestav(mine), sk);
 }
-function mmSkupinaZrus(n){
-  if(!confirm('Zrušit skupinu „'+n+'“? Návyky zůstanou, jen bez skupiny.')) return;
+async function mmSkupinaZrus(n){
+  if(!(await mmPotvrd('Zrušit skupinu „'+n+'“?', 'Návyky zůstanou, jen budou bez skupiny.', 'Zrušit skupinu'))) return;
   const mine=mmHabitMine(state.currentPlayerId); const sk=new Map();
   mine.forEach(h=>{ if(mmSkupNazev(h)===n) sk.set(h.id, null); });
   // navyky ze zrusene skupiny jdou na konec horni casti (bez skupiny)
   const skup=mmSkupinyPoradi(mine).filter(x=>x!==n);
   mmHabitZapisZmeny([...mine.filter(h=>!mmSkupNazev(h)), ...mine.filter(h=>mmSkupNazev(h)===n), ...skup.flatMap(x=>mine.filter(h=>mmSkupNazev(h)===x))], sk);
 }
-// Rezim "Uspořádat": vsechny navyky (ne jen dnesni), sipky nahoru/dolu, vyber skupiny pod nazvem.
+// Menu skupiny (••• v hlavicce): prejmenovat, posunout, vybrat navyky, zrusit.
+async function mmSkupinaMenu(n){
+  const skup=mmSkupinyPoradi(mmHabitMine(state.currentPlayerId)); const i=skup.indexOf(n);
+  const tl=[{t:'Přejmenovat', styl:'sek', h:'jmeno'}, {t:'Vybrat návyky ve skupině', styl:'sek', h:'navyky'}];
+  if(i>0) tl.push({t:'Posunout skupinu výš', styl:'sek', h:'vys'});
+  if(i>=0 && i<skup.length-1) tl.push({t:'Posunout skupinu níž', styl:'sek', h:'niz'});
+  tl.push({t:'Zrušit skupinu', styl:'cervene', h:'zrus'});
+  const r=await mmDialog({ titul:n, tlacitka:tl });
+  if(!r) return;
+  if(r.h==='vys') mmSkupinaPosun(n,-1);
+  else if(r.h==='niz') mmSkupinaPosun(n,1);
+  else if(r.h==='zrus') mmSkupinaZrus(n);
+  else if(r.h==='jmeno'){
+    const j=await mmDialog({ titul:'Přejmenovat skupinu', vstup:{hodnota:n, max:30}, tlacitka:[{t:'Uložit', styl:'hlavni', h:'ok', pozaduj:'vstup'},{t:'Zrušit', styl:'sek'}] });
+    if(j && j.h==='ok') mmSkupinaPrejmenuj(n, j.vstup);
+  }
+  else if(r.h==='navyky') mmSkupinaNavyky(n);
+}
+// Vyber navyku: zaskrtnute patri do skupiny, odskrtnute z ni odejdou (bez skupiny).
+async function mmSkupinaNavyky(n){
+  const mine=mmHabitMine(state.currentPlayerId);
+  const pol=mine.map(h=>({ id:h.id, text:h.nazev, sub:mmSkupNazev(h) && mmSkupNazev(h)!==n ? 've skupině '+mmSkupNazev(h) : (mmSkupNazev(h)?'':'bez skupiny'),
+    ikona:habitIconHtml(h.ikona), barva:h.barva, on:mmSkupNazev(h)===n }));
+  const r=await mmDialog({ titul:'Návyky ve skupině „'+n+'“', seznam:{polozky:pol, multi:true}, tlacitka:[{t:'Hotovo', styl:'hlavni', h:'ok'},{t:'Zrušit', styl:'sek'}] });
+  if(!r || r.h!=='ok') return;
+  const chci=new Set(r.vybrane);
+  const pryc=mine.filter(h=>mmSkupNazev(h)===n && !chci.has(h.id)).map(h=>h.id);
+  const nove=mine.filter(h=>chci.has(h.id) && mmSkupNazev(h)!==n).map(h=>h.id);
+  if(!pryc.length && !nove.length) return;
+  // nejdriv odebrat, pak pridat (v jednom zapisu): sestav poradi a mapu skupin rucne
+  const sk=new Map(); pryc.forEach(id=>sk.set(id,null)); nove.forEach(id=>sk.set(id,n));
+  const g=h=>sk.has(h.id) ? (sk.get(h.id)||'') : mmSkupNazev(h);
+  const poradiSk=mmSkupinyPoradi(mine); if(!poradiSk.includes(n)) poradiSk.push(n);
+  const zbyle=poradiSk.filter(x=>mine.some(h=>g(h)===x));
+  mmHabitZapisZmeny([...mine.filter(h=>!g(h)), ...zbyle.flatMap(x=>mine.filter(h=>g(h)===x))], sk);
+}
+async function mmSkupinaNova(){
+  const mine=mmHabitMine(state.currentPlayerId);
+  if(!mine.length){ toast('Nejdřív si založ nějaký návyk', 'error'); return; }
+  const pol=mine.map(h=>({ id:h.id, text:h.nazev, sub:mmSkupNazev(h)?'teď ve skupině '+mmSkupNazev(h):'', ikona:habitIconHtml(h.ikona), barva:h.barva, on:false }));
+  const r=await mmDialog({ titul:'Nová skupina', vstup:{placeholder:'Název, např. Ráno nebo Suplementy', max:30},
+    seznam:{polozky:pol, multi:true, nadpis:'Které návyky do ní patří'},
+    tlacitka:[{t:'Vytvořit skupinu', styl:'hlavni', h:'ok', pozaduj:'oboji'},{t:'Zrušit', styl:'sek'}] });
+  if(!r || r.h!=='ok') return;
+  mmHabitDoSkupinyVice(r.vybrane, r.vstup.slice(0,30));
+}
+// Sprava skupin a poradi: vsechny navyky po skupinach, podrzet a pretahnout (i do jine skupiny),
+// ťuknutí na návyk ho otevre k uprave, ••• u skupiny = menu, dole Nova skupina.
 function mmHabitUpravHtml(mine){
   const skup=mmSkupinyPoradi(mine);
-  const vyber=h=>{ const cur=mmSkupNazev(h);
-    return `<select class="usel" onchange="mmHabitDoSkupiny('${h.id}',this.value,this)"><option value=""${cur?'':' selected'}>Bez skupiny</option>`
-      + skup.map(n=>`<option value="${esc(n)}"${n===cur?' selected':''}>${esc(n)}</option>`).join('')
-      + `<option value="__nova">＋ Nová skupina…</option></select>`; };
-  const sip=(on, kod, smer)=>`<span class="usip${on?'':' off'}" onclick="${kod}"><i class="${smer<0?'nah':'dol'}"></i></span>`;
-  const radky=list=>list.map((h,i)=>`<div class="nrow urow" style="--nc:${safeColor(h.barva)}"><span class="nic">${habitIconHtml(h.ikona)}</span>`
-    + `<span class="unm"><b>${esc(h.nazev)}</b><span class="uselw">${vyber(h)}<i></i></span></span>`
-    + sip(i>0, `mmHabitPosun('${h.id}',-1)`, -1) + sip(i<list.length-1, `mmHabitPosun('${h.id}',1)`, 1) + `</div>`).join('');
+  const radek=h=>`<div class="nrow urow" data-hid="${h.id}" style="--nc:${safeColor(h.barva)}"><span class="nic">${habitIconHtml(h.ikona)}</span>`
+    + `<span class="unm"><b>${esc(h.nazev)}</b><small>${esc(mmHabitFreqLabel(h))}</small></span><span class="uchyt" aria-label="Přetáhnout"><i></i><i></i><i></i></span></div>`;
+  let out=`<div class="uhd"><span class="zp" onclick="mmNavykyUprav(0)">‹</span><div class="tt">Skupiny a pořadí</div><span class="zp"></span></div>`
+    + `<div class="unap">Návyk <b>podrž a přetáhni</b> jinam, klidně i do jiné skupiny. Ťuknutím ho upravíš.</div><div class="utah" data-tah>`;
+  if(skup.length) out+=`<div class="usek" data-sek=""><span class="usn">Bez skupiny</span></div>`;
   const bez=mine.filter(h=>!mmSkupNazev(h));
-  let out=`<div class="uhl"><span>Šipkami měníš pořadí. Pod názvem návyku vybereš skupinu nebo založíš novou.</span><span class="uhot" onclick="mmNavykyUprav(0)">Hotovo</span></div>`;
-  if(bez.length) out+=`<div class="ulist">${radky(bez)}</div>`;
-  skup.forEach((n,gi)=>{
-    out+=`<div class="ugrp" data-skup="${esc(n)}"><input class="ugnm" value="${esc(n)}" maxlength="30" aria-label="Název skupiny" onchange="mmSkupinaPrejmenuj(this.parentNode.dataset.skup,this.value)" onkeydown="if(event.key==='Enter')this.blur()">`
-      + sip(gi>0, `mmSkupinaPosun(this.parentNode.dataset.skup,-1)`, -1) + sip(gi<skup.length-1, `mmSkupinaPosun(this.parentNode.dataset.skup,1)`, 1)
-      + `<span class="usip uzr" onclick="mmSkupinaZrus(this.parentNode.dataset.skup)" aria-label="Zrušit skupinu">✕</span></div>`;
-    out+=`<div class="ulist">${radky(mine.filter(h=>mmSkupNazev(h)===n))}</div>`;
+  out+=bez.map(radek).join('');
+  skup.forEach(n=>{
+    const list=mine.filter(h=>mmSkupNazev(h)===n);
+    out+=`<div class="usek" data-sek="${esc(n)}"><span class="usn">${esc(n)}</span><span class="usc">${list.length}</span><span class="usm" onclick="mmSkupinaMenu(this.parentNode.dataset.sek)" aria-label="Možnosti skupiny"><i></i><i></i><i></i></span></div>`
+      + list.map(radek).join('');
   });
+  out+=`</div><button class="unova" onclick="mmSkupinaNova()"><span>＋</span> Nová skupina</button>`;
   return out;
+}
+// Pretahovani radku (vzor Squash Liga tahniDrilly, B543): podrzet 0,4 s nebo chytit za ≡ a tahnout.
+// touchmove na radku je ne-pasivni od zacatku, jinak Safari tah po podrzeni vezme jako posun stranky.
+function mmSkupTahni(sh){
+  const list=sh && sh.querySelector('[data-tah]'); if(!list || list._mmTah) return; list._mmTah=true;
+  let tahne=false;
+  list.querySelectorAll('.urow[data-hid]').forEach(rad=>{
+    rad.addEventListener('touchmove', e=>{ if(tahne) e.preventDefault(); }, {passive:false});
+    rad.addEventListener('click', e=>{ if(tahne || rad._poTahu){ e.preventDefault(); e.stopPropagation(); return; } openHabitModal(rad.dataset.hid); });
+    rad.addEventListener('contextmenu', e=>e.preventDefault());
+    rad.addEventListener('pointerdown', e=>{
+      if(e.button>0) return;
+      const zChytu=!!e.target.closest('.uchyt');
+      const x0=e.clientX, y0=e.clientY; let posY=y0, cek=null, auto=0;
+      const zrus=()=>{ clearTimeout(cek); document.removeEventListener('pointermove',pred); document.removeEventListener('pointerup',zrus); document.removeEventListener('pointercancel',zrus); };
+      const pred=ev=>{ if(Math.abs(ev.clientX-x0)>8 || Math.abs(ev.clientY-y0)>8) zrus(); };
+      const start=()=>{
+        zrus(); tahne=true; rad.classList.add('tahnu'); list.classList.add('tahnuti');
+        try{ navigator.vibrate && navigator.vibrate(12); }catch(_){}
+        const umisti=y=>{
+          const pod=[...list.children].filter(q=>q!==rad && (q.dataset.sek!==undefined || q.dataset.hid));
+          let pred=null; for(const q of pod){ const b=q.getBoundingClientRect(); if(y < b.top+b.height/2){ pred=q; break; } }
+          if(pred!==rad.nextElementSibling) list.insertBefore(rad, pred);
+        };
+        const smycka=()=>{ let v=0; const H=window.innerHeight;
+          if(posY<110) v=-Math.ceil((110-posY)/6); else if(posY>H-150) v=Math.ceil((posY-(H-150))/6);
+          if(v){ window.scrollBy(0,v); umisti(posY); } auto=requestAnimationFrame(smycka); };
+        auto=requestAnimationFrame(smycka);
+        const blok=ev=>ev.preventDefault();
+        const pohyb=ev=>{ posY=ev.clientY; umisti(ev.clientY); };
+        const konec=()=>{
+          cancelAnimationFrame(auto);
+          document.removeEventListener('pointermove',pohyb); document.removeEventListener('pointerup',konec); document.removeEventListener('pointercancel',konec);
+          document.removeEventListener('touchmove',blok,{passive:false});
+          rad.classList.remove('tahnu'); list.classList.remove('tahnuti'); rad._poTahu=true;
+          setTimeout(()=>{ tahne=false; rad._poTahu=false; },80);
+          mmSkupUlozZDom(list);
+        };
+        document.addEventListener('touchmove',blok,{passive:false});
+        document.addEventListener('pointermove',pohyb); document.addEventListener('pointerup',konec); document.addEventListener('pointercancel',konec);
+      };
+      if(zChytu){ e.preventDefault(); start(); return; }
+      document.addEventListener('pointermove',pred); document.addEventListener('pointerup',zrus); document.addEventListener('pointercancel',zrus);
+      cek=setTimeout(start, 400);
+    });
+  });
+}
+// Nove poradi a skupiny prectene z obrazovky: navyk patri do skupiny, pod jejiz hlavickou lezi.
+function mmSkupUlozZDom(list){
+  const mine=mmHabitMine(state.currentPlayerId); const podleId=Object.fromEntries(mine.map(h=>[h.id,h]));
+  let sek=''; const seq=[], mapa=new Map();
+  [...list.children].forEach(q=>{
+    if(q.dataset.sek!==undefined) sek=q.dataset.sek;
+    else if(q.dataset.hid && podleId[q.dataset.hid]){ seq.push(podleId[q.dataset.hid]); mapa.set(q.dataset.hid, sek||null); }
+  });
+  mine.forEach(h=>{ if(!seq.includes(h)) seq.push(h); });
+  mmHabitZapisZmeny(seq, mapa);
 }
 const MM_SKUP_CSS='.nskh{cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}'
   +'.nskh>span{display:inline-flex;align-items:center;gap:7px;}'
   +'.nskv{display:inline-block;width:5.5px;height:5.5px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:translateY(-1.5px) rotate(45deg);transition:transform .2s;opacity:.75;}'
   +'.nskh.zav .nskv{transform:rotate(-45deg);}'
-  +'.nskh.vse .slinfo{color:var(--fial2);}'
-  +'.nupr{text-align:center;margin-top:9px;font-size:12.2px;font-weight:700;color:var(--ter);cursor:pointer;padding:6px;-webkit-tap-highlight-color:transparent;}'
-  +'.uhl{display:flex;align-items:center;gap:12px;margin:2px 3px 12px;font-size:11.6px;line-height:1.4;font-weight:600;color:var(--sec);}'
-  +'.uhot{flex:0 0 auto;font-size:13px;font-weight:800;color:#fff;background:linear-gradient(160deg,#9C7BE6,#6B49CF);border-radius:999px;padding:7px 15px;cursor:pointer;}'
-  +'.ulist{display:grid;row-gap:6px;}'
-  +'.nrow.urow{height:auto;min-height:52px;padding:7px 8px 7px 8px;gap:8px;}'
+  +'.nupr{display:flex;align-items:center;justify-content:center;gap:7px;margin:10px auto 0;font-size:12.6px;font-weight:700;color:var(--sec);cursor:pointer;padding:7px 14px;border-radius:999px;background:var(--track);width:max-content;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}'
+  +'.nupr i{display:block;width:12px;height:2px;border-radius:2px;background:currentColor;box-shadow:0 -4px 0 currentColor,0 4px 0 currentColor;margin:0 2px;}'
+  +'.uhd{display:flex;align-items:center;margin:2px 0 6px;}'
+  +'.uhd .zp{flex:0 0 56px;font-size:32.59px;line-height:1;color:var(--ter);cursor:pointer;padding:4px 0 6px;touch-action:manipulation;}'
+  +'.uhd .tt{flex:1;min-width:0;text-align:center;font-size:19.12px;font-weight:800;color:var(--label);}'
+  +'.unap{font-size:11.8px;line-height:1.45;color:var(--sec);text-align:center;margin:0 10px 14px;}'
+  +'.unap b{color:var(--label);}'
+  +'.utah{display:flex;flex-direction:column;gap:6px;}'
+  +'.usek{display:flex;align-items:center;gap:8px;margin:12px 3px 1px;min-height:30px;font-size:11.15px;letter-spacing:.06em;text-transform:uppercase;color:var(--sec);font-weight:700;}'
+  +'.usek:first-child{margin-top:0;}'
+  +'.usek .usn{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}'
+  +'.usek .usc{font-size:10.5px;font-weight:800;color:var(--ter);letter-spacing:0;}'
+  +'.usek .usm{width:34px;height:28px;border-radius:999px;display:flex;align-items:center;justify-content:center;gap:3px;background:var(--track);cursor:pointer;touch-action:manipulation;}'
+  +'.usek .usm i{width:3.5px;height:3.5px;border-radius:50%;background:var(--sec);}'
+  +'.nrow.urow{height:auto;min-height:50px;padding:7px 6px 7px 8px;gap:10px;cursor:pointer;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;transition:transform .18s cubic-bezier(.55,1.3,.2,1),box-shadow .18s;}'
   +'.urow .unm{flex:1;min-width:0;display:flex;flex-direction:column;}'
   +'.urow .unm b{font-size:13.81px;font-weight:600;color:var(--label);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}'
-  +'.uselw{position:relative;align-self:flex-start;max-width:100%;}'
-  +'.usel{-webkit-appearance:none;appearance:none;border:0;outline:0;font:inherit;font-size:11.2px;font-weight:700;color:var(--fial2);background:color-mix(in srgb,var(--fial) 13%,transparent);border-radius:999px;padding:3px 22px 3px 9px;margin-top:3px;max-width:100%;text-overflow:ellipsis;cursor:pointer;}'
-  +'.uselw>i{position:absolute;right:9px;top:50%;width:4.5px;height:4.5px;margin-top:-2px;border-right:1.6px solid var(--fial2);border-bottom:1.6px solid var(--fial2);transform:rotate(45deg);pointer-events:none;}'
-  +'.usip{flex:0 0 32px;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:var(--track);cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;color:var(--sec);}'
-  +'.usip i{width:7px;height:7px;border-left:2px solid currentColor;border-top:2px solid currentColor;}'
-  +'.usip i.nah{transform:translateY(1.5px) rotate(45deg);}.usip i.dol{transform:translateY(-1.5px) rotate(225deg);}'
-  +'.usip.off{opacity:.3;pointer-events:none;}'
-  +'.usip.uzr{font-size:12px;font-weight:800;color:var(--ter);}'
-  +'.ugrp{display:flex;align-items:center;gap:8px;margin:16px 0 7px;}'
-  +'.ugnm{flex:1;min-width:0;border:0;outline:0;font:inherit;font-size:12.2px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--sec);background:transparent;border-bottom:1.5px dashed color-mix(in srgb,var(--ter) 70%,transparent);padding:4px 3px;border-radius:0;}'
-  +'.ugnm:focus{color:var(--label);border-bottom-color:var(--fial);}';
+  +'.urow .unm small{font-size:11px;font-weight:600;color:var(--ter);}'
+  +'.uchyt{flex:0 0 36px;height:36px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3.5px;cursor:grab;touch-action:none;}'
+  +'.uchyt i{display:block;width:15px;height:2px;border-radius:2px;background:var(--ter);}'
+  +'.urow.tahnu{transform:scale(1.03);box-shadow:0 14px 30px -10px rgba(18,26,22,.35);z-index:2;position:relative;}'
+  +'.utah.tahnuti .urow:not(.tahnu){transition:none;}'
+  +'.unova{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:18px;border:1.5px dashed color-mix(in srgb,var(--fial) 55%,transparent);background:none;border-radius:999px;padding:11px;font:inherit;font-size:14px;font-weight:800;color:var(--fial2);cursor:pointer;}'
+  +'.unova span{font-size:16px;}';
 function renderNavykyMM(){
   const host=document.getElementById('navyky-mm'); if(!host) return;
   const me=state.players.find(p=>p.id===state.currentPlayerId);
@@ -10592,21 +10693,21 @@ function renderNavykyMM(){
     ${mmHabitSouhrnHtml(pid, denNavyky, sel)}
     ${mmHabitSeznamHtml(denNavyky, mine, pid, sel)}
     ${flexRows}
-    <div class="nnew" onclick="openHabitModal()"><span><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg></span> Nový návyk</div>${mine.length>=2?'<div class="nupr" onclick="mmNavykyUprav(1)">Uspořádat a seskupit</div>':''}`;
+    <div class="nnew" onclick="openHabitModal()"><span><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg></span> Nový návyk</div>${mine.length>=2?'<div class="nupr" onclick="mmNavykyUprav(1)"><i></i>Skupiny a pořadí</div>':''}`;
   }
-  const tpl=nav+body;
+  const tpl=(state.habitUprav && mine.length) ? body : nav+body;   // sprava skupin ma vlastni hlavicku
   const _mmK=tpl+'|'+(document.documentElement.getAttribute('data-theme')||'light'); if(host._mmTpl===_mmK&&host.shadowRoot){const s=host.shadowRoot.querySelector('.scr'); if(s){const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; s.style.zoom=z; s.style.minHeight=(mmVyskaOkna()/z)+'px'; mmTrimTail(s,z);} mmBarSnap(host.shadowRoot,1); return;} host._mmTpl=_mmK; const sh=host.shadowRoot||host.attachShadow({mode:'open'});
   const tplEl=document.getElementById('mm-tpl'); const sprite=document.getElementById('momentum-sprite');
   const _spr = sh.querySelector('#momentum-sprite');
   [...sh.childNodes].forEach(n => { if (n !== _spr) n.remove(); });   // ukol 85: sprite se neodpojuje
   if(tplEl) sh.appendChild(tplEl.content.cloneNode(true));
   const ov=document.createElement('style');
-  ov.textContent=':host{-webkit-text-size-adjust:100%;display:block;font-family:var(--font-ui);font-size:19.31px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:calc(66px + var(--mm-sab, env(safe-area-inset-bottom)));}.tb{position:fixed;transform:translateZ(0);will-change:transform;backface-visibility:hidden;}.tbveil{display:none;}.nav{position:relative;}.nav .right{position:absolute;right:2px;top:16.5px;}'+MM_SKUP_CSS+(document.documentElement.classList.contains('pwa-standalone')?'.nav:not(:has(.date)){padding-top:15px;}':'');
+  ov.textContent=':host{-webkit-text-size-adjust:100%;display:block;font-family:var(--font-ui);font-size:19.31px;line-height:1.5;letter-spacing:-.01em;color:var(--label);}.scr{border-radius:0;height:auto;box-shadow:none;width:306px;}.body{padding-bottom:calc(66px + var(--mm-sab, env(safe-area-inset-bottom)));}.tb{position:fixed;transform:translateZ(0);will-change:transform;backface-visibility:hidden;}.tbveil{display:none;}.nav{position:relative;}.nav .right{position:absolute;right:2px;top:16.5px;}'+MM_SKUP_CSS+(document.documentElement.classList.contains('pwa-standalone')?'.nav:not(:has(.date)){padding-top:15px;}.uhd{padding-top:15px;}':'');
   sh.appendChild(ov);
   if(sprite && !sh.querySelector('#momentum-sprite')) sh.appendChild(sprite.cloneNode(true));
   const w=document.createElement('div'); w.innerHTML=`<div class="scr nvk" data-theme="${(document.documentElement.getAttribute('data-theme')||'light')}"><div class="body">${tpl}</div>${mmBar(1)}</div>`;
   sh.appendChild(w);
-  mmSrovnejJmena(sh); const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(mmVyskaOkna()/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin='0 auto'; mmBarSnap(sh,1); mmHabitSwipe(sh); mmHabitDrzeni(sh); window._mmTydSmer=0;
+  mmSrovnejJmena(sh); const scrEl=w.querySelector('.scr'); const z=(Math.min(Math.max(1,window.innerWidth),393)-8)/306; scrEl.style.zoom=z; scrEl.style.minHeight=(mmVyskaOkna()/z)+'px'; mmTrimTail(scrEl,z); scrEl.style.margin='0 auto'; mmBarSnap(sh,1); mmHabitSwipe(sh); mmHabitDrzeni(sh); if(state.habitUprav) mmSkupTahni(sh); window._mmTydSmer=0;
   requestAnimationFrame(()=>mmBarPos(sh, MM_TAB_IDX[state.view]));   // usadit indikator spodniho baru i po re-renderu bez navigace
 }
 
@@ -12327,6 +12428,8 @@ function mmHabitFormUklid(sh){
 }
 function mmMountHabit(){
   const host = document.getElementById('habit-shadow'); if (!host) return;
+  // Formular navyku = novy mmHf (state.hf). Stara sablona tvorba* zustava jen jako zaloha.
+  if (state.habitView !== 'catalog' && state.hf){ mmHfMount(); return; }
   const key = state.habitView === 'catalog' ? 'knihovna' : (MM_HABIT_FREQ_KEYS[state.habitFreq] || 'tvorba');
   const sh = mmBpMount(host, MM_BP2[key], '[data-mmcount] input{width:auto;flex:0 0 auto;text-align:right;}.body.formb.tcompact .fld[data-mmskupfld]{flex-wrap:wrap;}.body.formb.tcompact .fld>[data-mmskup]{flex:0 0 100%;justify-content:flex-start;flex-wrap:wrap;gap:6px;margin:0 0 5px;}[data-mmskup] .pk{cursor:pointer;}');
   if (!sh) return;
@@ -12436,6 +12539,7 @@ function mmHabitSync(sh){
 }
 
 function mmHabitClick(e){
+  if (state.habitView !== 'catalog' && state.hf) return;   // formular obsluhuje mmHfClick
   const t = e.target;
   if (t.closest('.fx')) {
     // Ukol 40: z formulare patri sipka ZPET do knihovny, ne zavreni celeho okna.
@@ -12483,6 +12587,7 @@ function mmHabitClick(e){
 }
 
 function mmHabitInput(e){
+  if (state.habitView !== 'catalog' && state.hf) return;   // formular obsluhuje mmHfInput
   const inp = e.target; if (!inp.dataset || !inp.dataset.mmhb) return;
   if (inp.dataset.mmhb === 'habit-search') { onHabitSearch(inp.value); mmHabitSync(); return; }
   const l = document.getElementById(inp.dataset.mmhb);
@@ -12497,6 +12602,462 @@ function mmHabitInput(e){
     const sh = (document.getElementById('habit-shadow') || {}).shadowRoot;
     if (sh) sh.querySelectorAll('[data-mmskupv]').forEach(el => el.classList.toggle('on', el.dataset.mmskupv === inp.value.trim()));
   }
+}
+
+// ============================================================
+//  mmDialog — jeden spodni panel pro celou appku misto confirm()/prompt()/alert()
+//  (Faze 4: pryc nativni dialogy). Vraci Promise s {h, vstup, vybrane, v} nebo null (zavreno).
+//  o = { titul, text, akcent:'fial'|'oranz'|'zel', vstup:{hodnota,placeholder,max},
+//        seznam:{polozky:[{id,text,sub,ikona,barva,on}], multi:true},
+//        html:'… [data-v] …' (klik na [data-v] panel zavre s {v}),
+//        tlacitka:[{t, styl:'hlavni'|'sek'|'cervene', h, pozaduj:'vstup'|'vyber'|'oboji'}] }
+// ============================================================
+const MM_DLG_CSS = `
+:host{all:initial;}
+.w{position:fixed;inset:0;font-family:var(--font-ui,Figtree,system-ui,sans-serif);-webkit-text-size-adjust:100%;letter-spacing:-.01em;
+  --card:#FFFFFF;--bg:#EDF0EC;--label:#141A16;--sec:#69736D;--ter:#A6AEA8;--sep:rgba(18,26,22,.08);--track:#E6EAE4;--red:#D0493D;}
+.w.dark{--card:#161B18;--bg:#0C0F0D;--label:#ECF3EF;--sec:#8C968F;--ter:#5C655F;--sep:rgba(255,255,255,.09);--track:#242A26;--red:#F0685C;}
+.w.fial{--a1:#9C7BE6;--a2:#6B49CF;--a:#8B6FE0;}
+.w.oranz{--a1:#F3AE4B;--a2:#D97F1C;--a:#E8952F;}
+.w.zel{--a1:#2FC07E;--a2:#0E9A5E;--a:#0FA968;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+.i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round;flex:0 0 auto;}
+.dim{position:absolute;inset:0;background:rgba(10,14,12,.38);opacity:0;transition:opacity .22s ease;}
+.w.on .dim{opacity:1;}
+.pan{position:absolute;left:0;right:0;bottom:0;background:var(--bg);border-radius:22px 22px 0 0;box-shadow:0 -12px 40px rgba(0,0,0,.22);
+  display:flex;flex-direction:column;transform:translateY(105%);transition:transform .3s cubic-bezier(.55,1.3,.2,1);}
+.w.on .pan{transform:none;}
+.w.ven .pan{transition:transform .2s ease-in;transform:translateY(105%);}
+.hl{flex:0 0 auto;padding:8px 16px 4px;}
+.ucho{width:36px;height:4.5px;border-radius:9px;background:var(--ter);opacity:.55;margin:0 auto 12px;}
+.tt{font-size:17.5px;font-weight:800;color:var(--label);text-align:center;}
+.tx{font-size:13.2px;line-height:1.5;color:var(--sec);text-align:center;margin-top:5px;}
+.ob{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 14px 4px;}
+.inp{display:block;width:100%;border:0;outline:0;background:var(--card);border-radius:14px;padding:12px 14px;font:inherit;font-size:15px;font-weight:600;color:var(--label);
+  box-shadow:0 1px 2px rgba(18,26,22,.05);-webkit-appearance:none;appearance:none;}
+.inp::placeholder{color:var(--ter);font-weight:500;}
+.inp:focus{box-shadow:0 0 0 2px color-mix(in srgb,var(--a) 55%,transparent);}
+.sz{background:var(--card);border-radius:16px;overflow:hidden;margin-top:10px;}
+.sz:first-child{margin-top:0;}
+.pol{display:flex;align-items:center;gap:11px;padding:10px 14px;min-height:46px;cursor:pointer;position:relative;}
+.pol+.pol::before{content:"";position:absolute;left:14px;right:0;top:0;height:1px;background:var(--sep);}
+.pol .ik{width:28px;height:28px;flex:0 0 28px;border-radius:50%;display:grid;place-items:center;color:var(--c,var(--a));background:color-mix(in srgb,var(--c,var(--a)) 15%,transparent);}
+.pol .ik svg{width:15px;height:15px;}
+.pol .t{flex:1;min-width:0;font-size:14px;font-weight:600;color:var(--label);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.pol .t small{display:block;font-size:11.4px;font-weight:600;color:var(--ter);}
+.pol .ch{width:22px;height:22px;flex:0 0 22px;border-radius:50%;border:2px solid var(--ter);display:grid;place-items:center;color:#fff;}
+.pol.on .ch{border:0;background:linear-gradient(160deg,var(--a1),var(--a2));}
+.pol .ch svg{width:12px;height:12px;visibility:hidden;}
+.pol.on .ch svg{visibility:visible;}
+.ft{flex:0 0 auto;padding:12px 14px 12px;display:flex;flex-direction:column;gap:9px;}
+.bt{display:block;width:100%;border:0;border-radius:999px;padding:13px;font:inherit;font-size:15.5px;font-weight:800;cursor:pointer;touch-action:manipulation;transition:transform .12s,opacity .15s;}
+.bt:active{transform:scale(.97);}
+.bt.hlavni{color:#fff;background:linear-gradient(160deg,var(--a1),var(--a2));box-shadow:0 10px 22px -12px var(--a2);}
+.bt.cervene{color:#fff;background:linear-gradient(160deg,#EE6B5E,#C9392C);box-shadow:0 10px 22px -12px #C9392C;}
+.bt.sek{color:var(--label);background:var(--card);}
+.bt[disabled]{opacity:.4;pointer-events:none;}
+.mriz{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;background:var(--card);border-radius:16px;padding:12px;}
+.mriz b{aspect-ratio:1;border-radius:50%;display:grid;place-items:center;cursor:pointer;color:var(--c);background:color-mix(in srgb,var(--c) 13%,transparent);}
+.mriz b svg{width:19px;height:19px;}
+.mriz b.on{background:var(--c);color:#fff;box-shadow:0 6px 14px -6px var(--c);}
+.barvy{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;background:var(--card);border-radius:16px;padding:16px;}
+.barvy b{aspect-ratio:1;border-radius:50%;cursor:pointer;background:var(--c);display:grid;place-items:center;color:#fff;}
+.barvy b svg{width:18px;height:18px;visibility:hidden;}
+.barvy b.on{box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--c);}
+.barvy b.on svg{visibility:visible;}
+.pozn{font-size:11.6px;color:var(--ter);margin:8px 4px 0;line-height:1.4;}
+`;
+function mmDialog(o){
+  o = o || {};
+  return new Promise(resolve => {
+    let host = document.getElementById('mm-dialog');
+    if (!host){ host = document.createElement('div'); host.id = 'mm-dialog'; document.body.appendChild(host); host.attachShadow({ mode: 'open' }); }
+    const sh = host.shadowRoot;
+    const gen = host._mmGen = (host._mmGen || 0) + 1;   // dalsi panel otevreny hned po zavreni predchoziho nesmi smazat jeho uklid
+    host.style.cssText = 'position:fixed;inset:0;z-index:2147483100;';
+    const tema = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : '';
+    const z = (Math.min(Math.max(1, window.innerWidth), 393) - 8) / 306;
+    const sprite = document.getElementById('momentum-sprite');
+    const pol = (o.seznam && o.seznam.polozky) || [];
+    const vybrane = new Set(pol.filter(p => p.on).map(p => p.id));
+    const chk = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.2 4.2L19 7"/></svg>';
+    let ob = '';
+    const vstupHtml = o.vstup ? `<input class="inp" data-d="vstup" maxlength="${o.vstup.max || 40}" placeholder="${habitEsc(o.vstup.placeholder || '')}" value="${habitEsc(o.vstup.hodnota || '')}" enterkeyhint="done">` : '';
+    const nahore = o.vstup && !o.vstupDole;
+    if (nahore) ob += vstupHtml;
+    if (pol.length) ob += (o.seznam.nadpis ? `<div class="pozn" style="margin:${nahore ? '14px' : '0'} 4px 6px;font-weight:700;text-transform:uppercase;letter-spacing:.06em">${habitEsc(o.seznam.nadpis)}</div>` : '')
+      + `<div class="sz" style="${nahore && !o.seznam.nadpis ? 'margin-top:12px' : ''}">` + pol.map(p => `<div class="pol${vybrane.has(p.id) ? ' on' : ''}" data-p="${habitEsc(p.id)}" style="${p.barva ? '--c:' + safeColor(p.barva) : ''}">`
+      + (p.ikona ? `<span class="ik">${p.ikona}</span>` : '') + `<span class="t">${habitEsc(p.text)}${p.sub ? `<small>${habitEsc(p.sub)}</small>` : ''}</span><span class="ch">${chk}</span></div>`).join('') + '</div>';
+    if (o.vstup && o.vstupDole) ob += `<div class="pozn" style="margin:16px 4px 6px;font-weight:700;text-transform:uppercase;letter-spacing:.06em">${habitEsc(o.vstup.nadpis || 'Nová')}</div>${vstupHtml}`;
+    if (o.html) ob += o.html;
+    const tl = (o.tlacitka || []).map((b, i) => `<button class="bt ${b.styl || 'sek'}" data-b="${i}">${habitEsc(b.t)}</button>`).join('');
+    sh.innerHTML = `<style>${MM_DLG_CSS}</style><div class="w ${tema} ${o.akcent || 'fial'}"><div class="dim"></div>`
+      + `<div class="pan" style="zoom:${z};max-height:${Math.round(window.innerHeight * 0.88 / z)}px;padding-bottom:calc(var(--mm-sab, env(safe-area-inset-bottom)) / ${z.toFixed(4)})">`
+      + `<div class="hl"><div class="ucho"></div>${o.titul ? `<div class="tt">${habitEsc(o.titul)}</div>` : ''}${o.text ? `<div class="tx">${habitEsc(o.text)}</div>` : ''}</div>`
+      + (ob ? `<div class="ob">${ob}</div>` : '') + (tl ? `<div class="ft">${tl}</div>` : '') + `</div></div>`;
+    if (sprite && /<use/.test(sh.innerHTML)) sh.appendChild(sprite.cloneNode(true));
+    const w = sh.querySelector('.w'), inp = sh.querySelector('[data-d="vstup"]');
+    const hotovo = (vysl) => {
+      if (w._konec) return; w._konec = true;
+      w.classList.add('ven'); w.classList.remove('on');
+      setTimeout(() => { if (host._mmGen !== gen) return; host.style.cssText = 'display:none'; sh.innerHTML = ''; }, 210);
+      resolve(vysl);
+    };
+    const stav = () => ({ vstup: inp ? inp.value.trim() : null, vybrane: [...vybrane] });
+    const prepocti = () => {
+      (o.tlacitka || []).forEach((b, i) => {
+        const el = sh.querySelector(`[data-b="${i}"]`); if (!el || !b.pozaduj) return;
+        const s = stav();
+        const ok = (b.pozaduj !== 'vstup' && b.pozaduj !== 'oboji' || !!s.vstup) && (b.pozaduj !== 'vyber' && b.pozaduj !== 'oboji' || s.vybrane.length > 0);
+        el.disabled = !ok;
+      });
+    };
+    prepocti();
+    w.addEventListener('click', e => {
+      const t = e.target;
+      if (t.classList.contains('dim')) { hotovo(null); return; }
+      const v = t.closest('[data-v]'); if (v) { hotovo(Object.assign({ v: v.dataset.v }, stav())); return; }
+      const p = t.closest('[data-p]');
+      if (p){
+        const id = p.dataset.p;
+        if (o.seznam.multi){ vybrane.has(id) ? vybrane.delete(id) : vybrane.add(id); p.classList.toggle('on', vybrane.has(id)); prepocti(); }
+        else hotovo(Object.assign({ v: id }, stav()));
+        return;
+      }
+      const b = t.closest('[data-b]');
+      if (b && !b.disabled){ const d = o.tlacitka[+b.dataset.b]; hotovo(d.h == null ? null : Object.assign({ h: d.h }, stav())); }
+    });
+    if (inp){
+      inp.addEventListener('input', prepocti);
+      inp.addEventListener('keydown', e => { if (e.key === 'Enter'){ e.preventDefault(); const i = (o.tlacitka || []).findIndex(b => b.styl === 'hlavni' || b.styl === 'cervene'); const el = i >= 0 && sh.querySelector(`[data-b="${i}"]`); if (el && !el.disabled) el.click(); } });
+    }
+    requestAnimationFrame(() => requestAnimationFrame(() => { w.classList.add('on'); if (inp && o.vstup.fokus !== false) try { inp.focus(); } catch(_) {} }));
+  });
+}
+async function mmPotvrd(titul, text, ano, akcent){
+  const r = await mmDialog({ titul, text, akcent, tlacitka: [{ t: ano || 'Ano', styl: 'cervene', h: 'ano' }, { t: 'Zrušit', styl: 'sek' }] });
+  return !!(r && r.h === 'ano');
+}
+
+// ============================================================
+//  NASTAVENI NAVYKU — novy formular (Marek 18. 11.: "celé rozbité ... odladěné, blbuvzdorné").
+//  Jediny zdroj pravdy je state.hf (zadne skryte light-DOM pole ani mosty). Klepnuti prekresli
+//  jen obsah, psani do poli nic neprekresluje (fokus zustava). Vyber ikony/barvy/skupiny =
+//  spodni panel mmDialog, datum = nativni vyber data iPhonu.
+// ============================================================
+const MM_HF_IKONY = ['water','sprout','run','shoe','bike','swim','stretch','pushup','pullup','squat','dips','climb','boulder',
+  'book','moon','sun','heart','target','flame','bolt','snow','clock','list','check','note','comment','users','calc','chart',
+  'trophy','medal','crown','shield','eye','camera','calendar','bell','clap'];
+const MM_HF_FREQ = [['daily','Denně'],['specific_days','Dny'],['weekly','Týdně'],['monthly','Měsíčně'],['yearly','Ročně']];
+const MM_HF_FLEX = { weekly: { max: 7, slovo: 'týdně', def: 3 }, monthly: { max: 31, slovo: 'měsíčně', def: 1 }, yearly: { max: 366, slovo: 'ročně', def: 2 } };
+const MM_HF_CSS = `
+.scr{--fial:#8B6FE0;--fial2:#7757d6;}
+.body.hf{height:auto!important;flex:1 1 auto;min-height:0;padding:16px 14px 18px;}
+.hfhd{display:flex;align-items:center;margin-bottom:14px;}
+.hfhd .zp{flex:0 0 56px;font-size:32.59px;line-height:1;color:var(--ter);cursor:pointer;padding:4px 0 6px;touch-action:manipulation;}
+.hfhd .tt{flex:1;min-width:0;text-align:center;font-size:19.12px;font-weight:800;color:var(--label);}
+.hfk{background:var(--card);border-radius:16px;box-shadow:var(--shadow);margin-bottom:12px;overflow:hidden;}
+.hfr{display:flex;align-items:center;gap:10px;min-height:46px;padding:6px 14px;position:relative;}
+.hfr+.hfr::before,.hfblok+.hfr::before{content:"";position:absolute;left:14px;right:0;top:0;height:1px;background:var(--sep);}
+.hfr .lb{flex:0 0 auto;font-size:13.8px;font-weight:600;color:var(--label);}
+.hfr .vl{flex:1;min-width:0;display:flex;justify-content:flex-end;align-items:center;gap:8px;font-size:13.8px;font-weight:600;color:var(--sec);white-space:nowrap;}
+.hfr .vl .vt{overflow:hidden;text-overflow:ellipsis;}
+.hfr .sip{color:var(--ter);font-size:19px;line-height:1;margin-left:2px;}
+.hfr.klik{cursor:pointer;touch-action:manipulation;}
+.hfr.klik:active{background:color-mix(in srgb,var(--track) 60%,transparent);}
+.hfr input.tx{flex:1;min-width:0;border:0;outline:0;background:none;font:inherit;font-size:13.8px;font-weight:600;color:var(--label);text-align:right;padding:4px 0;margin:0;-webkit-appearance:none;}
+.hfr input.tx::placeholder{color:var(--ter);font-weight:500;opacity:1;}
+.hfr.chyba .lb{color:#D0493D;}
+.hfr.chyba{box-shadow:inset 3px 0 0 #D0493D;}
+.ikp{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;color:var(--c);background:color-mix(in srgb,var(--c) 15%,transparent);}
+.ikp .i{width:15px;height:15px;}
+.bap{width:20px;height:20px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(0,0,0,.06);}
+.hfsg{display:flex;background:var(--track);border-radius:999px;padding:3px;gap:2px;}
+.hfsg b{flex:1 1 0;min-width:0;text-align:center;font-size:12.2px;font-weight:700;padding:7px 0;border-radius:999px;color:var(--sec);cursor:pointer;white-space:nowrap;touch-action:manipulation;transition:background .2s,color .2s;}
+.hfsg b.on{background:linear-gradient(160deg,#9C7BE6,#6B49CF);color:#fff;box-shadow:0 5px 12px -7px #6B49CF;}
+.hfsg.mini b{padding:6px 14px;flex:0 0 auto;}
+.hfblok{padding:11px 14px 13px;}
+.hfblok .lb2{font-size:13.8px;font-weight:600;color:var(--label);margin-bottom:9px;}
+.hfdny{display:flex;justify-content:space-between;margin-top:12px;}
+.hfdny b{width:33px;height:33px;border-radius:50%;display:grid;place-items:center;font-size:11.8px;font-weight:800;background:var(--track);color:var(--sec);cursor:pointer;touch-action:manipulation;}
+.hfdny b.on{background:linear-gradient(160deg,#9C7BE6,#6B49CF);color:#fff;}
+.hfst{display:inline-flex;align-items:center;gap:4px;}
+.hfst b{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--track);color:var(--label);font-size:18px;font-weight:700;line-height:1;cursor:pointer;touch-action:manipulation;user-select:none;}
+.hfst b:active{transform:scale(.92);}
+.hfst input{width:58px;border:0;outline:0;background:none;font:inherit;font-family:var(--font-display);font-size:17px;font-weight:800;color:var(--label);text-align:center;padding:2px 0;-webkit-appearance:none;}
+.hfst .po{font-size:12.4px;font-weight:700;color:var(--sec);margin-left:2px;}
+.hfnap{font-size:11.4px;line-height:1.45;color:var(--sec);margin:-5px 6px 12px;}
+.hfnap b{color:var(--label);}
+.dt{position:absolute;inset:0;width:100%;height:100%;opacity:0;border:0;margin:0;padding:0;cursor:pointer;-webkit-appearance:none;appearance:none;font-size:16px;}
+.hfsw{width:44px;height:26px;border-radius:999px;background:var(--track);position:relative;cursor:pointer;transition:background .2s;flex:0 0 auto;margin:0;}
+.hfsw .kn{display:block;position:absolute;top:2px;left:2px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 2px 5px rgba(0,0,0,.2);transition:transform .25s cubic-bezier(.55,1.3,.2,1);}
+.hfsw.on{background:linear-gradient(160deg,#9C7BE6,#6B49CF);}
+.hfsw.on .kn{transform:translateX(18px);}
+.hfakce{justify-content:center;font-size:13.8px;font-weight:700;color:var(--fial2);}
+.hfakce.cerv{color:#D0493D;}
+.hff{flex:0 0 auto;padding:10px 14px 13px;background:var(--bg);border-top:1px solid var(--sep);}
+.hferr{font-size:12px;font-weight:700;color:#D0493D;text-align:center;margin:0 0 8px;}
+.hfbtn{display:block;width:100%;border:0;border-radius:999px;padding:14px;font:inherit;font-size:16.5px;font-weight:800;color:#fff;cursor:pointer;
+  background:linear-gradient(160deg,#9C7BE6,#6B49CF);box-shadow:0 10px 24px -10px rgba(107,73,207,.6);touch-action:manipulation;transition:transform .12s,opacity .15s;}
+.hfbtn:active{transform:scale(.97);}
+.hfbtn[disabled]{opacity:.55;pointer-events:none;}
+`;
+function mmHfSh(){ const h = document.getElementById('habit-shadow'); return h && h.shadowRoot; }
+function mmHfOtisk(hf){ const k = ['nazev','ikona','barva','zapis','cil','jednotka','freq','dny','kolik','skupina','zacatek','konec']; return JSON.stringify(k.map(x => hf[x])); }
+function mmHfNovy(h, preset, rezim){
+  const dnes = todayStr();
+  const fq = h ? (h.frekvence_typ || 'daily') : (preset ? (preset.fq || 'daily') : 'daily');
+  const flex = MM_HF_FLEX[fq];
+  const kopie = rezim === 'kopie';
+  const hf = {
+    rezim: rezim || (h ? 'uprava' : 'novy'), id: (h && !kopie) ? h.id : null,
+    nazev: h ? ((h.nazev || '') + (kopie ? ' (kopie)' : '')).slice(0, 40) : (preset ? preset.nazev : ''),
+    ikona: h ? (h.ikona || 'target') : (preset ? preset.ikona : 'target'),
+    ikonaAuto: !h && !preset,
+    barva: h ? (h.barva || HABIT_COLORS[0]) : (preset ? (HABIT_CAT_COLOR[preset.kat] || HABIT_COLORS[0]) : HABIT_COLORS[0]),
+    zapis: h ? habitEffZapis(h) : (preset && preset.jed ? 'number' : 'check'),
+    cil: h ? (h.cil_hodnota != null ? String(h.cil_hodnota) : '') : (preset && preset.mer != null ? String(preset.mer) : ''),
+    jednotka: h ? (h.cil_jednotka || '') : (preset ? (preset.jed || '') : ''),
+    freq: fq,
+    dny: h ? (h.frekvence_dny || 0) : 0,
+    kolik: h ? (flex ? (h.frekvence_cil || flex.def) : 3) : (preset ? (preset.weekCil || preset.monthCil || (flex ? flex.def : 3)) : 3),
+    skupina: h ? mmSkupNazev(h) : '',
+    // u stareho navyku bez data zacatku je zacatek den zalozeni (jinak by uprava smazala jeho historii)
+    zacatek: (h && !kopie) ? (h.zacatek || String(h.created_at || '').slice(0, 10) || dnes) : dnes,
+    konec: (h && !kopie && h.konec) ? h.konec : '',
+    zachovat: { cast_dne: h ? (h.cast_dne || null) : (preset ? (preset.cast || null) : null), kotva: h ? (h.kotva || null) : null, poznamka: h ? (h.poznamka || null) : null },
+    pokus: false, ukladam: false
+  };
+  if (fq === 'specific_days' && !hf.dny) hf.dny = 31;
+  hf.puvodni = mmHfOtisk(hf);
+  return hf;
+}
+function mmHfCislo(s){ const n = parseFloat(String(s == null ? '' : s).replace(',', '.').replace(/\s/g, '')); return isFinite(n) ? n : NaN; }
+function mmHfChyby(hf){
+  const ch = {};
+  if (!hf.nazev.trim()) ch.nazev = 'Napiš název návyku';
+  if (hf.zapis === 'number'){ const n = mmHfCislo(hf.cil); if (!(n > 0) || n > 100000) ch.cil = 'Zadej denní cíl (číslo větší než 0)'; }
+  if (hf.freq === 'specific_days' && !hf.dny) ch.dny = 'Vyber aspoň jeden den';
+  if (!hf.zacatek) ch.zacatek = 'Vyber den začátku';
+  if (hf.konec && hf.zacatek && hf.konec < hf.zacatek) ch.konec = 'Konec nesmí být před začátkem';
+  return ch;
+}
+function mmHfDatum(ds){
+  if (!ds) return '';
+  const d = new Date(ds + 'T00:00:00'), dnes = todayStr();
+  if (ds === dnes) return 'dnes';
+  return d.getDate() + '. ' + (d.getMonth() + 1) + '.' + (d.getFullYear() !== new Date().getFullYear() ? ' ' + d.getFullYear() : '');
+}
+function mmHfTpl(){
+  const hf = state.hf, ch = hf.pokus ? mmHfChyby(hf) : {};
+  const titul = hf.rezim === 'uprava' ? 'Upravit návyk' : (hf.rezim === 'kopie' ? 'Kopie návyku' : 'Nový návyk');
+  const col = safeColor(hf.barva), flex = MM_HF_FLEX[hf.freq];
+  const r = (pole) => ch[pole] ? ' chyba' : '';
+  const krok = (pole, hodnota, po) => `<span class="hfst"><b data-hfst="${pole}" data-d="-1">−</b><input data-hfi="${pole}" inputmode="decimal" value="${habitEsc(hodnota)}">`
+    + `<b data-hfst="${pole}" data-d="1">+</b>${po ? `<span class="po">${po}</span>` : ''}</span>`;
+  let b = `<div class="hfhd"><span class="zp" data-hf="zpet">‹</span><div class="tt">${titul}</div><span class="zp"></span></div>`;
+  b += `<div class="hfk">`
+    + `<label class="hfr${r('nazev')}" data-pole="nazev"><span class="lb">Název</span><input class="tx" data-hfi="nazev" maxlength="40" value="${habitEsc(hf.nazev)}" placeholder="Např. Pít 2 l vody" enterkeyhint="done" autocomplete="off"></label>`
+    + `<div class="hfr klik" data-hf="ikona"><span class="lb">Ikona</span><span class="vl"><span class="ikp" style="--c:${col}">${habitIconHtml(hf.ikona)}</span><span class="sip">›</span></span></div>`
+    + `<div class="hfr klik" data-hf="barva"><span class="lb">Barva</span><span class="vl"><span class="bap" style="background:${col}"></span><span class="sip">›</span></span></div>`
+    + `</div>`;
+  b += `<div class="hfk"><div class="hfr"><span class="lb">Typ</span><span class="vl"><span class="hfsg mini"><b class="${hf.zapis === 'check' ? 'on' : ''}" data-hfz="check">Splnit</b><b class="${hf.zapis === 'number' ? 'on' : ''}" data-hfz="number">Změřit</b></span></span></div>`;
+  if (hf.zapis === 'number'){
+    b += `<div class="hfr${r('cil')}" data-pole="cil"><span class="lb">Denní cíl</span><span class="vl">${krok('cil', hf.cil)}</span></div>`
+      + `<label class="hfr"><span class="lb">Jednotka</span><input class="tx" data-hfi="jednotka" maxlength="12" value="${habitEsc(hf.jednotka)}" placeholder="např. sklenic, min, km" autocomplete="off"></label>`;
+  }
+  b += `</div><div class="hfnap">${hf.zapis === 'check' ? '<b>Splnit</b> — v seznamu ho jedním ťuknutím odškrtneš.' : '<b>Změřit</b> — ťuknutí přidá díl, podržení splní celý denní cíl.'}</div>`;
+  b += `<div class="hfk"><div class="hfblok${r('dny')}" data-pole="dny"><div class="lb2">Jak často</div><div class="hfsg">`
+    + MM_HF_FREQ.map(([k, t]) => `<b class="${hf.freq === k ? 'on' : ''}" data-hff="${k}">${t}</b>`).join('') + `</div>`
+    + (hf.freq === 'specific_days' ? `<div class="hfdny">${HABIT_DEN_NAMES.map((d, i) => `<b class="${hf.dny & (1 << i) ? 'on' : ''}" data-hfden="${i}">${d}</b>`).join('')}</div>` : '')
+    + `</div>`
+    + (flex ? `<div class="hfr"><span class="lb">Kolikrát</span><span class="vl">${krok('kolik', hf.kolik, '× ' + flex.slovo)}</span></div>` : '')
+    + `</div>`;
+  b += `<div class="hfk">`
+    + `<div class="hfr klik" data-hf="skupina"><span class="lb">Skupina</span><span class="vl"><span class="vt">${hf.skupina ? habitEsc(hf.skupina) : 'žádná'}</span><span class="sip">›</span></span></div>`
+    + `<label class="hfr klik${r('zacatek')}" data-pole="zacatek"><span class="lb">Začátek</span><span class="vl"><span class="vt">${mmHfDatum(hf.zacatek)}</span><span class="sip">›</span></span><input type="date" class="dt" data-hfd="zacatek" value="${hf.zacatek}"></label>`
+    + `<div class="hfr klik" data-hf="konec"><span class="lb">Konec</span><span class="vl"><span class="vt">${hf.konec ? '' : 'bez konce'}</span><span class="hfsw${hf.konec ? ' on' : ''}"><span class="kn"></span></span></span></div>`
+    + (hf.konec ? `<label class="hfr klik${r('konec')}" data-pole="konec"><span class="lb">Končí</span><span class="vl"><span class="vt">${mmHfDatum(hf.konec)}</span><span class="sip">›</span></span><input type="date" class="dt" data-hfd="konec" value="${hf.konec}" min="${hf.zacatek}"></label>` : '')
+    + `</div>`;
+  if (hf.rezim === 'uprava'){
+    b += `<div class="hfk"><div class="hfr klik hfakce" data-hf="kopie">Duplikovat návyk</div><div class="hfr klik hfakce cerv" data-hf="smazat">Smazat návyk</div></div>`;
+  }
+  const prvni = Object.values(ch)[0];
+  const tl = hf.ukladam ? 'Ukládám…' : (hf.rezim === 'uprava' ? 'Uložit změny' : (hf.rezim === 'kopie' ? 'Vytvořit kopii' : 'Vytvořit návyk'));
+  const f = `<div class="hff">${prvni ? `<div class="hferr">${habitEsc(prvni)}</div>` : ''}<button class="hfbtn" data-hf="ulozit"${hf.ukladam ? ' disabled' : ''}>${tl}</button></div>`;
+  return { b, f };
+}
+function mmHfMount(){
+  const host = document.getElementById('habit-shadow'); if (!host || !state.hf) return;
+  const t = mmHfTpl();
+  const sh = mmBpMount(host, `<div class="body hf">${t.b}</div>${t.f}`, MM_HF_CSS);
+  if (!sh) return;
+  if (!host._mmHfBound){
+    host._mmHfBound = true;
+    sh.addEventListener('click', mmHfClick);
+    sh.addEventListener('input', mmHfInput);
+    sh.addEventListener('change', mmHfChange);
+  }
+}
+function mmHfPrekresli(){
+  const sh = mmHfSh(); const body = sh && sh.querySelector('.body.hf'), foot = sh && sh.querySelector('.hff');
+  if (!body || !foot){ mmHfMount(); return; }
+  const st = body.scrollTop, t = mmHfTpl();
+  body.innerHTML = t.b; foot.outerHTML = t.f;
+  body.scrollTop = st;
+}
+// po neuspesnem ulozeni: posun na prvni chybne pole
+function mmHfNaChybu(){
+  const sh = mmHfSh(); const el = sh && sh.querySelector('.chyba'); if (!el) return;
+  try { el.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch(_) {}
+  const inp = el.querySelector('input:not(.dt)'); if (inp) setTimeout(() => { try { inp.focus(); } catch(_) {} }, 250);
+}
+function mmHfClick(e){
+  if (state.habitView === 'catalog' || !state.hf) return;
+  const hf = state.hf, t = e.target;
+  const dt = t.closest('.dt');
+  if (dt){ try { if (dt.showPicker) dt.showPicker(); } catch(_) {} return; }
+  const z = t.closest('[data-hfz]');
+  if (z){ hf.zapis = z.dataset.hfz; if (hf.zapis === 'number' && !hf.cil) hf.cil = '1'; mmHfPrekresli(); return; }
+  const f = t.closest('[data-hff]');
+  if (f){ hf.freq = f.dataset.hff; const fl = MM_HF_FLEX[hf.freq];
+    if (fl && !(hf.kolik >= 1 && hf.kolik <= fl.max)) hf.kolik = fl.def;
+    if (hf.freq === 'specific_days' && !hf.dny) hf.dny = 31;
+    mmHfPrekresli(); return; }
+  const den = t.closest('[data-hfden]');
+  if (den){ hf.dny ^= (1 << (+den.dataset.hfden)); mmHfPrekresli(); return; }
+  const st = t.closest('[data-hfst]');
+  if (st){
+    const d = +st.dataset.d;
+    if (st.dataset.hfst === 'kolik'){ const fl = MM_HF_FLEX[hf.freq]; hf.kolik = Math.max(1, Math.min(fl ? fl.max : 7, (parseInt(hf.kolik) || 1) + d)); }
+    else { const n = mmHfCislo(hf.cil) || 0; const s = n >= 1000 ? 500 : (n >= 100 ? 10 : (n >= 20 ? 5 : 1)); hf.cil = String(Math.max(s === 1 ? 1 : s, Math.round((n + d * s) * 100) / 100)); }
+    mmHfPrekresli(); return;
+  }
+  const a = t.closest('[data-hf]'); if (!a) return;
+  const k = a.dataset.hf;
+  if (k === 'zpet') mmHfZpet();
+  else if (k === 'ikona') mmHfVyberIkonu();
+  else if (k === 'barva') mmHfVyberBarvu();
+  else if (k === 'skupina') mmHfVyberSkupinu();
+  else if (k === 'konec'){
+    if (hf.konec) hf.konec = '';
+    else { const d = new Date((hf.zacatek > todayStr() ? hf.zacatek : todayStr()) + 'T00:00:00'); d.setDate(d.getDate() + 30); hf.konec = dateToStr(d); }
+    mmHfPrekresli();
+  }
+  else if (k === 'kopie'){ const h = state.habits.find(x => x.id === hf.id); if (h){ state.hf = mmHfNovy(h, null, 'kopie'); state.hf.zKopie = true; mmHfMount(); } }
+  else if (k === 'smazat') mmHfSmazat();
+  else if (k === 'ulozit') mmHfUloz();
+}
+function mmHfInput(e){
+  if (state.habitView === 'catalog' || !state.hf) return;
+  const hf = state.hf, inp = e.target, k = inp.dataset && inp.dataset.hfi; if (!k) return;
+  if (k === 'nazev'){
+    hf.nazev = inp.value;
+    if (hf.ikonaAuto){ const ic = habitAutoIcon(inp.value); if (ic !== hf.ikona){ hf.ikona = ic; const p = mmHfSh().querySelector('.ikp'); if (p) p.innerHTML = habitIconHtml(ic); } }
+  }
+  else if (k === 'jednotka') hf.jednotka = inp.value;
+  else if (k === 'cil') hf.cil = inp.value;
+  else if (k === 'kolik'){ const fl = MM_HF_FLEX[hf.freq]; const n = parseInt(inp.value); if (n >= 1) hf.kolik = Math.min(fl ? fl.max : 7, n); }
+  // po pokusu o ulozeni se chyby hlidaji zive, ale bez prekresleni (fokus zustava v poli)
+  if (hf.pokus){
+    const ch = mmHfChyby(hf), sh = mmHfSh();
+    sh.querySelectorAll('[data-pole]').forEach(el => el.classList.toggle('chyba', !!ch[el.dataset.pole]));
+    const er = sh.querySelector('.hferr'), prvni = Object.values(ch)[0];
+    if (er && !prvni) er.remove(); else if (er) er.textContent = prvni;
+  }
+}
+function mmHfChange(e){
+  if (state.habitView === 'catalog' || !state.hf) return;
+  const inp = e.target, k = inp.dataset && inp.dataset.hfd;
+  if (k){ state.hf[k] = inp.value || (k === 'zacatek' ? todayStr() : ''); mmHfPrekresli(); return; }
+  if (inp.dataset && inp.dataset.hfi === 'kolik'){ inp.value = state.hf.kolik; }
+}
+async function mmHfZpet(){
+  const hf = state.hf;
+  const zmeneno = hf && mmHfOtisk(hf) !== hf.puvodni;
+  if (zmeneno && !(await mmPotvrd(hf.rezim === 'uprava' ? 'Zahodit změny?' : 'Zahodit rozepsaný návyk?', 'To, co jsi tu vyplnil, se neuloží.', 'Zahodit'))) return;
+  if (hf && hf.rezim !== 'uprava' && !hf.zKopie){ state.hf = null; state.habitView = 'catalog'; mmMountHabit(); return; }
+  closeHabitModal();
+}
+async function mmHfVyberIkonu(){
+  const hf = state.hf, col = safeColor(hf.barva);
+  const ikony = MM_HF_IKONY.includes(hf.ikona) ? MM_HF_IKONY : [hf.ikona].concat(MM_HF_IKONY);
+  const r = await mmDialog({ titul: 'Ikona návyku', html: `<div class="mriz">${ikony.map(ic => `<b class="${ic === hf.ikona ? 'on' : ''}" data-v="${habitEsc(ic)}" style="--c:${col}">${habitIconHtml(ic)}</b>`).join('')}</div>`,
+    tlacitka: [{ t: 'Zavřít', styl: 'sek' }] });
+  if (r && r.v){ hf.ikona = r.v; hf.ikonaAuto = false; mmHfPrekresli(); }
+}
+async function mmHfVyberBarvu(){
+  const hf = state.hf;
+  const barvy = HABIT_COLORS.includes(hf.barva) ? HABIT_COLORS : [hf.barva].concat(HABIT_COLORS);
+  const chk = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.2 4.2L19 7"/></svg>';
+  const r = await mmDialog({ titul: 'Barva návyku', html: `<div class="barvy">${barvy.map(c => `<b class="${c === hf.barva ? 'on' : ''}" data-v="${habitEsc(c)}" style="--c:${safeColor(c)}">${chk}</b>`).join('')}</div>`,
+    tlacitka: [{ t: 'Zavřít', styl: 'sek' }] });
+  if (r && r.v){ hf.barva = r.v; mmHfPrekresli(); }
+}
+async function mmHfVyberSkupinu(){
+  const hf = state.hf;
+  const sk = mmSkupinyPoradi(mmHabitMine(currentHabitPlayer()));
+  const pol = [{ id: '', text: 'Žádná skupina', on: !hf.skupina }].concat(sk.map(n => ({ id: n, text: n, on: n === hf.skupina })));
+  const r = await mmDialog({ titul: 'Skupina', seznam: { polozky: pol }, vstupDole: true,
+    vstup: { placeholder: 'Název, např. Ráno nebo Suplementy', max: 30, fokus: false, nadpis: 'Nebo nová skupina' },
+    tlacitka: [{ t: 'Vytvořit a vybrat', styl: 'hlavni', h: 'nova', pozaduj: 'vstup' }, { t: 'Zavřít', styl: 'sek' }] });
+  if (!r) return;
+  if (r.h === 'nova') hf.skupina = r.vstup.slice(0, 30);
+  else if (r.v != null) hf.skupina = r.v;
+  mmHfPrekresli();
+}
+async function mmHfUloz(){
+  const hf = state.hf; if (!hf || hf.ukladam) return;
+  hf.pokus = true;
+  if (Object.keys(mmHfChyby(hf)).length){ mmHfPrekresli(); mmHfNaChybu(); return; }
+  const pid = currentHabitPlayer(); if (!pid){ toast('Nejdřív se přihlas', 'error'); return; }
+  const fl = MM_HF_FLEX[hf.freq];
+  const payload = {
+    nazev: hf.nazev.trim().slice(0, 40), ikona: hf.ikona, barva: hf.barva,
+    frekvence_typ: hf.freq, frekvence_cil: fl ? Math.max(1, Math.min(fl.max, parseInt(hf.kolik) || fl.def)) : 1,
+    frekvence_dny: hf.freq === 'specific_days' ? hf.dny : 0,
+    mira_typ: hf.zapis === 'check' ? 'binary' : 'measurable', zapis_typ: hf.zapis,
+    cil_hodnota: hf.zapis === 'number' ? mmHfCislo(hf.cil) : null,
+    cil_jednotka: hf.zapis === 'number' ? (hf.jednotka.trim().slice(0, 12) || null) : null,
+    cast_dne: hf.zachovat.cast_dne, kotva: hf.zachovat.kotva, poznamka: hf.zachovat.poznamka,
+    zacatek: hf.zacatek, konec: hf.konec || null, skupina: hf.skupina ? hf.skupina.slice(0, 30) : null
+  };
+  const uprava = hf.rezim === 'uprava' && hf.id;
+  if (!uprava){
+    payload.player_id = pid;
+    const mine = mmHabitMine(pid);
+    payload.poradi = mine.length ? Math.max(...mine.map(h => Number(h.poradi) || 0)) + 1 : 0;
+  }
+  hf.ukladam = true; mmHfPrekresli();
+  try {
+    if (isDemo()){
+      if (uprava){ const h = state.habits.find(x => x.id === hf.id); if (h) Object.assign(h, payload); }
+      else state.habits.push(Object.assign({ id: 'demo-h' + Date.now(), archived: false, created_at: new Date().toISOString() }, payload));
+    } else {
+      const zapis = (p) => uprava ? db.from('habits').update(p).eq('id', hf.id) : db.from('habits').insert(p);
+      let r = await zapis(payload);
+      if (r.error && /skupina/.test(r.error.message || '')){ delete payload.skupina; r = await zapis(payload); }
+      if (r.error) throw r.error;
+    }
+    toast(uprava ? 'Návyk uložen' : 'Návyk vytvořen', 'success');
+    state.hf = null;
+    closeHabitModal();
+    if (isDemo()){ mmNavykyZnovu(); _mmDnesekSpinavy = true; } else await loadData();
+  } catch(e){
+    hf.ukladam = false; mmHfPrekresli();
+    toast('Neuloženo: ' + ((e && e.message) || e), 'error');
+  }
+}
+async function mmHfSmazat(){
+  const hf = state.hf; if (!hf || !hf.id) return;
+  if (!(await mmPotvrd('Smazat návyk?', '„' + hf.nazev.trim() + '“ zmizí i s celou historií odškrtávání. Nejde to vrátit.', 'Smazat návyk'))) return;
+  try {
+    if (isDemo()){ state.habits = state.habits.filter(h => h.id !== hf.id); state.habitLogs = state.habitLogs.filter(l => l.habit_id !== hf.id); }
+    else { const { error } = await db.from('habits').delete().eq('id', hf.id); if (error) throw error; }
+    toast('Návyk smazán', 'success');
+    state.hf = null; closeHabitModal();
+    if (isDemo()){ mmNavykyZnovu(); _mmDnesekSpinavy = true; } else await loadData();
+  } catch(e){ toast('Nesmazáno: ' + ((e && e.message) || e), 'error'); }
 }
 
 // ----- UPRAVA PROFILU (#player-modal -> #player-shadow) -----
@@ -14362,6 +14923,8 @@ function openHabitModal(id){
   state.habitSearch = ''; const s = document.getElementById('habit-search'); if (s) s.value = '';
   document.getElementById('habit-delete-btn').style.display = id ? '' : 'none';
   document.getElementById('habit-dup-btn').style.display = id ? '' : 'none';
+  const hEdit = id ? state.habits.find(x => x.id === id) : null;
+  state.hf = hEdit ? mmHfNovy(hEdit, null, 'uprava') : null;   // novy formular navyku (mmHf)
   if (id){
     const h = state.habits.find(x => x.id === id);
     document.getElementById('habit-modal-title').textContent = 'Upravit návyk';
@@ -14383,6 +14946,7 @@ function closeHabitModal(){
   document.getElementById('habit-modal').classList.remove('active');
   unlockBodyScroll();
   state.habitEditId = null;
+  state.hf = null;
 }
 // duplikace návyku: otevře formulář jako NOVÝ návyk, předvyplněný nastavením existujícího → uložíš jako svůj
 function duplicateHabit(id){
@@ -14431,8 +14995,8 @@ function renderHabitPresets(){
   html += `<div class="habit-preset-tile custom" onclick="startCustomHabit()">＋ Vytvořit vlastní návyk</div>`;
   el.innerHTML = html;
 }
-function selectPreset(idx){ prefillHabitForm(null, HABIT_PRESETS[idx]); showHabitScreen('form'); }
-function startCustomHabit(){ prefillHabitForm(null, null); state.habitIconAuto = true; showHabitScreen('form'); }
+function selectPreset(idx){ prefillHabitForm(null, HABIT_PRESETS[idx]); state.hf = mmHfNovy(null, HABIT_PRESETS[idx]); showHabitScreen('form'); }
+function startCustomHabit(){ prefillHabitForm(null, null); state.habitIconAuto = true; state.hf = mmHfNovy(null, null); showHabitScreen('form'); }
 function habitBackToCatalog(){ renderHabitCatTabs(); renderHabitPresets(); showHabitScreen('catalog'); }
 
 function onHabitNoEnd(){
