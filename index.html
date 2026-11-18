@@ -3194,7 +3194,15 @@ html.mm-ramec #mm-shoda{display:block;}
 .mm-sub.open{display:block;}
 
 body.mm-full .main{padding:0!important;max-width:none!important;}
-html.pwa-standalone body.mm-full .main{margin-top:-33px!important;}
+/* iOS 27 (Marek 18. 11. 2026, iOS 27.2.1): system rozmaze horni okraj appky z plochy (pas ~40-50 px
+   pod listou s hodinami). Drive tu bylo .main{margin-top:-33px} (od 7. 7., tesnejsi hlavicka) —
+   nadpis pak sedel 2 px pod horni hranou okna, tedy primo v rozmazanem pasu. Zruseno: obsah
+   zacina pod hodinami s plnym odsazenim. Rozmazani navic potlacuje .ios-prouzek (stejne jako
+   Squash Liga B552–B554): neviditelny prouzek na horni hrane okna, iOS ho vezme jako listu.
+   Musi to byt skutecny prvek (ne ::before), position:fixed, >=6 px, >=80 % sirky, <=4 px od hrany;
+   background-color = barva pozadi appky (podle ni iOS barvi listu), viditelny neni diky clip:text. */
+.ios-prouzek{position:fixed;left:0;right:0;top:0;height:11px;z-index:2147483600;pointer-events:none;
+  background:var(--bg);-webkit-background-clip:text;background-clip:text;}
 /* Marek 2026-08-18: v mm rezimu uz misto pro plovouci bar rezervuje stinova .body
    (padding-bottom vc. safe-area) — puvodni `body{padding-bottom:80px+safe-area}` (radek ~1841)
    pod obrazovkou pridaval jen prazdne misto = falesne scrollovani na kazde obrazovce. */
@@ -3214,7 +3222,7 @@ body.mm-full{background:var(--bg);padding-bottom:0;}
       var a = q.match(/[?&]sab=(\d+)/), b = q.match(/[?&]sat=(\d+)/), s = document.documentElement.style;
       s.setProperty('--mm-sab', (a ? a[1] : 0) + 'px');
       s.setProperty('--mm-sat', (b ? b[1] : 0) + 'px');
-      // appka z plochy ma vlastni upravy (napr. .main o 33 px vys) - ramecek je musi mit taky
+      // appka z plochy ma vlastni upravy (napr. odsazeni nadpisu) - ramecek je musi mit taky
       if (/[?&]plocha=1(&|$)/.test(q)) document.documentElement.classList.add('pwa-standalone');
       return;
     }
@@ -4326,6 +4334,13 @@ body.mm-full{background:var(--bg);padding-bottom:0;}
 })();
 
 (function(){try{if(window.navigator.standalone===true||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches))document.documentElement.classList.add('pwa-standalone');}catch(e){}})();
+/* iOS 27: neviditelny prouzek proti rozmazani horniho okraje (CSS .ios-prouzek) — jen v appce z plochy */
+(function(){try{
+  if(!(window.navigator.standalone===true||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches))) return;
+  function vloz(){ if(document.querySelector('.ios-prouzek')) return;
+    var p=document.createElement('div'); p.className='ios-prouzek'; p.setAttribute('aria-hidden','true'); document.body.prepend(p); }
+  if(document.body) vloz(); else document.addEventListener('DOMContentLoaded', vloz);
+}catch(e){}})();
 /* Dark mode dle telefonu (paleta [data-theme=dark] uz v kodu je, jen se nezapinala) */
 (function(){try{var mq=window.matchMedia('(prefers-color-scheme: dark)');function apply(){document.documentElement.setAttribute('data-theme',mq.matches?'dark':'light');if(window.renderAllViews){try{renderAllViews();}catch(e){}}}apply();if(mq.addEventListener)mq.addEventListener('change',apply);else if(mq.addListener)mq.addListener(apply);}catch(e){}})();
 </script>
@@ -7739,7 +7754,7 @@ function mmAdminPruhHtml(){
 // Verze se zapisuje RUCNE pri kazdem nasazeni. document.lastModified se nedal pouzit:
 // stranka se neceshuje, takze prohlizec vraci cas stazeni, ne cas buildu — ukazoval
 // tedy vzdycky "ted" a nedalo se podle nej poznat vubec nic (Marek 4. 9.).
-const MM_VERZE = 'v179';
+const MM_VERZE = 'v180';
 // Ukol 99 (Marek 14. 9.): "obrazovka se zastavi, ale jakoby se to neviditelne scrolluje dal".
 // Stinova obrazovka si rezervovala vysku podle window.innerHeight. Na iPhonu ta hodnota umi
 // byt vetsi nez skutecna viditelna plocha (listy Safari se sbaluji), takze pod obsahem vzniklo
